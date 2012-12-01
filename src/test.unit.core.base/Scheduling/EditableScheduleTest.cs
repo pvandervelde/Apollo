@@ -22,14 +22,14 @@ namespace Apollo.Core.Base.Scheduling
         {
             var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
-            var start = new EditableStartVertex(1);
+            var start = new StartVertex(1);
             graph.AddVertex(start);
 
-            var end = new EditableEndVertex(2);
+            var end = new EndVertex(2);
             graph.AddVertex(end);
             graph.AddEdge(new ScheduleEdge(start, end));
 
-            var schedule = new EditableSchedule(graph, start, end);
+            var schedule = new Schedule(graph, start, end);
 
             Assert.AreSame(start, schedule.Start);
             Assert.AreSame(end, schedule.End);
@@ -41,34 +41,33 @@ namespace Apollo.Core.Base.Scheduling
         [Test]
         public void TraverseSchedulePartially()
         {
-            EditableSchedule schedule = null;
+            Schedule schedule = null;
             {
                 var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
-                var start = new EditableStartVertex(1);
+                var start = new StartVertex(1);
                 graph.AddVertex(start);
 
-                var end = new EditableEndVertex(2);
+                var end = new EndVertex(2);
                 graph.AddVertex(end);
 
-                var vertex1 = new EditableInsertVertex(3);
+                var vertex1 = new InsertVertex(3);
                 graph.AddVertex(vertex1);
 
-                var vertex2 = new EditableInsertVertex(4);
+                var vertex2 = new InsertVertex(4);
                 graph.AddVertex(vertex2);
 
                 graph.AddEdge(new ScheduleEdge(start, vertex1));
                 graph.AddEdge(new ScheduleEdge(vertex1, vertex2));
                 graph.AddEdge(new ScheduleEdge(vertex2, end));
 
-                schedule = new EditableSchedule(graph, start, end);
+                schedule = new Schedule(graph, start, end);
             }
 
             var vertices = new List<int>();
-            schedule.TraverseSchedule(
-                schedule.Start,
-                true,
-                (vertex, edges) => 
+            schedule.TraverseAllScheduleVertices(
+                schedule.Start, 
+                (vertex, edges) =>
                     {
                         vertices.Add(vertex.Index);
                         return vertex.Index != 3;
@@ -80,33 +79,32 @@ namespace Apollo.Core.Base.Scheduling
         [Test]
         public void TraverseScheduleCompletely()
         {
-            EditableSchedule schedule = null;
+            Schedule schedule = null;
             {
                 var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
-                var start = new EditableStartVertex(1);
+                var start = new StartVertex(1);
                 graph.AddVertex(start);
 
-                var end = new EditableEndVertex(2);
+                var end = new EndVertex(2);
                 graph.AddVertex(end);
 
-                var vertex1 = new EditableInsertVertex(3);
+                var vertex1 = new InsertVertex(3);
                 graph.AddVertex(vertex1);
 
-                var vertex2 = new EditableInsertVertex(4);
+                var vertex2 = new InsertVertex(4);
                 graph.AddVertex(vertex2);
 
                 graph.AddEdge(new ScheduleEdge(start, vertex1));
                 graph.AddEdge(new ScheduleEdge(vertex1, vertex2));
                 graph.AddEdge(new ScheduleEdge(vertex2, end));
 
-                schedule = new EditableSchedule(graph, start, end);
+                schedule = new Schedule(graph, start, end);
             }
 
             var vertices = new List<int>();
-            schedule.TraverseSchedule(
-                schedule.Start,
-                true,
+            schedule.TraverseAllScheduleVertices(
+                schedule.Start, 
                 (vertex, edges) =>
                 {
                     vertices.Add(vertex.Index);
@@ -123,23 +121,23 @@ namespace Apollo.Core.Base.Scheduling
             // start -> node1 --> node2 -> end
             //            ^           |
             //            |-- node3 <-|
-            EditableSchedule schedule = null;
+            Schedule schedule = null;
             {
                 var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
-                var start = new EditableStartVertex(1);
+                var start = new StartVertex(1);
                 graph.AddVertex(start);
 
-                var end = new EditableEndVertex(2);
+                var end = new EndVertex(2);
                 graph.AddVertex(end);
 
-                var vertex1 = new EditableInsertVertex(3);
+                var vertex1 = new InsertVertex(3);
                 graph.AddVertex(vertex1);
 
-                var vertex2 = new EditableInsertVertex(4);
+                var vertex2 = new InsertVertex(4);
                 graph.AddVertex(vertex2);
 
-                var vertex3 = new EditableInsertVertex(5);
+                var vertex3 = new InsertVertex(5);
                 graph.AddVertex(vertex3);
 
                 graph.AddEdge(new ScheduleEdge(start, vertex1));
@@ -150,13 +148,12 @@ namespace Apollo.Core.Base.Scheduling
 
                 graph.AddEdge(new ScheduleEdge(vertex3, vertex1));
 
-                schedule = new EditableSchedule(graph, start, end);
+                schedule = new Schedule(graph, start, end);
             }
 
             var vertices = new List<int>();
-            schedule.TraverseSchedule(
-                schedule.Start,
-                true,
+            schedule.TraverseAllScheduleVertices(
+                schedule.Start, 
                 (vertex, edges) =>
                 {
                     vertices.Add(vertex.Index);
@@ -177,29 +174,29 @@ namespace Apollo.Core.Base.Scheduling
             //         node5--|  |->  node4
             //           ^              |
             //           |--------------|
-            EditableSchedule schedule = null;
+            Schedule schedule = null;
             {
                 var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
-                var start = new EditableStartVertex(1);
+                var start = new StartVertex(1);
                 graph.AddVertex(start);
 
-                var end = new EditableEndVertex(2);
+                var end = new EndVertex(2);
                 graph.AddVertex(end);
 
-                var vertex1 = new EditableInsertVertex(3);
+                var vertex1 = new InsertVertex(3);
                 graph.AddVertex(vertex1);
 
-                var vertex2 = new EditableInsertVertex(4);
+                var vertex2 = new InsertVertex(4);
                 graph.AddVertex(vertex2);
 
-                var vertex3 = new EditableInsertVertex(5);
+                var vertex3 = new InsertVertex(5);
                 graph.AddVertex(vertex3);
 
-                var vertex4 = new EditableInsertVertex(6);
+                var vertex4 = new InsertVertex(6);
                 graph.AddVertex(vertex4);
 
-                var vertex5 = new EditableInsertVertex(7);
+                var vertex5 = new InsertVertex(7);
                 graph.AddVertex(vertex5);
 
                 graph.AddEdge(new ScheduleEdge(start, vertex1));
@@ -214,13 +211,12 @@ namespace Apollo.Core.Base.Scheduling
                 graph.AddEdge(new ScheduleEdge(vertex4, vertex5));
                 graph.AddEdge(new ScheduleEdge(vertex5, vertex3));
 
-                schedule = new EditableSchedule(graph, start, end);
+                schedule = new Schedule(graph, start, end);
             }
 
             var vertices = new List<int>();
-            schedule.TraverseSchedule(
-                schedule.Start,
-                true,
+            schedule.TraverseAllScheduleVertices(
+                schedule.Start, 
                 (vertex, edges) =>
                 {
                     vertices.Add(vertex.Index);

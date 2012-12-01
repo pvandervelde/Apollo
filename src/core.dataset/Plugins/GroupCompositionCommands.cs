@@ -26,7 +26,7 @@ namespace Apollo.Core.Dataset.Plugins
         /// <summary>
         /// The object that stores all the selected groups and their connections.
         /// </summary>
-        private readonly IStoreGroupsAndConnections m_Groups;
+        private readonly IStoreGroupsAndConnections m_CompositionLayer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupCompositionCommands"/> class.
@@ -43,7 +43,7 @@ namespace Apollo.Core.Dataset.Plugins
             }
 
             m_DatasetLock = datasetLock;
-            m_Groups = groups;
+            m_CompositionLayer = groups;
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Apollo.Core.Dataset.Plugins
                     var key = m_DatasetLock.LockForWriting();
                     try
                     {
-                        m_Groups.Add(id, group);
+                        m_CompositionLayer.Add(id, group);
                     }
                     finally
                     {
@@ -84,7 +84,7 @@ namespace Apollo.Core.Dataset.Plugins
                     var key = m_DatasetLock.LockForWriting();
                     try
                     {
-                        m_Groups.Remove(id);
+                        m_CompositionLayer.Remove(id);
                     }
                     finally
                     {
@@ -109,7 +109,7 @@ namespace Apollo.Core.Dataset.Plugins
                     var key = m_DatasetLock.LockForWriting();
                     try
                     {
-                        m_Groups.Connect(connection.ImportingGroup, connection.GroupImport, connection.ExportingGroup);
+                        m_CompositionLayer.Connect(connection);
                     }
                     finally
                     {
@@ -134,7 +134,7 @@ namespace Apollo.Core.Dataset.Plugins
                     var key = m_DatasetLock.LockForWriting();
                     try
                     {
-                        m_Groups.Disconnect(importingGroup, exportingGroup);
+                        m_CompositionLayer.Disconnect(importingGroup, exportingGroup);
                     }
                     finally
                     {
@@ -158,7 +158,7 @@ namespace Apollo.Core.Dataset.Plugins
                     var key = m_DatasetLock.LockForWriting();
                     try
                     {
-                        m_Groups.Disconnect(group);
+                        m_CompositionLayer.Disconnect(group);
                     }
                     finally
                     {
@@ -184,9 +184,9 @@ namespace Apollo.Core.Dataset.Plugins
                     var key = m_DatasetLock.LockForReading();
                     try
                     {
-                        var groups = m_Groups.Groups()
+                        var groups = m_CompositionLayer.Groups()
                             .SelectMany(
-                                id => m_Groups.UnsatisfiedImports(id)
+                                id => m_CompositionLayer.UnsatisfiedImports(id)
                                     .Select(import => new Tuple<GroupCompositionId, GroupImportDefinition>(id, import)))
                             .ToList();
 
@@ -213,13 +213,13 @@ namespace Apollo.Core.Dataset.Plugins
                     var key = m_DatasetLock.LockForReading();
                     try
                     {
-                        var groups = m_Groups.Groups()
-                                    .Select(id => new Tuple<GroupCompositionId, GroupDefinition>(id, m_Groups.Group(id)))
+                        var groups = m_CompositionLayer.Groups()
+                                    .Select(id => new Tuple<GroupCompositionId, GroupDefinition>(id, m_CompositionLayer.Group(id)))
                                     .ToList();
 
-                        var connections = m_Groups.Groups()
+                        var connections = m_CompositionLayer.Groups()
                             .SelectMany(
-                                id => m_Groups.SatisfiedImports(id)
+                                id => m_CompositionLayer.SatisfiedImports(id)
                                     .Select(
                                         import => new Tuple<GroupCompositionId, GroupImportDefinition, GroupCompositionId>(
                                             id,

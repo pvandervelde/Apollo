@@ -6,6 +6,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base.Scheduling;
+using Apollo.Core.Extensions.Scheduling;
 using MbUnit.Framework;
 
 namespace Apollo.Core.Dataset.Scheduling.Processors
@@ -13,20 +14,20 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class NoOpVertexProcessorTest
+    public sealed class InsertVertexProcessorTest
     {
         [Test]
         public void VertexTypeToProcess()
         {
-            var processor = new NoOpVertexProcessor();
-            Assert.AreEqual(typeof(ExecutableNoOpVertex), processor.VertexTypeToProcess);
+            var processor = new InsertVertexProcessor();
+            Assert.AreEqual(typeof(InsertVertex), processor.VertexTypeToProcess);
         }
 
         [Test]
         public void ProcessWithIncorrectVertexType()
         {
-            var processor = new NoOpVertexProcessor();
-            var state = processor.Process(new ExecutableStartVertex(1), new ScheduleExecutionInfo());
+            var processor = new InsertVertexProcessor();
+            var state = processor.Process(new StartVertex(1), new ScheduleExecutionInfo());
             Assert.AreEqual(ScheduleExecutionState.IncorrectProcessorForVertex, state);
         }
 
@@ -36,16 +37,16 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
             var info = new ScheduleExecutionInfo();
             info.CancelScheduleExecution();
 
-            var processor = new NoOpVertexProcessor();
-            var state = processor.Process(new ExecutableNoOpVertex(1), info);
+            var processor = new InsertVertexProcessor();
+            var state = processor.Process(new InsertVertex(1), info);
             Assert.AreEqual(ScheduleExecutionState.Canceled, state);
         }
 
         [Test]
         public void Process()
         {
-            var processor = new NoOpVertexProcessor();
-            var state = processor.Process(new ExecutableNoOpVertex(1), new ScheduleExecutionInfo());
+            var processor = new InsertVertexProcessor();
+            var state = processor.Process(new InsertVertex(1), new ScheduleExecutionInfo());
             Assert.AreEqual(ScheduleExecutionState.Executing, state);
         }
     }

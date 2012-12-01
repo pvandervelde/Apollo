@@ -21,7 +21,7 @@ namespace Apollo.Core.Dataset.Scheduling
                 Justification = "Unit tests do not need documentation.")]
     public sealed class ScheduleDistributorTest
     {
-        private static EditableSchedule BuildSchedule(
+        private static Schedule BuildSchedule(
             ScheduleElementId action1, 
             ScheduleElementId action2, 
             ScheduleId scheduleId,
@@ -38,35 +38,35 @@ namespace Apollo.Core.Dataset.Scheduling
             //                    node7--|  |->  node6
             //                      ^              |
             //                      |--------------|
-            EditableSchedule schedule = null;
+            Schedule schedule = null;
             {
                 var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
-                var start = new EditableStartVertex(1);
+                var start = new StartVertex(1);
                 graph.AddVertex(start);
 
-                var end = new EditableEndVertex(2);
+                var end = new EndVertex(2);
                 graph.AddVertex(end);
 
-                var vertex1 = new EditableExecutingActionVertex(3, action1);
+                var vertex1 = new ExecutingActionVertex(3, action1);
                 graph.AddVertex(vertex1);
 
-                var vertex2 = new EditableExecutingActionVertex(4, action2);
+                var vertex2 = new ExecutingActionVertex(4, action2);
                 graph.AddVertex(vertex2);
 
-                var vertex3 = new EditableSynchronizationStartVertex(5, new IScheduleVariable[] { variable.Object });
+                var vertex3 = new SynchronizationStartVertex(5, new IScheduleVariable[] { variable.Object });
                 graph.AddVertex(vertex3);
 
-                var vertex4 = new EditableExecutingActionVertex(6, action2);
+                var vertex4 = new ExecutingActionVertex(6, action2);
                 graph.AddVertex(vertex4);
 
-                var vertex5 = new EditableSynchronizationEndVertex(7);
+                var vertex5 = new SynchronizationEndVertex(7);
                 graph.AddVertex(vertex5);
 
-                var vertex6 = new EditableSubScheduleVertex(8, scheduleId);
+                var vertex6 = new SubScheduleVertex(8, scheduleId);
                 graph.AddVertex(vertex6);
 
-                var vertex7 = new EditableInsertVertex(9);
+                var vertex7 = new InsertVertex(9);
                 graph.AddVertex(vertex7);
 
                 graph.AddEdge(new ScheduleEdge(start, vertex1));
@@ -84,75 +84,41 @@ namespace Apollo.Core.Dataset.Scheduling
                 graph.AddEdge(new ScheduleEdge(vertex6, vertex7));
                 graph.AddEdge(new ScheduleEdge(vertex7, vertex4));
 
-                schedule = new EditableSchedule(graph, start, end);
+                schedule = new Schedule(graph, start, end);
             }
 
             return schedule;
         }
 
-        private static void VerifySchedule(EditableSchedule editableSchedule, ExecutableSchedule executableSchedule)
+        private static void VerifySchedule(ISchedule first, ISchedule second)
         {
             var linearisedEditableGraph = new List<Tuple<IScheduleVertex, List<Tuple<ScheduleElementId, IScheduleVertex>>>>();
-            editableSchedule.TraverseSchedule(
-                editableSchedule.Start,
-                true,
+            first.TraverseAllScheduleVertices(
+                first.Start, 
                 (vertex, edges) =>
                 {
                     linearisedEditableGraph.Add(
                         new Tuple<IScheduleVertex, List<Tuple<ScheduleElementId, IScheduleVertex>>>(
-                            vertex, 
+                            vertex,
                             edges.ToList()));
 
                     return true;
                 });
 
             var linearisedExecutableGraph = new List<Tuple<IScheduleVertex, List<Tuple<ScheduleElementId, IScheduleVertex>>>>();
-            var executableGraph = executableSchedule.Graph;
-            TraverseExecutableSchedule(
-                executableSchedule.Graph,
-                executableSchedule.Start,
+            second.TraverseAllScheduleVertices(
+                second.Start,
                 (vertex, edges) =>
                 {
                     linearisedExecutableGraph.Add(
                         new Tuple<IScheduleVertex, List<Tuple<ScheduleElementId, IScheduleVertex>>>(
                             vertex,
                             edges.ToList()));
+
+                    return true;
                 });
 
             CompareLinearisedGraphs(linearisedEditableGraph, linearisedExecutableGraph);
-        }
-
-        private static void TraverseExecutableSchedule(
-            IVertexListGraph<IScheduleVertex, ScheduleEdge> executableGraph,
-            IScheduleVertex start,
-            Action<IScheduleVertex, IEnumerable<Tuple<ScheduleElementId, IScheduleVertex>>> vertexAction)
-        {
-            var nodeCounter = new List<IScheduleVertex>();
-
-            var uncheckedVertices = new Queue<IScheduleVertex>();
-            uncheckedVertices.Enqueue(start);
-            while (uncheckedVertices.Count > 0)
-            {
-                var source = uncheckedVertices.Dequeue();
-                if (nodeCounter.Contains(source))
-                {
-                    continue;
-                }
-
-                nodeCounter.Add(source);
-
-                var outEdges = executableGraph.OutEdges(source);
-                var traverseMap = from edge in outEdges
-                                  select new Tuple<ScheduleElementId, IScheduleVertex>(
-                                      edge.TraversingCondition,
-                                      edge.Target);
-
-                vertexAction(source, traverseMap);
-                foreach (var outEdge in outEdges)
-                {
-                    uncheckedVertices.Enqueue(outEdge.Target);
-                }
-            }
         }
 
         private static void CompareLinearisedGraphs(
@@ -166,7 +132,7 @@ namespace Apollo.Core.Dataset.Scheduling
                 var givenPair = given[i];
 
                 Assert.AreEqual(expectedPair.Item1.Index, givenPair.Item1.Index);
-                Assert.AreEqual(TranslateEditableVertexToExecutableVertex(expectedPair.Item1.GetType()), givenPair.Item1.GetType());
+                Assert.AreEqual(expectedPair.Item1.GetType(), givenPair.Item1.GetType());
 
                 Assert.AreEqual(expectedPair.Item2.Count, givenPair.Item2.Count);
                 for (int j = 0; j < expectedPair.Item2.Count; j++)
@@ -175,51 +141,6 @@ namespace Apollo.Core.Dataset.Scheduling
                     Assert.AreEqual(expectedPair.Item2[j].Item2.Index, givenPair.Item2[j].Item2.Index);
                 }
             }
-        }
-
-        private static Type TranslateEditableVertexToExecutableVertex(Type type)
-        {
-            if (type == typeof(EditableStartVertex))
-            {
-                return typeof(ExecutableStartVertex);
-            }
-
-            if (type == typeof(EditableEndVertex))
-            {
-                return typeof(ExecutableEndVertex);
-            }
-
-            if (type == typeof(EditableExecutingActionVertex))
-            {
-                return typeof(ExecutableActionVertex);
-            }
-
-            if (type == typeof(EditableInsertVertex))
-            {
-                return typeof(ExecutableNoOpVertex);
-            }
-
-            if (type == typeof(EditableMarkHistoryVertex))
-            {
-                return typeof(ExecutableMarkHistoryVertex);
-            }
-
-            if (type == typeof(EditableSubScheduleVertex))
-            {
-                return typeof(ExecutableSubScheduleVertex);
-            }
-
-            if (type == typeof(EditableSynchronizationStartVertex))
-            {
-                return typeof(ExecutableSynchronizationStartVertex);
-            }
-
-            if (type == typeof(EditableSynchronizationEndVertex))
-            {
-                return typeof(ExecutableSynchronizationEndVertex);
-            }
-
-            return null;
         }
 
         [Test]
@@ -253,9 +174,9 @@ namespace Apollo.Core.Dataset.Scheduling
                 "a", 
                 "b");
 
-            ExecutableSchedule storedSchedule = null;
+            ISchedule storedSchedule = null;
             var executor = new Mock<IExecuteSchedules>();
-            Func<ExecutableSchedule, ScheduleId, ScheduleExecutionInfo, IExecuteSchedules> builder =
+            Func<ISchedule, ScheduleId, ScheduleExecutionInfo, IExecuteSchedules> builder =
                 (s, i, e) => 
                 {
                     storedSchedule = s;
@@ -296,11 +217,11 @@ namespace Apollo.Core.Dataset.Scheduling
                 "a", 
                 "b");
 
-            ExecutableSchedule storedSchedule = null;
+            ISchedule storedSchedule = null;
             var executor = new Mock<IExecuteSchedules>();
 
             int index = 0;
-            Func<ExecutableSchedule, ScheduleId, ScheduleExecutionInfo, IExecuteSchedules> builder =
+            Func<ISchedule, ScheduleId, ScheduleExecutionInfo, IExecuteSchedules> builder =
                 (s, id, e) =>
                 {
                     storedSchedule = s;

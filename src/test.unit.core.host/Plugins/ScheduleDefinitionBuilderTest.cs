@@ -34,7 +34,7 @@ namespace Apollo.Core.Host.Plugins
             {
                 scheduleBuilder.Setup(s => s.AddExecutingAction(It.IsAny<ScheduleElementId>()))
                     .Callback<ScheduleElementId>(s => id = s)
-                    .Returns<ScheduleElementId>(s => new EditableExecutingActionVertex(0, s));
+                    .Returns<ScheduleElementId>(s => new ExecutingActionVertex(0, s));
             }
 
             var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
@@ -56,7 +56,7 @@ namespace Apollo.Core.Host.Plugins
             {
                 scheduleBuilder.Setup(s => s.AddExecutingAction(It.IsAny<ScheduleElementId>()))
                     .Callback<ScheduleElementId>(s => id = s)
-                    .Returns<ScheduleElementId>(s => new EditableExecutingActionVertex(0, s));
+                    .Returns<ScheduleElementId>(s => new ExecutingActionVertex(0, s));
             }
 
             var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
@@ -80,7 +80,7 @@ namespace Apollo.Core.Host.Plugins
 
             var schedule = new ScheduleId();
             ScheduleId storedId = null;
-            var scheduleVertex = new EditableSubScheduleVertex(0, schedule);
+            var scheduleVertex = new SubScheduleVertex(0, schedule);
             var scheduleBuilder = new Mock<IBuildFixedSchedules>();
             {
                 scheduleBuilder.Setup(s => s.AddSubSchedule(It.IsAny<ScheduleId>()))
@@ -105,7 +105,7 @@ namespace Apollo.Core.Host.Plugins
             {
                 scheduleBuilder.Setup(s => s.AddSynchronizationStart(It.IsAny<IEnumerable<IScheduleVariable>>()))
                     .Callback<IEnumerable<IScheduleVariable>>(s => variables = s)
-                    .Returns<IEnumerable<IScheduleVariable>>(s => new EditableSynchronizationStartVertex(0, s));
+                    .Returns<IEnumerable<IScheduleVariable>>(s => new SynchronizationStartVertex(0, s));
             }
 
             var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
@@ -122,17 +122,17 @@ namespace Apollo.Core.Host.Plugins
         {
             var owner = new Mock<IOwnScheduleDefinitions>();
 
-            EditableSynchronizationStartVertex startVertex = null;
+            SynchronizationStartVertex startVertex = null;
             var scheduleBuilder = new Mock<IBuildFixedSchedules>();
             {
-                scheduleBuilder.Setup(s => s.AddSynchronizationEnd(It.IsAny<EditableSynchronizationStartVertex>()))
-                    .Callback<EditableSynchronizationStartVertex>(s => startVertex = s)
-                    .Returns<EditableSynchronizationStartVertex>(s => new EditableSynchronizationEndVertex(0));
+                scheduleBuilder.Setup(s => s.AddSynchronizationEnd(It.IsAny<SynchronizationStartVertex>()))
+                    .Callback<SynchronizationStartVertex>(s => startVertex = s)
+                    .Returns<SynchronizationStartVertex>(s => new SynchronizationEndVertex(0));
             }
 
             var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
 
-            var inputVertex = new EditableSynchronizationStartVertex(
+            var inputVertex = new SynchronizationStartVertex(
                 0, 
                 new List<IScheduleVariable> { new Mock<IScheduleVariable>().Object });
             var vertex = builder.AddSynchronizationEnd(inputVertex);
@@ -146,7 +146,7 @@ namespace Apollo.Core.Host.Plugins
         {
             var owner = new Mock<IOwnScheduleDefinitions>();
 
-            EditableMarkHistoryVertex startVertex = new EditableMarkHistoryVertex(0);
+            MarkHistoryVertex startVertex = new MarkHistoryVertex(0);
             var scheduleBuilder = new Mock<IBuildFixedSchedules>();
             {
                 scheduleBuilder.Setup(s => s.AddHistoryMarkingPoint())
@@ -164,7 +164,7 @@ namespace Apollo.Core.Host.Plugins
         {
             var owner = new Mock<IOwnScheduleDefinitions>();
 
-            var insertVertex = new EditableInsertVertex(0);
+            var insertVertex = new InsertVertex(0);
             var scheduleBuilder = new Mock<IBuildFixedSchedules>();
             {
                 scheduleBuilder.Setup(s => s.AddInsertPoint())
@@ -187,7 +187,7 @@ namespace Apollo.Core.Host.Plugins
             {
                 scheduleBuilder.Setup(s => s.AddInsertPoint(It.IsAny<int>()))
                     .Callback<int>(i => storedMaximum = i)
-                    .Returns<int>(i => new EditableInsertVertex(0, i));
+                    .Returns<int>(i => new InsertVertex(0, i));
             }
 
             var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
@@ -213,8 +213,8 @@ namespace Apollo.Core.Host.Plugins
 
             var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
 
-            var start = new EditableMarkHistoryVertex(0);
-            var end = new EditableInsertVertex(1);
+            var start = new MarkHistoryVertex(0);
+            var end = new InsertVertex(1);
             builder.LinkTo(start, end);
         }
 
@@ -237,8 +237,8 @@ namespace Apollo.Core.Host.Plugins
 
             var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
 
-            var start = new EditableMarkHistoryVertex(0);
-            var end = new EditableInsertVertex(1);
+            var start = new MarkHistoryVertex(0);
+            var end = new InsertVertex(1);
             var condition = new ScheduleConditionRegistrationId(typeof(string), 0, "a");
             builder.LinkTo(start, end, condition);
 
@@ -265,12 +265,12 @@ namespace Apollo.Core.Host.Plugins
             var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
 
             var condition = new ScheduleConditionRegistrationId(typeof(string), 0, "a");
-            builder.LinkTo(new EditableMarkHistoryVertex(0), new EditableInsertVertex(1), condition);
+            builder.LinkTo(new MarkHistoryVertex(0), new InsertVertex(1), condition);
             
             Assert.IsNotNull(id);
             
             var firstId = id;
-            builder.LinkTo(new EditableMarkHistoryVertex(2), new EditableInsertVertex(3), condition);
+            builder.LinkTo(new MarkHistoryVertex(2), new InsertVertex(3), condition);
 
             Assert.IsNotNull(id);
             Assert.AreSame(firstId, id);
@@ -292,7 +292,7 @@ namespace Apollo.Core.Host.Plugins
             }
 
             var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
-            builder.LinkFromStart(new EditableMarkHistoryVertex(0));
+            builder.LinkFromStart(new MarkHistoryVertex(0));
         }
 
         [Test]
@@ -314,7 +314,7 @@ namespace Apollo.Core.Host.Plugins
             var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
 
             var condition = new ScheduleConditionRegistrationId(typeof(string), 0, "a");
-            builder.LinkFromStart(new EditableInsertVertex(1), condition);
+            builder.LinkFromStart(new InsertVertex(1), condition);
 
             Assert.IsNotNull(id);
         }
@@ -335,7 +335,7 @@ namespace Apollo.Core.Host.Plugins
             }
 
             var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
-            builder.LinkToEnd(new EditableMarkHistoryVertex(0));
+            builder.LinkToEnd(new MarkHistoryVertex(0));
         }
 
         [Test]
@@ -357,7 +357,7 @@ namespace Apollo.Core.Host.Plugins
             var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
 
             var condition = new ScheduleConditionRegistrationId(typeof(string), 0, "a");
-            builder.LinkToEnd(new EditableInsertVertex(1), condition);
+            builder.LinkToEnd(new InsertVertex(1), condition);
 
             Assert.IsNotNull(id);
         }
@@ -369,20 +369,20 @@ namespace Apollo.Core.Host.Plugins
         {
             var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
-            var start = new EditableStartVertex(1);
+            var start = new StartVertex(1);
             graph.AddVertex(start);
 
-            var end = new EditableEndVertex(2);
+            var end = new EndVertex(2);
             graph.AddVertex(end);
             graph.AddEdge(new ScheduleEdge(start, end));
 
-            var schedule = new EditableSchedule(graph, start, end);
+            var schedule = new Schedule(graph, start, end);
             var scheduleBuilder = new Mock<IBuildFixedSchedules>();
             {
                 scheduleBuilder.Setup(s => s.Build())
                     .Returns(schedule);
                 scheduleBuilder.Setup(s => s.AddExecutingAction(It.IsAny<ScheduleElementId>()))
-                    .Returns<ScheduleElementId>(s => new EditableExecutingActionVertex(0, s));
+                    .Returns<ScheduleElementId>(s => new ExecutingActionVertex(0, s));
             }
 
             var actionId = new ScheduleActionRegistrationId(typeof(string), 0, "a");
@@ -391,10 +391,10 @@ namespace Apollo.Core.Host.Plugins
             {
                 owner.Setup(
                     o => o.StoreSchedule(
-                        It.IsAny<IEditableSchedule>(),
+                        It.IsAny<ISchedule>(),
                         It.IsAny<Dictionary<ScheduleActionRegistrationId, ScheduleElementId>>(),
                         It.IsAny<Dictionary<ScheduleConditionRegistrationId, ScheduleElementId>>()))
-                    .Callback<IEditableSchedule, Dictionary<ScheduleActionRegistrationId, ScheduleElementId>, Dictionary<ScheduleConditionRegistrationId, ScheduleElementId>>(
+                    .Callback<ISchedule, Dictionary<ScheduleActionRegistrationId, ScheduleElementId>, Dictionary<ScheduleConditionRegistrationId, ScheduleElementId>>(
                         (s, a, c) => 
                         {
                             Assert.AreElementsEqual(new List<ScheduleActionRegistrationId> { actionId }, a.Keys);

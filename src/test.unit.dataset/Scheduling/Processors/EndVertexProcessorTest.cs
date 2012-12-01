@@ -6,6 +6,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base.Scheduling;
+using Apollo.Core.Extensions.Scheduling;
 using MbUnit.Framework;
 
 namespace Apollo.Core.Dataset.Scheduling.Processors
@@ -19,14 +20,14 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         public void VertexTypeToProcess()
         {
             var processor = new EndVertexProcessor();
-            Assert.AreEqual(typeof(ExecutableEndVertex), processor.VertexTypeToProcess);
+            Assert.AreEqual(typeof(EndVertex), processor.VertexTypeToProcess);
         }
 
         [Test]
         public void ProcessWithIncorrectVertexType()
         {
             var processor = new EndVertexProcessor();
-            var state = processor.Process(new ExecutableStartVertex(1), new ScheduleExecutionInfo());
+            var state = processor.Process(new StartVertex(1), new ScheduleExecutionInfo());
             Assert.AreEqual(ScheduleExecutionState.IncorrectProcessorForVertex, state);
         }
 
@@ -34,7 +35,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         public void Process()
         {
             var processor = new EndVertexProcessor();
-            var state = processor.Process(new ExecutableEndVertex(1), new ScheduleExecutionInfo());
+            var state = processor.Process(new EndVertex(1), new ScheduleExecutionInfo());
             Assert.AreEqual(ScheduleExecutionState.Completed, state);
         }
     }

@@ -18,7 +18,7 @@ namespace Apollo.Core.Extensions.Scheduling
         public void Index()
         {
             var index = 10;
-            var vertex = new EditableStartVertex(index);
+            var vertex = new StartVertex(index);
 
             Assert.AreEqual(index, vertex.Index);
         }

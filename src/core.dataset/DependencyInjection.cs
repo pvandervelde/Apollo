@@ -59,7 +59,7 @@ namespace Apollo.Core.Dataset
             builder.Register(c => new EndVertexProcessor())
                 .As<IProcesExecutableScheduleVertices>();
 
-            builder.Register(c => new NoOpVertexProcessor())
+            builder.Register(c => new InsertVertexProcessor())
                 .As<IProcesExecutableScheduleVertices>();
 
             builder.Register(c => new SubScheduleVertexProcessor(
@@ -82,7 +82,7 @@ namespace Apollo.Core.Dataset
             builder.Register((c, p) => new ScheduleExecutor(
                     c.Resolve<IEnumerable<IProcesExecutableScheduleVertices>>(),
                     c.Resolve<IStoreScheduleConditions>(),
-                    p.TypedAs<ExecutableSchedule>(),
+                    p.TypedAs<ISchedule>(),
                     p.TypedAs<ScheduleId>(),
                     p.TypedAs<ScheduleExecutionInfo>()))
                 .As<IExecuteSchedules>();
@@ -96,7 +96,7 @@ namespace Apollo.Core.Dataset
                             (s, id, i) =>
                             {
                                 return ctx.Resolve<IExecuteSchedules>(
-                                    new TypedParameter(typeof(ExecutableSchedule), s),
+                                    new TypedParameter(typeof(ISchedule), s),
                                     new TypedParameter(typeof(ScheduleId), id),
                                     new TypedParameter(typeof(ScheduleExecutionInfo), i));
                             });

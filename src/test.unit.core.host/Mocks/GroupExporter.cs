@@ -34,7 +34,7 @@ namespace Apollo.Core.Host.Mocks
             var conditionOnProperty = builder.RegisterObject(typeof(ConditionOnProperty));
             builder.Connect(importOnProperty.RegisteredImports.First(), exportOnProperty.RegisteredExports.First());
 
-            EditableInsertVertex insertPoint;
+            InsertVertex insertPoint;
             var registrator = builder.ScheduleRegistrator();
             {
                 var actionVertex = registrator.AddExecutingAction(actionOnMethod.RegisteredActions.First());

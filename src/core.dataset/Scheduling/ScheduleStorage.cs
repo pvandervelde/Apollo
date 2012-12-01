@@ -36,7 +36,7 @@ namespace Apollo.Core.Dataset.Scheduling
             /// <summary>
             /// The schedule.
             /// </summary>
-            private readonly IEditableSchedule m_Schedule;
+            private readonly ISchedule m_Schedule;
 
             /// <summary>
             /// The information describing the schedule.
@@ -48,7 +48,7 @@ namespace Apollo.Core.Dataset.Scheduling
             /// </summary>
             /// <param name="information">The information describing the schedule.</param>
             /// <param name="schedule">The schedule.</param>
-            public ScheduleMap(ScheduleInformation information, IEditableSchedule schedule)
+            public ScheduleMap(ScheduleInformation information, ISchedule schedule)
             {
                 {
                     Debug.Assert(information != null, "The schedule information should not be a null reference.");
@@ -73,7 +73,7 @@ namespace Apollo.Core.Dataset.Scheduling
             /// <summary>
             /// Gets the schedule.
             /// </summary>
-            public IEditableSchedule Schedule
+            public ISchedule Schedule
             {
                 get
                 {
@@ -164,7 +164,7 @@ namespace Apollo.Core.Dataset.Scheduling
         }
 
         /// <summary>
-        /// Adds the <see cref="IEditableSchedule"/> object with the variables it affects and the dependencies for that schedule.
+        /// Adds the <see cref="ISchedule"/> object with the variables it affects and the dependencies for that schedule.
         /// </summary>
         /// <param name="schedule">The schedule that should be stored.</param>
         /// <param name="name">The name of the schedule that is being described by this information object.</param>
@@ -174,7 +174,7 @@ namespace Apollo.Core.Dataset.Scheduling
         ///     Thrown if <paramref name="schedule"/> is <see langword="null" />.
         /// </exception>
         public ScheduleInformation Add(
-            IEditableSchedule schedule,
+            ISchedule schedule,
             string name,
             string description)
         {
@@ -205,7 +205,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// </exception>
         public void Update(
             ScheduleId scheduleToReplace,
-            IEditableSchedule newSchedule)
+            ISchedule newSchedule)
         {
             {
                 Lokad.Enforce.Argument(() => scheduleToReplace);
@@ -260,7 +260,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <exception cref="UnknownScheduleException">
         ///     Thrown if <paramref name="id"/> is not linked to a known schedule.
         /// </exception>
-        public IEditableSchedule Schedule(ScheduleId id)
+        public ISchedule Schedule(ScheduleId id)
         {
             {
                 Lokad.Enforce.Argument(() => id);

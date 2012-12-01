@@ -18,7 +18,7 @@ namespace Apollo.Core.Extensions.Scheduling
         public void Index()
         {
             var index = 10;
-            var vertex = new EditableInsertVertex(index);
+            var vertex = new InsertVertex(index);
 
             Assert.AreEqual(index, vertex.Index);
             Assert.AreEqual(-1, vertex.RemainingInserts);
@@ -29,7 +29,7 @@ namespace Apollo.Core.Extensions.Scheduling
         {
             var index = 10;
             var insertCount = 5;
-            var vertex = new EditableInsertVertex(index, insertCount);
+            var vertex = new InsertVertex(index, insertCount);
 
             Assert.AreEqual(index, vertex.Index);
             Assert.AreEqual(insertCount, vertex.RemainingInserts);

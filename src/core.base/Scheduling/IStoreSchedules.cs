@@ -11,21 +11,21 @@ using Apollo.Core.Extensions.Scheduling;
 namespace Apollo.Core.Base.Scheduling
 {
     /// <summary>
-    /// Defines the interface for objects that store <see cref="IEditableSchedule"/> objects.
+    /// Defines the interface for objects that store <see cref="ISchedule"/> objects.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "While we store schedules here, it's more than just a collection.")]
     public interface IStoreSchedules : IEnumerable<ScheduleId>
     {
         /// <summary>
-        /// Adds the <see cref="IEditableSchedule"/> object with the variables it affects and the dependencies for that schedule.
+        /// Adds the <see cref="ISchedule"/> object with the variables it affects and the dependencies for that schedule.
         /// </summary>
         /// <param name="schedule">The schedule that should be stored.</param>
         /// <param name="name">The name of the schedule that is being described by this information object.</param>
         /// <param name="description">The description of the schedule that is being described by this information object.</param>
         /// <returns>An object identifying and describing the schedule.</returns>
         ScheduleInformation Add(
-            IEditableSchedule schedule,
+            ISchedule schedule,
             string name,
             string description);
 
@@ -36,7 +36,7 @@ namespace Apollo.Core.Base.Scheduling
         /// <param name="newSchedule">The new schedule.</param>
         void Update(
             ScheduleId scheduleToReplace,
-            IEditableSchedule newSchedule);
+            ISchedule newSchedule);
 
         /// <summary>
         /// Removes the schedule with the specified ID.
@@ -60,7 +60,7 @@ namespace Apollo.Core.Base.Scheduling
         /// </summary>
         /// <param name="id">The ID for the schedule.</param>
         /// <returns>The schedule.</returns>
-        IEditableSchedule Schedule(ScheduleId id);
+        ISchedule Schedule(ScheduleId id);
 
         /// <summary>
         /// Returns the schedule information for the schedule that is mapped to the given ID.

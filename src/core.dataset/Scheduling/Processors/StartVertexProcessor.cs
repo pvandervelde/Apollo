@@ -12,7 +12,7 @@ using Apollo.Core.Extensions.Scheduling;
 namespace Apollo.Core.Dataset.Scheduling.Processors
 {
     /// <summary>
-    /// Defines the actions taken when a <see cref="ExecutableStartVertex"/> is encountered while processing
+    /// Defines the actions taken when a <see cref="StartVertex"/> is encountered while processing
     /// an executable schedule.
     /// </summary>
     internal sealed class StartVertexProcessor : IProcesExecutableScheduleVertices
@@ -25,7 +25,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         {
             get
             {
-                return typeof(ExecutableStartVertex);
+                return typeof(StartVertex);
             }
         }
 
@@ -37,7 +37,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         /// <returns>A value indicating if the execution of the schedule should continue.</returns>
         public ScheduleExecutionState Process(IScheduleVertex vertex, ScheduleExecutionInfo executionInfo)
         {
-            var startVertex = vertex as ExecutableStartVertex;
+            var startVertex = vertex as StartVertex;
             if (startVertex == null)
             {
                 Debug.Assert(false, "The vertex is of the incorrect type.");

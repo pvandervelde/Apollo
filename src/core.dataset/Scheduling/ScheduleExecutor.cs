@@ -45,7 +45,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <summary>
         /// The schedule that is being executed.
         /// </summary>
-        private readonly ExecutableSchedule m_Schedule;
+        private readonly ISchedule m_Schedule;
 
         /// <summary>
         /// The ID of the schedule that is being executed.
@@ -93,7 +93,7 @@ namespace Apollo.Core.Dataset.Scheduling
         public ScheduleExecutor(
             IEnumerable<IProcesExecutableScheduleVertices> executors,
             IStoreScheduleConditions conditions,
-            ExecutableSchedule schedule,
+            ISchedule schedule,
             ScheduleId id,
             ScheduleExecutionInfo executionInfo = null)
         {
@@ -217,55 +217,56 @@ namespace Apollo.Core.Dataset.Scheduling
             Justification = "There is no point in letting this exception escape. We will report back in a different way.")]
         private void ExecuteSchedule()
         {
-            var graph = m_Schedule.Graph;
-            var current = m_Schedule.Start;
-
             ScheduleExecutionState state = ScheduleExecutionState.Executing;
-            while (state == ScheduleExecutionState.Executing)
-            {
-                if (m_ExecutionInfo.Cancellation.IsCancellationRequested)
+            m_Schedule.TraverseSchedule(
+                m_Schedule.Start,
+                current =>
                 {
-                    state = ScheduleExecutionState.Canceled;
-                    continue;
-                }
-
-                // If we need to pause we do it here
-                m_ExecutionInfo.PauseHandler.WaitForUnPause(m_ExecutionInfo.Cancellation);
-
-                // Get the executor for the current node type and run it
-                // on the current node. If we fail then we exit the loop
-                {
-                    var type = current.GetType();
-                    if (!m_Executors.ContainsKey(type))
+                    if (m_ExecutionInfo.Cancellation.IsCancellationRequested)
                     {
-                        state = ScheduleExecutionState.NoProcessorForVertex;
-                        continue;
+                        state = ScheduleExecutionState.Canceled;
+                        return false;
                     }
 
-                    RaiseOnVertexProcess(Schedule, current.Index);
-                    var processor = m_Executors[type];
-                    try
+                    // If we need to pause we do it here
+                    m_ExecutionInfo.PauseHandler.WaitForUnPause(m_ExecutionInfo.Cancellation);
+
+                    // Get the executor for the current node type and run it
+                    // on the current node. If we fail then we exit the loop
                     {
-                        ScheduleExecutionState shouldContinue = processor.Process(current, m_ExecutionInfo);
-                        if (shouldContinue != ScheduleExecutionState.Executing)
+                        var type = current.GetType();
+                        if (!m_Executors.ContainsKey(type))
                         {
-                            state = shouldContinue;
-                            continue;
+                            state = ScheduleExecutionState.NoProcessorForVertex;
+                            return false;
                         }
-                    }
-                    catch (Exception)
-                    {
-                        state = ScheduleExecutionState.UnhandledException;
-                        continue;
-                    }
-                }
 
-                // Get all the outedges and find the first edge that we can traverse.
-                // If we don't find any edges then we fail.
+                        RaiseOnVertexProcess(Schedule, current.Index);
+                        var processor = m_Executors[type];
+                        try
+                        {
+                            ScheduleExecutionState shouldContinue = processor.Process(current, m_ExecutionInfo);
+                            if (shouldContinue != ScheduleExecutionState.Executing)
+                            {
+                                state = shouldContinue;
+                                return false;
+                            }
+
+                            RaiseOnExecutionProgress(-1, new ScheduleExecutionProgressMark());
+                        }
+                        catch (Exception)
+                        {
+                            state = ScheduleExecutionState.UnhandledException;
+                            return false;
+                        }
+
+                        return true;
+                    }
+                },
+                availableNodes =>
                 {
-                    var lastVertex = current;
-                    var outEdges = graph.OutEdges(current);
-                    foreach (var edge in outEdges)
+                    IScheduleVertex nextVertex = null;
+                    foreach (var pair in availableNodes)
                     {
                         if (m_ExecutionInfo.Cancellation.IsCancellationRequested)
                         {
@@ -273,11 +274,14 @@ namespace Apollo.Core.Dataset.Scheduling
                             break;
                         }
 
+                        // If we need to pause we do it here
+                        m_ExecutionInfo.PauseHandler.WaitForUnPause(m_ExecutionInfo.Cancellation);
+
                         bool canTraverse = true;
-                        if (edge.TraversingCondition != null)
+                        if (pair.Item1 != null)
                         {
-                            Debug.Assert(m_Conditions.Contains(edge.TraversingCondition), "The traversing condition for the edge does not exist");
-                            var condition = m_Conditions.Condition(edge.TraversingCondition);
+                            Debug.Assert(m_Conditions.Contains(pair.Item1), "The traversing condition for the edge does not exist");
+                            var condition = m_Conditions.Condition(pair.Item1);
                             try
                             {
                                 canTraverse = condition.CanTraverse(m_ExecutionInfo.Cancellation);
@@ -291,20 +295,19 @@ namespace Apollo.Core.Dataset.Scheduling
 
                         if (canTraverse)
                         {
-                            current = edge.Target;
+                            nextVertex = pair.Item2;
                             break;
                         }
                     }
 
                     // If we get here then there were no edges we could traverse. Fail the execution
-                    if (ReferenceEquals(lastVertex, current) && (state == ScheduleExecutionState.Executing))
+                    if ((nextVertex == null) && (state == ScheduleExecutionState.Executing))
                     {
                         state = ScheduleExecutionState.NoTraversableEdgeFound;
                     }
-                }
 
-                RaiseOnExecutionProgress(-1, new ScheduleExecutionProgressMark());
-            }
+                    return nextVertex;
+                });
 
             RaiseOnFinish(state);
 

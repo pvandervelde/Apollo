@@ -18,8 +18,8 @@ namespace Apollo.Core.Base.Scheduling
         [Test]
         public void Create()
         {
-            IScheduleVertex source = new EditableStartVertex(10);
-            IScheduleVertex target = new EditableEndVertex(11);
+            IScheduleVertex source = new StartVertex(10);
+            IScheduleVertex target = new EndVertex(11);
 
             var condition = new ScheduleElementId();
             var edge = new ScheduleEdge(source, target, condition);

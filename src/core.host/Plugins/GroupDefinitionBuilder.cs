@@ -69,7 +69,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// The schedule for the current group.
         /// </summary>
-        private IEditableSchedule m_Schedule;
+        private ISchedule m_Schedule;
 
         /// <summary>
         /// The export for the group.
@@ -243,7 +243,7 @@ namespace Apollo.Core.Host.Plugins
         /// <exception cref="DuplicateContractNameException">
         ///     Thrown if <paramref name="contractName"/> already exists in the collection of imports.
         /// </exception>
-        public void DefineImport(string contractName, EditableInsertVertex insertPoint)
+        public void DefineImport(string contractName, InsertVertex insertPoint)
         {
             DefineImport(contractName, insertPoint, null);
         }
@@ -282,7 +282,7 @@ namespace Apollo.Core.Host.Plugins
         /// <exception cref="DuplicateContractNameException">
         ///     Thrown if <paramref name="contractName"/> already exists in the collection of imports.
         /// </exception>
-        public void DefineImport(string contractName, EditableInsertVertex insertPoint, IEnumerable<ImportRegistrationId> importsToSatisfy)
+        public void DefineImport(string contractName, InsertVertex insertPoint, IEnumerable<ImportRegistrationId> importsToSatisfy)
         {
             if (m_GroupImports.ContainsKey(contractName))
             {
@@ -372,7 +372,7 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="conditionMap">The collection mapping the registered conditions to the schedule element that holds the condition.</param>
         /// <returns>The ID of the newly created schedule.</returns>
         public ScheduleId StoreSchedule(
-            IEditableSchedule schedule,
+            ISchedule schedule,
             Dictionary<ScheduleActionRegistrationId, ScheduleElementId> actionMap,
             Dictionary<ScheduleConditionRegistrationId, ScheduleElementId> conditionMap)
         {

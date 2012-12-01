@@ -241,24 +241,29 @@ namespace Apollo.Core.Dataset.Plugins
         /// <summary>
         /// Connects the exporting group with the importing group via the given import.
         /// </summary>
-        /// <param name="importingGroup">The composition ID of the importing group.</param>
-        /// <param name="importDefinition">The import definition.</param>
-        /// <param name="exportingGroup">The composition ID of the exporting group.</param>
-        public void Connect(GroupCompositionId importingGroup, GroupImportDefinition importDefinition, GroupCompositionId exportingGroup)
+        /// <param name="connection">The object that describes how the group import and the group export should be connected.</param>
+        public void Connect(GroupConnection connection)
         {
             {
-                Lokad.Enforce.Argument(() => importingGroup);
-                Lokad.Enforce.Argument(() => importDefinition);
-                Lokad.Enforce.Argument(() => exportingGroup);
+                Lokad.Enforce.Argument(() => connection);
                 Lokad.Enforce.With<UnknownGroupCompositionIdException>(
-                    m_Groups.ContainsKey(importingGroup),
+                    m_Groups.ContainsKey(connection.ImportingGroup),
                     Resources.Exceptions_Messages_UnknownGroupCompositionId);
                 Lokad.Enforce.With<UnknownGroupCompositionIdException>(
-                    m_Groups.ContainsKey(exportingGroup),
+                    m_Groups.ContainsKey(connection.ExportingGroup),
                     Resources.Exceptions_Messages_UnknownGroupCompositionId);
             }
 
-            m_GroupConnections.AddEdge(new GroupCompositionGraphEdge(importingGroup, importDefinition, exportingGroup));
+            m_GroupConnections.AddEdge(new GroupCompositionGraphEdge(connection.ImportingGroup, connection.GroupImport, connection.ExportingGroup));
+
+            // Parts
+            // var importingParts = m_Parts.PartsByGroup(connection.ImportingGroup)
+            //                 .Select(partId => new Tuple<PartCompositionId, GroupPartDefinition>(partId, m_Parts.Part(partId)));
+            // var exportingParts = m_Parts.PartsByGroup(connection.ExportingGroup)
+            //     .Select(partId => new Tuple<PartCompositionId, GroupPartDefinition>(partId, m_Parts.Part(partId)));
+            // ConnectParts(connection.PartConnections, bla, bla);
+            //
+            // Schedules
         }
 
         private void ConnectParts(

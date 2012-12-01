@@ -96,7 +96,7 @@ namespace Apollo.Core.Base.Plugins
         public static GroupImportDefinition CreateDefinition(
             string contractName, 
             GroupRegistrationId containingGroup, 
-            EditableInsertVertex insertPoint, 
+            InsertVertex insertPoint, 
             IEnumerable<ImportRegistrationId> importsToMatch)
         {
             {
@@ -125,7 +125,7 @@ namespace Apollo.Core.Base.Plugins
         /// <summary>
         /// The schedule import point at which a sub-schedule can be provided.
         /// </summary>
-        private readonly EditableInsertVertex m_InsertPoint;
+        private readonly InsertVertex m_InsertPoint;
 
         /// <summary>
         /// The object imports that have to be provided for the current import.
@@ -142,7 +142,7 @@ namespace Apollo.Core.Base.Plugins
         private GroupImportDefinition(
             string contractName, 
             GroupRegistrationId containingGroup, 
-            EditableInsertVertex insertPoint, 
+            InsertVertex insertPoint, 
             IEnumerable<ImportRegistrationId> importsToMatch)
         {
             {
@@ -182,7 +182,7 @@ namespace Apollo.Core.Base.Plugins
         /// <summary>
         /// Gets the schedule import point at which a sub-schedule can be provided.
         /// </summary>
-        public EditableInsertVertex ScheduleInsertPosition
+        public InsertVertex ScheduleInsertPosition
         {
             get
             {

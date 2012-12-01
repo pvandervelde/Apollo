@@ -12,12 +12,12 @@ using Apollo.Core.Extensions.Scheduling;
 namespace Apollo.Core.Base.Scheduling
 {
     /// <summary>
-    /// Verifies if an <see cref="IEditableSchedule"/> is complete and legal.
+    /// Verifies if an <see cref="ISchedule"/> is complete and legal.
     /// </summary>
     internal sealed class ScheduleVerifier : IVerifyScheduleIntegrity
     {
         private static bool VerifyStartVertexOnlyHasOutboundEdges(
-            IEditableSchedule schedule,
+            ISchedule schedule,
             Action<ScheduleIntegrityFailureType, IScheduleVertex> onValidationFailure)
         {
             var result = (schedule.NumberOfInboundConnections(schedule.Start) == 0) && (schedule.NumberOfOutboundConnections(schedule.Start) >= 1);
@@ -30,7 +30,7 @@ namespace Apollo.Core.Base.Scheduling
         }
 
         private static bool VerifyEndVertexOnlyHasInboundEdges(
-            IEditableSchedule schedule,
+            ISchedule schedule,
             Action<ScheduleIntegrityFailureType, IScheduleVertex> onValidationFailure)
         {
             var result = (schedule.NumberOfOutboundConnections(schedule.End) == 0) && (schedule.NumberOfInboundConnections(schedule.End) >= 1);
@@ -43,13 +43,12 @@ namespace Apollo.Core.Base.Scheduling
         }
 
         private static bool VerifyTrackForwardsFromStart(
-            IEditableSchedule schedule,
+            ISchedule schedule,
             Action<ScheduleIntegrityFailureType, IScheduleVertex> onValidationFailure)
         {
             var unvisitedNodes = new List<IScheduleVertex>(schedule.Vertices);
-            schedule.TraverseSchedule(
+            schedule.TraverseAllScheduleVertices(
                 schedule.Start,
-                true,
                 (node, edges) =>
                 {
                     if (unvisitedNodes.Contains(node))
@@ -73,13 +72,12 @@ namespace Apollo.Core.Base.Scheduling
         }
 
         private static bool VerifyTrackBackwardsFromEnd(
-            IEditableSchedule schedule,
+            ISchedule schedule,
             Action<ScheduleIntegrityFailureType, IScheduleVertex> onValidationFailure)
         {
             var unvisitedNodes = new List<IScheduleVertex>(schedule.Vertices);
-            schedule.TraverseSchedule(
+            schedule.TraverseAllScheduleVertices(
                 schedule.End,
-                false,
                 (node, edges) =>
                 {
                     if (unvisitedNodes.Contains(node))
@@ -88,7 +86,8 @@ namespace Apollo.Core.Base.Scheduling
                     }
 
                     return true;
-                });
+                },
+                false);
 
             var result = unvisitedNodes.Count == 0;
             if (!result)
@@ -103,13 +102,12 @@ namespace Apollo.Core.Base.Scheduling
         }
 
         private static bool VerifyVerticesAreOnlyConnectedByOneEdgeInGivenDirection(
-            IEditableSchedule schedule,
+            ISchedule schedule,
             Action<ScheduleIntegrityFailureType, IScheduleVertex> onValidationFailure)
         {
             bool result = true;
-            schedule.TraverseSchedule(
+            schedule.TraverseAllScheduleVertices(
                 schedule.Start,
-                true,
                 (node, edges) =>
                 {
                     var outNodes = new List<IScheduleVertex>();
@@ -193,8 +191,8 @@ namespace Apollo.Core.Base.Scheduling
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
         public bool IsValid(
-            ScheduleId id, 
-            IEditableSchedule schedule,
+            ScheduleId id,
+            ISchedule schedule,
             Action<ScheduleIntegrityFailureType, IScheduleVertex> onValidationFailure)
         {
             {
@@ -217,16 +215,15 @@ namespace Apollo.Core.Base.Scheduling
 
         private bool VerifySubSchedulesDoNotLinkBackToParentSchedule(
             ScheduleId id,
-            IEditableSchedule schedule,
+            ISchedule schedule,
             Action<ScheduleIntegrityFailureType, IScheduleVertex> onValidationFailure)
         {
             bool result = true;
-            schedule.TraverseSchedule(
+            schedule.TraverseAllScheduleVertices(
                 schedule.Start, 
-                true, 
                 (node, edges) =>
                     {
-                        var scheduleNode = node as EditableSubScheduleVertex;
+                        var scheduleNode = node as SubScheduleVertex;
                         if (scheduleNode == null)
                         {
                             return true;
@@ -254,15 +251,14 @@ namespace Apollo.Core.Base.Scheduling
             return result;
         }
 
-        private bool DoesSubScheduleLinkTo(ScheduleId scheduleId, IEditableSchedule schedule)
+        private bool DoesSubScheduleLinkTo(ScheduleId scheduleId, ISchedule schedule)
         {
             var result = false;
-            schedule.TraverseSchedule(
+            schedule.TraverseAllScheduleVertices(
                 schedule.Start, 
-                true, 
                 (node, edges) =>
                     {
-                        var scheduleNode = node as EditableSubScheduleVertex;
+                        var scheduleNode = node as SubScheduleVertex;
                         if (scheduleNode == null)
                         {
                             return true;

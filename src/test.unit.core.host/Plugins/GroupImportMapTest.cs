@@ -31,7 +31,7 @@ namespace Apollo.Core.Host.Plugins
                 new List<GroupImportMap> 
                     {
                         new GroupImportMap("a"),
-                        new GroupImportMap("b", new EditableInsertVertex(1)),
+                        new GroupImportMap("b", new InsertVertex(1)),
                         new GroupImportMap(
                             "c", 
                             objectImports: new List<ImportRegistrationId> 
@@ -40,7 +40,7 @@ namespace Apollo.Core.Host.Plugins
                                 }),
                         new GroupImportMap(
                             "d", 
-                            new EditableInsertVertex(1),
+                            new InsertVertex(1),
                             new List<ImportRegistrationId> 
                                 { 
                                     new ImportRegistrationId(typeof(string), 0, "aa") 
@@ -55,7 +55,7 @@ namespace Apollo.Core.Host.Plugins
             EquivalenceClasses = new EquivalenceClassCollection
                 { 
                     new GroupImportMap("a"),
-                    new GroupImportMap("b", new EditableInsertVertex(1)),
+                    new GroupImportMap("b", new InsertVertex(1)),
                     new GroupImportMap(
                         "c", 
                         objectImports: new List<ImportRegistrationId> 
@@ -64,7 +64,7 @@ namespace Apollo.Core.Host.Plugins
                             }),
                     new GroupImportMap(
                         "d", 
-                        new EditableInsertVertex(1),
+                        new InsertVertex(1),
                         new List<ImportRegistrationId> 
                             { 
                                 new ImportRegistrationId(typeof(string), 0, "aa") 
@@ -77,7 +77,7 @@ namespace Apollo.Core.Host.Plugins
         {
             var original = new GroupImportMap(
                 "c",
-                new EditableInsertVertex(1),
+                new InsertVertex(1),
                 new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 0, "aa") 
@@ -93,7 +93,7 @@ namespace Apollo.Core.Host.Plugins
             GroupImportMap first = null;
             var second = new GroupImportMap(
                 "c",
-                new EditableInsertVertex(1),
+                new InsertVertex(1),
                 new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 0, "aa") 
@@ -107,7 +107,7 @@ namespace Apollo.Core.Host.Plugins
         {
             var first = new GroupImportMap(
                 "c",
-                new EditableInsertVertex(1),
+                new InsertVertex(1),
                 new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 0, "aa") 
@@ -122,14 +122,14 @@ namespace Apollo.Core.Host.Plugins
         {
             var first = new GroupImportMap(
                 "c",
-                new EditableInsertVertex(1),
+                new InsertVertex(1),
                 new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 0, "aa") 
                     });
             var second = new GroupImportMap(
                 "c",
-                new EditableInsertVertex(2),
+                new InsertVertex(2),
                 new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 1, "aa") 
@@ -143,14 +143,14 @@ namespace Apollo.Core.Host.Plugins
         {
             var first = new GroupImportMap(
                 "c",
-                new EditableInsertVertex(1),
+                new InsertVertex(1),
                 new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 0, "aa") 
                     });
             var second = new GroupImportMap(
                 "d",
-                new EditableInsertVertex(1),
+                new InsertVertex(1),
                 new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 0, "aa") 
@@ -165,7 +165,7 @@ namespace Apollo.Core.Host.Plugins
             GroupImportMap first = null;
             var second = new GroupImportMap(
                 "c",
-                new EditableInsertVertex(1),
+                new InsertVertex(1),
                 new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 0, "aa") 
@@ -179,7 +179,7 @@ namespace Apollo.Core.Host.Plugins
         {
             var first = new GroupImportMap(
                 "c",
-                new EditableInsertVertex(1),
+                new InsertVertex(1),
                 new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 0, "aa") 
@@ -194,14 +194,14 @@ namespace Apollo.Core.Host.Plugins
         {
             var first = new GroupImportMap(
                 "c",
-                new EditableInsertVertex(1),
+                new InsertVertex(1),
                 new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 0, "aa") 
                     });
             var second = new GroupImportMap(
                 "c",
-                new EditableInsertVertex(2),
+                new InsertVertex(2),
                 new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 1, "aa") 
@@ -215,14 +215,14 @@ namespace Apollo.Core.Host.Plugins
         {
             var first = new GroupImportMap(
                 "c",
-                new EditableInsertVertex(1),
+                new InsertVertex(1),
                 new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 0, "aa") 
                     });
             var second = new GroupImportMap(
                 "d",
-                new EditableInsertVertex(1),
+                new InsertVertex(1),
                 new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 0, "aa") 
@@ -235,7 +235,7 @@ namespace Apollo.Core.Host.Plugins
         public void Create()
         {
             var name = "a";
-            var insertVertex = new EditableInsertVertex(1);
+            var insertVertex = new InsertVertex(1);
             var imports = new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 0, "aa") 
@@ -252,7 +252,7 @@ namespace Apollo.Core.Host.Plugins
         {
             var first = new GroupImportMap(
                 "c",
-                new EditableInsertVertex(1),
+                new InsertVertex(1),
                 new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 0, "aa") 
@@ -267,14 +267,14 @@ namespace Apollo.Core.Host.Plugins
         {
             var first = new GroupImportMap(
                 "c",
-                new EditableInsertVertex(1),
+                new InsertVertex(1),
                 new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 0, "aa") 
                     });
             object second = new GroupImportMap(
                 "c",
-                new EditableInsertVertex(2),
+                new InsertVertex(2),
                 new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 1, "aa") 
@@ -288,14 +288,14 @@ namespace Apollo.Core.Host.Plugins
         {
             var first = new GroupImportMap(
                 "c",
-                new EditableInsertVertex(1),
+                new InsertVertex(1),
                 new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 0, "aa") 
                     });
             object second = new GroupImportMap(
                 "d",
-                new EditableInsertVertex(1),
+                new InsertVertex(1),
                 new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 0, "aa") 
@@ -309,7 +309,7 @@ namespace Apollo.Core.Host.Plugins
         {
             var first = new GroupImportMap(
                 "c",
-                new EditableInsertVertex(1),
+                new InsertVertex(1),
                 new List<ImportRegistrationId> 
                     { 
                         new ImportRegistrationId(typeof(string), 0, "aa") 

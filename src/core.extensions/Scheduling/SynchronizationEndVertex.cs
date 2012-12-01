@@ -5,19 +5,17 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using Apollo.Core.Extensions.Plugins;
-using Apollo.Core.Extensions.Scheduling;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Core.Extensions.Scheduling
 {
     /// <summary>
-    /// Stores a group ID and an import ID to uniquely identify an import.
+    /// A vertex for the schedule which marks the position where a set of variables
+    /// should be synchronized.
     /// </summary>
     [Serializable]
-    internal sealed class GroupImportMap : IEquatable<GroupImportMap>
+    public sealed class SynchronizationEndVertex : IScheduleVertex
     {
         /// <summary>
         /// Implements the operator ==.
@@ -25,7 +23,7 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator ==(GroupImportMap first, GroupImportMap second)
+        public static bool operator ==(SynchronizationEndVertex first, SynchronizationEndVertex second)
         {
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
@@ -52,7 +50,7 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator !=(GroupImportMap first, GroupImportMap second)
+        public static bool operator !=(SynchronizationEndVertex first, SynchronizationEndVertex second)
         {
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
@@ -74,93 +72,34 @@ namespace Apollo.Core.Host.Plugins
         }
 
         /// <summary>
-        /// The contract name for the import.
+        /// Initializes a new instance of the <see cref="SynchronizationEndVertex"/> class.
         /// </summary>
-        private readonly string m_ContractName;
-
-        /// <summary>
-        /// The location where a sub-schedule can be inserted in the schedule owned by the group that
-        /// published the current import.
-        /// </summary>
-        private readonly InsertVertex m_InsertPoint;
-
-        /// <summary>
-        /// The collection of object imports that should be satisfied.
-        /// </summary>
-        private readonly IEnumerable<ImportRegistrationId> m_ObjectImports;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GroupImportMap"/> class.
-        /// </summary>
-        /// <param name="contractName">The contract name for the import.</param>
-        /// <param name="insertPoint">
-        /// The location where a sub-schedule can be inserted in the schedule owned by the group that
-        /// published the current import.
-        /// </param>
-        /// <param name="objectImports">The collection of object imports that should be satisfied.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="contractName"/> is an empty string.
-        /// </exception>
-        public GroupImportMap(string contractName, InsertVertex insertPoint = null, IEnumerable<ImportRegistrationId> objectImports = null)
+        /// <param name="index">The index of the vertex in the graph.</param>
+        public SynchronizationEndVertex(int index)
         {
-            {
-                Lokad.Enforce.Argument(() => contractName);
-                Lokad.Enforce.Argument(() => contractName, Lokad.Rules.StringIs.NotEmpty);
-            }
-
-            m_InsertPoint = insertPoint;
-            m_ContractName = contractName;
-            m_ObjectImports = objectImports;
+            Index = index;
         }
 
         /// <summary>
-        /// Gets the contract name for the current import.
+        /// Gets the index of the vertex in the graph.
         /// </summary>
-        public string ContractName
+        public int Index
         {
-            get
-            {
-                return m_ContractName;
-            }
+            get;
+            private set;
         }
 
         /// <summary>
-        /// Gets the location where a sub-schedule can be inserted in the schedule owned by the group that
-        /// published the current import.
+        /// Determines whether the specified <see cref="IScheduleVertex"/> is equal to this instance.
         /// </summary>
-        public InsertVertex InsertPoint
-        {
-            get
-            {
-                return m_InsertPoint;
-            }
-        }
-
-        /// <summary>
-        /// Gets the collection of object imports that should be satisfied.
-        /// </summary>
-        public IEnumerable<ImportRegistrationId> ObjectImports
-        {
-            get
-            {
-                return m_ObjectImports;
-            }
-        }
-
-        /// <summary>
-        /// Determines whether the specified <see cref="GroupImportMap"/> is equal to this instance.
-        /// </summary>
-        /// <param name="other">The <see cref="GroupImportMap"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="IScheduleVertex"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="GroupImportMap"/> is equal to this instance;
+        ///     <see langword="true"/> if the specified <see cref="IScheduleVertex"/> is equal to this instance;
         ///     otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public bool Equals(GroupImportMap other)
+        public bool Equals(IScheduleVertex other)
         {
             if (ReferenceEquals(this, other))
             {
@@ -171,7 +110,8 @@ namespace Apollo.Core.Host.Plugins
             // we overload the == operator. If other isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
             return !ReferenceEquals(other, null)
-                && string.Equals(ContractName, other.ContractName, StringComparison.Ordinal);
+                && Index == other.Index
+                && GetType().Equals(other.GetType());
         }
 
         /// <summary>
@@ -191,7 +131,7 @@ namespace Apollo.Core.Host.Plugins
                 return true;
             }
 
-            var id = obj as GroupImportMap;
+            var id = obj as IScheduleVertex;
             return Equals(id);
         }
 
@@ -214,7 +154,9 @@ namespace Apollo.Core.Host.Plugins
                 int hash = 17;
 
                 // Mash the hash together with yet another random prime number
-                hash = (hash * 23) ^ ContractName.GetHashCode();
+                hash = (hash * 23) ^ Index.GetHashCode();
+                hash = (hash * 23) ^ GetType().GetHashCode();
+
                 return hash;
             }
         }
@@ -227,7 +169,11 @@ namespace Apollo.Core.Host.Plugins
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "[{0}]", ContractName);
+            return string.Format(
+                CultureInfo.InvariantCulture,
+                "{0}: {1}",
+                GetType().Name,
+                Index);
         }
     }
 }

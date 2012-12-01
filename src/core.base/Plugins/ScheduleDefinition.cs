@@ -98,7 +98,7 @@ namespace Apollo.Core.Base.Plugins
         /// </exception>
         public static ScheduleDefinition CreateDefinition(
             GroupRegistrationId containingGroup,
-            IEditableSchedule schedule,
+            ISchedule schedule,
             IDictionary<ScheduleElementId, ScheduleActionRegistrationId> actions,
             IDictionary<ScheduleElementId, ScheduleConditionRegistrationId> conditions)
         {
@@ -120,7 +120,7 @@ namespace Apollo.Core.Base.Plugins
         /// <summary>
         /// The schedule that is described by this definition.
         /// </summary>
-        private readonly IEditableSchedule m_Schedule;
+        private readonly ISchedule m_Schedule;
 
         /// <summary>
         /// The collection that maps a schedule element to a schedule action.
@@ -141,7 +141,7 @@ namespace Apollo.Core.Base.Plugins
         /// <param name="conditions">The collection that maps a schedule element to a condition.</param>
         private ScheduleDefinition(
             GroupRegistrationId containingGroup,
-            IEditableSchedule schedule,
+            ISchedule schedule,
             IDictionary<ScheduleElementId, ScheduleActionRegistrationId> actions,
             IDictionary<ScheduleElementId, ScheduleConditionRegistrationId> conditions)
         {
@@ -172,7 +172,7 @@ namespace Apollo.Core.Base.Plugins
         /// <summary>
         /// Gets the schedule for the current group.
         /// </summary>
-        public IEditableSchedule Schedule
+        public ISchedule Schedule
         {
             get
             {

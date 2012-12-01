@@ -37,14 +37,14 @@ namespace Apollo.Core.Host.Plugins
                 return false;
             }
 
-            if (first is EditableExecutingActionVertex)
+            if (first is ExecutingActionVertex)
             {
-                return ((EditableExecutingActionVertex)first).ActionToExecute == ((EditableExecutingActionVertex)second).ActionToExecute;
+                return ((ExecutingActionVertex)first).ActionToExecute == ((ExecutingActionVertex)second).ActionToExecute;
             }
 
-            if (first is EditableSubScheduleVertex)
+            if (first is SubScheduleVertex)
             {
-                return ((EditableSubScheduleVertex)first).ScheduleToExecute == ((EditableSubScheduleVertex)second).ScheduleToExecute;
+                return ((SubScheduleVertex)first).ScheduleToExecute == ((SubScheduleVertex)second).ScheduleToExecute;
             }
 
             return true;
@@ -537,8 +537,8 @@ namespace Apollo.Core.Host.Plugins
                 new IScheduleVertex[] 
                     { 
                         group.Schedule.Schedule.Start, 
-                        new EditableExecutingActionVertex(2, group.Schedule.Actions.First().Key), 
-                        new EditableInsertVertex(3),
+                        new ExecutingActionVertex(2, group.Schedule.Actions.First().Key), 
+                        new InsertVertex(3),
                         group.Schedule.Schedule.End 
                     },
                 group.Schedule.Schedule.Vertices,

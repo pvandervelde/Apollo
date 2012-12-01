@@ -4,6 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
+
 namespace Apollo.Core.Extensions.Scheduling
 {
     /// <summary>
@@ -13,7 +15,7 @@ namespace Apollo.Core.Extensions.Scheduling
     /// All schedule vertices should be immutable because a schedule is copied
     /// by reusing the vertices.
     /// </remarks>
-    public interface IScheduleVertex
+    public interface IScheduleVertex : IEquatable<IScheduleVertex>
     {
         /// <summary>
         /// Gets the index of the vertex in the graph.

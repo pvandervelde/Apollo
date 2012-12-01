@@ -24,7 +24,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         {
             var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
             var processor = new ActionVertexProcessor(collection);
-            Assert.AreEqual(typeof(ExecutableActionVertex), processor.VertexTypeToProcess);
+            Assert.AreEqual(typeof(ExecutingActionVertex), processor.VertexTypeToProcess);
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         {
             var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
             var processor = new ActionVertexProcessor(collection);
-            var state = processor.Process(new ExecutableStartVertex(1), new ScheduleExecutionInfo());
+            var state = processor.Process(new StartVertex(1), new ScheduleExecutionInfo());
             Assert.AreEqual(ScheduleExecutionState.IncorrectProcessorForVertex, state);
         }
 
@@ -55,7 +55,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
             executionInfo.CancelScheduleExecution();
 
             var processor = new ActionVertexProcessor(collection);
-            var state = processor.Process(new ExecutableActionVertex(1, info.Id), executionInfo);
+            var state = processor.Process(new ExecutingActionVertex(1, info.Id), executionInfo);
             Assert.AreEqual(ScheduleExecutionState.Canceled, state);
         }
 
@@ -81,7 +81,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
                 "b");
 
             var processor = new ActionVertexProcessor(collection);
-            var state = processor.Process(new ExecutableActionVertex(1, info.Id), new ScheduleExecutionInfo());
+            var state = processor.Process(new ExecutingActionVertex(1, info.Id), new ScheduleExecutionInfo());
             Assert.AreEqual(ScheduleExecutionState.Executing, state);
             action.Verify(a => a.Execute(It.IsAny<CancellationToken>()), Times.Once());
         }

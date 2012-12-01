@@ -19,7 +19,7 @@ namespace Apollo.Core.Extensions.Scheduling
         {
             var index = 10;
             var subScheduleId = new ScheduleId();
-            var vertex = new EditableSubScheduleVertex(index, subScheduleId);
+            var vertex = new SubScheduleVertex(index, subScheduleId);
 
             Assert.AreEqual(index, vertex.Index);
             Assert.AreSame(subScheduleId, vertex.ScheduleToExecute);

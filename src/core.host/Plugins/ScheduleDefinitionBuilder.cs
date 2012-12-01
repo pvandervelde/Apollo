@@ -65,7 +65,7 @@ namespace Apollo.Core.Host.Plugins
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="action"/> is <see langword="null" />.
         /// </exception>
-        public EditableExecutingActionVertex AddExecutingAction(ScheduleActionRegistrationId action)
+        public ExecutingActionVertex AddExecutingAction(ScheduleActionRegistrationId action)
         {
             {
                 Lokad.Enforce.Argument(() => action);
@@ -93,7 +93,7 @@ namespace Apollo.Core.Host.Plugins
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="schedule"/> is <see langword="null" />.
         /// </exception>
-        public EditableSubScheduleVertex AddSubSchedule(ScheduleId schedule)
+        public SubScheduleVertex AddSubSchedule(ScheduleId schedule)
         {
             {
                 Lokad.Enforce.Argument(() => schedule);
@@ -108,7 +108,7 @@ namespace Apollo.Core.Host.Plugins
         /// </summary>
         /// <param name="variables">The collection of variables that should be synchronized.</param>
         /// <returns>The vertex that contains the synchronization information.</returns>
-        public EditableSynchronizationStartVertex AddSynchronizationStart(IEnumerable<IScheduleVariable> variables)
+        public SynchronizationStartVertex AddSynchronizationStart(IEnumerable<IScheduleVariable> variables)
         {
             return m_Builder.AddSynchronizationStart(variables);
         }
@@ -118,7 +118,7 @@ namespace Apollo.Core.Host.Plugins
         /// </summary>
         /// <param name="startPoint">The vertex that forms the start point of the block.</param>
         /// <returns>The vertex that indicates the end of a synchronization block.</returns>
-        public EditableSynchronizationEndVertex AddSynchronizationEnd(EditableSynchronizationStartVertex startPoint)
+        public SynchronizationEndVertex AddSynchronizationEnd(SynchronizationStartVertex startPoint)
         {
             return m_Builder.AddSynchronizationEnd(startPoint);
         }
@@ -129,7 +129,7 @@ namespace Apollo.Core.Host.Plugins
         /// current point in time later on.
         /// </summary>
         /// <returns>The vertex that indicates that the current state should be stored in the <see cref="Timeline"/>.</returns>
-        public EditableMarkHistoryVertex AddHistoryMarkingPoint()
+        public MarkHistoryVertex AddHistoryMarkingPoint()
         {
             return m_Builder.AddHistoryMarkingPoint();
         }
@@ -138,7 +138,7 @@ namespace Apollo.Core.Host.Plugins
         /// Adds a vertex which can be replaced by another set of vertices.
         /// </summary>
         /// <returns>The vertex that indicates a place in the schedule where new vertices can be inserted.</returns>
-        public EditableInsertVertex AddInsertPoint()
+        public InsertVertex AddInsertPoint()
         {
             return m_Builder.AddInsertPoint();
         }
@@ -148,7 +148,7 @@ namespace Apollo.Core.Host.Plugins
         /// </summary>
         /// <param name="maximumNumberOfInserts">The maximum number of times another vertex can be inserted in place of the insert vertex.</param>
         /// <returns>The vertex that indicates a place in the schedule where new vertices can be inserted.</returns>
-        public EditableInsertVertex AddInsertPoint(int maximumNumberOfInserts)
+        public InsertVertex AddInsertPoint(int maximumNumberOfInserts)
         {
             return m_Builder.AddInsertPoint(maximumNumberOfInserts);
         }

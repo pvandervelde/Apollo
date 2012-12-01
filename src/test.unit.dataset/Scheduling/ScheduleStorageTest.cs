@@ -32,7 +32,7 @@ namespace Apollo.Core.Dataset.Scheduling
         public void Add()
         {
             var collection = ScheduleStorage.BuildStorageWithoutTimeline();
-            var schedule = new Mock<IEditableSchedule>();
+            var schedule = new Mock<ISchedule>();
 
             var info = collection.Add(schedule.Object, "a", "b");
             Assert.AreSame(info, collection.Information(info.Id));
@@ -43,7 +43,7 @@ namespace Apollo.Core.Dataset.Scheduling
         public void AddWithDuplicate()
         {
             var collection = ScheduleStorage.BuildStorageWithoutTimeline();
-            var schedule = new Mock<IEditableSchedule>();
+            var schedule = new Mock<ISchedule>();
 
             var info = collection.Add(schedule.Object, "a", "b");
             Assert.AreSame(info, collection.Information(info.Id));
@@ -58,10 +58,10 @@ namespace Apollo.Core.Dataset.Scheduling
         public void UpdateWithNullId()
         {
             var collection = ScheduleStorage.BuildStorageWithoutTimeline();
-            var schedule = new Mock<IEditableSchedule>();
+            var schedule = new Mock<ISchedule>();
 
             var info = collection.Add(schedule.Object, "a", "b");
-            var otherSchedule = new Mock<IEditableSchedule>();
+            var otherSchedule = new Mock<ISchedule>();
             Assert.Throws<ArgumentNullException>(() => collection.Update(null, otherSchedule.Object));
         }
 
@@ -69,10 +69,10 @@ namespace Apollo.Core.Dataset.Scheduling
         public void UpdateWithUnknownId()
         {
             var collection = ScheduleStorage.BuildStorageWithoutTimeline();
-            var schedule = new Mock<IEditableSchedule>();
+            var schedule = new Mock<ISchedule>();
 
             var info = collection.Add(schedule.Object, "a", "b");
-            var otherSchedule = new Mock<IEditableSchedule>();
+            var otherSchedule = new Mock<ISchedule>();
             Assert.Throws<UnknownScheduleException>(() => collection.Update(new ScheduleId(), otherSchedule.Object));
         }
 
@@ -80,7 +80,7 @@ namespace Apollo.Core.Dataset.Scheduling
         public void UpdateWithNullSchedule()
         {
             var collection = ScheduleStorage.BuildStorageWithoutTimeline();
-            var schedule = new Mock<IEditableSchedule>();
+            var schedule = new Mock<ISchedule>();
 
             var info = collection.Add(schedule.Object, "a", "b");
             Assert.Throws<ArgumentNullException>(() => collection.Update(info.Id, null));
@@ -90,12 +90,12 @@ namespace Apollo.Core.Dataset.Scheduling
         public void Update()
         {
             var collection = ScheduleStorage.BuildStorageWithoutTimeline();
-            var schedule = new Mock<IEditableSchedule>();
+            var schedule = new Mock<ISchedule>();
 
             var info = collection.Add(schedule.Object, "a", "b");
             Assert.AreSame(schedule.Object, collection.Schedule(info.Id));
 
-            var otherSchedule = new Mock<IEditableSchedule>();
+            var otherSchedule = new Mock<ISchedule>();
             collection.Update(info.Id, otherSchedule.Object);
             var otherInfo = collection.Information(info.Id);
             Assert.AreEqual(info.Id, otherInfo.Id);
@@ -116,7 +116,7 @@ namespace Apollo.Core.Dataset.Scheduling
         public void Remove()
         {
             var collection = ScheduleStorage.BuildStorageWithoutTimeline();
-            var schedule = new Mock<IEditableSchedule>();
+            var schedule = new Mock<ISchedule>();
 
             var info = collection.Add(schedule.Object, "a", "b");
             Assert.IsTrue(collection.Contains(info.Id));
@@ -129,7 +129,7 @@ namespace Apollo.Core.Dataset.Scheduling
         public void Contains()
         {
             var collection = ScheduleStorage.BuildStorageWithoutTimeline();
-            var schedule = new Mock<IEditableSchedule>();
+            var schedule = new Mock<ISchedule>();
 
             var info = collection.Add(schedule.Object, "a", "b");
             Assert.IsTrue(collection.Contains(info.Id));

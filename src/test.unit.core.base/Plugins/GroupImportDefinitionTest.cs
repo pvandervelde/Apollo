@@ -49,7 +49,7 @@ namespace Apollo.Core.Base.Plugins
                         GroupImportDefinition.CreateDefinition(
                             "g", 
                             new GroupRegistrationId("h"), 
-                            new EditableInsertVertex(0, 1), 
+                            new InsertVertex(0, 1), 
                             Enumerable.Empty<ImportRegistrationId>()),
                     },
         };
@@ -78,7 +78,7 @@ namespace Apollo.Core.Base.Plugins
                     GroupImportDefinition.CreateDefinition(
                         "g", 
                         new GroupRegistrationId("h"), 
-                        new EditableInsertVertex(0, 1), 
+                        new InsertVertex(0, 1), 
                         Enumerable.Empty<ImportRegistrationId>()),
                 },
         };
@@ -221,7 +221,7 @@ namespace Apollo.Core.Base.Plugins
         {
             var groupId = new GroupRegistrationId("a");
             var contractName = "b";
-            var vertex = new EditableInsertVertex(0, 1);
+            var vertex = new InsertVertex(0, 1);
             var imports = new List<ImportRegistrationId> { new ImportRegistrationId(typeof(string), 0, "a") };
             var obj = GroupImportDefinition.CreateDefinition(contractName, groupId, vertex, imports);
 

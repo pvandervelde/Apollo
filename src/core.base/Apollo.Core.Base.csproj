@@ -265,11 +265,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Scheduling\EditableSchedule.cs" />
+    <Compile Include="Scheduling\Schedule.cs" />
     <Compile Include="Scheduling\FixedScheduleBuilder.cs" />
     <Compile Include="Scheduling\IBuildFixedSchedules.cs" />
     <Compile Include="Scheduling\IBuildSchedules.cs" />
-    <Compile Include="Scheduling\IEditableSchedule.cs" />
     <Compile Include="Scheduling\ISchedule.cs" />
     <Compile Include="Scheduling\IScheduleAction.cs" />
     <Compile Include="Scheduling\IScheduleCondition.cs" />

@@ -21,14 +21,14 @@ namespace Apollo.Core.Extensions.Plugins
         /// </summary>
         /// <param name="action">The ID of the action that should be added.</param>
         /// <returns>The vertex that contains the information about the given action.</returns>
-        EditableExecutingActionVertex AddExecutingAction(ScheduleActionRegistrationId action);
+        ExecutingActionVertex AddExecutingAction(ScheduleActionRegistrationId action);
 
         /// <summary>
         /// Adds the schedule with the specified ID as a sub-schedule to the current schedule.
         /// </summary>
         /// <param name="schedule">The ID of the sub-schedule.</param>
         /// <returns>The vertex that contains the information about the given sub-schedule.</returns>
-        EditableSubScheduleVertex AddSubSchedule(ScheduleId schedule);
+        SubScheduleVertex AddSubSchedule(ScheduleId schedule);
 
         /// <summary>
         /// Adds a vertex that indicates the start of a synchronization block over which the given variables
@@ -36,14 +36,14 @@ namespace Apollo.Core.Extensions.Plugins
         /// </summary>
         /// <param name="variables">The collection of variables that should be synchronized.</param>
         /// <returns>The vertex that contains the synchronization information.</returns>
-        EditableSynchronizationStartVertex AddSynchronizationStart(IEnumerable<IScheduleVariable> variables);
+        SynchronizationStartVertex AddSynchronizationStart(IEnumerable<IScheduleVariable> variables);
 
         /// <summary>
         /// Adds a vertex that indicates the end of a synchronization block.
         /// </summary>
         /// <param name="startPoint">The vertex that forms the start point of the block.</param>
         /// <returns>The vertex that indicates the end of a synchronization block.</returns>
-        EditableSynchronizationEndVertex AddSynchronizationEnd(EditableSynchronizationStartVertex startPoint);
+        SynchronizationEndVertex AddSynchronizationEnd(SynchronizationStartVertex startPoint);
 
         /// <summary>
         /// Adds a vertex which indicates that the current values of all history-enabled data should
@@ -51,20 +51,20 @@ namespace Apollo.Core.Extensions.Plugins
         /// current point in time later on.
         /// </summary>
         /// <returns>The vertex that indicates that the current state should be stored in the <see cref="Timeline"/>.</returns>
-        EditableMarkHistoryVertex AddHistoryMarkingPoint();
+        MarkHistoryVertex AddHistoryMarkingPoint();
 
         /// <summary>
         /// Adds a vertex which can be replaced by another set of vertices.
         /// </summary>
         /// <returns>The vertex that indicates a place in the schedule where new vertices can be inserted.</returns>
-        EditableInsertVertex AddInsertPoint();
+        InsertVertex AddInsertPoint();
 
         /// <summary>
         /// Adds a vertex which can be replaced by another set of vertices.
         /// </summary>
         /// <param name="maximumNumberOfInserts">The maximum number of times another vertex can be inserted in place of the insert vertex.</param>
         /// <returns>The vertex that indicates a place in the schedule where new vertices can be inserted.</returns>
-        EditableInsertVertex AddInsertPoint(int maximumNumberOfInserts);
+        InsertVertex AddInsertPoint(int maximumNumberOfInserts);
 
         /// <summary>
         /// Links the given start vertex to the end vertex.

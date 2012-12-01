@@ -27,48 +27,48 @@ namespace Apollo.Core.Base.Scheduling
             = new Dictionary<Type, Func<IScheduleVertex, int, IScheduleVertex>>
             {
                 { 
-                    typeof(EditableStartVertex), 
-                    (vertex, index) => new EditableStartVertex(index) 
+                    typeof(StartVertex), 
+                    (vertex, index) => new StartVertex(index) 
                 },
                 { 
-                    typeof(EditableEndVertex), 
-                    (vertex, index) => new EditableEndVertex(index) 
+                    typeof(EndVertex), 
+                    (vertex, index) => new EndVertex(index) 
                 },
                 { 
-                    typeof(EditableInsertVertex), 
-                    (vertex, index) => new EditableInsertVertex(index) 
+                    typeof(InsertVertex), 
+                    (vertex, index) => new InsertVertex(index) 
                 },
                 { 
-                    typeof(EditableMarkHistoryVertex), 
-                    (vertex, index) => new EditableMarkHistoryVertex(index) 
+                    typeof(MarkHistoryVertex), 
+                    (vertex, index) => new MarkHistoryVertex(index) 
                 },
                 { 
-                    typeof(EditableSynchronizationStartVertex), 
-                    (vertex, index) => new EditableSynchronizationStartVertex(
+                    typeof(SynchronizationStartVertex), 
+                    (vertex, index) => new SynchronizationStartVertex(
                         index, 
-                        ((EditableSynchronizationStartVertex)vertex).VariablesToSynchronizeOn)
+                        ((SynchronizationStartVertex)vertex).VariablesToSynchronizeOn)
                 },
                 { 
-                    typeof(EditableSynchronizationEndVertex), 
-                    (vertex, index) => new EditableSynchronizationEndVertex(index) 
+                    typeof(SynchronizationEndVertex), 
+                    (vertex, index) => new SynchronizationEndVertex(index) 
                 },
                 {
-                    typeof(EditableExecutingActionVertex),
-                    (vertex, index) => new EditableExecutingActionVertex(
+                    typeof(ExecutingActionVertex),
+                    (vertex, index) => new ExecutingActionVertex(
                         index,
-                        ((EditableExecutingActionVertex)vertex).ActionToExecute)
+                        ((ExecutingActionVertex)vertex).ActionToExecute)
                 },
                 { 
-                    typeof(EditableSubScheduleVertex), 
-                    (vertex, index) => new EditableSubScheduleVertex(
+                    typeof(SubScheduleVertex), 
+                    (vertex, index) => new SubScheduleVertex(
                         index, 
-                        ((EditableSubScheduleVertex)vertex).ScheduleToExecute) 
+                        ((SubScheduleVertex)vertex).ScheduleToExecute) 
                 },
             };
 
-        private static IScheduleVertex CloneVertex(IScheduleVertex vertex, int newVertexIndex)
+        private static IScheduleVertex CloneVertex(IScheduleVertex vertex)
         {
-            return s_VertexBuilder[vertex.GetType()](vertex, newVertexIndex);
+            return s_VertexBuilder[vertex.GetType()](vertex, vertex.Index);
         }
 
         private static Tuple<BidirectionalGraph<IScheduleVertex, ScheduleEdge>, IScheduleVertex, IScheduleVertex> CopyGraph(
@@ -78,7 +78,7 @@ namespace Apollo.Core.Base.Scheduling
             var map = new Dictionary<IScheduleVertex, IScheduleVertex>();
             var newGraph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>(false);
 
-            var startVertex = CloneVertex(start, newGraph.VertexCount);
+            var startVertex = CloneVertex(start);
             newGraph.AddVertex(startVertex);
             map.Add(start, startVertex);
 
@@ -101,7 +101,7 @@ namespace Apollo.Core.Base.Scheduling
                     var target = outEdge.Target;
                     if (!map.ContainsKey(target))
                     {
-                        var targetVertex = CloneVertex(target, newGraph.VertexCount);
+                        var targetVertex = CloneVertex(target);
                         newGraph.AddVertex(targetVertex);
                         map.Add(target, targetVertex);
                     }
@@ -114,27 +114,26 @@ namespace Apollo.Core.Base.Scheduling
                 }
             }
 
-            var endVertex = map.First(p => p.Value is EditableEndVertex).Value;
+            var endVertex = map.First(p => p.Value is EndVertex).Value;
             return new Tuple<BidirectionalGraph<IScheduleVertex, ScheduleEdge>, IScheduleVertex, IScheduleVertex>(newGraph, startVertex, endVertex);
         }
 
         private static Tuple<BidirectionalGraph<IScheduleVertex, ScheduleEdge>, IScheduleVertex, IScheduleVertex> CopySchedule(
-            IEditableSchedule schedule)
+            ISchedule schedule)
         {
             var map = new Dictionary<IScheduleVertex, IScheduleVertex>();
             var newSchedule = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
-            var start = CloneVertex(schedule.Start, newSchedule.VertexCount);
+            var start = CloneVertex(schedule.Start);
             newSchedule.AddVertex(start);
             map.Add(schedule.Start, start);
 
-            var end = CloneVertex(schedule.End, newSchedule.VertexCount);
+            var end = CloneVertex(schedule.End);
             newSchedule.AddVertex(end);
             map.Add(schedule.End, end);
 
-            schedule.TraverseSchedule(
+            schedule.TraverseAllScheduleVertices(
                 schedule.Start,
-                true,
                 (vertex, edges) =>
                 {
                     foreach (var pair in edges)
@@ -142,7 +141,7 @@ namespace Apollo.Core.Base.Scheduling
                         var target = pair.Item2;
                         if (!map.ContainsKey(target))
                         {
-                            var executableVertex = CloneVertex(target, newSchedule.VertexCount);
+                            var executableVertex = CloneVertex(target);
                             map.Add(target, executableVertex);
                             newSchedule.AddVertex(executableVertex);
                         }
@@ -180,10 +179,10 @@ namespace Apollo.Core.Base.Scheduling
         {
             m_Schedule = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>(false);
 
-            m_Start = new EditableStartVertex(m_Schedule.VertexCount);
+            m_Start = new StartVertex(m_Schedule.VertexCount);
             m_Schedule.AddVertex(m_Start);
 
-            m_End = new EditableEndVertex(m_Schedule.VertexCount);
+            m_End = new EndVertex(m_Schedule.VertexCount);
             m_Schedule.AddVertex(m_End);
         }
 
@@ -194,7 +193,7 @@ namespace Apollo.Core.Base.Scheduling
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="scheduleToStartWith"/> is <see langword="null" />.
         /// </exception>
-        public FixedScheduleBuilder(IEditableSchedule scheduleToStartWith)
+        public FixedScheduleBuilder(ISchedule scheduleToStartWith)
         {
             {
                 Lokad.Enforce.Argument(() => scheduleToStartWith);
@@ -214,13 +213,13 @@ namespace Apollo.Core.Base.Scheduling
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="action"/> is <see langword="null" />.
         /// </exception>
-        public EditableExecutingActionVertex AddExecutingAction(ScheduleElementId action)
+        public ExecutingActionVertex AddExecutingAction(ScheduleElementId action)
         {
             {
                 Lokad.Enforce.Argument(() => action);
             }
 
-            var result = new EditableExecutingActionVertex(m_Schedule.VertexCount, action);
+            var result = new ExecutingActionVertex(m_Schedule.VertexCount, action);
             m_Schedule.AddVertex(result);
 
             return result;
@@ -234,13 +233,13 @@ namespace Apollo.Core.Base.Scheduling
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="schedule"/> is <see langword="null" />.
         /// </exception>
-        public EditableSubScheduleVertex AddSubSchedule(ScheduleId schedule)
+        public SubScheduleVertex AddSubSchedule(ScheduleId schedule)
         {
             {
                 Lokad.Enforce.Argument(() => schedule);
             }
 
-            var result = new EditableSubScheduleVertex(m_Schedule.VertexCount, schedule);
+            var result = new SubScheduleVertex(m_Schedule.VertexCount, schedule);
             m_Schedule.AddVertex(result);
 
             return result;
@@ -258,7 +257,7 @@ namespace Apollo.Core.Base.Scheduling
         /// <exception cref="CannotCreateASynchronizationBlockWithoutVariablesException">
         ///     Thrown if <paramref name="variables"/> is an empty collection.
         /// </exception>
-        public EditableSynchronizationStartVertex AddSynchronizationStart(IEnumerable<IScheduleVariable> variables)
+        public SynchronizationStartVertex AddSynchronizationStart(IEnumerable<IScheduleVariable> variables)
         {
             {
                 Lokad.Enforce.Argument(() => variables);
@@ -267,7 +266,7 @@ namespace Apollo.Core.Base.Scheduling
                     Resources.Exceptions_Messages_CannotCreateASynchronizationBlockWithoutVariables);
             }
 
-            var result = new EditableSynchronizationStartVertex(m_Schedule.VertexCount, variables);
+            var result = new SynchronizationStartVertex(m_Schedule.VertexCount, variables);
             m_Schedule.AddVertex(result);
 
             return result;
@@ -284,7 +283,7 @@ namespace Apollo.Core.Base.Scheduling
         /// <exception cref="UnknownScheduleVertexException">
         ///     Thrown if <paramref name="startPoint"/> is not part of the current schedule.
         /// </exception>
-        public EditableSynchronizationEndVertex AddSynchronizationEnd(EditableSynchronizationStartVertex startPoint)
+        public SynchronizationEndVertex AddSynchronizationEnd(SynchronizationStartVertex startPoint)
         {
             {
                 Lokad.Enforce.Argument(() => startPoint);
@@ -293,7 +292,7 @@ namespace Apollo.Core.Base.Scheduling
                     Resources.Exceptions_Messages_UnknownScheduleVertex);
             }
 
-            var result = new EditableSynchronizationEndVertex(m_Schedule.VertexCount);
+            var result = new SynchronizationEndVertex(m_Schedule.VertexCount);
             m_Schedule.AddVertex(result);
 
             return result;
@@ -305,9 +304,9 @@ namespace Apollo.Core.Base.Scheduling
         /// current point in time later on.
         /// </summary>
         /// <returns>The vertex that indicates that the current state should be stored in the <see cref="Timeline"/>.</returns>
-        public EditableMarkHistoryVertex AddHistoryMarkingPoint()
+        public MarkHistoryVertex AddHistoryMarkingPoint()
         {
-            var result = new EditableMarkHistoryVertex(m_Schedule.VertexCount);
+            var result = new MarkHistoryVertex(m_Schedule.VertexCount);
             m_Schedule.AddVertex(result);
 
             return result;
@@ -317,9 +316,9 @@ namespace Apollo.Core.Base.Scheduling
         /// Adds a vertex which can be replaced by another set of vertices.
         /// </summary>
         /// <returns>The vertex that indicates a place in the schedule where new vertices can be inserted.</returns>
-        public EditableInsertVertex AddInsertPoint()
+        public InsertVertex AddInsertPoint()
         {
-            var result = new EditableInsertVertex(m_Schedule.VertexCount);
+            var result = new InsertVertex(m_Schedule.VertexCount);
             m_Schedule.AddVertex(result);
 
             return result;
@@ -333,7 +332,7 @@ namespace Apollo.Core.Base.Scheduling
         /// <exception cref="ArgumentOutOfRangeException">
         ///     Thrown if <paramref name="maximumNumberOfInserts"/> is zero or smaller.
         /// </exception>
-        public EditableInsertVertex AddInsertPoint(int maximumNumberOfInserts)
+        public InsertVertex AddInsertPoint(int maximumNumberOfInserts)
         {
             {
                 Lokad.Enforce.With<ArgumentOutOfRangeException>(
@@ -341,7 +340,7 @@ namespace Apollo.Core.Base.Scheduling
                     Resources.Exceptions_Messages_CannotCreateInsertVertexWithLessThanOneInsert);
             }
 
-            var result = new EditableInsertVertex(m_Schedule.VertexCount, maximumNumberOfInserts);
+            var result = new InsertVertex(m_Schedule.VertexCount, maximumNumberOfInserts);
             m_Schedule.AddVertex(result);
 
             return result;
@@ -369,8 +368,8 @@ namespace Apollo.Core.Base.Scheduling
         /// <exception cref="NoInsertsLeftOnVertexException">
         ///     Thrown if <paramref name="insertVertex"/> has no more inserts left.
         /// </exception>
-        public Tuple<EditableInsertVertex, EditableInsertVertex> InsertIn(
-            EditableInsertVertex insertVertex,
+        public Tuple<InsertVertex, InsertVertex> InsertIn(
+            InsertVertex insertVertex,
             IScheduleVertex vertexToInsert)
         {
             {
@@ -402,15 +401,15 @@ namespace Apollo.Core.Base.Scheduling
             // Create two new insert vertices to be placed on either side of the new vertex
             var count = (insertVertex.RemainingInserts != -1) ? insertVertex.RemainingInserts - 1 : -1;
 
-            EditableInsertVertex inboundInsert = null;
-            EditableInsertVertex outboundInsert = null;
+            InsertVertex inboundInsert = null;
+            InsertVertex outboundInsert = null;
             if ((count == -1) || (count > 0))
             {
-                inboundInsert = new EditableInsertVertex(m_Schedule.VertexCount, count);
+                inboundInsert = new InsertVertex(m_Schedule.VertexCount, count);
                 m_Schedule.AddVertex(inboundInsert);
                 m_Schedule.AddEdge(new ScheduleEdge(inboundInsert, vertexToInsert, null));
 
-                outboundInsert = new EditableInsertVertex(m_Schedule.VertexCount, count);
+                outboundInsert = new InsertVertex(m_Schedule.VertexCount, count);
                 m_Schedule.AddVertex(outboundInsert);
                 m_Schedule.AddEdge(new ScheduleEdge(vertexToInsert, outboundInsert, null));
             }
@@ -433,7 +432,7 @@ namespace Apollo.Core.Base.Scheduling
             // connected to it.
             m_Schedule.RemoveVertex(insertVertex);
 
-            return new Tuple<EditableInsertVertex, EditableInsertVertex>(inboundInsert, outboundInsert);
+            return new Tuple<InsertVertex, InsertVertex>(inboundInsert, outboundInsert);
         }
 
         /// <summary>
@@ -459,14 +458,14 @@ namespace Apollo.Core.Base.Scheduling
         /// <exception cref="NoInsertsLeftOnVertexException">
         ///     Thrown if <paramref name="insertVertex"/> has no more inserts left.
         /// </exception>
-        public Tuple<EditableInsertVertex, EditableSubScheduleVertex, EditableInsertVertex> InsertIn(
-            EditableInsertVertex insertVertex,
+        public Tuple<InsertVertex, SubScheduleVertex, InsertVertex> InsertIn(
+            InsertVertex insertVertex,
             ScheduleId scheduleToInsert)
         {
-            var subScheduleVertex = new EditableSubScheduleVertex(m_Schedule.VertexCount, scheduleToInsert);
+            var subScheduleVertex = new SubScheduleVertex(m_Schedule.VertexCount, scheduleToInsert);
             var internalResult = InsertIn(insertVertex, subScheduleVertex);
 
-            return new Tuple<EditableInsertVertex, EditableSubScheduleVertex, EditableInsertVertex>(
+            return new Tuple<InsertVertex, SubScheduleVertex, InsertVertex>(
                 internalResult.Item1,
                 subScheduleVertex,
                 internalResult.Item2);
@@ -621,10 +620,10 @@ namespace Apollo.Core.Base.Scheduling
         /// <returns>
         /// A new schedule with all the information that was stored.
         /// </returns>
-        public IEditableSchedule Build()
+        public ISchedule Build()
         {
             var tuple = CopyGraph(m_Schedule, m_Start);
-            return new EditableSchedule(
+            return new Schedule(
                 tuple.Item1,
                 tuple.Item2,
                 tuple.Item3);

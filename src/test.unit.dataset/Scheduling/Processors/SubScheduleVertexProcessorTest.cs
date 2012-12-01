@@ -23,7 +23,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         {
             var distributor = new Mock<IDistributeScheduleExecutions>();
             var processor = new SubScheduleVertexProcessor(distributor.Object);
-            Assert.AreEqual(typeof(ExecutableSubScheduleVertex), processor.VertexTypeToProcess);
+            Assert.AreEqual(typeof(SubScheduleVertex), processor.VertexTypeToProcess);
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         {
             var distributor = new Mock<IDistributeScheduleExecutions>();
             var processor = new SubScheduleVertexProcessor(distributor.Object);
-            var state = processor.Process(new ExecutableStartVertex(1), new ScheduleExecutionInfo());
+            var state = processor.Process(new StartVertex(1), new ScheduleExecutionInfo());
             Assert.AreEqual(ScheduleExecutionState.IncorrectProcessorForVertex, state);
         }
 
@@ -43,7 +43,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
             info.CancelScheduleExecution();
 
             var processor = new SubScheduleVertexProcessor(distributor.Object);
-            var state = processor.Process(new ExecutableSubScheduleVertex(1, new ScheduleId()), info);
+            var state = processor.Process(new SubScheduleVertex(1, new ScheduleId()), info);
             Assert.AreEqual(ScheduleExecutionState.Canceled, state);
         }
 
@@ -77,7 +77,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
             var id = new ScheduleId();
 
             var processor = new SubScheduleVertexProcessor(distributor.Object);
-            var state = processor.Process(new ExecutableSubScheduleVertex(1, id), new ScheduleExecutionInfo());
+            var state = processor.Process(new SubScheduleVertex(1, id), new ScheduleExecutionInfo());
             Assert.AreEqual(ScheduleExecutionState.Executing, state);
             distributor.Verify(
                 d => d.Execute(

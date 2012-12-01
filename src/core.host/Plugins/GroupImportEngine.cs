@@ -174,6 +174,7 @@ namespace Apollo.Core.Host.Plugins
             GroupImportDefinition importDefinition,
             GroupCompositionId exportingGroup)
         {
+            // foobar();
             throw new NotImplementedException();
         }
     }

@@ -44,10 +44,8 @@ namespace Apollo.Core.Dataset.Plugins
         /// <summary>
         /// Connects the exporting group with the importing group via the given import.
         /// </summary>
-        /// <param name="importingGroup">The composition ID of the importing group.</param>
-        /// <param name="importDefinition">The import definition.</param>
-        /// <param name="exportingGroup">The composition ID of the exporting group.</param>
-        void Connect(GroupCompositionId importingGroup, GroupImportDefinition importDefinition, GroupCompositionId exportingGroup);
+        /// <param name="connection">The object that describes how the group import and the group export should be connected.</param>
+        void Connect(GroupConnection connection);
 
         /// <summary>
         /// Disconnects the exporting group from the importing group.

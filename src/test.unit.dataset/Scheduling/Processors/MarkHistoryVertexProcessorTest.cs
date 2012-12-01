@@ -6,6 +6,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base.Scheduling;
+using Apollo.Core.Extensions.Scheduling;
 using Apollo.Utilities.History;
 using MbUnit.Framework;
 using Moq;
@@ -22,7 +23,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         {
             var timeline = new Mock<ITimeline>();
             var processor = new MarkHistoryVertexProcessor(timeline.Object, m => { });
-            Assert.AreEqual(typeof(ExecutableMarkHistoryVertex), processor.VertexTypeToProcess);
+            Assert.AreEqual(typeof(MarkHistoryVertex), processor.VertexTypeToProcess);
         }
 
         [Test]
@@ -30,7 +31,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         {
             var timeline = new Mock<ITimeline>();
             var processor = new MarkHistoryVertexProcessor(timeline.Object, m => { });
-            var state = processor.Process(new ExecutableStartVertex(1), new ScheduleExecutionInfo());
+            var state = processor.Process(new StartVertex(1), new ScheduleExecutionInfo());
             Assert.AreEqual(ScheduleExecutionState.IncorrectProcessorForVertex, state);
         }
 
@@ -42,7 +43,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
             info.CancelScheduleExecution();
 
             var processor = new MarkHistoryVertexProcessor(timeline.Object, m => { });
-            var state = processor.Process(new ExecutableMarkHistoryVertex(1), info);
+            var state = processor.Process(new MarkHistoryVertex(1), info);
             Assert.AreEqual(ScheduleExecutionState.Canceled, state);
         }
 
@@ -64,7 +65,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
 
             TimeMarker storedMarker = null;
             var processor = new MarkHistoryVertexProcessor(timeline.Object, m => storedMarker = m);
-            var state = processor.Process(new ExecutableMarkHistoryVertex(1), new ScheduleExecutionInfo());
+            var state = processor.Process(new MarkHistoryVertex(1), new ScheduleExecutionInfo());
             Assert.AreEqual(ScheduleExecutionState.Executing, state);
             Assert.AreEqual(marker, storedMarker);
         }

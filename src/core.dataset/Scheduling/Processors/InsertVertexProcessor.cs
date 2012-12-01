@@ -12,10 +12,10 @@ using Apollo.Core.Extensions.Scheduling;
 namespace Apollo.Core.Dataset.Scheduling.Processors
 {
     /// <summary>
-    /// Defines the actions taken when a <see cref="ExecutableNoOpVertex"/> is encountered while processing
+    /// Defines the actions taken when a <see cref="InsertVertex"/> is encountered while processing
     /// an executable schedule.
     /// </summary>
-    internal sealed class NoOpVertexProcessor : IProcesExecutableScheduleVertices
+    internal sealed class InsertVertexProcessor : IProcesExecutableScheduleVertices
     {
         /// <summary>
         /// Gets the type of the <see cref="IScheduleVertex"/> that will be processed by
@@ -25,7 +25,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         {
             get
             {
-                return typeof(ExecutableNoOpVertex);
+                return typeof(InsertVertex);
             }
         }
 
@@ -37,7 +37,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         /// <returns>A value indicating if the execution of the schedule should continue.</returns>
         public ScheduleExecutionState Process(IScheduleVertex vertex, ScheduleExecutionInfo executionInfo)
         {
-            var startVertex = vertex as ExecutableNoOpVertex;
+            var startVertex = vertex as InsertVertex;
             if (startVertex == null)
             {
                 Debug.Assert(false, "The vertex is of the incorrect type.");

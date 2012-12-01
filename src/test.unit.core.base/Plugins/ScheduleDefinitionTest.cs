@@ -20,18 +20,18 @@ namespace Apollo.Core.Base.Plugins
             Justification = "Unit tests do not need documentation.")]
     public sealed class ScheduleDefinitionTest
     {
-        private static IEditableSchedule BuildSchedule()
+        private static ISchedule BuildSchedule()
         {
             var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
-            var start = new EditableStartVertex(1);
+            var start = new StartVertex(1);
             graph.AddVertex(start);
 
-            var end = new EditableEndVertex(2);
+            var end = new EndVertex(2);
             graph.AddVertex(end);
             graph.AddEdge(new ScheduleEdge(start, end));
 
-            return new EditableSchedule(graph, start, end);
+            return new Schedule(graph, start, end);
         }
 
         [VerifyContract]

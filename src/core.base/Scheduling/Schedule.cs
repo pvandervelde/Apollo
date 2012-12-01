@@ -18,7 +18,7 @@ namespace Apollo.Core.Base.Scheduling
     /// Stores a schedule in editable format.
     /// </summary>
     [Serializable]
-    internal sealed class EditableSchedule : IEditableSchedule
+    internal sealed class Schedule : ISchedule
     {
         /// <summary>
         /// The graph of schedule nodes.
@@ -44,12 +44,12 @@ namespace Apollo.Core.Base.Scheduling
         private readonly IScheduleVertex m_End;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EditableSchedule"/> class.
+        /// Initializes a new instance of the <see cref="Schedule"/> class.
         /// </summary>
         /// <param name="graph">The graph that describes the current schedule.</param>
         /// <param name="start">The start node for the schedule.</param>
         /// <param name="end">The end node for the schedule.</param>
-        public EditableSchedule(
+        public Schedule(
             BidirectionalGraph<IScheduleVertex, ScheduleEdge> graph,
             IScheduleVertex start,
             IScheduleVertex end)
@@ -58,11 +58,11 @@ namespace Apollo.Core.Base.Scheduling
                 Debug.Assert(graph != null, "The graph should not be a null reference.");
 
                 Debug.Assert(start != null, "The start vertex should not be a null reference.");
-                Debug.Assert(start is EditableStartVertex, "The start vertex should be an editable start vertex.");
+                Debug.Assert(start is StartVertex, "The start vertex should be an editable start vertex.");
                 Debug.Assert(graph.ContainsVertex(start), "The start vertex should be part of the graph.");
 
                 Debug.Assert(end != null, "The end vertex should not be a null reference.");
-                Debug.Assert(end is EditableEndVertex, "The end vertex should be an editable end vertex.");
+                Debug.Assert(end is EndVertex, "The end vertex should be an editable end vertex.");
                 Debug.Assert(graph.ContainsVertex(end), "The end vertex should be part of the graph.");
             }
 
@@ -109,19 +109,19 @@ namespace Apollo.Core.Base.Scheduling
         /// Traverses the schedule and applies an action to each vertex visited.
         /// </summary>
         /// <param name="start">The vertex where the traverse should be started.</param>
-        /// <param name="traverseViaOutBoundVertices">
-        /// A flag indicating if the schedule should be traversed via the outbound edges of the vertices, or the inbound ones.
-        /// </param>
         /// <param name="vertexAction">
         /// The action taken for each vertex that is encountered. The action is provided with the current vertex and
         /// a collection of all outbound, if <paramref name="traverseViaOutBoundVertices"/> is <see langword="true" />,
         /// or inbound vertices and the ID of the traversing condition. The function should return <see langword="false" />
         /// to terminate the traverse.
         /// </param>
-        public void TraverseSchedule(
-            IScheduleVertex start,
-            bool traverseViaOutBoundVertices,
-            Func<IScheduleVertex, IEnumerable<Tuple<ScheduleElementId, IScheduleVertex>>, bool> vertexAction)
+        /// <param name="traverseViaOutBoundVertices">
+        /// A flag indicating if the schedule should be traversed via the outbound edges of the vertices, or the inbound ones.
+        /// </param>
+        public void TraverseAllScheduleVertices(
+            IScheduleVertex start, 
+            Func<IScheduleVertex, IEnumerable<Tuple<ScheduleElementId, IScheduleVertex>>, bool> vertexAction, 
+            bool traverseViaOutBoundVertices = true)
         {
             {
                 Lokad.Enforce.Argument(() => start);
@@ -166,6 +166,60 @@ namespace Apollo.Core.Base.Scheduling
         }
 
         /// <summary>
+        /// Traverses the schedule and applies an action to each vertex visited.
+        /// </summary>
+        /// <param name="start">The vertex where the traverse should be started.</param>
+        /// <param name="vertexAction">
+        /// The action taken for each vertex that is encountered. The function is provided with the current vertex and
+        /// a collection of all outbound, if <paramref name="traverseViaOutboundVertices"/> is <see langword="true" />,
+        /// or inbound vertices and the ID of the traversing condition. The function should return <see langword="false" />
+        /// to terminate the traverse.
+        /// </param>
+        /// <param name="directionAction">
+        /// The function that determines in which direction the traverse should proceed. The function is provided with
+        /// a collection of all outbound, if <paramref name="traverseViaOutboundVertices"/> is <see langword="true" />,
+        /// or inbound vertices and the ID of the traversing condition. The function should return the next vertex
+        /// that should be traversed, or <see langword="null" /> if the traverse should be terminated.
+        /// </param>
+        /// <param name="traverseViaOutboundVertices">
+        /// A flag indicating if the schedule should be traversed via the outbound edges of the vertices, or the inbound ones.
+        /// </param>
+        public void TraverseSchedule(
+            IScheduleVertex start,
+            Func<IScheduleVertex, bool> vertexAction,
+            Func<IEnumerable<Tuple<ScheduleElementId, IScheduleVertex>>, IScheduleVertex> directionAction,
+            bool traverseViaOutboundVertices = true)
+        {
+            {
+                Lokad.Enforce.Argument(() => start);
+                Lokad.Enforce.With<UnknownScheduleVertexException>(
+                    m_Graph.ContainsVertex(start),
+                    Resources.Exceptions_Messages_UnknownScheduleVertex);
+
+                Lokad.Enforce.Argument(() => vertexAction);
+                Lokad.Enforce.Argument(() => directionAction);
+            }
+
+            var source = start;
+            while (source != null)
+            {
+                var result = vertexAction(source);
+                if (!result)
+                {
+                    return;
+                }
+
+                var outEdges = traverseViaOutboundVertices ? m_Graph.OutEdges(source) : m_Graph.InEdges(source);
+                var traverseMap = from edge in outEdges
+                                  select new Tuple<ScheduleElementId, IScheduleVertex>(
+                                      edge.TraversingCondition,
+                                      traverseViaOutboundVertices ? edge.Target : edge.Source);
+
+                source = directionAction(traverseMap);
+            }
+        }
+
+        /// <summary>
         /// Returns the number of vertices which connect to the current vertex.
         /// </summary>
         /// <param name="origin">The vertex for which the number of inbound connections should be returned.</param>
@@ -189,11 +243,11 @@ namespace Apollo.Core.Base.Scheduling
         /// Returns a collection containing all the insert points for the schedule.
         /// </summary>
         /// <returns>The collection that contains all the insert points for the schedule.</returns>
-        public IEnumerable<EditableInsertVertex> InsertPoints()
+        public IEnumerable<InsertVertex> InsertPoints()
         {
             var result = from vertex in m_Graph.Vertices
-                         where vertex is EditableInsertVertex
-                         select vertex as EditableInsertVertex;
+                         where vertex is InsertVertex
+                         select vertex as InsertVertex;
 
             return result;
         }

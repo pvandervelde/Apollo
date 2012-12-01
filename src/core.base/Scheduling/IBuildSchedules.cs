@@ -17,6 +17,6 @@ namespace Apollo.Core.Base.Scheduling
         /// <returns>
         /// A new schedule with all the information that was stored.
         /// </returns>
-        IEditableSchedule Build();
+        ISchedule Build();
     }
 }

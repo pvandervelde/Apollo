@@ -18,7 +18,7 @@ namespace Apollo.Core.Extensions.Scheduling
         public void Create()
         {
             var index = 10;
-            var vertex = new EditableSynchronizationEndVertex(index);
+            var vertex = new SynchronizationEndVertex(index);
 
             Assert.AreEqual(index, vertex.Index);
         }

@@ -13,7 +13,7 @@ using Apollo.Utilities.History;
 namespace Apollo.Core.Dataset.Scheduling.Processors
 {
     /// <summary>
-    /// Defines the actions taken when a <see cref="ExecutableMarkHistoryVertex"/> is encountered while processing
+    /// Defines the actions taken when a <see cref="MarkHistoryVertex"/> is encountered while processing
     /// an executable schedule.
     /// </summary>
     internal sealed class MarkHistoryVertexProcessor : IProcesExecutableScheduleVertices
@@ -58,7 +58,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         {
             get
             {
-                return typeof(ExecutableMarkHistoryVertex);
+                return typeof(MarkHistoryVertex);
             }
         }
 
@@ -70,7 +70,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         /// <returns>A value indicating if the execution of the schedule should continue.</returns>
         public ScheduleExecutionState Process(IScheduleVertex vertex, ScheduleExecutionInfo executionInfo)
         {
-            var markVertex = vertex as ExecutableMarkHistoryVertex;
+            var markVertex = vertex as MarkHistoryVertex;
             if (markVertex == null)
             {
                 Debug.Assert(false, "The vertex is of the incorrect type.");

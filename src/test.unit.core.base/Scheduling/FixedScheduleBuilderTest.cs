@@ -21,22 +21,7 @@ namespace Apollo.Core.Base.Scheduling
     {
         private static bool AreVerticesEqual(IScheduleVertex first, IScheduleVertex second)
         {
-            if (first.GetType() != second.GetType())
-            {
-                return false;
-            }
-
-            if (first is EditableExecutingActionVertex)
-            {
-                return ((EditableExecutingActionVertex)first).ActionToExecute == ((EditableExecutingActionVertex)second).ActionToExecute;
-            }
-
-            if (first is EditableSubScheduleVertex)
-            {
-                return ((EditableSubScheduleVertex)first).ScheduleToExecute == ((EditableSubScheduleVertex)second).ScheduleToExecute;
-            }
-
-            return true;
+            return first.Equals(second);
         }
 
         [Test]
@@ -53,16 +38,16 @@ namespace Apollo.Core.Base.Scheduling
             var templateSchedule = templateBuilder.Build();
 
             var builder = new FixedScheduleBuilder(templateSchedule);
-            var markHistoryVertex = builder.AddHistoryMarkingPoint();
+            var markHistoryVertex = new MarkHistoryVertex(10);
             builder.InsertIn(insertVertex, markHistoryVertex);
             var schedule = builder.Build();
 
             int index = 0;
             var vertexTypes = new List<Type> 
                 { 
-                    typeof(EditableStartVertex), 
-                    typeof(EditableMarkHistoryVertex), 
-                    typeof(EditableEndVertex) 
+                    typeof(StartVertex), 
+                    typeof(MarkHistoryVertex), 
+                    typeof(EndVertex) 
                 };
             var conditions = new List<ScheduleElementId> 
                 { 
@@ -70,9 +55,8 @@ namespace Apollo.Core.Base.Scheduling
                     conditionId2 
                 };
 
-            schedule.TraverseSchedule(
+            schedule.TraverseAllScheduleVertices(
                 schedule.Start,
-                true,
                 (vertex, edges) =>
                 {
                     Assert.AreEqual(vertexTypes[index], vertex.GetType());
@@ -159,7 +143,7 @@ namespace Apollo.Core.Base.Scheduling
             var builder = new FixedScheduleBuilder();
             Assert.Throws<UnknownScheduleVertexException>(
                 () => builder.AddSynchronizationEnd(
-                    new EditableSynchronizationStartVertex(
+                    new SynchronizationStartVertex(
                         10, 
                         new IScheduleVariable[] 
                             { 
@@ -251,7 +235,7 @@ namespace Apollo.Core.Base.Scheduling
             var builder = new FixedScheduleBuilder();
             var markHistoryVertex = builder.AddHistoryMarkingPoint();
             Assert.Throws<UnknownScheduleVertexException>(
-                () => builder.InsertIn(new EditableInsertVertex(10), markHistoryVertex));
+                () => builder.InsertIn(new InsertVertex(10), markHistoryVertex));
         }
 
         [Test]
@@ -272,7 +256,7 @@ namespace Apollo.Core.Base.Scheduling
             builder.LinkFromStart(insertVertex, null);
             builder.LinkToEnd(insertVertex, null);
 
-            var markHistoryVertex1 = new EditableMarkHistoryVertex(10);
+            var markHistoryVertex1 = new MarkHistoryVertex(10);
             var newInserts = builder.InsertIn(insertVertex, markHistoryVertex1);
             Assert.IsNull(newInserts.Item1);
             Assert.IsNull(newInserts.Item2);
@@ -289,18 +273,18 @@ namespace Apollo.Core.Base.Scheduling
             builder.LinkFromStart(insertVertex, conditionId1);
             builder.LinkToEnd(insertVertex, conditionId2);
 
-            var markHistoryVertex = new EditableMarkHistoryVertex(10);
+            var markHistoryVertex = new MarkHistoryVertex(10);
             builder.InsertIn(insertVertex, markHistoryVertex);
             var schedule = builder.Build();
 
             int index = 0;
             var vertexTypes = new List<Type> 
                 { 
-                    typeof(EditableStartVertex), 
-                    typeof(EditableInsertVertex), 
-                    typeof(EditableMarkHistoryVertex), 
-                    typeof(EditableInsertVertex), 
-                    typeof(EditableEndVertex) 
+                    typeof(StartVertex), 
+                    typeof(InsertVertex), 
+                    typeof(MarkHistoryVertex), 
+                    typeof(InsertVertex), 
+                    typeof(EndVertex) 
                 };
             var conditions = new List<ScheduleElementId> 
                 { 
@@ -310,9 +294,8 @@ namespace Apollo.Core.Base.Scheduling
                     conditionId2 
                 };
 
-            schedule.TraverseSchedule(
+            schedule.TraverseAllScheduleVertices(
                 schedule.Start,
-                true,
                 (vertex, edges) =>
                 {
                     Assert.AreEqual(vertexTypes[index], vertex.GetType());
@@ -338,16 +321,16 @@ namespace Apollo.Core.Base.Scheduling
             builder.LinkFromStart(insertVertex, conditionId1);
             builder.LinkToEnd(insertVertex, conditionId2);
 
-            var markHistoryVertex = new EditableMarkHistoryVertex(10);
+            var markHistoryVertex = new MarkHistoryVertex(10);
             builder.InsertIn(insertVertex, markHistoryVertex);
             var schedule = builder.Build();
 
             int index = 0;
             var vertexTypes = new List<Type> 
                 { 
-                    typeof(EditableStartVertex), 
-                    typeof(EditableMarkHistoryVertex), 
-                    typeof(EditableEndVertex) 
+                    typeof(StartVertex), 
+                    typeof(MarkHistoryVertex), 
+                    typeof(EndVertex) 
                 };
             var conditions = new List<ScheduleElementId> 
                 { 
@@ -355,9 +338,8 @@ namespace Apollo.Core.Base.Scheduling
                     conditionId2 
                 };
 
-            schedule.TraverseSchedule(
+            schedule.TraverseAllScheduleVertices(
                 schedule.Start,
-                true,
                 (vertex, edges) =>
                 {
                     Assert.AreEqual(vertexTypes[index], vertex.GetType());
@@ -390,11 +372,11 @@ namespace Apollo.Core.Base.Scheduling
             int index = 0;
             var vertexTypes = new List<Type> 
                 { 
-                    typeof(EditableStartVertex), 
-                    typeof(EditableInsertVertex), 
-                    typeof(EditableSubScheduleVertex), 
-                    typeof(EditableInsertVertex), 
-                    typeof(EditableEndVertex) 
+                    typeof(StartVertex), 
+                    typeof(InsertVertex), 
+                    typeof(SubScheduleVertex), 
+                    typeof(InsertVertex), 
+                    typeof(EndVertex) 
                 };
             var conditions = new List<ScheduleElementId> 
                 { 
@@ -404,9 +386,8 @@ namespace Apollo.Core.Base.Scheduling
                     conditionId2 
                 };
 
-            schedule.TraverseSchedule(
+            schedule.TraverseAllScheduleVertices(
                 schedule.Start,
-                true,
                 (vertex, edges) =>
                 {
                     Assert.AreEqual(vertexTypes[index], vertex.GetType());
@@ -426,7 +407,7 @@ namespace Apollo.Core.Base.Scheduling
         {
             var builder = new FixedScheduleBuilder();
             var insertVertex = builder.AddInsertPoint();
-            var otherVertex = new EditableInsertVertex(10);
+            var otherVertex = new InsertVertex(10);
             Assert.Throws<UnknownScheduleVertexException>(() => builder.LinkTo(otherVertex, insertVertex));
         }
 
@@ -435,7 +416,7 @@ namespace Apollo.Core.Base.Scheduling
         {
             var builder = new FixedScheduleBuilder();
             var insertVertex = builder.AddInsertPoint();
-            var otherVertex = new EditableInsertVertex(10);
+            var otherVertex = new InsertVertex(10);
             Assert.Throws<UnknownScheduleVertexException>(() => builder.LinkTo(insertVertex, otherVertex));
         }
 
@@ -444,7 +425,7 @@ namespace Apollo.Core.Base.Scheduling
         {
             var builder = new FixedScheduleBuilder();
             var insertVertex = builder.AddInsertPoint();
-            var otherVertex = new EditableInsertVertex(10);
+            var otherVertex = new InsertVertex(10);
             Assert.Throws<CannotLinkAVertexToItselfException>(() => builder.LinkTo(insertVertex, insertVertex));
         }
 
@@ -452,7 +433,7 @@ namespace Apollo.Core.Base.Scheduling
         public void LinkFromStartWithUnknownVertex()
         {
             var builder = new FixedScheduleBuilder();
-            var otherVertex = new EditableInsertVertex(10);
+            var otherVertex = new InsertVertex(10);
             Assert.Throws<UnknownScheduleVertexException>(() => builder.LinkFromStart(otherVertex));
         }
 
@@ -460,7 +441,7 @@ namespace Apollo.Core.Base.Scheduling
         public void LinkToEndWithUnknownVertex()
         {
             var builder = new FixedScheduleBuilder();
-            var otherVertex = new EditableInsertVertex(10);
+            var otherVertex = new InsertVertex(10);
             Assert.Throws<UnknownScheduleVertexException>(() => builder.LinkToEnd(otherVertex));
         }
     }

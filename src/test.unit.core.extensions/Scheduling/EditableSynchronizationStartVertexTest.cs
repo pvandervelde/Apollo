@@ -23,7 +23,7 @@ namespace Apollo.Core.Extensions.Scheduling
 
             var index = 10;
             var variables = new List<IScheduleVariable> { variable.Object };
-            var vertex = new EditableSynchronizationStartVertex(index, variables);
+            var vertex = new SynchronizationStartVertex(index, variables);
 
             Assert.AreEqual(index, vertex.Index);
             Assert.AreSame(variables, vertex.VariablesToSynchronizeOn);

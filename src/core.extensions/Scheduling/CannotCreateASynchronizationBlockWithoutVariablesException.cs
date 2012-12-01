@@ -11,7 +11,7 @@ using Apollo.Core.Extensions.Properties;
 namespace Apollo.Core.Extensions.Scheduling
 {
     /// <summary>
-    /// An exception thrown when the user tries to create a <see cref="EditableSynchronizationStartVertex"/> without variables.
+    /// An exception thrown when the user tries to create a <see cref="SynchronizationStartVertex"/> without variables.
     /// </summary>
     [Serializable]
     public sealed class CannotCreateASynchronizationBlockWithoutVariablesException : Exception
