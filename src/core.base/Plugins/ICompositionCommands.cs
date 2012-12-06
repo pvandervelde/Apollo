@@ -14,7 +14,7 @@ namespace Apollo.Core.Base.Plugins
     /// <summary>
     /// Defines the interface for objects that provide commands related to group composition.
     /// </summary>
-    public interface IGroupCompositionCommands : ICommandSet
+    public interface ICompositionCommands : ICommandSet
     {
         /// <summary>
         /// Adds a new <see cref="GroupDefinition"/> to the graph and returns the ID for that group.

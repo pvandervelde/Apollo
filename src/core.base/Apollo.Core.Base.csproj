@@ -239,8 +239,8 @@
     <Compile Include="Plugins\GroupExportDefinition.cs" />
     <Compile Include="Plugins\GroupImportDefinition.cs" />
     <Compile Include="Plugins\GroupPartDefinition.cs" />
-    <Compile Include="Plugins\IGroupCompositionCommands.cs" />
-    <Compile Include="Plugins\IGroupCompositionLayer.cs" />
+    <Compile Include="Plugins\ICompositionCommands.cs" />
+    <Compile Include="Plugins\ICompositionLayer.cs" />
     <Compile Include="Plugins\MethodBasedExportDefinition.cs" />
     <Compile Include="Plugins\MethodBasedScheduleConditionDefinition.cs" />
     <Compile Include="Plugins\MethodDefinition.cs" />

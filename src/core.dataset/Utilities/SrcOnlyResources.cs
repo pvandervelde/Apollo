@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Dataset.Properties;
 using Apollo.Utilities.Logging;
 
@@ -17,6 +18,7 @@ namespace Apollo.Utilities
     /// This class handles the resource retrieval for the code that is linked from 
     /// <c>Apollo.Utilities.SrcOnly</c> project.
     /// </design>
+    [ExcludeFromCodeCoverage]
     internal static class SrcOnlyResources
     {
         /// <summary>

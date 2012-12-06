@@ -16,7 +16,7 @@ namespace Apollo.Core.Dataset.Plugins
     /// Defines the commands that allow changing and connecting the currently loaded
     /// part groups.
     /// </summary>
-    internal sealed class GroupCompositionCommands : IGroupCompositionCommands
+    internal sealed class CompositionCommands : ICompositionCommands
     {
         /// <summary>
         /// The object used to lock the dataset for reading or writing.
@@ -29,7 +29,7 @@ namespace Apollo.Core.Dataset.Plugins
         private readonly IStoreGroupsAndConnections m_CompositionLayer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GroupCompositionCommands"/> class.
+        /// Initializes a new instance of the <see cref="CompositionCommands"/> class.
         /// </summary>
         /// <param name="datasetLock">The object used to lock the dataset for reading or writing.</param>
         /// <param name="groups">The object that stores all the selected groups and their connections.</param>
@@ -39,7 +39,7 @@ namespace Apollo.Core.Dataset.Plugins
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="groups"/> is <see langword="null" />.
         /// </exception>
-        public GroupCompositionCommands(
+        public CompositionCommands(
             ITrackDatasetLocks datasetLock,
             IStoreGroupsAndConnections groups)
         {

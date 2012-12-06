@@ -392,7 +392,7 @@ namespace Apollo.Core.Base.Communication
             };
 
             layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
-            Assert.Throws<CommandNotSupportedException>(() => hub.CommandsFor<IGroupCompositionCommands>(connectionInfo.Id));
+            Assert.Throws<CommandNotSupportedException>(() => hub.CommandsFor<ICompositionCommands>(connectionInfo.Id));
         }
 
         [Test]

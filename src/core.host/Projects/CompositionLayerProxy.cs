@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace Apollo.Core.Host.Projects
     /// Defines a proxy for the group composition graph in a dataset. Also caches the current state of the graph for faster
     /// access.
     /// </summary>
-    internal sealed class GroupCompositionLayerProxy : IGroupCompositionLayer, IAmProxyForDataset
+    internal sealed class CompositionLayerProxy : ICompositionLayer, IAmProxyForDataset
     {
         /// <summary>
         /// The object used to lock on.
@@ -39,13 +40,13 @@ namespace Apollo.Core.Host.Projects
         /// <design>
         /// Note that the edges point from the export to the import.
         /// </design>
-        private readonly BidirectionalGraph<GroupCompositionId, GroupCompositionGraphProxyEdge> m_GroupConnections
-            = new BidirectionalGraph<GroupCompositionId, GroupCompositionGraphProxyEdge>();
+        private readonly BidirectionalGraph<GroupCompositionId, CompositionLayerGroupEdge> m_GroupConnections
+            = new BidirectionalGraph<GroupCompositionId, CompositionLayerGroupEdge>();
 
         /// <summary>
         /// The object that provides the commands for the composition of part groups.
         /// </summary>
-        private readonly IGroupCompositionCommands m_Commands;
+        private readonly ICompositionCommands m_Commands;
 
         /// <summary>
         /// The object that handles the connection of part groups.
@@ -53,7 +54,7 @@ namespace Apollo.Core.Host.Projects
         private readonly IConnectGroups m_Connector;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GroupCompositionLayerProxy"/> class.
+        /// Initializes a new instance of the <see cref="CompositionLayerProxy"/> class.
         /// </summary>
         /// <param name="commands">The object that provides the commands for the composition of part groups.</param>
         /// <param name="groupConnector">The object that handles the connection of part groups.</param>
@@ -63,8 +64,8 @@ namespace Apollo.Core.Host.Projects
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="groupConnector"/> is <see langword="null" />.
         /// </exception>
-        public GroupCompositionLayerProxy(
-            IGroupCompositionCommands commands,
+        public CompositionLayerProxy(
+            ICompositionCommands commands,
             IConnectGroups groupConnector)
         {
             {
@@ -85,11 +86,15 @@ namespace Apollo.Core.Host.Projects
         /// </returns>
         public Task<GroupCompositionId> Add(GroupDefinition group)
         {
+            {
+                Debug.Assert(group != null, "The definition that should be added should not be a null reference.");
+            }
+
             var id = new GroupCompositionId();
             var remoteTask = m_Commands.Add(id, group);
 
             return remoteTask.ContinueWith(
-                t => 
+                t =>
                 {
                     lock (m_Lock)
                     {
@@ -108,6 +113,11 @@ namespace Apollo.Core.Host.Projects
         /// <returns>A task that indicates when the removal has taken place.</returns>
         public Task Remove(GroupCompositionId group)
         {
+            {
+                Debug.Assert(group != null, "The ID that should be removed should not be a null reference.");
+                Debug.Assert(m_Groups.ContainsKey(group), "The ID should be known.");
+            }
+
             var remoteTask = m_Commands.Remove(group);
             return remoteTask.ContinueWith(
                 t =>
@@ -152,7 +162,7 @@ namespace Apollo.Core.Host.Projects
         public GroupDefinition Group(GroupCompositionId id)
         {
             {
-                Lokad.Enforce.Argument(() => id);
+                Debug.Assert(id != null, "The ID that should be removed should not be a null reference.");
             }
 
             lock (m_Lock)
@@ -191,9 +201,9 @@ namespace Apollo.Core.Host.Projects
             GroupCompositionId exportingGroup)
         {
             {
-                Lokad.Enforce.Argument(() => importingGroup);
-                Lokad.Enforce.Argument(() => importDefinition);
-                Lokad.Enforce.Argument(() => exportingGroup);
+                Debug.Assert(importingGroup != null, "The ID of the importing group should not be a null reference.");
+                Debug.Assert(importDefinition != null, "The import definition should not be a null reference.");
+                Debug.Assert(exportingGroup != null, "The ID of the exporting group should not be a null reference.");
             }
 
             if (!Contains(importingGroup) || !Contains(exportingGroup))
@@ -201,14 +211,15 @@ namespace Apollo.Core.Host.Projects
                 throw new UnknownPartGroupException();
             }
 
-            var state = m_Connector.GenerateConnectionFor(importingGroup, importDefinition, exportingGroup);
+            var parts = m_Connector.GenerateConnectionFor(m_Groups[importingGroup], importDefinition, m_Groups[exportingGroup]);
+            var state = new GroupConnection(importingGroup, exportingGroup, importDefinition, parts);
             var remoteTask = m_Commands.Connect(state);
             return remoteTask.ContinueWith(
                 t =>
                 {
                     lock (m_Lock)
                     {
-                        m_GroupConnections.AddEdge(new GroupCompositionGraphProxyEdge(importingGroup, importDefinition, exportingGroup));
+                        m_GroupConnections.AddEdge(new CompositionLayerGroupEdge(importingGroup, importDefinition, exportingGroup));
                     }
                 });
         }
@@ -223,17 +234,11 @@ namespace Apollo.Core.Host.Projects
         /// <param name="importingGroup">The ID of the group that owns the import.</param>
         /// <param name="exportingGroup">The ID of the group that owns the export.</param>
         /// <returns>A task which indicates when the disconnection has taken place.</returns>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="importingGroup"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="exportingGroup"/> is <see langword="null" />.
-        /// </exception>
         public Task Disconnect(GroupCompositionId importingGroup, GroupCompositionId exportingGroup)
         {
             {
-                Lokad.Enforce.Argument(() => importingGroup);
-                Lokad.Enforce.Argument(() => exportingGroup);
+                Debug.Assert(importingGroup != null, "The ID of the importing group should not be a null reference.");
+                Debug.Assert(exportingGroup != null, "The ID of the exporting group should not be a null reference.");
             }
 
             var remoteTask = m_Commands.Disconnect(importingGroup, exportingGroup);
@@ -249,13 +254,10 @@ namespace Apollo.Core.Host.Projects
         /// </summary>
         /// <param name="group">The ID of the group.</param>
         /// <returns>A task which indicates when the disconnection has taken place.</returns>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="group"/> is <see langword="null" />.
-        /// </exception>
         public Task Disconnect(GroupCompositionId group)
         {
             {
-                Lokad.Enforce.Argument(() => group);
+                Debug.Assert(group != null, "The ID of the group should not be a null reference.");
             }
 
             var remoteTask = m_Commands.Disconnect(group);
@@ -382,7 +384,7 @@ namespace Apollo.Core.Host.Projects
 
                         foreach (var connection in state.Connections)
                         {
-                            m_GroupConnections.AddEdge(new GroupCompositionGraphProxyEdge(connection.Item1, connection.Item2, connection.Item3));
+                            m_GroupConnections.AddEdge(new CompositionLayerGroupEdge(connection.Item1, connection.Item2, connection.Item3));
                         }
                     }
                 });

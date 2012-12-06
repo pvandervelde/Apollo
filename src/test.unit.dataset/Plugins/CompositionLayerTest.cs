@@ -4,25 +4,20 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using MbUnit.Framework;
 
-namespace Apollo.Core.Extensions.Scheduling
+namespace Apollo.Core.Dataset.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class EditableSubScheduleVertexTest
+    public sealed class CompositionLayerTest
     {
-        [Test]
-        public void Create()
-        {
-            var index = 10;
-            var subScheduleId = new ScheduleId();
-            var vertex = new SubScheduleVertex(index, subScheduleId);
-
-            Assert.AreEqual(index, vertex.Index);
-            Assert.AreSame(subScheduleId, vertex.ScheduleToExecute);
-        }
     }
 }

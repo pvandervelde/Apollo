@@ -70,8 +70,8 @@
     <Compile Include="Plugins\AppDomainPluginClassLoader.cs" />
     <Compile Include="Plugins\IConnectGroups.cs" />
     <Compile Include="Plugins\IConnectParts.cs" />
-    <Compile Include="Projects\GroupCompositionLayerProxy.cs" />
-    <Compile Include="Projects\GroupCompositionGraphProxyEdge.cs" />
+    <Compile Include="Projects\CompositionLayerProxy.cs" />
+    <Compile Include="Projects\CompositionLayerGroupEdge.cs" />
     <Compile Include="Projects\GroupDescriptor.cs" />
     <Compile Include="Plugins\GroupImportEngine.cs" />
     <Compile Include="Plugins\IPluginRepository.cs" />

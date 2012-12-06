@@ -6,12 +6,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Primitives;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
+using Apollo.Core.Host.Mocks;
 using Apollo.Utilities;
 using Gallio.Framework;
 using MbUnit.Framework;
@@ -27,6 +30,126 @@ namespace Apollo.Core.Host.Plugins
         private static List<TypeDefinition> s_Types;
         private static List<PartDefinition> s_Parts;
         private static List<GroupDefinition> s_Groups;
+
+        private static GroupDefinition CreateExportingGroup()
+        {
+            return new GroupDefinition("a")
+                {
+                    InternalConnections = Enumerable.Empty<PartImportToPartExportMap>(),
+                    Parts = new List<GroupPartDefinition>
+                                {
+                                    new GroupPartDefinition(
+                                        TypeIdentity.CreateDefinition(typeof(int)),
+                                        0,
+                                        new Dictionary<ExportRegistrationId, SerializableExportDefinition>
+                                            {
+                                                { 
+                                                    new ExportRegistrationId(typeof(int), 0, "PartContract1"),
+                                                    TypeBasedExportDefinition.CreateDefinition("PartContract1", typeof(int))
+                                                }
+                                            },
+                                        new Dictionary<ImportRegistrationId, SerializableImportDefinition>(),
+                                        new Dictionary<ScheduleActionRegistrationId, ScheduleActionDefinition>(),
+                                        new Dictionary<ScheduleConditionRegistrationId, ScheduleConditionDefinition>()),
+                                    new GroupPartDefinition(
+                                        TypeIdentity.CreateDefinition(typeof(string)),
+                                        1,
+                                        new Dictionary<ExportRegistrationId, SerializableExportDefinition>
+                                            {
+                                                { 
+                                                    new ExportRegistrationId(typeof(string), 1, "PartContract2"),
+                                                    TypeBasedExportDefinition.CreateDefinition("PartContract2", typeof(string))
+                                                }
+                                            },
+                                        new Dictionary<ImportRegistrationId, SerializableImportDefinition>(),
+                                        new Dictionary<ScheduleActionRegistrationId, ScheduleActionDefinition>(),
+                                        new Dictionary<ScheduleConditionRegistrationId, ScheduleConditionDefinition>()),
+                                    new GroupPartDefinition(
+                                        TypeIdentity.CreateDefinition(typeof(Version)),
+                                        2,
+                                        new Dictionary<ExportRegistrationId, SerializableExportDefinition>
+                                            {
+                                                { 
+                                                    new ExportRegistrationId(typeof(string), 2, "PartContract2"),
+                                                    TypeBasedExportDefinition.CreateDefinition("PartContract2", typeof(string))
+                                                }
+                                            },
+                                        new Dictionary<ImportRegistrationId, SerializableImportDefinition>(),
+                                        new Dictionary<ScheduleActionRegistrationId, ScheduleActionDefinition>(),
+                                        new Dictionary<ScheduleConditionRegistrationId, ScheduleConditionDefinition>()),
+                                },
+                    GroupExport = GroupExportDefinition.CreateDefinition(
+                        "ContractName",
+                        new GroupRegistrationId("a"),
+                        new List<ExportRegistrationId>
+                        {
+                            new ExportRegistrationId(typeof(int), 0, "PartContract1"),
+                            new ExportRegistrationId(typeof(string), 1, "PartContract2"),
+                            new ExportRegistrationId(typeof(string), 2, "PartContract2"),
+                        }),
+                };
+        }
+
+        private static GroupDefinition CreateImportingGroup()
+        {
+            return new GroupDefinition("b")
+                {
+                    InternalConnections = Enumerable.Empty<PartImportToPartExportMap>(),
+                    Parts = new List<GroupPartDefinition>
+                                {
+                                    new GroupPartDefinition(
+                                        TypeIdentity.CreateDefinition(typeof(string)),
+                                        0,
+                                        new Dictionary<ExportRegistrationId, SerializableExportDefinition>(),
+                                        new Dictionary<ImportRegistrationId, SerializableImportDefinition>
+                                            {
+                                                { 
+                                                    new ImportRegistrationId(typeof(string), 0, "PartContract1"),
+                                                    PropertyBasedImportDefinition.CreateDefinition(
+                                                        "PartContract1", 
+                                                        TypeIdentity.CreateDefinition(typeof(int)),
+                                                        ImportCardinality.ExactlyOne,
+                                                        false,
+                                                        CreationPolicy.Any,
+                                                        typeof(ImportOnPropertyWithType).GetProperty("ImportingProperty"))
+                                                }
+                                            },
+                                        new Dictionary<ScheduleActionRegistrationId, ScheduleActionDefinition>(),
+                                        new Dictionary<ScheduleConditionRegistrationId, ScheduleConditionDefinition>()),
+                                    new GroupPartDefinition(
+                                        TypeIdentity.CreateDefinition(typeof(string)),
+                                        1,
+                                        new Dictionary<ExportRegistrationId, SerializableExportDefinition>(),
+                                        new Dictionary<ImportRegistrationId, SerializableImportDefinition>
+                                            {
+                                                { 
+                                                    new ImportRegistrationId(typeof(string), 1, "PartContract2"),
+                                                    PropertyBasedImportDefinition.CreateDefinition(
+                                                        "PartContract2", 
+                                                        TypeIdentity.CreateDefinition(typeof(string)),
+                                                        ImportCardinality.ExactlyOne,
+                                                        false,
+                                                        CreationPolicy.Any,
+                                                        typeof(ImportOnPropertyWithEnumerable).GetProperty("ImportingProperty"))
+                                                }
+                                            },
+                                        new Dictionary<ScheduleActionRegistrationId, ScheduleActionDefinition>(),
+                                        new Dictionary<ScheduleConditionRegistrationId, ScheduleConditionDefinition>()),
+                                },
+                    GroupImports = new List<GroupImportDefinition> 
+                            {
+                                GroupImportDefinition.CreateDefinition(
+                                    "ContractName",
+                                    new GroupRegistrationId("b"),
+                                    null,
+                                    new List<ImportRegistrationId>
+                                        {
+                                            new ImportRegistrationId(typeof(string), 0, "PartContract1"),
+                                            new ImportRegistrationId(typeof(string), 1, "PartContract2"),
+                                        })
+                            },
+                };
+        }
 
         [FixtureSetUp]
         public void Setup()
@@ -208,7 +331,7 @@ namespace Apollo.Core.Host.Plugins
             var importEngine = new GroupImportEngine(repository.Object, partImportEngine.Object);
             Assert.IsFalse(
                 importEngine.ExportPassesSelectionCriteria(
-                    s_Groups.First().GroupExport, 
+                    s_Groups.First().GroupExport,
                     new Dictionary<string, object> { { "a", new object() } }));
         }
 
@@ -294,6 +417,64 @@ namespace Apollo.Core.Host.Plugins
             Assert.AreEqual(2, groups.Count());
             Assert.AreEqual(s_Groups[1].Id, groups.First().Id);
             Assert.AreEqual(s_Groups[2].Id, groups.Last().Id);
+        }
+
+        [Test]
+        public void GenerateConnectionForWithSingleConnection()
+        {
+            var repository = new Mock<IPluginRepository>();
+            var partImportEngine = new Mock<IConnectParts>();
+            {
+                partImportEngine.Setup(i => i.Accepts(It.IsAny<SerializableImportDefinition>(), It.IsAny<SerializableExportDefinition>()))
+                    .Returns<SerializableImportDefinition, SerializableExportDefinition>(
+                        (import, export) => import.ContractName == export.ContractName);
+            }
+
+            var importEngine = new GroupImportEngine(repository.Object, partImportEngine.Object);
+            var connections = importEngine.GenerateConnectionFor(s_Groups[0], s_Groups[0].GroupImports.First(), s_Groups[2]);
+
+            Assert.AreEqual(1, connections.Count());
+
+            var connection = connections.First();
+            Assert.AreEqual(s_Groups[0].GroupImports.First().ImportsToMatch.First(), connection.Import);
+            Assert.AreEqual(1, connection.Exports.Count());
+            Assert.AreEqual(s_Groups[2].GroupExport.ProvidedExports.First(), connection.Exports.First());
+        }
+
+        [Test]
+        public void GenerateConnectionForWithMultipleConnections()
+        {
+            var group1 = CreateExportingGroup();
+            var group2 = CreateImportingGroup();
+
+            var repository = new Mock<IPluginRepository>();
+            var partImportEngine = new Mock<IConnectParts>();
+            {
+                partImportEngine.Setup(i => i.Accepts(It.IsAny<SerializableImportDefinition>(), It.IsAny<SerializableExportDefinition>()))
+                    .Returns<SerializableImportDefinition, SerializableExportDefinition>(
+                        (import, export) => import.ContractName == export.ContractName);
+            }
+
+            var importEngine = new GroupImportEngine(repository.Object, partImportEngine.Object);
+            var connections = importEngine.GenerateConnectionFor(group2, group2.GroupImports.First(), group1);
+
+            Assert.AreEqual(2, connections.Count());
+
+            var connection = connections.ElementAt(0);
+            Assert.AreEqual(group2.GroupImports.First().ImportsToMatch.ElementAt(0), connection.Import);
+            Assert.AreEqual(1, connection.Exports.Count());
+            Assert.AreEqual(group1.GroupExport.ProvidedExports.ElementAt(0), connection.Exports.ElementAt(0));
+
+            connection = connections.ElementAt(1);
+            Assert.AreEqual(group2.GroupImports.First().ImportsToMatch.ElementAt(1), connection.Import);
+            Assert.AreEqual(2, connection.Exports.Count());
+            Assert.AreElementsEqualIgnoringOrder(
+                new List<ExportRegistrationId> 
+                    {
+                        group1.GroupExport.ProvidedExports.ElementAt(1),
+                        group1.GroupExport.ProvidedExports.ElementAt(2),
+                    },
+                connection.Exports);
         }
     }
 }

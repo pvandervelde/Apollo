@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using System.ComponentModel.Composition.ReflectionModel;
@@ -74,29 +75,27 @@ namespace Apollo.Core.Host.Plugins
             return createTypeIdentity;
         }
 
-        private static Type FindType(string typeName, Assembly assembly, bool searchReferencedAssemblies)
+        private static Type ExtractRequiredType(IEnumerable<Attribute> memberAttributes, Type memberType)
         {
-            foreach (var assemblyType in assembly.GetTypes())
+            // This is really rather ugly but we can't get the RequiredTypeIdentity straight from the import
+            // (eventhough it has a property named as such) because we want an actual type and the 
+            // MEF ImportDefinition.RequiredTypeIdentity is a string that has been mangled, e.g. for 
+            // delegates the type name is <RETURNTYPE>(<PARAMETERTYPES>), which means we don't know
+            // exactly what the type is. Also MEF strips the Lazy<T> type and replaces it with T. Hence
+            // we go straight to the actual import attribute and get it from there.
+            var attribute = memberAttributes
+                .Where(a => a is ImportAttribute)
+                .Select(a => (ImportAttribute)a)
+                .FirstOrDefault();
+            Debug.Assert(attribute != null, "There should be an import attribute.");
+
+            var requiredType = attribute.ContractType ?? memberType;
+            if (requiredType == null)
             {
-                if (string.Equals(typeName, assemblyType.FullName, StringComparison.Ordinal))
-                {
-                    return assemblyType;
-                }
+                return null;
             }
 
-            if (searchReferencedAssemblies)
-            {
-                foreach (var referencedAssembly in assembly.GetReferencedAssemblies())
-                {
-                    var type = FindType(typeName, Assembly.Load(referencedAssembly), false);
-                    if (type != null)
-                    {
-                        return type;
-                    }
-                }
-            }
-
-            return null;
+            return requiredType;
         }
 
         private static SerializableExportDefinition CreateMethodExport(
@@ -160,7 +159,7 @@ namespace Apollo.Core.Host.Plugins
             var name = getMember.Name.Substring("set_".Length);
             var property = getMember.DeclaringType.GetProperty(name);
 
-            var requiredType = FindType(import.RequiredTypeIdentity, containingAssembly, true);
+            var requiredType = ExtractRequiredType(property.GetCustomAttributes(), property.PropertyType);
             if (requiredType == null)
             {
                 return null;
@@ -182,7 +181,7 @@ namespace Apollo.Core.Host.Plugins
             Assembly containingAssembly)
         {
             var parameterInfo = ReflectionModelServices.GetImportingParameter(import);
-            var requiredType = FindType(import.RequiredTypeIdentity, containingAssembly, true);
+            var requiredType = ExtractRequiredType(parameterInfo.Value.GetCustomAttributes(), parameterInfo.Value.ParameterType);
             if (requiredType == null)
             {
                 return null;

@@ -31,6 +31,8 @@ namespace Apollo.Core.Dataset.Plugins
             {
                 Lokad.Enforce.Argument(() => definition);
             }
+
+            m_Definition = definition;
         }
 
         /// <summary>

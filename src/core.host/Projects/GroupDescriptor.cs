@@ -12,7 +12,7 @@ using Apollo.Utilities;
 namespace Apollo.Core.Host.Projects
 {
     /// <summary>
-    /// Defines methods for selecting and connecting a group with other groups in the <see cref="IGroupCompositionLayer"/>.
+    /// Defines methods for selecting and connecting a group with other groups in the <see cref="ICompositionLayer"/>.
     /// </summary>
     internal sealed class GroupDescriptor
     {

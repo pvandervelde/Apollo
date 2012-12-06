@@ -319,6 +319,7 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsNotNull(import);
             Assert.AreEqual("ImportOnConstructor", import.ContractName);
             Assert.AreEqual(id, import.DeclaringType);
+            Assert.AreEqual(TypeIdentity.CreateDefinition(typeof(int)), import.RequiredTypeIdentity);
             Assert.AreEqual(
                 ConstructorDefinition.CreateDefinition(
                     typeof(ImportOnConstructorWithName).GetConstructor(new[] { typeof(int) })),
@@ -345,6 +346,7 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsNotNull(import);
             Assert.AreEqual(typeof(IImportingInterface).FullName, import.ContractName);
             Assert.AreEqual(id, import.DeclaringType);
+            Assert.AreEqual(TypeIdentity.CreateDefinition(typeof(IImportingInterface)), import.RequiredTypeIdentity);
             Assert.AreEqual(
                 ConstructorDefinition.CreateDefinition(
                     typeof(ImportOnConstructorWithType).GetConstructor(new[] { typeof(int) })),
@@ -371,6 +373,7 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsNotNull(import);
             Assert.AreEqual(typeof(int).FullName, import.ContractName);
             Assert.AreEqual(id, import.DeclaringType);
+            Assert.AreEqual(TypeIdentity.CreateDefinition(typeof(int)), import.RequiredTypeIdentity);
             Assert.AreEqual(
                 ConstructorDefinition.CreateDefinition(
                     typeof(ImportOnConstructor).GetConstructor(new[] { typeof(int) })),
@@ -378,6 +381,114 @@ namespace Apollo.Core.Host.Plugins
             Assert.AreEqual(
                 ParameterDefinition.CreateDefinition(
                     typeof(ImportOnConstructor).GetConstructor(new[] { typeof(int) }).GetParameters().First()),
+                import.Parameter);
+        }
+
+        [Test]
+        public void ImportOnConstructorWithEnumerable()
+        {
+            var id = TypeIdentity.CreateDefinition(typeof(ImportOnConstructorWithEnumerable));
+            Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
+
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
+            Assert.IsTrue(plugins.Count() == 1);
+
+            var plugin = plugins.First();
+            Assert.AreEqual(1, plugin.Imports.Count());
+
+            var import = plugin.Imports.First() as ConstructorBasedImportDefinition;
+            Assert.IsNotNull(import);
+            Assert.AreEqual("ContractName", import.ContractName);
+            Assert.AreEqual(id, import.DeclaringType);
+            Assert.AreEqual(TypeIdentity.CreateDefinition(typeof(IEnumerable<int>)), import.RequiredTypeIdentity);
+            Assert.AreEqual(
+                ConstructorDefinition.CreateDefinition(
+                    typeof(ImportOnConstructorWithEnumerable).GetConstructor(new[] { typeof(IEnumerable<int>) })),
+                import.Constructor);
+            Assert.AreEqual(
+                ParameterDefinition.CreateDefinition(
+                    typeof(ImportOnConstructorWithEnumerable).GetConstructor(new[] { typeof(IEnumerable<int>) }).GetParameters().First()),
+                import.Parameter);
+        }
+
+        [Test]
+        public void ImportOnConstructorWithLazy()
+        {
+            var id = TypeIdentity.CreateDefinition(typeof(ImportOnConstructorWithLazy));
+            Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
+
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
+            Assert.IsTrue(plugins.Count() == 1);
+
+            var plugin = plugins.First();
+            Assert.AreEqual(1, plugin.Imports.Count());
+
+            var import = plugin.Imports.First() as ConstructorBasedImportDefinition;
+            Assert.IsNotNull(import);
+            Assert.AreEqual("ContractName", import.ContractName);
+            Assert.AreEqual(id, import.DeclaringType);
+            Assert.AreEqual(TypeIdentity.CreateDefinition(typeof(Lazy<int>)), import.RequiredTypeIdentity);
+            Assert.AreEqual(
+                ConstructorDefinition.CreateDefinition(
+                    typeof(ImportOnConstructorWithLazy).GetConstructor(new[] { typeof(Lazy<int>) })),
+                import.Constructor);
+            Assert.AreEqual(
+                ParameterDefinition.CreateDefinition(
+                    typeof(ImportOnConstructorWithLazy).GetConstructor(new[] { typeof(Lazy<int>) }).GetParameters().First()),
+                import.Parameter);
+        }
+
+        [Test]
+        public void ImportOnConstructorWithFunc()
+        {
+            var id = TypeIdentity.CreateDefinition(typeof(ImportOnConstructorWithFunc));
+            Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
+
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
+            Assert.IsTrue(plugins.Count() == 1);
+
+            var plugin = plugins.First();
+            Assert.AreEqual(1, plugin.Imports.Count());
+
+            var import = plugin.Imports.First() as ConstructorBasedImportDefinition;
+            Assert.IsNotNull(import);
+            Assert.AreEqual("ContractName", import.ContractName);
+            Assert.AreEqual(id, import.DeclaringType);
+            Assert.AreEqual(TypeIdentity.CreateDefinition(typeof(Func<int, bool>)), import.RequiredTypeIdentity);
+            Assert.AreEqual(
+                ConstructorDefinition.CreateDefinition(
+                    typeof(ImportOnConstructorWithFunc).GetConstructor(new[] { typeof(Func<int, bool>) })),
+                import.Constructor);
+            Assert.AreEqual(
+                ParameterDefinition.CreateDefinition(
+                    typeof(ImportOnConstructorWithFunc).GetConstructor(new[] { typeof(Func<int, bool>) }).GetParameters().First()),
+                import.Parameter);
+        }
+
+        [Test]
+        public void ImportOnConstructorWithAction()
+        {
+            var id = TypeIdentity.CreateDefinition(typeof(ImportOnConstructorWithAction));
+            Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
+
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
+            Assert.IsTrue(plugins.Count() == 1);
+
+            var plugin = plugins.First();
+            Assert.AreEqual(1, plugin.Imports.Count());
+
+            var import = plugin.Imports.First() as ConstructorBasedImportDefinition;
+            Assert.IsNotNull(import);
+            Assert.AreEqual("ContractName", import.ContractName);
+            Assert.AreEqual(id, import.DeclaringType);
+            Assert.AreEqual(TypeIdentity.CreateDefinition(typeof(Action<int, bool>)), import.RequiredTypeIdentity);
+            Assert.AreEqual(
+                ConstructorDefinition.CreateDefinition(
+                    typeof(ImportOnConstructorWithAction).GetConstructor(new[] { typeof(Action<int, bool>) })),
+                import.Constructor);
+            Assert.AreEqual(
+                ParameterDefinition.CreateDefinition(
+                    typeof(ImportOnConstructorWithAction).GetConstructor(new[] { typeof(Action<int, bool>) }).GetParameters().First()),
                 import.Parameter);
         }
 
@@ -397,6 +508,7 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsNotNull(import);
             Assert.AreEqual("ImportOnProperty", import.ContractName);
             Assert.AreEqual(id, import.DeclaringType);
+            Assert.AreEqual(TypeIdentity.CreateDefinition(typeof(int)), import.RequiredTypeIdentity);
             Assert.AreEqual(
                 PropertyDefinition.CreateDefinition(
                     typeof(ImportOnPropertyWithName).GetProperty("ImportingProperty")),
@@ -419,6 +531,7 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsNotNull(import);
             Assert.AreEqual(typeof(IImportingInterface).FullName, import.ContractName);
             Assert.AreEqual(id, import.DeclaringType);
+            Assert.AreEqual(TypeIdentity.CreateDefinition(typeof(IImportingInterface)), import.RequiredTypeIdentity);
             Assert.AreEqual(
                 PropertyDefinition.CreateDefinition(
                     typeof(ImportOnPropertyWithType).GetProperty("ImportingProperty")),
@@ -441,9 +554,102 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsNotNull(import);
             Assert.AreEqual(typeof(IExportOnProperty).FullName, import.ContractName);
             Assert.AreEqual(id, import.DeclaringType);
+            Assert.AreEqual(TypeIdentity.CreateDefinition(typeof(IExportOnProperty)), import.RequiredTypeIdentity);
             Assert.AreEqual(
                 PropertyDefinition.CreateDefinition(
                     typeof(ImportOnProperty).GetProperty("ImportingProperty")),
+                import.Property);
+        }
+
+        [Test]
+        public void ImportOnPropertyWithEnumerable()
+        {
+            var id = TypeIdentity.CreateDefinition(typeof(ImportOnPropertyWithEnumerable));
+            Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
+
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
+            Assert.IsTrue(plugins.Count() == 1);
+
+            var plugin = plugins.First();
+            Assert.AreEqual(1, plugin.Imports.Count());
+
+            var import = plugin.Imports.First() as PropertyBasedImportDefinition;
+            Assert.IsNotNull(import);
+            Assert.AreEqual("ContractName", import.ContractName);
+            Assert.AreEqual(id, import.DeclaringType);
+            Assert.AreEqual(TypeIdentity.CreateDefinition(typeof(IEnumerable<string>)), import.RequiredTypeIdentity);
+            Assert.AreEqual(
+                PropertyDefinition.CreateDefinition(
+                    typeof(ImportOnPropertyWithEnumerable).GetProperty("ImportingProperty")),
+                import.Property);
+        }
+
+        [Test]
+        public void ImportOnPropertyWithLazy()
+        {
+            var id = TypeIdentity.CreateDefinition(typeof(ImportOnPropertyWithLazy));
+            Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
+
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
+            Assert.IsTrue(plugins.Count() == 1);
+
+            var plugin = plugins.First();
+            Assert.AreEqual(1, plugin.Imports.Count());
+
+            var import = plugin.Imports.First() as PropertyBasedImportDefinition;
+            Assert.IsNotNull(import);
+            Assert.AreEqual("ContractName", import.ContractName);
+            Assert.AreEqual(id, import.DeclaringType);
+            Assert.AreEqual(TypeIdentity.CreateDefinition(typeof(Lazy<string>)), import.RequiredTypeIdentity);
+            Assert.AreEqual(
+                PropertyDefinition.CreateDefinition(
+                    typeof(ImportOnPropertyWithLazy).GetProperty("ImportingProperty")),
+                import.Property);
+        }
+
+        [Test]
+        public void ImportOnPropertyWithFunc()
+        {
+            var id = TypeIdentity.CreateDefinition(typeof(ImportOnPropertyWithFunc));
+            Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
+
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
+            Assert.IsTrue(plugins.Count() == 1);
+
+            var plugin = plugins.First();
+            Assert.AreEqual(1, plugin.Imports.Count());
+
+            var import = plugin.Imports.First() as PropertyBasedImportDefinition;
+            Assert.IsNotNull(import);
+            Assert.AreEqual("ContractName", import.ContractName);
+            Assert.AreEqual(id, import.DeclaringType);
+            Assert.AreEqual(TypeIdentity.CreateDefinition(typeof(Func<string, bool>)), import.RequiredTypeIdentity);
+            Assert.AreEqual(
+                PropertyDefinition.CreateDefinition(
+                    typeof(ImportOnPropertyWithFunc).GetProperty("ImportingProperty")),
+                import.Property);
+        }
+
+        [Test]
+        public void ImportOnPropertyWithAction()
+        {
+            var id = TypeIdentity.CreateDefinition(typeof(ImportOnPropertyWithAction));
+            Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
+
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
+            Assert.IsTrue(plugins.Count() == 1);
+
+            var plugin = plugins.First();
+            Assert.AreEqual(1, plugin.Imports.Count());
+
+            var import = plugin.Imports.First() as PropertyBasedImportDefinition;
+            Assert.IsNotNull(import);
+            Assert.AreEqual("ContractName", import.ContractName);
+            Assert.AreEqual(id, import.DeclaringType);
+            Assert.AreEqual(TypeIdentity.CreateDefinition(typeof(Action<string, bool>)), import.RequiredTypeIdentity);
+            Assert.AreEqual(
+                PropertyDefinition.CreateDefinition(
+                    typeof(ImportOnPropertyWithAction).GetProperty("ImportingProperty")),
                 import.Property);
         }
 

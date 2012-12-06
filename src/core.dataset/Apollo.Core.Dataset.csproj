@@ -91,7 +91,7 @@
     <Compile Include="IDatasetApplicationNotificationInvoker.cs" />
     <Compile Include="InvalidCommandLineArgumentsException.cs" />
     <Compile Include="ITrackDatasetLocks.cs" />
-    <Compile Include="Plugins\GroupCompositionCommands.cs" />
+    <Compile Include="Plugins\CompositionCommands.cs" />
     <Compile Include="Plugins\CompositionLayer.cs" />
     <Compile Include="Plugins\GroupCompositionGraphEdge.cs" />
     <Compile Include="Plugins\IStoreGroupsAndConnections.cs" />

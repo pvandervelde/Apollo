@@ -6,21 +6,20 @@
 
 using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
+using MbUnit.Framework.ContractVerifiers;
 
-namespace Apollo.Core.Extensions.Scheduling
+namespace Apollo.Core.Dataset.Scheduling
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class EditableEndVertexTest
+    public sealed class DuplicateScheduleIdExceptionTest
     {
-        [Test]
-        public void Index()
+        [VerifyContract]
+        public readonly IContract ExceptionTests = new ExceptionContract<DuplicateScheduleIdException>
         {
-            var index = 10;
-            var vertex = new EndVertex(index);
-
-            Assert.AreEqual(index, vertex.Index);
-        }
+            ImplementsSerialization = true,
+            ImplementsStandardConstructors = true,
+        };
     }
 }

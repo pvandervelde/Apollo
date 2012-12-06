@@ -11,9 +11,9 @@ using QuickGraph;
 namespace Apollo.Core.Host.Projects
 {
     /// <summary>
-    /// Defines an <see cref="Edge{T}"/> that links two part groups in the <see cref="GroupCompositionLayerProxy"/>.
+    /// Defines an <see cref="Edge{T}"/> that links two part groups in the <see cref="CompositionLayerProxy"/>.
     /// </summary>
-    internal sealed class GroupCompositionGraphProxyEdge : Edge<GroupCompositionId>
+    internal sealed class CompositionLayerGroupEdge : Edge<GroupCompositionId>
     {
         /// <summary>
         /// The import definition to which the connection points.
@@ -21,12 +21,12 @@ namespace Apollo.Core.Host.Projects
         private readonly GroupImportDefinition m_Import;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GroupCompositionGraphProxyEdge"/> class.
+        /// Initializes a new instance of the <see cref="CompositionLayerGroupEdge"/> class.
         /// </summary>
         /// <param name="importingGroup">The ID of the importing group.</param>
         /// <param name="importDefinition">The import definition.</param>
         /// <param name="exportingGroup">The ID of the exporting group.</param>
-        public GroupCompositionGraphProxyEdge(
+        public CompositionLayerGroupEdge(
             GroupCompositionId importingGroup, 
             GroupImportDefinition importDefinition, 
             GroupCompositionId exportingGroup)

@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Security.Cryptography;
 using NSarrac.Framework;
@@ -18,6 +19,7 @@ namespace Apollo.Utilities.ExceptionHandling
     /// this class should NOT be copied to the host project. Define a NEW class called
     /// <c>Apollo.Utilities.ExceptionHandling.SrcOnlyExceptionHandlingUtillities</c> that mimicks the current class.
     /// </design>
+    [ExcludeFromCodeCoverage]
     internal static class SrcOnlyExceptionHandlingUtillities
     {
         public static RSAParameters ReportingPublicKey()

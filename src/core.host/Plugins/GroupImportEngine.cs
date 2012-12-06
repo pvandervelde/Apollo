@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Base.Plugins;
+using Apollo.Core.Extensions.Plugins;
 
 namespace Apollo.Core.Host.Plugins
 {
@@ -89,6 +90,7 @@ namespace Apollo.Core.Host.Plugins
                     var foundMatch = false;
                     foreach (var export in exports)
                     {
+                        // @todo: how do we deal with IEnumerable<T> etc.? Some imports allow multiple exports etc.
                         if (m_PartImportEngine.Accepts(import, export))
                         {
                             foundMatch = true;
@@ -168,14 +170,46 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="importingGroup">The ID of the group containing the import.</param>
         /// <param name="importDefinition">The import definition.</param>
         /// <param name="exportingGroup">The ID of the group containing the export.</param>
-        /// <returns>An object describing the way in which the two groups should be connected.</returns>
-        public GroupConnection GenerateConnectionFor(
-            GroupCompositionId importingGroup,
+        /// <returns>A collection that describes how the parts of the importing and exporting group should be connected.</returns>
+        public IEnumerable<PartImportToPartExportMap> GenerateConnectionFor(
+            GroupDefinition importingGroup,
             GroupImportDefinition importDefinition,
-            GroupCompositionId exportingGroup)
+            GroupDefinition exportingGroup)
         {
-            foobar();
-            throw new NotImplementedException();
+            if ((importingGroup == null) || (importDefinition == null) || (exportingGroup == null))
+            {
+                return Enumerable.Empty<PartImportToPartExportMap>();
+            }
+
+            var importDefinitions = importDefinition
+                .ImportsToMatch
+                .Select(id => new Tuple<ImportRegistrationId, SerializableImportDefinition>(id, importingGroup.Parts.PartImportById(id)));
+            var exportDefinitions = exportingGroup
+                .GroupExport
+                .ProvidedExports
+                .Select(id => new Tuple<ExportRegistrationId, SerializableExportDefinition>(id, exportingGroup.Parts.PartExportById(id)))
+                .ToList();
+
+            var parts = new List<PartImportToPartExportMap>();
+            foreach (var pair in importDefinitions)
+            {
+                var matchedExports = new List<Tuple<ExportRegistrationId, SerializableExportDefinition>>();
+                foreach (var export in exportDefinitions)
+                {
+                    if (m_PartImportEngine.Accepts(pair.Item2, export.Item2))
+                    {
+                        matchedExports.Add(export);
+                    }
+                }
+
+                parts.Add(new PartImportToPartExportMap(pair.Item1, matchedExports.Select(p => p.Item1).ToList()));
+                foreach (var export in matchedExports)
+                {
+                    exportDefinitions.Remove(export);
+                }
+            }
+
+            return parts;
         }
     }
 }

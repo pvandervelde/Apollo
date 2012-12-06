@@ -36,7 +36,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         {
             var commandSets = new List<KeyValuePair<Type, ICommandSet>> 
                 { 
-                    new KeyValuePair<Type, ICommandSet>(typeof(IGroupCompositionCommands), new Mock<IGroupCompositionCommands>().Object)
+                    new KeyValuePair<Type, ICommandSet>(typeof(ICompositionCommands), new Mock<ICompositionCommands>().Object)
                 };
 
             var endpoint = new EndpointId("id");
@@ -66,7 +66,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
 
             var responseMsg = storedMsg as EndpointProxyTypesResponseMessage;
             Assert.AreElementsEqual(
-                new List<ISerializedType> { ProxyExtensions.FromType(typeof(IGroupCompositionCommands)) }, 
+                new List<ISerializedType> { ProxyExtensions.FromType(typeof(ICompositionCommands)) }, 
                 responseMsg.ProxyTypes, 
                 (x, y) => x.Equals(y));
         }
@@ -76,7 +76,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         {
             var commandSets = new List<KeyValuePair<Type, ICommandSet>> 
                 { 
-                    new KeyValuePair<Type, ICommandSet>(typeof(IGroupCompositionCommands), new Mock<IGroupCompositionCommands>().Object)
+                    new KeyValuePair<Type, ICommandSet>(typeof(ICompositionCommands), new Mock<ICompositionCommands>().Object)
                 };
 
             var endpoint = new EndpointId("id");
@@ -117,7 +117,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         {
             var commandSets = new List<KeyValuePair<Type, ICommandSet>> 
                 { 
-                    new KeyValuePair<Type, ICommandSet>(typeof(IGroupCompositionCommands), new Mock<IGroupCompositionCommands>().Object)
+                    new KeyValuePair<Type, ICommandSet>(typeof(ICompositionCommands), new Mock<ICompositionCommands>().Object)
                 };
 
             var endpoint = new EndpointId("id");

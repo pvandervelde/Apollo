@@ -112,6 +112,7 @@
     <Compile Include="Plugins\GroupExportMapTest.cs" />
     <Compile Include="Plugins\GroupImportEngineTest.cs" />
     <Compile Include="Plugins\GroupImportMapTest.cs" />
+    <Compile Include="Projects\CompositionLayerProxyTest.cs" />
     <Compile Include="Projects\GroupSelectorTest.cs" />
     <Compile Include="Plugins\PartImportEngineTest.cs" />
     <Compile Include="Plugins\PluginDetectorTest.cs" />

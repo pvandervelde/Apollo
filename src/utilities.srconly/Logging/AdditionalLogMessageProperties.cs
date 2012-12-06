@@ -4,11 +4,14 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace Apollo.Utilities.Logging
 {
     /// <summary>
     /// Defines constants for possible additional log message properties.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal static class AdditionalLogMessageProperties
     {
         /// <summary>

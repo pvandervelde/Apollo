@@ -24,7 +24,7 @@ namespace Apollo.Core.Base.Communication.Messages
             var response = new MessageId();
             var commands = new List<Type> 
                 { 
-                    typeof(IGroupCompositionCommands),
+                    typeof(ICompositionCommands),
                     typeof(IDatasetApplicationCommands)
                 };
 
@@ -44,7 +44,7 @@ namespace Apollo.Core.Base.Communication.Messages
             var response = new MessageId();
             var commands = new List<Type> 
                 { 
-                    typeof(IGroupCompositionCommands),
+                    typeof(ICompositionCommands),
                     typeof(IDatasetApplicationCommands)
                 };
             var msg = new EndpointProxyTypesResponseMessage(id, response, commands.ToArray());

@@ -68,13 +68,13 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Creates the connection data that describes how the importing group and the exporting group should be connected.
         /// </summary>
-        /// <param name="importingGroup">The ID of the group containing the import.</param>
+        /// <param name="importingGroup">The definition of the group containing the import.</param>
         /// <param name="importDefinition">The import definition.</param>
-        /// <param name="exportingGroup">The ID of the group containing the export.</param>
-        /// <returns>An object describing the way in which the two groups should be connected.</returns>
-        GroupConnection GenerateConnectionFor(
-            GroupCompositionId importingGroup, 
-            GroupImportDefinition importDefinition, 
-            GroupCompositionId exportingGroup);
+        /// <param name="exportingGroup">The definition of the group containing the export.</param>
+        /// <returns>A collection that describes how the parts of the importing and exporting group should be connected.</returns>
+        IEnumerable<PartImportToPartExportMap> GenerateConnectionFor(
+            GroupDefinition importingGroup, 
+            GroupImportDefinition importDefinition,
+            GroupDefinition exportingGroup);
     }
 }

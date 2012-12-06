@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Plugins;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Dataset.Properties;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Utilities.History;
@@ -148,7 +149,7 @@ namespace Apollo.Core.Dataset.Plugins
         /// Note that the edges point from the export to the import.
         /// </design>
         [FieldIndexForHistoryTracking(PartConnectionIndex)]
-        private readonly IBidirectionalGraphHistory<PartCompositionId, PartCompositionGraphEdge> m_PartConnections; 
+        private readonly IBidirectionalGraphHistory<PartCompositionId, PartCompositionGraphEdge> m_PartConnections;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompositionLayer"/> class.
@@ -351,7 +352,7 @@ namespace Apollo.Core.Dataset.Plugins
             var importingParts = PartsForGroup(connection.ImportingGroup);
             var exportingParts = PartsForGroup(connection.ExportingGroup);
             ConnectParts(connection.PartConnections, importingParts, exportingParts);
-            
+
             // Schedules
         }
 
@@ -378,12 +379,12 @@ namespace Apollo.Core.Dataset.Plugins
                 .Select(edge => edge.Import)
                 .FirstOrDefault();
             m_GroupConnections.RemoveInEdgeIf(importingGroup, edge => edge.Source.Equals(exportingGroup));
-            
+
             DisconnectParts(importingGroup, importDefinition, exportingGroup);
         }
 
         private void DisconnectParts(GroupCompositionId importingGroup, GroupImportDefinition importDefinition, GroupCompositionId exportingGroup)
-        { 
+        {
             var definitionId = m_Groups[importingGroup];
             var importingGroupDefinition = m_Definitions[definitionId];
             var importingParts = importDefinition
@@ -406,7 +407,7 @@ namespace Apollo.Core.Dataset.Plugins
                     pair => pair.Key,
                     (partDef, pair) => pair.Key);
 
-            foreach(var importingPart in importingParts)
+            foreach (var importingPart in importingParts)
             {
                 m_PartConnections.RemoveInEdgeIf(importingPart, edge => exportingParts.Contains(edge.Source));
             }

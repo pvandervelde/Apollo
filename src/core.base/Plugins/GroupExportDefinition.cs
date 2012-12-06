@@ -130,7 +130,7 @@ namespace Apollo.Core.Base.Plugins
         /// <param name="contractName">The contract name for the import.</param>
         /// <param name="containingGroup">The ID of the group that has registered the import.</param>
         /// <param name="providedExports">The object exports that are provided with the current export.</param>
-        public GroupExportDefinition(
+        private GroupExportDefinition(
             string contractName, 
             GroupRegistrationId containingGroup, 
             IEnumerable<ExportRegistrationId> providedExports)

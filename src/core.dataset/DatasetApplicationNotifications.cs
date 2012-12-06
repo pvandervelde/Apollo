@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base;
 using Apollo.Utilities;
 
@@ -13,6 +14,7 @@ namespace Apollo.Core.Dataset
     /// <summary>
     /// Defines the notifications that allow a dataset to signal the outside world.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal sealed class DatasetApplicationNotifications : IDatasetApplicationNotificationInvoker
     {
         /// <summary>

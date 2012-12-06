@@ -64,8 +64,14 @@
     <Compile Include="DatasetLockKeyTest.cs" />
     <Compile Include="DatasetLockTest.cs" />
     <Compile Include="InvalidCommandLineArgumentsExceptionTest.cs" />
+    <Compile Include="Plugins\CompositionCommandsTest.cs" />
+    <Compile Include="Plugins\CompositionLayerTest.cs" />
+    <Compile Include="Plugins\PartCompositionIdTest.cs" />
+    <Compile Include="Plugins\PartInstanceIdTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduling\CannotExecuteScheduleWithoutProcessorsExceptionTest.cs" />
+    <Compile Include="Scheduling\DuplicateScheduleElementIdExceptionTest.cs" />
+    <Compile Include="Scheduling\DuplicateScheduleIdExceptionTest.cs" />
     <Compile Include="Scheduling\Processors\ActionVertexProcessorTest.cs" />
     <Compile Include="Scheduling\Processors\EndVertexProcessorTest.cs" />
     <Compile Include="Scheduling\Processors\MarkHistoryVertexProcessorTest.cs" />
