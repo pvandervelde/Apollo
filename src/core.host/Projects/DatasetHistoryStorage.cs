@@ -37,7 +37,7 @@ namespace Apollo.Core.Host.Projects
         /// <param name="members">The collection that holds all the members for the current object.</param>
         /// <param name="constructorArguments">The optional constructor arguments.</param>
         /// <returns>A new instance of the <see cref="DatasetHistoryStorage"/> class.</returns>
-        internal static DatasetHistoryStorage Build(
+        internal static DatasetHistoryStorage CreateInstance(
             HistoryId id,
             IEnumerable<Tuple<byte, IStoreTimelineValues>> members,
             params object[] constructorArguments)

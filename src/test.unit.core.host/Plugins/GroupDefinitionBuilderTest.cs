@@ -15,9 +15,9 @@ using Apollo.Core.Base.Plugins;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Extensions.Scheduling;
-using Apollo.Core.Host.Mocks;
 using MbUnit.Framework;
 using Moq;
+using Test.Mocks;
 
 namespace Apollo.Core.Host.Plugins
 {

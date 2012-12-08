@@ -129,8 +129,8 @@ namespace Apollo.Core.Host.Projects
             m_Timeline.OnRolledBack += new EventHandler<EventArgs>(OnTimelineRolledBack);
             m_Timeline.OnRolledForward += new EventHandler<EventArgs>(OnTimelineRolledForward);
 
-            m_ProjectInformation = m_Timeline.AddToTimeline<ProjectHistoryStorage>(ProjectHistoryStorage.Build);
-            m_Datasets = m_Timeline.AddToTimeline<DatasetHistoryStorage>(DatasetHistoryStorage.Build);
+            m_ProjectInformation = m_Timeline.AddToTimeline<ProjectHistoryStorage>(ProjectHistoryStorage.CreateInstance);
+            m_Datasets = m_Timeline.AddToTimeline<DatasetHistoryStorage>(DatasetHistoryStorage.CreateInstance);
 
             m_DatasetDistributor = distributor;
             if (persistenceInfo != null)
@@ -549,7 +549,7 @@ namespace Apollo.Core.Host.Projects
                 };
 
             var newDataset = m_Timeline.AddToTimeline<DatasetProxy>(
-                DatasetProxy.Build,
+                DatasetProxy.CreateInstance,
                 parameters);
 
             return newDataset;

@@ -51,6 +51,24 @@ namespace Apollo.Core.Dataset.Plugins
         private const byte PartConnectionIndex = 4;
 
         /// <summary>
+        /// Creates a default layer that isn't linked to a timeline.
+        /// </summary>
+        /// <remarks>
+        /// This method is provided for testing purposes only.
+        /// </remarks>
+        /// <returns>The newly created instance.</returns>
+        internal static CompositionLayer CreateInstanceWithoutTimeline()
+        {
+            return new CompositionLayer(
+                new HistoryId(),
+                new DictionaryHistory<GroupRegistrationId, GroupDefinition>(),
+                new DictionaryHistory<GroupCompositionId, GroupRegistrationId>(),
+                new BidirectionalGraphHistory<GroupCompositionId, GroupCompositionGraphEdge>(),
+                new DictionaryHistory<PartCompositionId, PartCompositionInfo>(),
+                new BidirectionalGraphHistory<PartCompositionId, PartCompositionGraphEdge>());
+        }
+
+        /// <summary>
         /// Creates a new instance of the <see cref="CompositionLayer"/> class with the given 
         /// history information.
         /// </summary>
@@ -58,7 +76,7 @@ namespace Apollo.Core.Dataset.Plugins
         /// <param name="members">The collection that holds all the members for the current object.</param>
         /// <param name="constructorArguments">The optional constructor arguments.</param>
         /// <returns>A new instance of the <see cref="CompositionLayer"/> class.</returns>
-        internal static CompositionLayer Build(
+        internal static CompositionLayer CreateInstance(
             HistoryId id,
             IEnumerable<Tuple<byte, IStoreTimelineValues>> members,
             params object[] constructorArguments)
@@ -224,7 +242,9 @@ namespace Apollo.Core.Dataset.Plugins
 
             foreach (var part in group.Parts)
             {
-                m_Parts.Add(new PartCompositionId(id, part.Id), new PartCompositionInfo(part));
+                var partId = new PartCompositionId(id, part.Id);
+                m_Parts.Add(partId, new PartCompositionInfo(part));
+                m_PartConnections.AddVertex(partId);
             }
 
             var parts = PartsForGroup(id);
@@ -352,8 +372,6 @@ namespace Apollo.Core.Dataset.Plugins
             var importingParts = PartsForGroup(connection.ImportingGroup);
             var exportingParts = PartsForGroup(connection.ExportingGroup);
             ConnectParts(connection.PartConnections, importingParts, exportingParts);
-
-            // Schedules
         }
 
         /// <summary>

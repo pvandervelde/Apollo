@@ -8,7 +8,7 @@ using System.ComponentModel.Composition;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Extensions.Plugins;
 
-namespace Apollo.Core.Host.Mocks
+namespace Test.Mocks
 {
     [Export("ConditionOnMethodExport")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

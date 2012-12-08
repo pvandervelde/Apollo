@@ -94,6 +94,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\test.srconly\Mocks\Actions.cs">
+      <Link>Mocks\Actions.cs</Link>
+    </Compile>
+    <Compile Include="..\test.srconly\Mocks\Conditions.cs">
+      <Link>Mocks\Conditions.cs</Link>
+    </Compile>
+    <Compile Include="..\test.srconly\Mocks\Exports.cs">
+      <Link>Mocks\Exports.cs</Link>
+    </Compile>
+    <Compile Include="..\test.srconly\Mocks\GroupExporter.cs">
+      <Link>Mocks\GroupExporter.cs</Link>
+    </Compile>
+    <Compile Include="..\test.srconly\Mocks\Imports.cs">
+      <Link>Mocks\Imports.cs</Link>
+    </Compile>
     <Compile Include="CannotUninstallNonequivalentServiceExceptionTest.cs" />
     <Compile Include="CoreProxyTest.cs" />
     <Compile Include="KernelNotInInstallReadyStateExceptionTest.cs" />
@@ -101,11 +116,6 @@
     <Compile Include="KernelStartupFailedExceptionTest.cs" />
     <Compile Include="KernelTest.cs" />
     <Compile Include="MissingServiceDependencyExceptionTest.cs" />
-    <Compile Include="Mocks\Actions.cs" />
-    <Compile Include="Mocks\Conditions.cs" />
-    <Compile Include="Mocks\Exports.cs" />
-    <Compile Include="Mocks\GroupExporter.cs" />
-    <Compile Include="Mocks\Imports.cs" />
     <Compile Include="NotificationNameTest.cs" />
     <Compile Include="Plugins\DuplicateContractNameExceptionTest.cs" />
     <Compile Include="Plugins\GroupDefinitionBuilderTest.cs" />

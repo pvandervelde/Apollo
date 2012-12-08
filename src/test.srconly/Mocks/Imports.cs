@@ -5,42 +5,17 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Apollo.Core.Host.Mocks
+namespace Test.Mocks
 {
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public interface IExportingInterface
-    {
-    }
-
-    [Export("OnTypeWithName")]
-    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
-        Justification = "Unit tests do not need documentation.")]
-    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
-        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public sealed class ExportOnTypeWithName
-    {
-    }
-
-    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
-        Justification = "Unit tests do not need documentation.")]
-    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
-        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public interface IExportOnTypeWithType : IExportingInterface
-    {
-    }
-
-    [Export(typeof(IExportOnTypeWithType))]
-    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
-        Justification = "Unit tests do not need documentation.")]
-    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
-        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public sealed class ExportOnTypeWithType
+    public interface IImportingInterface
     {
     }
 
@@ -49,120 +24,194 @@ namespace Apollo.Core.Host.Mocks
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public sealed class ExportOnType
+    public sealed class ImportOnConstructorWithName
     {
+        [ImportingConstructor]
+        public ImportOnConstructorWithName([Import("ImportOnConstructor")]int input)
+        { 
+        }
     }
 
+    [Export]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public sealed class ExportOnPropertyWithName
+    public sealed class ImportOnConstructorWithType
     {
-        [Export("OnPropertyWithName")]
-        public int ExportingProperty
+        [ImportingConstructor]
+        public ImportOnConstructorWithType([Import(typeof(IImportingInterface))]int input)
+        { 
+        }
+    }
+
+    [Export]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
+        Justification = "Unit tests do not need documentation.")]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
+        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
+    public sealed class ImportOnConstructor
+    {
+        [ImportingConstructor]
+        public ImportOnConstructor([Import]int input)
+        {
+        }
+    }
+
+    [Export]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
+        Justification = "Unit tests do not need documentation.")]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
+        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
+    public sealed class ImportOnConstructorWithEnumerable
+    {
+        [ImportingConstructor]
+        public ImportOnConstructorWithEnumerable([Import("ContractName")]IEnumerable<int> input)
+        {
+        }
+    }
+
+    [Export]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
+        Justification = "Unit tests do not need documentation.")]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
+        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
+    public sealed class ImportOnConstructorWithLazy
+    {
+        [ImportingConstructor]
+        public ImportOnConstructorWithLazy([Import("ContractName")]Lazy<int> input)
+        {
+        }
+    }
+
+    [Export]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
+        Justification = "Unit tests do not need documentation.")]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
+        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
+    public sealed class ImportOnConstructorWithFunc
+    {
+        [ImportingConstructor]
+        public ImportOnConstructorWithFunc([Import("ContractName")]Func<int, bool> input)
+        {
+        }
+    }
+
+    [Export]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
+        Justification = "Unit tests do not need documentation.")]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
+        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
+    public sealed class ImportOnConstructorWithAction
+    {
+        [ImportingConstructor]
+        public ImportOnConstructorWithAction([Import("ContractName")]Action<int, bool> input)
+        {
+        }
+    }
+
+    [Export]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
+        Justification = "Unit tests do not need documentation.")]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
+        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
+    public sealed class ImportOnPropertyWithName
+    {
+        [Import("ImportOnProperty")]
+        public int ImportingProperty
         {
             get;
             set;
         }
     }
 
+    [Export]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public interface IExportOnPropertyWithType : IExportingInterface
+    public sealed class ImportOnPropertyWithType
     {
-    }
-
-    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
-        Justification = "Unit tests do not need documentation.")]
-    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
-        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public sealed class ExportOnPropertyWithType
-    {
-        [Export(typeof(IExportOnPropertyWithType))]
-        public int ExportingProperty
+        [Import(typeof(IImportingInterface))]
+        public int ImportingProperty
         {
             get;
             set;
         }
     }
 
+    [Export]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public interface IExportOnProperty : IExportingInterface
+    public sealed class ImportOnProperty
     {
-    }
-
-    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
-        Justification = "Unit tests do not need documentation.")]
-    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
-        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public sealed class ExportOnProperty
-    {
-        [Export]
-        public IExportOnProperty ExportingProperty
+        [Import]
+        public IExportOnProperty ImportingProperty
         {
             get;
             set;
         }
     }
 
+    [Export]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public sealed class ExportOnMethodWithName
+    public sealed class ImportOnPropertyWithEnumerable
     {
-        [Export("OnMethodWithName")]
-        public int ExportingMethod()
+        [Import("ContractName")]
+        public IEnumerable<string> ImportingProperty
         {
-            throw new NotImplementedException();
+            get;
+            set;
         }
     }
 
+    [Export]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public interface IExportOnMethodWithType : IExportingInterface
+    public sealed class ImportOnPropertyWithLazy
     {
-    }
-
-    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
-        Justification = "Unit tests do not need documentation.")]
-    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
-        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public sealed class ExportOnMethodWithType
-    {
-        [Export(typeof(IExportOnMethodWithType))]
-        public int ExportingMethod()
+        [Import("ContractName")]
+        public Lazy<string> ImportingProperty
         {
-            throw new NotImplementedException();
+            get;
+            set;
         }
     }
 
+    [Export]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public interface IExportOnMethod : IExportingInterface
+    public sealed class ImportOnPropertyWithFunc
     {
+        [Import("ContractName")]
+        public Func<string, bool> ImportingProperty
+        {
+            get;
+            set;
+        }
     }
 
+    [Export]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public sealed class ExportOnMethod
+    public sealed class ImportOnPropertyWithAction
     {
-        [Export]
-        public IExportOnMethod ExportingMethod()
+        [Import("ContractName")]
+        public Action<string, bool> ImportingProperty
         {
-            throw new NotImplementedException();
+            get;
+            set;
         }
     }
 }

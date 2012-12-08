@@ -24,7 +24,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void AddWithNullCondition()
         {
-            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleConditionStorage.CreateInstanceWithoutTimeline();
 
             Assert.Throws<ArgumentNullException>(
                 () => collection.Add(null, "a", "b"));
@@ -33,7 +33,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void Add()
         {
-            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleConditionStorage.CreateInstanceWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
 
             var info = collection.Add(condition.Object, "a", "b");
@@ -44,7 +44,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void AddWithDuplicate()
         {
-            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleConditionStorage.CreateInstanceWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
 
             var info = collection.Add(condition.Object, "a", "b");
@@ -59,7 +59,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void UpdateWithNullId()
         {
-            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleConditionStorage.CreateInstanceWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
 
             var info = collection.Add(condition.Object, "a", "b");
@@ -70,7 +70,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void UpdateWithUnknownId()
         {
-            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleConditionStorage.CreateInstanceWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
 
             var info = collection.Add(condition.Object, "a", "b");
@@ -81,7 +81,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void UpdateWithNullAction()
         {
-            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleConditionStorage.CreateInstanceWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
 
             var info = collection.Add(condition.Object, "a", "b");
@@ -91,7 +91,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void Update()
         {
-            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleConditionStorage.CreateInstanceWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
 
             var info = collection.Add(condition.Object, "a", "b");
@@ -110,14 +110,14 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void RemoveWithNullId()
         {
-            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleConditionStorage.CreateInstanceWithoutTimeline();
             Assert.DoesNotThrow(() => collection.Remove(null));
         }
 
         [Test]
         public void Remove()
         {
-            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleConditionStorage.CreateInstanceWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
 
             var info = collection.Add(condition.Object, "a", "b");
@@ -130,7 +130,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void Contains()
         {
-            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleConditionStorage.CreateInstanceWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
 
             var info = collection.Add(condition.Object, "a", "b");

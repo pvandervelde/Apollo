@@ -22,7 +22,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void AddWithNullAction()
         {
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
 
             Assert.Throws<ArgumentNullException>(
                 () => collection.Add(null, "a", "b"));
@@ -31,7 +31,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void Add()
         {
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var action = new Mock<IScheduleAction>(); 
 
             var info = collection.Add(action.Object, "a", "b");
@@ -42,7 +42,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void AddWithDuplicate()
         {
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var action = new Mock<IScheduleAction>();
 
             var info = collection.Add(action.Object, "a", "b");
@@ -57,7 +57,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void UpdateWithNullId()
         {
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var action = new Mock<IScheduleAction>();
 
             var info = collection.Add(action.Object, "a", "b");
@@ -68,7 +68,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void UpdateWithUnknownId()
         {
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var action = new Mock<IScheduleAction>();
 
             var info = collection.Add(action.Object, "a", "b");
@@ -79,7 +79,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void UpdateWithNullAction()
         {
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var action = new Mock<IScheduleAction>();
 
             var info = collection.Add(action.Object, "a", "b");
@@ -89,7 +89,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void Update()
         {
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var action = new Mock<IScheduleAction>();
 
             var info = collection.Add(action.Object, "a", "b");
@@ -108,14 +108,14 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void RemoveWithNullId()
         {
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             Assert.DoesNotThrow(() => collection.Remove(null));
         }
 
         [Test]
         public void Remove()
         {
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var action = new Mock<IScheduleAction>();
 
             var info = collection.Add(action.Object, "a", "b");
@@ -128,7 +128,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void Contains()
         {
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var action = new Mock<IScheduleAction>();
 
             var info = collection.Add(action.Object, "a", "b");

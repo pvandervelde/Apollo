@@ -86,7 +86,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// Creates a default schedule storage that isn't linked to a timeline.
         /// </summary>
         /// <returns>The newly created instance.</returns>
-        internal static ScheduleConditionStorage BuildStorageWithoutTimeline()
+        internal static ScheduleConditionStorage CreateInstanceWithoutTimeline()
         {
             return new ScheduleConditionStorage(new HistoryId(), new DictionaryHistory<ScheduleElementId, ConditionMap>());
         }
@@ -98,7 +98,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <param name="members">The collection containing all the member collections.</param>
         /// <param name="constructorArguments">The constructor arguments.</param>
         /// <returns>The newly created instance.</returns>
-        public static ScheduleConditionStorage BuildStorage(
+        public static ScheduleConditionStorage CreateInstance(
             HistoryId id,
             IEnumerable<Tuple<byte, IStoreTimelineValues>> members,
             params object[] constructorArguments)

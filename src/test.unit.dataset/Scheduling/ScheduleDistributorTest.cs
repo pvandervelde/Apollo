@@ -147,7 +147,7 @@ namespace Apollo.Core.Dataset.Scheduling
         public void ExecuteWithUnknownSchedule()
         {
             var distributor = new ScheduleDistributor(
-                ScheduleStorage.BuildStorageWithoutTimeline(),
+                ScheduleStorage.CreateInstanceWithoutTimeline(),
                 (s, id, e) => null);
             Assert.Throws<UnknownScheduleException>(() => distributor.Execute(new ScheduleId()));
         }
@@ -168,7 +168,7 @@ namespace Apollo.Core.Dataset.Scheduling
                 exitCondition,
                 passThroughCondition);
 
-            var knownSchedules = ScheduleStorage.BuildStorageWithoutTimeline();
+            var knownSchedules = ScheduleStorage.CreateInstanceWithoutTimeline();
             var scheduleInfo = knownSchedules.Add(
                 schedule, 
                 "a", 
@@ -211,7 +211,7 @@ namespace Apollo.Core.Dataset.Scheduling
                 exitCondition,
                 passThroughCondition);
 
-            var knownSchedules = ScheduleStorage.BuildStorageWithoutTimeline();
+            var knownSchedules = ScheduleStorage.CreateInstanceWithoutTimeline();
             var scheduleInfo = knownSchedules.Add(
                 schedule, 
                 "a", 

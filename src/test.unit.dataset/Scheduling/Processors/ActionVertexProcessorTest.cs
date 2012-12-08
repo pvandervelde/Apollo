@@ -22,7 +22,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         [Test]
         public void VertexTypeToProcess()
         {
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var processor = new ActionVertexProcessor(collection);
             Assert.AreEqual(typeof(ExecutingActionVertex), processor.VertexTypeToProcess);
         }
@@ -30,7 +30,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         [Test]
         public void ProcessWithIncorrectVertexType()
         {
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var processor = new ActionVertexProcessor(collection);
             var state = processor.Process(new StartVertex(1), new ScheduleExecutionInfo());
             Assert.AreEqual(ScheduleExecutionState.IncorrectProcessorForVertex, state);
@@ -45,7 +45,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
                     .Verifiable();
             }
 
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var info = collection.Add(
                 action.Object, 
                 "a", 
@@ -74,7 +74,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
                     .Verifiable();
             }
 
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var info = collection.Add(
                 action.Object, 
                 "a", 

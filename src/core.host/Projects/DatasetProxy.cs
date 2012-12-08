@@ -109,7 +109,7 @@ namespace Apollo.Core.Host.Projects
         /// <exception cref="UnknownMemberException">
         ///     Thrown if <paramref name="members"/> contains member data for an unknown member.
         /// </exception>
-        internal static DatasetProxy Build(
+        internal static DatasetProxy CreateInstance(
             HistoryId historyId,
             IEnumerable<Tuple<byte, IStoreTimelineValues>> members,
             params object[] constructorArguments)

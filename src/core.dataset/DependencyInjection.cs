@@ -31,15 +31,15 @@ namespace Apollo.Core.Dataset
     {
         private static void RegisterStorage(ContainerBuilder builder)
         {
-            builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<ScheduleActionStorage>(ScheduleActionStorage.BuildStorage))
+            builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<ScheduleActionStorage>(ScheduleActionStorage.CreateInstance))
                 .As<IStoreScheduleActions>()
                 .SingleInstance();
 
-            builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<ScheduleConditionStorage>(ScheduleConditionStorage.BuildStorage))
+            builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<ScheduleConditionStorage>(ScheduleConditionStorage.CreateInstance))
                 .As<IStoreScheduleConditions>()
                 .SingleInstance();
 
-            builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<ScheduleStorage>(ScheduleStorage.BuildStorage))
+            builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<ScheduleStorage>(ScheduleStorage.CreateInstance))
                 .As<IStoreSchedules>()
                 .SingleInstance();
 

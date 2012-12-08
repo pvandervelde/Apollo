@@ -40,7 +40,7 @@ namespace Apollo.Core.Dataset.Plugins
         /// <param name="members">The collection that holds all the members for the current object.</param>
         /// <param name="constructorArguments">The optional constructor arguments.</param>
         /// <returns>A new instance of the <see cref="InstanceLayer"/> class.</returns>
-        internal static InstanceLayer Build(
+        internal static InstanceLayer CreateInstance(
             HistoryId id,
             IEnumerable<Tuple<byte, IStoreTimelineValues>> members,
             params object[] constructorArguments)
