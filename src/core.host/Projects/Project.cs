@@ -32,6 +32,11 @@ namespace Apollo.Core.Host.Projects
     /// </remarks>
     internal sealed partial class Project : IProject, ICanClose
     {
+        private static void CloseOnlineDataset(DatasetProxy info)
+        {
+            info.UnloadFromMachine();
+        }
+
         /// <summary>
         /// The object used to lock on.
         /// </summary>
@@ -495,11 +500,6 @@ namespace Apollo.Core.Host.Projects
             }
 
             RaiseOnClosed();
-        }
-
-        private void CloseOnlineDataset(DatasetProxy info)
-        {
-            info.UnloadFromMachine();
         }
 
         /// <summary>

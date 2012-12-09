@@ -150,7 +150,7 @@ namespace Apollo.Core.Base.Plugins
         /// <summary>
         /// Gets the type of the parameter.
         /// </summary>
-        public TypeIdentity Type
+        public TypeIdentity Identity
         {
             get
             {
@@ -180,7 +180,7 @@ namespace Apollo.Core.Base.Plugins
             // we get an infinite loop where we're constantly trying to compare to null.
             return !ReferenceEquals(other, null) 
                 && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase) 
-                && Type == other.Type;
+                && Identity == other.Identity;
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace Apollo.Core.Base.Plugins
 
                 // Mash the hash together with yet another random prime number
                 hash = (hash * 23) ^ Name.GetHashCode();
-                hash = (hash * 23) ^ Type.GetHashCode();
+                hash = (hash * 23) ^ Identity.GetHashCode();
                 
                 return hash;
             }
@@ -241,7 +241,7 @@ namespace Apollo.Core.Base.Plugins
             return string.Format(
                 CultureInfo.InvariantCulture,
                 "{0} {1}",
-                Type,
+                Identity,
                 Name);
         }
     }

@@ -321,8 +321,6 @@ namespace Apollo.Core.Dataset.Scheduling
             var executor = m_LoadExecutor(editableSchedule, scheduleId, executionInfo);
             {
                 // Attach to events. We want to remove the executor from the collection as soon as it's finished
-                executor.OnStart += HandleScheduleExecutionStart;
-                executor.OnPause += HandleScheduleExecutionPause;
                 executor.OnFinish += HandleScheduleExecutionFinish;
                 m_RunningExecutors.Add(new ExecutingScheduleKey(scheduleId, scheduleParameters), executor);
                 
@@ -332,16 +330,6 @@ namespace Apollo.Core.Dataset.Scheduling
             return executor;
         }
 
-        private void HandleScheduleExecutionStart(object sender, EventArgs e)
-        {
-            var executor = sender as IExecuteSchedules;
-        }
-
-        private void HandleScheduleExecutionPause(object sender, EventArgs e)
-        {
-            var executor = sender as IExecuteSchedules;
-        }
-
         private void HandleScheduleExecutionFinish(object sender, ScheduleExecutionStateEventArgs e)
         {
             lock (m_Lock)
@@ -349,8 +337,6 @@ namespace Apollo.Core.Dataset.Scheduling
                 var executor = sender as IExecuteSchedules;
                 Debug.Assert(executor != null, "Received the event from a non-IExecuteSchedules object.");
 
-                executor.OnStart -= HandleScheduleExecutionStart;
-                executor.OnPause -= HandleScheduleExecutionPause;
                 executor.OnFinish -= HandleScheduleExecutionFinish;
 
                 m_RunningExecutors.Remove(new ExecutingScheduleKey(executor.Schedule, executor.Parameters));

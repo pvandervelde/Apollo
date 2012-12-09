@@ -32,7 +32,7 @@ namespace Apollo.Core.Host.Plugins
                 {
                     new PartDefinition
                         {
-                            Type = TypeIdentity.CreateDefinition(typeof(ActionOnMethod)),
+                            Identity = TypeIdentity.CreateDefinition(typeof(ActionOnMethod)),
                             Exports = new List<SerializableExportDefinition> 
                                 {
                                     TypeBasedExportDefinition.CreateDefinition("ActionExport", typeof(ActionOnMethod))
@@ -48,7 +48,7 @@ namespace Apollo.Core.Host.Plugins
                         },
                     new PartDefinition
                         {
-                            Type = TypeIdentity.CreateDefinition(typeof(ConditionOnMethod)),
+                            Identity = TypeIdentity.CreateDefinition(typeof(ConditionOnMethod)),
                             Exports = new List<SerializableExportDefinition> 
                                 {
                                     TypeBasedExportDefinition.CreateDefinition("ConditionOnMethodExport", typeof(ConditionOnMethod))
@@ -64,7 +64,7 @@ namespace Apollo.Core.Host.Plugins
                         },
                     new PartDefinition
                         {
-                            Type = TypeIdentity.CreateDefinition(typeof(ConditionOnProperty)),
+                            Identity = TypeIdentity.CreateDefinition(typeof(ConditionOnProperty)),
                             Exports = new List<SerializableExportDefinition> 
                                 {
                                     TypeBasedExportDefinition.CreateDefinition("ConditionOnPropertyExport", typeof(ConditionOnProperty))
@@ -80,7 +80,7 @@ namespace Apollo.Core.Host.Plugins
                         },
                     new PartDefinition
                         {
-                            Type = TypeIdentity.CreateDefinition(typeof(ExportOnProperty)),
+                            Identity = TypeIdentity.CreateDefinition(typeof(ExportOnProperty)),
                             Exports = new List<SerializableExportDefinition> 
                                 {
                                     PropertyBasedExportDefinition.CreateDefinition(
@@ -93,7 +93,7 @@ namespace Apollo.Core.Host.Plugins
                         },
                     new PartDefinition
                         {
-                            Type = TypeIdentity.CreateDefinition(typeof(ImportOnProperty)),
+                            Identity = TypeIdentity.CreateDefinition(typeof(ImportOnProperty)),
                             Exports = new List<SerializableExportDefinition> 
                                 {
                                     TypeBasedExportDefinition.CreateDefinition(typeof(ImportOnProperty).FullName, typeof(ImportOnProperty))
@@ -297,7 +297,7 @@ namespace Apollo.Core.Host.Plugins
             var actionInfo = builder.RegisterObject(typeof(ActionOnMethod));
             var conditionInfo = builder.RegisterObject(typeof(ConditionOnProperty));
 
-            var registrator = builder.ScheduleRegistrator();
+            var registrator = builder.RegisterSchedule();
             {
                 var vertex = registrator.AddExecutingAction(actionInfo.RegisteredActions.First());
                 registrator.LinkFromStart(vertex, conditionInfo.RegisteredConditions.First());
@@ -342,7 +342,7 @@ namespace Apollo.Core.Host.Plugins
             var fourthInfo = builder.RegisterObject(typeof(ConditionOnProperty));
             builder.Connect(firstInfo.RegisteredImports.First(), secondInfo.RegisteredExports.First());
 
-            var registrator = builder.ScheduleRegistrator();
+            var registrator = builder.RegisterSchedule();
             {
                 var vertex = registrator.AddExecutingAction(thirdInfo.RegisteredActions.First());
                 registrator.LinkFromStart(vertex, fourthInfo.RegisteredConditions.First());
@@ -395,7 +395,7 @@ namespace Apollo.Core.Host.Plugins
             var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
             var firstInfo = builder.RegisterObject(typeof(ImportOnProperty));
 
-            var registrator = builder.ScheduleRegistrator();
+            var registrator = builder.RegisterSchedule();
             var vertex = registrator.AddInsertPoint();
             registrator.LinkFromStart(vertex);
             registrator.LinkToEnd(vertex);

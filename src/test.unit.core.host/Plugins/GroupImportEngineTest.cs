@@ -215,7 +215,7 @@ namespace Apollo.Core.Host.Plugins
                 repository.Setup(r => r.Parts())
                     .Returns(s_Parts);
                 repository.Setup(r => r.Part(It.IsAny<TypeIdentity>()))
-                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Type.Equals(t)).FirstOrDefault());
+                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Identity.Equals(t)).FirstOrDefault());
                 repository.Setup(r => r.Groups())
                     .Returns(s_Groups);
                 repository.Setup(r => r.Group(It.IsAny<GroupRegistrationId>()))
@@ -240,7 +240,7 @@ namespace Apollo.Core.Host.Plugins
                 repository.Setup(r => r.Parts())
                     .Returns(s_Parts);
                 repository.Setup(r => r.Part(It.IsAny<TypeIdentity>()))
-                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Type.Equals(t)).FirstOrDefault());
+                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Identity.Equals(t)).FirstOrDefault());
                 repository.Setup(r => r.Groups())
                     .Returns(s_Groups);
                 repository.Setup(r => r.Group(It.IsAny<GroupRegistrationId>()))
@@ -265,7 +265,7 @@ namespace Apollo.Core.Host.Plugins
                 repository.Setup(r => r.Parts())
                     .Returns(s_Parts);
                 repository.Setup(r => r.Part(It.IsAny<TypeIdentity>()))
-                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Type.Equals(t)).FirstOrDefault());
+                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Identity.Equals(t)).FirstOrDefault());
                 repository.Setup(r => r.Groups())
                     .Returns(s_Groups);
                 repository.Setup(r => r.Group(It.IsAny<GroupRegistrationId>()))
@@ -290,7 +290,7 @@ namespace Apollo.Core.Host.Plugins
                 repository.Setup(r => r.Parts())
                     .Returns(s_Parts);
                 repository.Setup(r => r.Part(It.IsAny<TypeIdentity>()))
-                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Type.Equals(t)).FirstOrDefault());
+                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Identity.Equals(t)).FirstOrDefault());
                 repository.Setup(r => r.Groups())
                     .Returns(s_Groups);
                 repository.Setup(r => r.Group(It.IsAny<GroupRegistrationId>()))
@@ -315,7 +315,7 @@ namespace Apollo.Core.Host.Plugins
                 repository.Setup(r => r.Parts())
                     .Returns(s_Parts);
                 repository.Setup(r => r.Part(It.IsAny<TypeIdentity>()))
-                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Type.Equals(t)).FirstOrDefault());
+                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Identity.Equals(t)).FirstOrDefault());
                 repository.Setup(r => r.Groups())
                     .Returns(s_Groups);
                 repository.Setup(r => r.Group(It.IsAny<GroupRegistrationId>()))
@@ -343,7 +343,7 @@ namespace Apollo.Core.Host.Plugins
                 repository.Setup(r => r.Parts())
                     .Returns(s_Parts);
                 repository.Setup(r => r.Part(It.IsAny<TypeIdentity>()))
-                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Type.Equals(t)).FirstOrDefault());
+                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Identity.Equals(t)).FirstOrDefault());
                 repository.Setup(r => r.Groups())
                     .Returns(s_Groups);
                 repository.Setup(r => r.Group(It.IsAny<GroupRegistrationId>()))
@@ -371,7 +371,7 @@ namespace Apollo.Core.Host.Plugins
                 repository.Setup(r => r.Parts())
                     .Returns(s_Parts);
                 repository.Setup(r => r.Part(It.IsAny<TypeIdentity>()))
-                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Type.Equals(t)).FirstOrDefault());
+                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Identity.Equals(t)).FirstOrDefault());
                 repository.Setup(r => r.Groups())
                     .Returns(s_Groups);
                 repository.Setup(r => r.Group(It.IsAny<GroupRegistrationId>()))
@@ -398,7 +398,7 @@ namespace Apollo.Core.Host.Plugins
                 repository.Setup(r => r.Parts())
                     .Returns(s_Parts);
                 repository.Setup(r => r.Part(It.IsAny<TypeIdentity>()))
-                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Type.Equals(t)).FirstOrDefault());
+                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Identity.Equals(t)).FirstOrDefault());
                 repository.Setup(r => r.Groups())
                     .Returns(s_Groups);
                 repository.Setup(r => r.Group(It.IsAny<GroupRegistrationId>()))

@@ -124,7 +124,7 @@ namespace Apollo.Core.Host.Plugins
         /// Returns an object that can be used to register schedules for the current group.
         /// </summary>
         /// <returns>The schedule builder for the current group.</returns>
-        public IRegisterSchedules ScheduleRegistrator()
+        public IRegisterSchedules RegisterSchedule()
         {
             return new ScheduleDefinitionBuilder(this, m_BuilderGenerator());
         }
@@ -139,7 +139,7 @@ namespace Apollo.Core.Host.Plugins
         /// </returns>
         public IPartRegistration RegisterObject(Type type)
         {
-            var plugin = m_Repository.Parts().Where(p => p.Type.Equals(type)).FirstOrDefault();
+            var plugin = m_Repository.Parts().Where(p => p.Identity.Equals(type)).FirstOrDefault();
             if (plugin == null)
             {
                 throw new UnknownPluginTypeException();

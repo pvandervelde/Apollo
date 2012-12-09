@@ -74,5 +74,16 @@ namespace Apollo.Core.Host.Projects
                 return m_CompositionLayer;
             }
         }
+
+        /// <summary>
+        /// Gets the object that is used to select part groups for the current dataset.
+        /// </summary>
+        public GroupSelector SelectGroups
+        {
+            get
+            {
+                return m_Selector;
+            }
+        }
     }
 }

@@ -11,7 +11,7 @@ using Apollo.Core.Base.Plugins;
 namespace Apollo.Core.Base.Plugins
 {
     /// <summary>
-    /// Stores the serialized information for a given <see cref="Type"/>.
+    /// Stores the serialized information for a given <see cref="Identity"/>.
     /// </summary>
     [Serializable]
     public sealed class PartDefinition
@@ -19,7 +19,7 @@ namespace Apollo.Core.Base.Plugins
         /// <summary>
         /// Gets or sets the serialized type info.
         /// </summary>
-        public TypeIdentity Type
+        public TypeIdentity Identity
         {
             get;
             set;

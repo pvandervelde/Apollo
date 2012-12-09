@@ -178,7 +178,7 @@ namespace Apollo.Core.Dataset.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The given schedule vertext is not part of the current schedule..
+        ///   Looks up a localized string similar to The given schedule vertex is not part of the current schedule..
         /// </summary>
         internal static string Exceptions_Messages_UnknownScheduleVertex {
             get {

@@ -12,7 +12,9 @@ using System.Threading;
 using System.Windows.Forms;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
+using Apollo.Core.Base.Plugins;
 using Apollo.Core.Base.Scheduling;
+using Apollo.Core.Dataset.Plugins;
 using Apollo.Core.Dataset.Scheduling;
 using Apollo.Core.Dataset.Scheduling.Processors;
 using Apollo.Core.Dataset.Utilities;
@@ -29,7 +31,7 @@ namespace Apollo.Core.Dataset
     [ExcludeFromCodeCoverage]
     internal static class DependencyInjection
     {
-        private static void RegisterStorage(ContainerBuilder builder)
+        private static void RegisterScheduleStorage(ContainerBuilder builder)
         {
             builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<ScheduleActionStorage>(ScheduleActionStorage.CreateInstance))
                 .As<IStoreScheduleActions>()
@@ -105,6 +107,17 @@ namespace Apollo.Core.Dataset
                 .SingleInstance();
         }
 
+        private static void RegisterPartStorage(ContainerBuilder builder)
+        {
+            builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<CompositionLayer>(CompositionLayer.CreateInstance))
+                .As<IStoreGroupsAndConnections>()
+                .SingleInstance();
+
+            builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<InstanceLayer>(InstanceLayer.CreateInstance))
+                .As<IStoreInstances>()
+                .SingleInstance();
+        }
+
         private static void RegisterDatasetLock(ContainerBuilder builder)
         {
             builder.Register(c => new DatasetLock())
@@ -155,6 +168,19 @@ namespace Apollo.Core.Dataset
                 .As<IDatasetApplicationCommands>()
                 .As<ICommandSet>()
                 .SingleInstance();
+
+            builder.Register(c => new CompositionCommands(
+                    c.Resolve<ITrackDatasetLocks>(),
+                    c.Resolve<IStoreGroupsAndConnections>()))
+                .OnActivated(
+                    a =>
+                    {
+                        var collection = a.Context.Resolve<ICommandCollection>();
+                        collection.Register(typeof(ICompositionCommands), a.Instance);
+                    })
+                .As<ICompositionCommands>()
+                .As<ICommandSet>()
+                .SingleInstance();
         }
 
         /// <summary>
@@ -184,8 +210,9 @@ namespace Apollo.Core.Dataset
                     .As<ApplicationContext>()
                     .ExternallyOwned();
 
-                RegisterStorage(builder);
+                RegisterScheduleStorage(builder);
                 RegisterScheduleExecutors(builder);
+                RegisterPartStorage(builder);
                 RegisterDatasetLock(builder);
             }
 
@@ -201,6 +228,8 @@ namespace Apollo.Core.Dataset
             context.ExitThread();
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "fileToLoad",
+            Justification = "Leaving this for now. At least until we can actually load stuff from file.")]
         private static void LoadDatasetFile(IContainer container, FileInfo fileToLoad)
         {
             // For now we fake this out by pretending it takes time to load.

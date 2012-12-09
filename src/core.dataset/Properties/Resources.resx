@@ -160,6 +160,6 @@
     <value>The given group composition ID is not related to a known group.</value>
   </data>
   <data name="Exceptions_Messages_UnknownScheduleVertex" xml:space="preserve">
-    <value>The given schedule vertext is not part of the current schedule.</value>
+    <value>The given schedule vertex is not part of the current schedule.</value>
   </data>
 </root>

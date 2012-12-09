@@ -35,7 +35,7 @@ namespace Test.Mocks
             builder.Connect(importOnProperty.RegisteredImports.First(), exportOnProperty.RegisteredExports.First());
 
             InsertVertex insertPoint;
-            var registrator = builder.ScheduleRegistrator();
+            var registrator = builder.RegisterSchedule();
             {
                 var actionVertex = registrator.AddExecutingAction(actionOnMethod.RegisteredActions.First());
                 insertPoint = registrator.AddInsertPoint();
@@ -64,7 +64,7 @@ namespace Test.Mocks
             var actionOnMethod = builder.RegisterObject(typeof(ActionOnMethod));
             var conditionOnProperty = builder.RegisterObject(typeof(ConditionOnProperty));
 
-            var registrator = builder.ScheduleRegistrator();
+            var registrator = builder.RegisterSchedule();
             {
                 var actionVertex = registrator.AddExecutingAction(actionOnMethod.RegisteredActions.First());
 
@@ -86,7 +86,7 @@ namespace Test.Mocks
             var actionOnMethod = builder.RegisterObject(typeof(ActionOnMethod));
             var conditionOnProperty = builder.RegisterObject(typeof(ConditionOnProperty));
 
-            var registrator = builder.ScheduleRegistrator();
+            var registrator = builder.RegisterSchedule();
             {
                 var actionVertex = registrator.AddExecutingAction(actionOnMethod.RegisteredActions.First());
 

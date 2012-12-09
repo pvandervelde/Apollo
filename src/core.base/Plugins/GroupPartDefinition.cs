@@ -100,7 +100,7 @@ namespace Apollo.Core.Base.Plugins
         /// <summary>
         /// Gets the type of object that has been registered.
         /// </summary>
-        public TypeIdentity Type
+        public TypeIdentity Identity
         {
             get
             {

@@ -49,7 +49,9 @@ namespace Apollo.Core.Host.Plugins
 
                     // Create the type full name ourselves because generic type parameters don't have one (see
                     // http://blogs.msdn.com/b/haibo_luo/archive/2006/02/17/534480.aspx).
-                    var name = t.AssemblyQualifiedName ?? string.Format("{0}.{1}, {2}", t.Namespace, t.Name, t.Assembly.FullName);
+                    var name = 
+                        t.AssemblyQualifiedName 
+                        ?? string.Format(CultureInfo.InvariantCulture, "{0}.{1}, {2}", t.Namespace, t.Name, t.Assembly.FullName);
                     if (!typeStorage.ContainsDefinitionForType(name))
                     {
                         try
@@ -143,8 +145,7 @@ namespace Apollo.Core.Host.Plugins
 
         private static SerializableImportDefinition CreatePropertyImport(
             ContractBasedImportDefinition import,
-            Func<Type, TypeIdentity> identityGenerator,
-            Assembly containingAssembly)
+            Func<Type, TypeIdentity> identityGenerator)
         {
             var memberInfo = ReflectionModelServices.GetImportingMember(import);
             if (memberInfo.MemberType != MemberTypes.Property)
@@ -177,8 +178,7 @@ namespace Apollo.Core.Host.Plugins
 
         private static SerializableImportDefinition CreateConstructorParameterImport(
             ContractBasedImportDefinition import,
-            Func<Type, TypeIdentity> identityGenerator,
-            Assembly containingAssembly)
+            Func<Type, TypeIdentity> identityGenerator)
         {
             var parameterInfo = ReflectionModelServices.GetImportingParameter(import);
             var requiredType = ExtractRequiredType(parameterInfo.Value.GetCustomAttributes(), parameterInfo.Value.ParameterType);
@@ -450,8 +450,8 @@ namespace Apollo.Core.Host.Plugins
                     var contractImport = import as ContractBasedImportDefinition;
 
                     SerializableImportDefinition importDefinition = !ReflectionModelServices.IsImportingParameter(contractImport)
-                        ? importDefinition = CreatePropertyImport(contractImport, createTypeIdentity, assembly)
-                        : importDefinition = CreateConstructorParameterImport(contractImport, createTypeIdentity, assembly);
+                        ? importDefinition = CreatePropertyImport(contractImport, createTypeIdentity)
+                        : importDefinition = CreateConstructorParameterImport(contractImport, createTypeIdentity);
 
                     if (importDefinition != null)
                     {
@@ -479,7 +479,7 @@ namespace Apollo.Core.Host.Plugins
                     type,
                     new PartDefinition
                         {
-                            Type = createTypeIdentity(type),
+                            Identity = createTypeIdentity(type),
                             Exports = exports,
                             Imports = imports,
                             Actions = Enumerable.Empty<ScheduleActionDefinition>(),

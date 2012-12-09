@@ -68,6 +68,56 @@ namespace Apollo.Core.Host.Plugins
             return isClosureOfGenericType || isSubClassOfClosure || inheritsClosureInterface;
         }
 
+        private static bool ImportIsLazy(TypeDefinition importType, Func<TypeIdentity, TypeDefinition> toDefinition)
+        {
+            return OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Lazy<>)], importType, toDefinition)
+                || OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Lazy<,>)], importType, toDefinition);
+        }
+
+        private static bool ImportIsFunc(TypeDefinition importType, Func<TypeIdentity, TypeDefinition> toDefinition)
+        {
+            return OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Func<>)], importType, toDefinition)
+                || OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Func<,>)], importType, toDefinition)
+                || OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Func<,,>)], importType, toDefinition)
+                || OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Func<,,,>)], importType, toDefinition);
+        }
+
+        private static bool ImportIsAction(TypeDefinition importType, Func<TypeIdentity, TypeDefinition> toDefinition)
+        {
+            return OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Action<>)], importType, toDefinition)
+                || OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Action<,>)], importType, toDefinition)
+                || OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Action<,,>)], importType, toDefinition)
+                || OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Action<,,,>)], importType, toDefinition);
+        }
+
+        private static bool ImportIsCollection(TypeDefinition importType, Func<TypeIdentity, TypeDefinition> toDefinition)
+        {
+            return OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(IEnumerable<>)], importType, toDefinition);
+        }
+
+        private static TypeIdentity ExportedType(SerializableExportDefinition exportDefinition)
+        {
+            var typeExport = exportDefinition as TypeBasedExportDefinition;
+            if (typeExport != null)
+            {
+                return typeExport.DeclaringType;
+            }
+
+            var propertyExport = exportDefinition as PropertyBasedExportDefinition;
+            if (propertyExport != null)
+            {
+                return propertyExport.Property.PropertyType;
+            }
+
+            var methodExport = exportDefinition as MethodBasedExportDefinition;
+            if (methodExport != null)
+            {
+                return methodExport.Method.ReturnType;
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// The object that stores information about all the available parts and part groups.
         /// </summary>
@@ -132,7 +182,7 @@ namespace Apollo.Core.Host.Plugins
                 return true;
             }
 
-            if (ImportIsAction(importRequiredTypeDef, toDefinition) && ExportMatchesActionImport(importRequiredType, exportType, exportDefinition))
+            if (ImportIsAction(importRequiredTypeDef, toDefinition) && ExportMatchesActionImport(importRequiredType, exportDefinition))
             {
                 return true;
             }
@@ -140,59 +190,9 @@ namespace Apollo.Core.Host.Plugins
             return false;
         }
 
-        private TypeIdentity ExportedType(SerializableExportDefinition exportDefinition)
-        {
-            var typeExport = exportDefinition as TypeBasedExportDefinition;
-            if (typeExport != null)
-            {
-                return typeExport.DeclaringType;
-            }
-
-            var propertyExport = exportDefinition as PropertyBasedExportDefinition;
-            if (propertyExport != null)
-            {
-                return propertyExport.Property.PropertyType;
-            }
-
-            var methodExport = exportDefinition as MethodBasedExportDefinition;
-            if (methodExport != null)
-            {
-                return methodExport.Method.ReturnType;
-            }
-
-            return null;
-        }
-
         private bool AvailableTypeMatchesRequiredType(TypeIdentity requiredType, TypeIdentity availableType)
         {
             return (availableType != null) && (requiredType.Equals(availableType) || m_Repository.IsSubTypeOf(requiredType, availableType));
-        }
-
-        private bool ImportIsCollection(TypeDefinition importType, Func<TypeIdentity, TypeDefinition> toDefinition)
-        {
-            return OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(IEnumerable<>)], importType, toDefinition);
-        }
-
-        private bool ImportIsLazy(TypeDefinition importType, Func<TypeIdentity, TypeDefinition> toDefinition)
-        {
-            return OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Lazy<>)], importType, toDefinition)
-                || OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Lazy<,>)], importType, toDefinition);
-        }
-
-        private bool ImportIsFunc(TypeDefinition importType, Func<TypeIdentity, TypeDefinition> toDefinition)
-        {
-            return OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Func<>)], importType, toDefinition)
-                || OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Func<,>)], importType, toDefinition)
-                || OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Func<,,>)], importType, toDefinition)
-                || OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Func<,,,>)], importType, toDefinition);
-        }
-
-        private bool ImportIsAction(TypeDefinition importType, Func<TypeIdentity, TypeDefinition> toDefinition)
-        {
-            return OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Action<>)], importType, toDefinition)
-                || OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Action<,>)], importType, toDefinition)
-                || OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Action<,,>)], importType, toDefinition)
-                || OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Action<,,,>)], importType, toDefinition);
         }
 
         private bool ExportMatchesCollectionImport(TypeIdentity importType, TypeIdentity exportType, Func<TypeIdentity, TypeDefinition> toDefinition)
@@ -256,7 +256,7 @@ namespace Apollo.Core.Host.Plugins
 
                 for (int i = 0; i < typeArguments.Count - 1; i++)
                 {
-                    if (!AvailableTypeMatchesRequiredType(typeArguments[i], parameters[i].Type))
+                    if (!AvailableTypeMatchesRequiredType(typeArguments[i], parameters[i].Identity))
                     {
                         return false;
                     }
@@ -268,7 +268,7 @@ namespace Apollo.Core.Host.Plugins
             return false;
         }
 
-        private bool ExportMatchesActionImport(TypeIdentity importType, TypeIdentity exportType, SerializableExportDefinition exportDefinition)
+        private bool ExportMatchesActionImport(TypeIdentity importType, SerializableExportDefinition exportDefinition)
         {
             Debug.Assert(importType.TypeArguments.Count() > 0, "Action<T> should have at least 1 generic type argument.");
             var typeArguments = importType.TypeArguments.ToList();
@@ -290,7 +290,7 @@ namespace Apollo.Core.Host.Plugins
 
                 for (int i = 0; i < typeArguments.Count; i++)
                 {
-                    if (!AvailableTypeMatchesRequiredType(typeArguments[i], parameters[i].Type))
+                    if (!AvailableTypeMatchesRequiredType(typeArguments[i], parameters[i].Identity))
                     {
                         return false;
                     }

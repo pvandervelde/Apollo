@@ -26,6 +26,8 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="repository">The object that contains all the part and part group information.</param>
         /// <param name="logger">The object that provides the logging for the remote <c>AppDomain</c>.</param>
         /// <returns>The newly created <see cref="IAssemblyScanner"/> object.</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "Cannot make this static because then it wouldn't be executed on the remote instance, but on the local proxy.")]
         public IAssemblyScanner Load(IPluginRepository repository, ILogMessagesFromRemoteAppDomains logger)
         {
             try

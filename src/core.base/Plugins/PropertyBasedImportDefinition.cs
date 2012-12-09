@@ -99,6 +99,8 @@ namespace Apollo.Core.Base.Plugins
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="identityGenerator"/> is <see langword="null" />.
         /// </exception>
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Recomposable",
+            Justification = "MEF uses the same term, so we're not going to make up some other one.")]
         public static PropertyBasedImportDefinition CreateDefinition(
             string contractName,
             TypeIdentity requiredTypeIdentity,
@@ -143,6 +145,8 @@ namespace Apollo.Core.Base.Plugins
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="property"/> is <see langword="null" />.
         /// </exception>
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Recomposable",
+            Justification = "MEF uses the same term, so we're not going to make up some other one.")]
         public static PropertyBasedImportDefinition CreateDefinition(
             string contractName,
             TypeIdentity requiredTypeIdentity,

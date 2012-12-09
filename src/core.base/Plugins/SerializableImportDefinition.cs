@@ -82,6 +82,8 @@ namespace Apollo.Core.Base.Plugins
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="declaringType"/> is <see langword="null" />.
         /// </exception>
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Recomposable",
+            Justification = "MEF uses the same term, so we're not going to make up some other one.")]
         protected SerializableImportDefinition(
             string contractName,
             TypeIdentity requiredTypeIdentity,
@@ -141,6 +143,8 @@ namespace Apollo.Core.Base.Plugins
         /// Gets a value indicating whether the import can be satisfied multiple times during the lifetime of
         /// a part.
         /// </summary>
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Recomposable",
+            Justification = "MEF uses the same term.")]
         public bool IsRecomposable
         {
             get

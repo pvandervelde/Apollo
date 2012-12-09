@@ -192,17 +192,17 @@ namespace Apollo.Utilities.History
         /// <summary>
         /// Adds a new edge to the graph.
         /// </summary>
-        /// <param name="e">The edge to add.</param>
+        /// <param name="edge">The edge to add.</param>
         /// <returns>
         /// <see langword="true" /> if the edge was added successfully; otherwise, <see langword="false" />.
         /// </returns>
-        public bool AddEdge(TEdge e)
+        public bool AddEdge(TEdge edge)
         {
-            var result = Current.AddEdge(e);
+            var result = Current.AddEdge(edge);
             if (result)
             {
-                Changes.Add(new AddEdgeChange(e));
-                RaiseEdgeAdded(e);
+                Changes.Add(new AddEdgeChange(edge));
+                RaiseEdgeAdded(edge);
             }
 
             return result;
@@ -232,6 +232,8 @@ namespace Apollo.Utilities.History
         /// </summary>
         [SuppressMessage("StyleCopPlus.StyleCopPlusRules", "SP0100:AdvancedNamingRules",
             Justification = "Event is inherited from the IMutableEdgeListGraph<TVertex, TEdge> interface.")]
+        [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
+            Justification = "Cannot rename EdgeAction because it is defined in QuickGraph.")]
         public event EdgeAction<TVertex, TEdge> EdgeAdded;
 
         private void RaiseEdgeAdded(TEdge args)
@@ -246,17 +248,17 @@ namespace Apollo.Utilities.History
         /// <summary>
         /// Removes the given edge from the graph.
         /// </summary>
-        /// <param name="e">The edge.</param>
+        /// <param name="edge">The edge.</param>
         /// <returns>
         /// <see langword="true" /> if the edge was removed; otherwise, <see langword="false" />.
         /// </returns>
-        public bool RemoveEdge(TEdge e)
+        public bool RemoveEdge(TEdge edge)
         {
-            var result = Current.RemoveEdge(e);
+            var result = Current.RemoveEdge(edge);
             if (result)
             {
-                Changes.Add(new RemoveEdgeChange(e));
-                RaiseEdgeRemoved(e);
+                Changes.Add(new RemoveEdgeChange(edge));
+                RaiseEdgeRemoved(edge);
             }
 
             return result;
@@ -295,11 +297,11 @@ namespace Apollo.Utilities.History
         /// Removes all the inbound edges that match the given predicate.
         /// </summary>
         /// <param name="v">The vertex for which the inbound edges should be checked.</param>
-        /// <param name="predicate">The predicate.</param>
+        /// <param name="edgePredicate">The predicate.</param>
         /// <returns>The number of inbound edges that were removed.</returns>
-        public int RemoveInEdgeIf(TVertex v, EdgePredicate<TVertex, TEdge> predicate)
+        public int RemoveInEdgeIf(TVertex v, EdgePredicate<TVertex, TEdge> edgePredicate)
         {
-            return RemoveEdgesByCollectionIf(Current.InEdges(v), predicate);
+            return RemoveEdgesByCollectionIf(Current.InEdges(v), edgePredicate);
         }
 
         /// <summary>
@@ -318,6 +320,8 @@ namespace Apollo.Utilities.History
         /// </summary>
         [SuppressMessage("StyleCopPlus.StyleCopPlusRules", "SP0100:AdvancedNamingRules",
             Justification = "Event is inherited from the IMutableEdgeListGraph<TVertex, TEdge> interface.")]
+        [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
+            Justification = "Cannot rename EdgeAction because it is defined in QuickGraph.")]
         public event EdgeAction<TVertex, TEdge> EdgeRemoved;
 
         private void RaiseEdgeRemoved(TEdge args)
@@ -370,15 +374,15 @@ namespace Apollo.Utilities.History
         /// <summary>
         /// Adds the edge and the vertices that belong to the edge.
         /// </summary>
-        /// <param name="e">The edge.</param>
+        /// <param name="edge">The edge.</param>
         /// <returns>
         /// <see langword="true" /> if the edge was added to the graph; otherwise, <see langword="false" />.
         /// </returns>
-        public bool AddVerticesAndEdge(TEdge e)
+        public bool AddVerticesAndEdge(TEdge edge)
         {
-            AddVertex(e.Source);
-            AddVertex(e.Target);
-            return AddEdge(e);
+            AddVertex(edge.Source);
+            AddVertex(edge.Target);
+            return AddEdge(edge);
         }
 
         /// <summary>
@@ -405,6 +409,8 @@ namespace Apollo.Utilities.History
         /// </summary>
         [SuppressMessage("StyleCopPlus.StyleCopPlusRules", "SP0100:AdvancedNamingRules",
             Justification = "Event is inherited from the IMutableVertexSet<TVertex> interface.")]
+        [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
+            Justification = "Cannot rename EdgeAction because it is defined in QuickGraph.")]
         public event VertexAction<TVertex> VertexAdded;
 
         private void RaiseVertexAdded(TVertex args)
@@ -438,14 +444,14 @@ namespace Apollo.Utilities.History
         /// <summary>
         /// Removes all vertices that match the given predictate.
         /// </summary>
-        /// <param name="predicate">The predicate.</param>
+        /// <param name="pred">The predicate.</param>
         /// <returns>The number of vertices that were removed.</returns>
-        public int RemoveVertexIf(VertexPredicate<TVertex> predicate)
+        public int RemoveVertexIf(VertexPredicate<TVertex> pred)
         {
             var verticesToRemove = new List<TVertex>();
             foreach (var vertex in Current.Vertices)
             {
-                if (predicate(vertex))
+                if (pred(vertex))
                 {
                     verticesToRemove.Add(vertex);
                 }
@@ -464,6 +470,8 @@ namespace Apollo.Utilities.History
         /// </summary>
         [SuppressMessage("StyleCopPlus.StyleCopPlusRules", "SP0100:AdvancedNamingRules",
             Justification = "Event is inherited from the IMutableVertexSet<TVertex> interface.")]
+        [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
+            Justification = "Cannot rename EdgeAction because it is defined in QuickGraph.")]
         public event VertexAction<TVertex> VertexRemoved;
 
         private void RaiseVertexRemoved(TVertex args)
@@ -639,25 +647,25 @@ namespace Apollo.Utilities.History
         /// Removes the given vertex and creates new edges between all the vertices
         /// that were connected to the deleted vertex.
         /// </summary>
-        /// <param name="v">The vertex.</param>
+        /// <param name="vertex">The vertex.</param>
         /// <param name="edgeFactory">The delegate that is used to create new edges.</param>
-        public void MergeVertex(TVertex v, EdgeFactory<TVertex, TEdge> edgeFactory)
+        public void MergeVertex(TVertex vertex, EdgeFactory<TVertex, TEdge> edgeFactory)
         {
-            var inEdges = Current.InEdges(v);
-            var outEdges = Current.OutEdges(v);
+            var inEdges = Current.InEdges(vertex);
+            var outEdges = Current.OutEdges(vertex);
 
-            RemoveVertex(v);
+            RemoveVertex(vertex);
 
             foreach (var inEdge in inEdges)
             {
-                if (inEdge.Source.Equals(v))
+                if (inEdge.Source.Equals(vertex))
                 {
                     continue;
                 }
 
                 foreach (var outEdge in outEdges)
                 {
-                    if (v.Equals(outEdge.Target))
+                    if (vertex.Equals(outEdge.Target))
                     {
                         continue;
                     }

@@ -19,7 +19,7 @@ namespace Apollo.Core.Extensions.Plugins
         /// Returns an object that can be used to register schedules for the current group.
         /// </summary>
         /// <returns>The schedule builder for the current group.</returns>
-        IRegisterSchedules ScheduleRegistrator();
+        IRegisterSchedules RegisterSchedule();
 
         /// <summary>
         /// Registers a new instance of the given type.

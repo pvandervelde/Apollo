@@ -161,7 +161,7 @@ namespace Apollo.Core.Base.Plugins
             var parameter = ParameterFromInt();
 
             Assert.AreEqual(parameter.Name, obj.Name);
-            Assert.AreEqual(TypeIdentity.CreateDefinition(parameter.ParameterType), obj.Type);
+            Assert.AreEqual(TypeIdentity.CreateDefinition(parameter.ParameterType), obj.Identity);
         }
 
         [Test]
