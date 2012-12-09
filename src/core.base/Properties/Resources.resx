@@ -147,6 +147,24 @@
   <data name="Exceptions_Messages_BaseLineIdValueMustNotBeLessThanTheUnknownIdValue" xml:space="preserve">
     <value>The value for a base line ID must not be smaller than that of the ID for an unknown value.</value>
   </data>
+  <data name="Exceptions_Messages_CannotCreateASynchronizationBlockWithoutVariables" xml:space="preserve">
+    <value>Cannot create a synchronization block without variables to synchronize on.</value>
+  </data>
+  <data name="Exceptions_Messages_CannotCreateInsertVertexWithLessThanOneInsert" xml:space="preserve">
+    <value>An editable insert vertex must have more than zero inserts.</value>
+  </data>
+  <data name="Exceptions_Messages_CannotExplicitlyLinkEndVertex" xml:space="preserve">
+    <value>Cannot directly link the end vertex to another vertex.</value>
+  </data>
+  <data name="Exceptions_Messages_CannotExplicitlyLinkStartVertex" xml:space="preserve">
+    <value>Cannot directly link the start vertex to another vertex.</value>
+  </data>
+  <data name="Exceptions_Messages_CannotInsertExistingVertex" xml:space="preserve">
+    <value>Cannot insert a vertex that already exists in the schedule.</value>
+  </data>
+  <data name="Exceptions_Messages_CannotLinkAVertexToItself" xml:space="preserve">
+    <value>Cannot link a vertex to itself.</value>
+  </data>
   <data name="Exceptions_Messages_ChannelAddresssMustBeDefined" xml:space="preserve">
     <value>The address of a communication channel must be defined in order to connect to the channel.</value>
   </data>
@@ -218,6 +236,9 @@
   </data>
   <data name="Exceptions_Messages_MissingEndpointId" xml:space="preserve">
     <value>The endpoint discovery message did not provide an endpoint ID. Contact information for the endpoint is incomplete without the ID.</value>
+  </data>
+  <data name="Exceptions_Messages_NoInsertsLeftOnVertex" xml:space="preserve">
+    <value>There are no more inserts left on the current insert vertex.</value>
   </data>
   <data name="Exceptions_Messages_NotificationNotSupported" xml:space="preserve">
     <value>The requested notification is not supported by the endpoint.</value>
@@ -311,6 +332,12 @@
   </data>
   <data name="Exceptions_Messages_UnknownEndpointIdFormat" xml:space="preserve">
     <value>The given endpoint had an unsupported format.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownSchedule" xml:space="preserve">
+    <value>The specified schedule ID does not map to a known schedule.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownScheduleVertex" xml:space="preserve">
+    <value>The specified vertex does not belong to the current schedule.</value>
   </data>
   <data name="Exceptions_Messages_UploadNotDeregistered" xml:space="preserve">
     <value>An upload for the given token already exists.</value>

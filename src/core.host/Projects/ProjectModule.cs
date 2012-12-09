@@ -7,6 +7,8 @@
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Plugins;
+using Apollo.Core.Host.Plugins;
 using Apollo.Utilities.History;
 using Autofac;
 using QuickGraph;
@@ -36,6 +38,7 @@ namespace Apollo.Core.Host.Projects
                         var ctx = c.Resolve<IComponentContext>();
                         return new ProjectService(
                             () => ctx.Resolve<ITimeline>(),
+                            d => ctx.Resolve<DatasetStorageProxy>(new TypedParameter(typeof(DatasetOnlineInformation), d)),
                             c.Resolve<IHelpDistributingDatasets>(),
                             c.Resolve<IBuildProjects>());
                     })
@@ -43,6 +46,28 @@ namespace Apollo.Core.Host.Projects
 
             builder.Register(c => new ProjectBuilder())
                 .As<IBuildProjects>();
+
+            builder.Register(
+                (c, p) => 
+                {
+                    var layer = c.Resolve<IProxyCompositionLayer>(
+                        new TypedParameter(
+                            typeof(ICompositionCommands),
+                            p.TypedAs<DatasetOnlineInformation>().Command<ICompositionCommands>()));
+                    return new DatasetStorageProxy(
+                        p.TypedAs<DatasetOnlineInformation>(),
+                        c.Resolve<GroupSelector>(new TypedParameter(typeof(ICompositionLayer), layer)),
+                        layer);
+                });
+
+            builder.Register((c, p) => new ProxyCompositionLayer(
+                    p.TypedAs<ICompositionCommands>(),
+                    c.Resolve<IConnectGroups>()))
+                .As<IProxyCompositionLayer>();
+
+            builder.Register((c, p) => new GroupSelector(
+                c.Resolve<IConnectGroups>(),
+                p.TypedAs<ICompositionLayer>()));
 
             builder.Register(c => new BidirectionalGraphHistory<DatasetId, Edge<DatasetId>>())
                 .As<IBidirectionalGraphHistory<DatasetId, Edge<DatasetId>>>();

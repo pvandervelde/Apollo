@@ -38,7 +38,7 @@ namespace Apollo.Core.Host.Projects
         /// <exception cref="UnknownMemberException">
         /// Thrown if the <paramref name="members"/> collection contains data for an unknown member field.
         /// </exception>
-        internal static ProjectHistoryStorage Build(
+        internal static ProjectHistoryStorage CreateInstance(
             HistoryId id,
             IEnumerable<Tuple<byte, IStoreTimelineValues>> members,
             params object[] constructorArguments)

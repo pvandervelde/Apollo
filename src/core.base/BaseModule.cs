@@ -13,6 +13,7 @@ using System.Threading;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Communication.Messages.Processors;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Utilities;
 using Apollo.Utilities.Configuration;
 using Autofac;
@@ -337,6 +338,7 @@ namespace Apollo.Core.Base
             RegisterEndpoints(builder);
             RegisterChannelTypes(builder, m_AllowChannelDiscovery);
             RegisterUploads(builder);
+
             RegisterStartables(builder);
         }
     }

@@ -40,10 +40,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="QuickGraph, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\QuickGraph\lib\net4\QuickGraph.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
@@ -72,9 +68,11 @@
     <Compile Include="Plugins\ExportRegistrationIdTest.cs" />
     <Compile Include="Plugins\GroupRegistrationIdTest.cs" />
     <Compile Include="Plugins\ImportRegistrationIdTest.cs" />
-    <Compile Include="Plugins\ObjectRegistrationIdTest.cs" />
+    <Compile Include="Plugins\PartRegistrationIdTest.cs" />
     <Compile Include="Plugins\ScheduleActionRegistrationIdTest.cs" />
     <Compile Include="Plugins\ScheduleConditionRegistrationIdTest.cs" />
+    <Compile Include="Plugins\UnknownExportDefinitionExceptionTest.cs" />
+    <Compile Include="Plugins\UnknownImportDefinitionExceptionTest.cs" />
     <Compile Include="Plugins\UnknownPluginTypeExceptionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduling\CannotCreateASynchronizationBlockWithoutVariablesExceptionTest.cs" />
@@ -85,22 +83,17 @@
     <Compile Include="Scheduling\CannotExplicitlyLinkStartVertexExceptionTest.cs" />
     <Compile Include="Scheduling\CannotInsertExistingVertexExceptionTest.cs" />
     <Compile Include="Scheduling\CannotLinkAVertexToItselfExceptionTest.cs" />
-    <Compile Include="Scheduling\EditableEndVertexTest.cs" />
-    <Compile Include="Scheduling\EditableExecutingActionVertexTest.cs" />
-    <Compile Include="Scheduling\EditableInsertVertexTest.cs" />
-    <Compile Include="Scheduling\EditableMarkHistoryVertexTest.cs" />
-    <Compile Include="Scheduling\EditableScheduleEdgeTest.cs" />
-    <Compile Include="Scheduling\EditableScheduleTest.cs" />
-    <Compile Include="Scheduling\EditableStartVertexTest.cs" />
-    <Compile Include="Scheduling\EditableSubScheduleVertexTest.cs" />
-    <Compile Include="Scheduling\EditableSynchronizationEndVertexTest.cs" />
-    <Compile Include="Scheduling\EditableSynchronizationStartVertexTest.cs" />
-    <Compile Include="Scheduling\FixedScheduleBuilderTest.cs" />
+    <Compile Include="Scheduling\EndVertexTest.cs" />
+    <Compile Include="Scheduling\ExecutingActionVertexTest.cs" />
+    <Compile Include="Scheduling\InsertVertexTest.cs" />
+    <Compile Include="Scheduling\MarkHistoryVertexTest.cs" />
+    <Compile Include="Scheduling\StartVertexTest.cs" />
+    <Compile Include="Scheduling\SubScheduleVertexTest.cs" />
+    <Compile Include="Scheduling\SynchronizationEndVertexTest.cs" />
+    <Compile Include="Scheduling\SynchronizationStartVertexTest.cs" />
     <Compile Include="Scheduling\NoInsertsLeftOnVertexExceptionTest.cs" />
     <Compile Include="Scheduling\ScheduleElementIdTest.cs" />
     <Compile Include="Scheduling\ScheduleIdTest.cs" />
-    <Compile Include="Scheduling\ScheduleVertifierTest.cs" />
-    <Compile Include="Scheduling\UnknownScheduleExceptionTest.cs" />
     <Compile Include="Scheduling\UnknownScheduleVertexExceptionTest.cs" />
   </ItemGroup>
   <ItemGroup />

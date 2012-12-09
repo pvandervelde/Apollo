@@ -151,6 +151,24 @@ namespace Apollo.Core.Extensions.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The requested export definition was not found..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownExportDefinition {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownExportDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The requested import definition was not found..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownImportDefinition {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownImportDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The type of plugin class or interface has not been registered..
         /// </summary>
         internal static string Exceptions_Messages_UnknownPluginType {

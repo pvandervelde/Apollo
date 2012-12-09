@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Dataset.Properties;
 using Apollo.Core.Extensions.Scheduling;
 using Apollo.Utilities;
@@ -85,7 +86,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// Creates a default storage that isn't linked to a timeline.
         /// </summary>
         /// <returns>The newly created instance.</returns>
-        internal static ScheduleActionStorage BuildStorageWithoutTimeline()
+        internal static ScheduleActionStorage CreateInstanceWithoutTimeline()
         {
             return new ScheduleActionStorage(new HistoryId(), new DictionaryHistory<ScheduleElementId, ActionMap>());
         }
@@ -97,7 +98,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <param name="members">The collection containing all the member collections.</param>
         /// <param name="constructorArguments">The constructor arguments.</param>
         /// <returns>The newly created instance.</returns>
-        public static ScheduleActionStorage BuildStorage(
+        public static ScheduleActionStorage CreateInstance(
             HistoryId id,
             IEnumerable<Tuple<byte, IStoreTimelineValues>> members,
             params object[] constructorArguments)
@@ -167,36 +168,22 @@ namespace Apollo.Core.Dataset.Scheduling
         /// </summary>
         /// <param name="action">The action that should be stored.</param>
         /// <param name="name">The name of the action that is being described by this information object.</param>
-        /// <param name="summary">The summary of the action that is being described by this information object.</param>
         /// <param name="description">The description of the action that is being described by this information object.</param>
-        /// <param name="produces">The variables that are affected by the action.</param>
-        /// <param name="dependsOn">The variables for which data should be available in order to execute the action.</param>
         /// <returns>An object identifying and describing the action.</returns>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="action"/> is <see langword="null" />.
         /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="produces"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="dependsOn"/> is <see langword="null" />.
-        /// </exception>
         public ScheduleActionInformation Add(
             IScheduleAction action,
             string name,
-            string summary,
-            string description,
-            IEnumerable<IScheduleVariable> produces,
-            IEnumerable<IScheduleDependency> dependsOn)
+            string description)
         {
             {
                 Lokad.Enforce.Argument(() => action);
-                Lokad.Enforce.Argument(() => produces);
-                Lokad.Enforce.Argument(() => dependsOn);
             }
 
             var id = new ScheduleElementId();
-            var info = new ScheduleActionInformation(id, name, summary, description, produces, dependsOn);
+            var info = new ScheduleActionInformation(id, name, description);
             m_Actions.Add(id, new ActionMap(info, action));
 
             return info;
@@ -232,10 +219,7 @@ namespace Apollo.Core.Dataset.Scheduling
             var info = new ScheduleActionInformation(
                 actionToReplace, 
                 oldInfo.Name, 
-                oldInfo.Summary, 
-                oldInfo.Description, 
-                oldInfo.Produces(), 
-                oldInfo.DependsOn());
+                oldInfo.Description);
             m_Actions[actionToReplace] = new ActionMap(info, newAction);
         }
 

@@ -38,7 +38,7 @@ namespace Apollo.Utilities.ExceptionHandling
             // loader issues. These are probably due to us trying to load some of our code or
             // one of it's dependencies. Given that this is causing a problem it seems wise to not
             // try to use our (external) code to find an assembly file path ...
-            var localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+            var localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             if (localAppDataPath == null)
             {
                 throw new DirectoryNotFoundException();

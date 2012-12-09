@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Dataset.Properties;
 using Apollo.Core.Extensions.Scheduling;
 using Apollo.Utilities;
@@ -85,7 +86,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// Creates a default schedule storage that isn't linked to a timeline.
         /// </summary>
         /// <returns>The newly created instance.</returns>
-        internal static ScheduleConditionStorage BuildStorageWithoutTimeline()
+        internal static ScheduleConditionStorage CreateInstanceWithoutTimeline()
         {
             return new ScheduleConditionStorage(new HistoryId(), new DictionaryHistory<ScheduleElementId, ConditionMap>());
         }
@@ -97,7 +98,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <param name="members">The collection containing all the member collections.</param>
         /// <param name="constructorArguments">The constructor arguments.</param>
         /// <returns>The newly created instance.</returns>
-        public static ScheduleConditionStorage BuildStorage(
+        public static ScheduleConditionStorage CreateInstance(
             HistoryId id,
             IEnumerable<Tuple<byte, IStoreTimelineValues>> members,
             params object[] constructorArguments)
@@ -167,30 +168,22 @@ namespace Apollo.Core.Dataset.Scheduling
         /// </summary>
         /// <param name="condition">The condition that should be stored.</param>
         /// <param name="name">The name of the condition that is being described by this information object.</param>
-        /// <param name="summary">The summary of the condition that is being described by this information object.</param>
         /// <param name="description">The description of the condition that is being described by this information object.</param>
-        /// <param name="dependsOn">The variables for which data should be available in order to evaluate the condition.</param>
         /// <returns>An object identifying and describing the condition.</returns>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="condition"/> is <see langword="null" />.
         /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="dependsOn"/> is <see langword="null" />.
-        /// </exception>
         public ScheduleConditionInformation Add(
             IScheduleCondition condition,
             string name,
-            string summary,
-            string description,
-            IEnumerable<IScheduleDependency> dependsOn)
+            string description)
         {
             {
                 Lokad.Enforce.Argument(() => condition);
-                Lokad.Enforce.Argument(() => dependsOn);
             }
 
             var id = new ScheduleElementId();
-            var info = new ScheduleConditionInformation(id, name, summary, description, dependsOn);
+            var info = new ScheduleConditionInformation(id, name, description);
             m_Conditions.Add(id, new ConditionMap(info, condition));
 
             return info;
@@ -226,9 +219,7 @@ namespace Apollo.Core.Dataset.Scheduling
             var info = new ScheduleConditionInformation(
                 conditionToReplace,
                 oldInfo.Name,
-                oldInfo.Summary,
-                oldInfo.Description,
-                oldInfo.DependsOn());
+                oldInfo.Description);
             m_Conditions[conditionToReplace] = new ConditionMap(info, newCondition);
         }
 

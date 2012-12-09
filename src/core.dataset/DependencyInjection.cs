@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -11,6 +12,9 @@ using System.Threading;
 using System.Windows.Forms;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
+using Apollo.Core.Base.Plugins;
+using Apollo.Core.Base.Scheduling;
+using Apollo.Core.Dataset.Plugins;
 using Apollo.Core.Dataset.Scheduling;
 using Apollo.Core.Dataset.Scheduling.Processors;
 using Apollo.Core.Dataset.Utilities;
@@ -27,75 +31,17 @@ namespace Apollo.Core.Dataset
     [ExcludeFromCodeCoverage]
     internal static class DependencyInjection
     {
-        private static void RegisterScheduleCommands(ContainerBuilder builder)
+        private static void RegisterScheduleStorage(ContainerBuilder builder)
         {
-            builder.Register(c => new ScheduleExecutionCommands(
-                    c.Resolve<IDistributeScheduleExecutions>(),
-                    c.Resolve<ITrackDatasetLocks>()))
-                .OnActivated(
-                    a =>
-                    {
-                        var collection = a.Context.Resolve<ICommandCollection>();
-                        collection.Register(typeof(IScheduleExecutionCommands), a.Instance);
-                    })
-                .As<IScheduleExecutionCommands>()
-                .As<ICommandSet>()
-                .SingleInstance();
-
-            builder.Register(c => new ScheduleCreationCommands(
-                    c.Resolve<IStoreSchedules>(),
-                    c.Resolve<ITrackDatasetLocks>()))
-                .OnActivated(
-                    a =>
-                    {
-                        var collection = a.Context.Resolve<ICommandCollection>();
-                        collection.Register(typeof(IScheduleCreationCommands), a.Instance);
-                    })
-                .As<IScheduleCreationCommands>()
-                .As<ICommandSet>()
-                .SingleInstance();
-
-            builder.Register(c => new ScheduleInformationCommands(
-                    c.Resolve<IStoreScheduleActions>(),
-                    c.Resolve<IStoreScheduleConditions>(),
-                    c.Resolve<IStoreSchedules>()))
-                .OnActivated(
-                    a =>
-                    {
-                        var collection = a.Context.Resolve<ICommandCollection>();
-                        collection.Register(typeof(IScheduleInformationCommands), a.Instance);
-                    })
-                .As<IScheduleInformationCommands>()
-                .As<ICommandSet>()
-                .SingleInstance();
-        }
-
-        private static void RegisterScheduleNotifications(ContainerBuilder builder)
-        {
-            builder.Register(c => new ScheduleExecutionNotifications())
-                .OnActivated(
-                    a =>
-                    {
-                        var collection = a.Context.Resolve<INotificationSendersCollection>();
-                        collection.Store(typeof(IScheduleExecutionNotifications), a.Instance);
-                    })
-                .As<IScheduleExecutionNotifications>()
-                .As<IScheduleExecutionNotificationInvoker>()
-                .As<INotificationSet>()
-                .SingleInstance();
-        }
-
-        private static void RegisterStorage(ContainerBuilder builder)
-        {
-            builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<ScheduleActionStorage>(ScheduleActionStorage.BuildStorage))
+            builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<ScheduleActionStorage>(ScheduleActionStorage.CreateInstance))
                 .As<IStoreScheduleActions>()
                 .SingleInstance();
 
-            builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<ScheduleConditionStorage>(ScheduleConditionStorage.BuildStorage))
+            builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<ScheduleConditionStorage>(ScheduleConditionStorage.CreateInstance))
                 .As<IStoreScheduleConditions>()
                 .SingleInstance();
 
-            builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<ScheduleStorage>(ScheduleStorage.BuildStorage))
+            builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<ScheduleStorage>(ScheduleStorage.CreateInstance))
                 .As<IStoreSchedules>()
                 .SingleInstance();
 
@@ -115,7 +61,7 @@ namespace Apollo.Core.Dataset
             builder.Register(c => new EndVertexProcessor())
                 .As<IProcesExecutableScheduleVertices>();
 
-            builder.Register(c => new NoOpVertexProcessor())
+            builder.Register(c => new InsertVertexProcessor())
                 .As<IProcesExecutableScheduleVertices>();
 
             builder.Register(c => new SubScheduleVertexProcessor(
@@ -138,7 +84,8 @@ namespace Apollo.Core.Dataset
             builder.Register((c, p) => new ScheduleExecutor(
                     c.Resolve<IEnumerable<IProcesExecutableScheduleVertices>>(),
                     c.Resolve<IStoreScheduleConditions>(),
-                    p.TypedAs<ExecutableSchedule>(),
+                    p.TypedAs<ISchedule>(),
+                    p.TypedAs<ScheduleId>(),
                     p.TypedAs<ScheduleExecutionInfo>()))
                 .As<IExecuteSchedules>();
 
@@ -148,15 +95,26 @@ namespace Apollo.Core.Dataset
                         var ctx = c.Resolve<IComponentContext>();
                         return new ScheduleDistributor(
                             c.Resolve<IStoreSchedules>(),
-                            c.Resolve<IScheduleExecutionNotificationInvoker>(),
-                            (s, i) =>
+                            (s, id, i) =>
                             {
                                 return ctx.Resolve<IExecuteSchedules>(
-                                    new TypedParameter(typeof(ExecutableSchedule), s),
+                                    new TypedParameter(typeof(ISchedule), s),
+                                    new TypedParameter(typeof(ScheduleId), id),
                                     new TypedParameter(typeof(ScheduleExecutionInfo), i));
                             });
                     })
                 .As<IDistributeScheduleExecutions>()
+                .SingleInstance();
+        }
+
+        private static void RegisterPartStorage(ContainerBuilder builder)
+        {
+            builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<CompositionLayer>(CompositionLayer.CreateInstance))
+                .As<IStoreGroupsAndConnections>()
+                .SingleInstance();
+
+            builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<InstanceLayer>(InstanceLayer.CreateInstance))
+                .As<IStoreInstances>()
                 .SingleInstance();
         }
 
@@ -175,6 +133,56 @@ namespace Apollo.Core.Dataset
                 .SingleInstance();
         }
 
+        private static void RegisterNotifications(ContainerBuilder builder)
+        {
+            builder.Register(c => new DatasetApplicationNotifications())
+                .OnActivated(
+                    a =>
+                    {
+                        var collection = a.Context.Resolve<INotificationSendersCollection>();
+                        collection.Store(typeof(IDatasetApplicationNotifications), a.Instance);
+                    })
+                .As<IDatasetApplicationNotificationInvoker>()
+                .As<IDatasetApplicationNotifications>()
+                .As<INotificationSet>()
+                .SingleInstance();
+        }
+
+        private static void RegisterCommands(
+            ContainerBuilder builder,
+            Action closeAction,
+            Action<FileInfo> loadAction)
+        {
+            builder.Register(c => new DatasetApplicationCommands(
+                    c.Resolve<ICommunicationLayer>(),
+                    c.Resolve<ITrackDatasetLocks>(),
+                    closeAction,
+                    loadAction,
+                    c.Resolve<SystemDiagnostics>()))
+                .OnActivated(
+                    a =>
+                    {
+                        var collection = a.Context.Resolve<ICommandCollection>();
+                        collection.Register(typeof(IDatasetApplicationCommands), a.Instance);
+                    })
+                .As<IDatasetApplicationCommands>()
+                .As<ICommandSet>()
+                .SingleInstance();
+
+            builder.Register(c => new CompositionCommands(
+                    c.Resolve<ITrackDatasetLocks>(),
+                    c.Resolve<IStoreGroupsAndConnections>()))
+                .OnActivated(
+                    a =>
+                    {
+                        var collection = a.Context.Resolve<ICommandCollection>();
+                        collection.Register(typeof(ICompositionCommands), a.Instance);
+                    })
+                .As<ICompositionCommands>()
+                .As<ICommandSet>()
+                .SingleInstance();
+        }
+
         /// <summary>
         /// Creates the DI container.
         /// </summary>
@@ -186,25 +194,25 @@ namespace Apollo.Core.Dataset
             var builder = new ContainerBuilder();
             {
                 builder.RegisterModule(new UtilitiesModule());
-                builder.RegisterModule(new SchedulingModule());
 
                 // Don't allow discovery on the dataset application because:
                 // - The dataset application wouldn't know what to do with it anyway
                 // - We don't want anybody talking to the application except for the
                 //   application that started it.
                 builder.RegisterModule(new BaseModule(false));
-                builder.RegisterModule(new BaseModuleForDatasets(
+                RegisterCommands(
+                    builder,
                     () => CloseApplication(result),
-                    file => LoadDatasetFile(result, file)));
+                    file => LoadDatasetFile(result, file));
+                RegisterNotifications(builder);
 
                 builder.Register(c => context)
                     .As<ApplicationContext>()
                     .ExternallyOwned();
 
-                RegisterScheduleCommands(builder);
-                RegisterScheduleNotifications(builder);
-                RegisterStorage(builder);
+                RegisterScheduleStorage(builder);
                 RegisterScheduleExecutors(builder);
+                RegisterPartStorage(builder);
                 RegisterDatasetLock(builder);
             }
 
@@ -220,6 +228,8 @@ namespace Apollo.Core.Dataset
             context.ExitThread();
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "fileToLoad",
+            Justification = "Leaving this for now. At least until we can actually load stuff from file.")]
         private static void LoadDatasetFile(IContainer container, FileInfo fileToLoad)
         {
             // For now we fake this out by pretending it takes time to load.

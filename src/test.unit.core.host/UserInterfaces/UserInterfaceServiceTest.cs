@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
+using Apollo.Core.Host.Plugins;
 using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Utilities;
@@ -184,8 +185,15 @@ namespace Apollo.Core.Host.UserInterfaces
             service.ConnectTo(proxy);
 
             ITimeline timeline = new Timeline(BuildStorage);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
             var projects = new ProjectService(
                 () => timeline,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -242,8 +250,15 @@ namespace Apollo.Core.Host.UserInterfaces
             service.ConnectTo(proxy);
 
             ITimeline timeline = new Timeline(BuildStorage);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
             var projects = new ProjectService(
                 () => timeline,
+                 d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -297,8 +312,15 @@ namespace Apollo.Core.Host.UserInterfaces
             service.ConnectTo(proxy);
 
             ITimeline timeline = new Timeline(BuildStorage);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
             var projects = new ProjectService(
                 () => timeline,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -381,8 +403,15 @@ namespace Apollo.Core.Host.UserInterfaces
             service.ConnectTo(proxy);
 
             ITimeline timeline = new Timeline(BuildStorage);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
             var projects = new ProjectService(
                 () => timeline,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -414,8 +443,15 @@ namespace Apollo.Core.Host.UserInterfaces
             service.ConnectTo(proxy);
 
             ITimeline timeline = new Timeline(BuildStorage);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
             var projects = new ProjectService(
                 () => timeline,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -448,8 +484,15 @@ namespace Apollo.Core.Host.UserInterfaces
             service.ConnectTo(proxy);
 
             ITimeline timeline = new Timeline(BuildStorage);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
             var projects = new ProjectService(
                 () => timeline,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -486,8 +529,15 @@ namespace Apollo.Core.Host.UserInterfaces
             service.ConnectTo(proxy);
 
             ITimeline timeline = new Timeline(BuildStorage);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
             var projects = new ProjectService(
                 () => timeline,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);

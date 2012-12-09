@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Extensions.Scheduling;
 
@@ -23,7 +24,7 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="conditionMap">The collection mapping the registered conditions to the schedule element that holds the condition.</param>
         /// <returns>The ID of the newly created schedule.</returns>
         ScheduleId StoreSchedule(
-            IEditableSchedule schedule,
+            ISchedule schedule,
             Dictionary<ScheduleActionRegistrationId, ScheduleElementId> actionMap,
             Dictionary<ScheduleConditionRegistrationId, ScheduleElementId> conditionMap);
     }

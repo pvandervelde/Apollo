@@ -47,7 +47,6 @@
     <Rule Name="DefineAccessorsForAttributeArguments" Enabled="True" />
     <Rule Name="DoNotCatchGeneralExceptionTypes" Enabled="True" />
     <Rule Name="DoNotDeclareProtectedMembersInSealedTypes" Enabled="True" />
-    <Rule Name="DoNotDeclareStaticMembersOnGenericTypes" Enabled="True" />
     <Rule Name="DoNotDeclareVirtualMembersInSealedTypes" Enabled="True" />
     <Rule Name="DoNotDeclareVisibleInstanceFields" Enabled="True" />
     <Rule Name="DoNotExposeGenericLists" Enabled="True" />
@@ -108,20 +107,40 @@
  </Rules>
  <FxCopReport Version="10.0">
   <Targets>
+   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Base.dll">
+    <Modules>
+     <Module Name="apollo.core.base.dll">
+      <Namespaces>
+       <Namespace Name="Apollo.Core.Base.Scheduling">
+        <Types>
+         <Type Name="IScheduleDependency">
+          <Messages>
+           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2012-12-09 01:59:46Z">
+            <Issue>
+             <Item>'IScheduleDependency'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+        </Types>
+       </Namespace>
+      </Namespaces>
+     </Module>
+    </Modules>
+   </Target>
    <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Dataset.exe">
     <Modules>
      <Module Name="apollo.core.dataset.exe">
       <Namespaces>
-       <Namespace Name="Apollo.Core.Dataset">
+       <Namespace Name="Apollo.Core.Dataset.Plugins">
         <Types>
-         <Type Name="DependencyInjection">
+         <Type Name="InstanceLayer">
           <Members>
-           <Member Name="#LoadDatasetFile(Autofac.IContainer,System.IO.FileInfo)">
+           <Member Name="#m_HistoryObjects">
             <Messages>
-             <Message Id="fileToLoad" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2011-09-26 10:18:02Z" FixCategory="NonBreaking">
+             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2012-12-09 01:59:46Z">
               <Issue>
-               <Item>'fileToLoad'</Item>
-               <Item>'DependencyInjection.LoadDatasetFile(IContainer, FileInfo)'</Item>
+               <Item>'InstanceLayer.m_HistoryObjects'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -138,35 +157,8 @@
     <Modules>
      <Module Name="apollo.core.extensions.dll">
       <Namespaces>
-       <Namespace Name="Apollo.Core.Extensions.Plugins">
-        <Types>
-         <Type Name="IRegisterGroupDefinitions">
-          <Members>
-           <Member Name="#ScheduleRegistrator()">
-            <Messages>
-             <Message Id="Registrator" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-10-19 23:47:33Z">
-              <Issue Name="Member">
-               <Item>Registrator</Item>
-               <Item>'IRegisterGroupDefinitions.ScheduleRegistrator()'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-        </Types>
-       </Namespace>
        <Namespace Name="Apollo.Core.Extensions.Scheduling">
         <Types>
-         <Type Name="IScheduleDependency">
-          <Messages>
-           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2012-07-21 06:19:10Z">
-            <Issue>
-             <Item>'IScheduleDependency'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
          <Type Name="IScheduleVariable">
           <Messages>
            <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2012-07-21 06:19:10Z">
@@ -188,17 +180,22 @@
       <Namespaces>
        <Namespace Name="Apollo.Core.Host.Projects">
         <Types>
-         <Type Name="Project">
+         <Type Name="DatasetProxy">
           <Members>
-           <Member Name="#CloseOnlineDataset(Apollo.Core.Host.Projects.DatasetProxy)">
+           <Member Name="#LoadOntoMachine(Apollo.Core.Base.Loaders.LoadingLocations,System.Func`2&lt;System.Collections.Generic.IEnumerable`1&lt;Apollo.Core.Base.Loaders.DistributionSuggestion&gt;,Apollo.Core.Base.Loaders.SelectedProposal&gt;,System.Threading.CancellationToken,System.Boolean)">
             <Messages>
-             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2012-08-06 07:47:47Z" FixCategory="NonBreaking">
+             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2012-12-09 01:59:46Z">
               <Issue>
-               <Item>'Project.CloseOnlineDataset(DatasetProxy)'</Item>
+               <Item>'DatasetProxy.LoadOntoMachine(LoadingLocations, Func&lt;IEnumerable&lt;DistributionSuggestion&gt;, SelectedProposal&gt;, CancellationToken, bool)'</Item>
+               <Item>'Exception'</Item>
               </Issue>
              </Message>
             </Messages>
            </Member>
+          </Members>
+         </Type>
+         <Type Name="Project">
+          <Members>
            <Member Name="#RestoreFromStore(Apollo.Utilities.IPersistenceInformation)">
             <Messages>
              <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2011-12-18 02:32:33Z" FixCategory="NonBreaking">
@@ -227,11 +224,11 @@
    <Rule TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040">
     <Resolution Name="Default">Define a custom attribute to replace {0}.</Resolution>
    </Rule>
-   <Rule TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704">
-    <Resolution Name="Assembly">Correct the spelling of '{0}' in assembly name {1}.</Resolution>
-    <Resolution Name="Member">Correct the spelling of '{0}' in member name {1} or remove it entirely if it represents any sort of Hungarian notation.</Resolution>
-    <Resolution Name="MemberParameter">In method {0}, correct the spelling of '{1}' in parameter name {2} or remove it entirely if it represents any sort of Hungarian notation.</Resolution>
-    <Resolution Name="Type">Correct the spelling of '{0}' in type name {1}.</Resolution>
+   <Rule TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823">
+    <Resolution Name="Default">It appears that field {0} is never used or is only ever assigned to. Use this field or remove it.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031">
+    <Resolution Name="Default">Modify {0} to catch a more specific exception than {1} or rethrow the exception.</Resolution>
    </Rule>
    <Rule TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822">
     <Resolution Name="Default">The 'this' parameter (or 'Me' in Visual Basic) of {0} is never used. Mark the member as static (or Shared in Visual Basic) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Resolution>

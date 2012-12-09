@@ -147,6 +147,12 @@
   <data name="Exceptions_Messages_NoInsertsLeftOnVertex" xml:space="preserve">
     <value>There are no more inserts left on the current insert vertex.</value>
   </data>
+  <data name="Exceptions_Messages_UnknownExportDefinition" xml:space="preserve">
+    <value>The requested export definition was not found.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownImportDefinition" xml:space="preserve">
+    <value>The requested import definition was not found.</value>
+  </data>
   <data name="Exceptions_Messages_UnknownPluginType" xml:space="preserve">
     <value>The type of plugin class or interface has not been registered.</value>
   </data>

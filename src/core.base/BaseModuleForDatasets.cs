@@ -4,14 +4,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages.Processors;
 using Apollo.Utilities;
 using Autofac;
-using Lokad;
 
 namespace Apollo.Core.Base
 {
@@ -22,21 +19,6 @@ namespace Apollo.Core.Base
     [ExcludeFromCodeCoverage]
     public sealed class BaseModuleForDatasets : Module
     {
-        private static void RegisterNotifications(ContainerBuilder builder)
-        {
-            builder.Register(c => new DatasetApplicationNotifications())
-                .OnActivated(
-                    a =>
-                    {
-                        var collection = a.Context.Resolve<INotificationSendersCollection>();
-                        collection.Store(typeof(IDatasetApplicationNotifications), a.Instance);
-                    })
-                .As<IDatasetApplicationNotificationInvoker>()
-                .As<IDatasetApplicationNotifications>()
-                .As<INotificationSet>()
-                .SingleInstance();
-        }
-
         private static void RegisterCommandCollection(ContainerBuilder builder)
         {
             builder.Register(c => new LocalCommandCollection(
@@ -108,34 +90,6 @@ namespace Apollo.Core.Base
         }
 
         /// <summary>
-        /// The action that is used to close the dataset application.
-        /// </summary>
-        private readonly Action m_CloseDatasetAction;
-
-        /// <summary>
-        /// The action that is used to load a dataset.
-        /// </summary>
-        private readonly Action<FileInfo> m_LoadDatasetAction;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BaseModuleForDatasets"/> class.
-        /// </summary>
-        /// <param name="closeDataset">The action that is used to close the dataset application.</param>
-        /// <param name="loadDataset">The action that is used to load a dataset application.</param>
-        public BaseModuleForDatasets(
-            Action closeDataset,
-            Action<FileInfo> loadDataset)
-        {
-            {
-                Enforce.Argument(() => closeDataset);
-                Enforce.Argument(() => loadDataset);
-            }
-
-            m_CloseDatasetAction = closeDataset;
-            m_LoadDatasetAction = loadDataset;
-        }
-
-        /// <summary>
         /// Override to add registrations to the container.
         /// </summary>
         /// <param name="builder">The builder through which components can be registered.</param>
@@ -143,30 +97,9 @@ namespace Apollo.Core.Base
         {
             base.Load(builder);
 
-            RegisterCommands(builder);
-            RegisterNotifications(builder);
             RegisterCommandCollection(builder);
             RegisterNotificationCollection(builder);
             RegisterMessageProcessingActions(builder);
-        }
-
-        private void RegisterCommands(ContainerBuilder builder)
-        {
-            builder.Register(c => new DatasetApplicationCommands(
-                    c.Resolve<ICommunicationLayer>(),
-                    c.Resolve<ITrackDatasetLocks>(),
-                    m_CloseDatasetAction,
-                    m_LoadDatasetAction,
-                    c.Resolve<SystemDiagnostics>()))
-                .OnActivated(
-                    a =>
-                    {
-                        var collection = a.Context.Resolve<ICommandCollection>();
-                        collection.Register(typeof(IDatasetApplicationCommands), a.Instance);
-                    })
-                .As<IDatasetApplicationCommands>()
-                .As<ICommandSet>()
-                .SingleInstance();
         }
     }
 }

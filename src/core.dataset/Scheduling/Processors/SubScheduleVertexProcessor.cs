@@ -9,12 +9,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Threading;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Scheduling;
 
 namespace Apollo.Core.Dataset.Scheduling.Processors
 {
     /// <summary>
-    /// Defines the actions taken when a <see cref="ExecutableSubScheduleVertex"/> is encountered while processing
+    /// Defines the actions taken when a <see cref="SubScheduleVertex"/> is encountered while processing
     /// an executable schedule.
     /// </summary>
     internal sealed class SubScheduleVertexProcessor : IProcesExecutableScheduleVertices
@@ -41,14 +42,14 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         }
 
         /// <summary>
-        /// Gets the type of the <see cref="IExecutableScheduleVertex"/> that will be processed by
+        /// Gets the type of the <see cref="IScheduleVertex"/> that will be processed by
         /// this processor.
         /// </summary>
         public Type VertexTypeToProcess
         {
             get
             {
-                return typeof(ExecutableSubScheduleVertex);
+                return typeof(SubScheduleVertex);
             }
         }
 
@@ -58,9 +59,9 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         /// <param name="vertex">The vertex.</param>
         /// <param name="executionInfo">The object that stores the information about the execution of the schedule.</param>
         /// <returns>A value indicating if the execution of the schedule should continue.</returns>
-        public ScheduleExecutionState Process(IExecutableScheduleVertex vertex, ScheduleExecutionInfo executionInfo)
+        public ScheduleExecutionState Process(IScheduleVertex vertex, ScheduleExecutionInfo executionInfo)
         {
-            var subScheduleVertex = vertex as ExecutableSubScheduleVertex;
+            var subScheduleVertex = vertex as SubScheduleVertex;
             if (subScheduleVertex == null)
             {
                 Debug.Assert(false, "The vertex is of the incorrect type.");
@@ -114,7 +115,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
             // Possibly for some sections?
             bool executeOutOfProcess = false;
             IEnumerable<IScheduleVariable> parameters = null;
-            var executor = m_Executor.Execute(subScheduleVertex.SubSchedule, parameters, executionInfo, executeOutOfProcess);
+            var executor = m_Executor.Execute(subScheduleVertex.ScheduleToExecute, parameters, executionInfo, executeOutOfProcess);
 
             // if we're running in-process then we probably have to wait for the sub-schedule to
             // finish executing because we don't want to have to make the schedule execution thread safe

@@ -30,5 +30,10 @@ namespace Apollo.Core.Base
         /// An event raised when the dataset is switched to executing mode.
         /// </summary>
         event EventHandler<EventArgs> OnSwitchToExecutingMode;
+
+        /// <summary>
+        /// An event raised when the dataset history is rolled back or rolled forward.
+        /// </summary>
+        event EventHandler<EventArgs> OnTimelineUpdate;
     }
 }

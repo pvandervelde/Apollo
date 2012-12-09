@@ -58,7 +58,7 @@ namespace Apollo.UI.Common.Feedback
         {
             try
             {
-                var path = m_FileConstants.CompanyPath();
+                var path = m_FileConstants.CompanyUserPath();
                 return Directory.GetFiles(
                     path,
                     string.Format(

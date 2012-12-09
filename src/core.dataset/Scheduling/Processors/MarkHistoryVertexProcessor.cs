@@ -6,13 +6,14 @@
 
 using System;
 using System.Diagnostics;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Scheduling;
 using Apollo.Utilities.History;
 
 namespace Apollo.Core.Dataset.Scheduling.Processors
 {
     /// <summary>
-    /// Defines the actions taken when a <see cref="ExecutableMarkHistoryVertex"/> is encountered while processing
+    /// Defines the actions taken when a <see cref="MarkHistoryVertex"/> is encountered while processing
     /// an executable schedule.
     /// </summary>
     internal sealed class MarkHistoryVertexProcessor : IProcesExecutableScheduleVertices
@@ -50,14 +51,14 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         }
 
         /// <summary>
-        /// Gets the type of the <see cref="IExecutableScheduleVertex"/> that will be processed by
+        /// Gets the type of the <see cref="IScheduleVertex"/> that will be processed by
         /// this processor.
         /// </summary>
         public Type VertexTypeToProcess
         {
             get
             {
-                return typeof(ExecutableMarkHistoryVertex);
+                return typeof(MarkHistoryVertex);
             }
         }
 
@@ -67,9 +68,9 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         /// <param name="vertex">The vertex.</param>
         /// <param name="executionInfo">The object that stores the information about the execution of the schedule.</param>
         /// <returns>A value indicating if the execution of the schedule should continue.</returns>
-        public ScheduleExecutionState Process(IExecutableScheduleVertex vertex, ScheduleExecutionInfo executionInfo)
+        public ScheduleExecutionState Process(IScheduleVertex vertex, ScheduleExecutionInfo executionInfo)
         {
-            var markVertex = vertex as ExecutableMarkHistoryVertex;
+            var markVertex = vertex as MarkHistoryVertex;
             if (markVertex == null)
             {
                 Debug.Assert(false, "The vertex is of the incorrect type.");

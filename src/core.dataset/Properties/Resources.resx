@@ -150,4 +150,16 @@
   <data name="Exceptions_Messages_UnknownSchedule" xml:space="preserve">
     <value>The specified schedule ID does not have an associated schedule.</value>
   </data>
+  <data name="Exceptions_Messages_DuplicateScheduleElementId" xml:space="preserve">
+    <value>The given schedule element ID is already registered.</value>
+  </data>
+  <data name="Exceptions_Messages_DuplicateScheduleId" xml:space="preserve">
+    <value>The given schedule ID is already registered.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownGroupCompositionId" xml:space="preserve">
+    <value>The given group composition ID is not related to a known group.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownScheduleVertex" xml:space="preserve">
+    <value>The given schedule vertex is not part of the current schedule.</value>
+  </data>
 </root>

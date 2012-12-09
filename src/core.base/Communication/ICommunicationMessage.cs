@@ -9,7 +9,7 @@ namespace Apollo.Core.Base.Communication
     /// <summary>
     /// Defines the base methods for communication methods.
     /// </summary>
-    internal interface ICommunicationMessage
+    public interface ICommunicationMessage
     {
         /// <summary>
         /// Gets a value indicating the ID number of the message.

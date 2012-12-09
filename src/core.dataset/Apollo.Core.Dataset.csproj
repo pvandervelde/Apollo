@@ -83,42 +83,44 @@
     <Compile Include="..\utilities.srconly\Logging\LogSeverityProxyToLogLevelMap.cs">
       <Link>Utilities\LogSeverityProxyToLogLevelMap.cs</Link>
     </Compile>
+    <Compile Include="DatasetApplicationCommands.cs" />
+    <Compile Include="DatasetApplicationNotifications.cs" />
     <Compile Include="DatasetLock.cs" />
+    <Compile Include="DatasetLockKey.cs" />
     <Compile Include="DependencyInjection.cs" />
+    <Compile Include="IDatasetApplicationNotificationInvoker.cs" />
     <Compile Include="InvalidCommandLineArgumentsException.cs" />
+    <Compile Include="ITrackDatasetLocks.cs" />
+    <Compile Include="Plugins\CompositionCommands.cs" />
+    <Compile Include="Plugins\CompositionLayer.cs" />
+    <Compile Include="Plugins\GroupCompositionGraphEdge.cs" />
+    <Compile Include="Plugins\IStoreGroupsAndConnections.cs" />
+    <Compile Include="Plugins\IStoreInstances.cs" />
+    <Compile Include="Plugins\PartCompositionGraphEdge.cs" />
+    <Compile Include="Plugins\PartInstanceId.cs" />
+    <Compile Include="Plugins\InstanceLayer.cs" />
+    <Compile Include="Plugins\PartCompositionInfo.cs" />
+    <Compile Include="Plugins\PartCompositionId.cs" />
+    <Compile Include="Plugins\UnknownGroupCompositionIdException.cs" />
     <Compile Include="Scheduling\CannotExecuteScheduleWithoutProcessorsException.cs" />
-    <Compile Include="Scheduling\ExecutableNoOpVertex.cs" />
+    <Compile Include="Scheduling\DuplicateScheduleElementIdException.cs" />
+    <Compile Include="Scheduling\DuplicateScheduleIdException.cs" />
     <Compile Include="Scheduling\IExecuteSchedules.cs" />
-    <Compile Include="Scheduling\IScheduleExecutionNotificationInvoker.cs" />
     <Compile Include="Scheduling\Processors\ActionVertexProcessor.cs" />
     <Compile Include="Scheduling\Processors\EndVertexProcessor.cs" />
-    <Compile Include="Scheduling\ExecutableActionVertex.cs" />
-    <Compile Include="Scheduling\ExecutableEndVertex.cs" />
-    <Compile Include="Scheduling\ExecutableMarkHistoryVertex.cs" />
-    <Compile Include="Scheduling\ExecutableSchedule.cs" />
-    <Compile Include="Scheduling\ExecutableScheduleEdge.cs" />
-    <Compile Include="Scheduling\ExecutableStartVertex.cs" />
-    <Compile Include="Scheduling\ExecutableSubScheduleVertex.cs" />
-    <Compile Include="Scheduling\ExecutableSynchronizationEndVertex.cs" />
-    <Compile Include="Scheduling\ExecutableSynchronizationStartVertex.cs" />
-    <Compile Include="Scheduling\Processors\NoOpVertexProcessor.cs" />
+    <Compile Include="Scheduling\Processors\InsertVertexProcessor.cs" />
     <Compile Include="Scheduling\ScheduleConditionStorage.cs" />
-    <Compile Include="Scheduling\ScheduleCreationCommands.cs" />
     <Compile Include="Scheduling\ScheduleDistributor.cs" />
-    <Compile Include="Scheduling\IExecutableScheduleVertex.cs" />
     <Compile Include="Scheduling\IProcesExecutableScheduleVertices.cs" />
     <Compile Include="Scheduling\IDistributeScheduleExecutions.cs" />
     <Compile Include="Scheduling\Processors\MarkHistoryVertexProcessor.cs" />
     <Compile Include="Scheduling\ScheduleActionStorage.cs" />
-    <Compile Include="Scheduling\ScheduleExecutionCommands.cs" />
     <Compile Include="Scheduling\ScheduleExecutionInfo.cs" />
-    <Compile Include="Scheduling\ScheduleExecutionNotifications.cs" />
     <Compile Include="Scheduling\ScheduleExecutionProgressMark.cs" />
     <Compile Include="Scheduling\ScheduleExecutionStateEventArgs.cs" />
     <Compile Include="Scheduling\ScheduleExecutor.cs" />
     <Compile Include="Scheduling\Processors\StartVertexProcessor.cs" />
     <Compile Include="Scheduling\Processors\SubScheduleVertexProcessor.cs" />
-    <Compile Include="Scheduling\ScheduleInformationCommands.cs" />
     <Compile Include="Scheduling\SchedulePauseHandler.cs" />
     <Compile Include="Scheduling\ScheduleStorage.cs" />
     <Compile Include="Scheduling\UnknownScheduleActionException.cs" />
@@ -226,9 +228,7 @@
       <Name>Apollo.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Plugins\" />
-  </ItemGroup>
+  <ItemGroup />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

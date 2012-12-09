@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Scheduling;
 using MbUnit.Framework;
 using Moq;
@@ -21,17 +22,17 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         [Test]
         public void VertexTypeToProcess()
         {
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var processor = new ActionVertexProcessor(collection);
-            Assert.AreEqual(typeof(ExecutableActionVertex), processor.VertexTypeToProcess);
+            Assert.AreEqual(typeof(ExecutingActionVertex), processor.VertexTypeToProcess);
         }
 
         [Test]
         public void ProcessWithIncorrectVertexType()
         {
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
+            var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var processor = new ActionVertexProcessor(collection);
-            var state = processor.Process(new ExecutableStartVertex(1), new ScheduleExecutionInfo());
+            var state = processor.Process(new StartVertex(1), new ScheduleExecutionInfo());
             Assert.AreEqual(ScheduleExecutionState.IncorrectProcessorForVertex, state);
         }
 
@@ -44,14 +45,17 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
                     .Verifiable();
             }
 
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
-            var info = collection.Add(action.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
+            var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
+            var info = collection.Add(
+                action.Object, 
+                "a", 
+                "b");
 
             var executionInfo = new ScheduleExecutionInfo();
             executionInfo.CancelScheduleExecution();
 
             var processor = new ActionVertexProcessor(collection);
-            var state = processor.Process(new ExecutableActionVertex(1, info.Id), executionInfo);
+            var state = processor.Process(new ExecutingActionVertex(1, info.Id), executionInfo);
             Assert.AreEqual(ScheduleExecutionState.Canceled, state);
         }
 
@@ -70,11 +74,14 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
                     .Verifiable();
             }
 
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
-            var info = collection.Add(action.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
+            var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
+            var info = collection.Add(
+                action.Object, 
+                "a", 
+                "b");
 
             var processor = new ActionVertexProcessor(collection);
-            var state = processor.Process(new ExecutableActionVertex(1, info.Id), new ScheduleExecutionInfo());
+            var state = processor.Process(new ExecutingActionVertex(1, info.Id), new ScheduleExecutionInfo());
             Assert.AreEqual(ScheduleExecutionState.Executing, state);
             action.Verify(a => a.Execute(It.IsAny<CancellationToken>()), Times.Once());
         }

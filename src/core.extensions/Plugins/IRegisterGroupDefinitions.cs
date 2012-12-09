@@ -19,7 +19,7 @@ namespace Apollo.Core.Extensions.Plugins
         /// Returns an object that can be used to register schedules for the current group.
         /// </summary>
         /// <returns>The schedule builder for the current group.</returns>
-        IRegisterSchedules ScheduleRegistrator();
+        IRegisterSchedules RegisterSchedule();
 
         /// <summary>
         /// Registers a new instance of the given type.
@@ -29,14 +29,14 @@ namespace Apollo.Core.Extensions.Plugins
         /// An object that provides a unique ID for the registered object and provides the IDs for the imports, exports,
         /// conditions and actions on that object.
         /// </returns>
-        IObjectRegistration RegisterObject(Type type);
+        IPartRegistration RegisterObject(Type type);
 
         /// <summary>
         /// Connects the export with the import.
         /// </summary>
-        /// <param name="exportRegistration">The ID of the export.</param>
         /// <param name="importRegistration">The ID of the import.</param>
-        void Connect(ExportRegistrationId exportRegistration, ImportRegistrationId importRegistration);
+        /// <param name="exportRegistration">The ID of the export.</param>
+        void Connect(ImportRegistrationId importRegistration, ExportRegistrationId exportRegistration);
 
         /// <summary>
         /// Defines an export for the group. The export is created with the specified name
@@ -51,7 +51,7 @@ namespace Apollo.Core.Extensions.Plugins
         /// </summary>
         /// <param name="contractName">The contract name for the group import.</param>
         /// <param name="insertPoint">The point at which the imported schedule will be placed in the group schedule.</param>
-        void DefineImport(string contractName, EditableInsertVertex insertPoint);
+        void DefineImport(string contractName, InsertVertex insertPoint);
 
         /// <summary>
         /// Defines an import for the group with the given imports that should be satisfied.
@@ -66,7 +66,7 @@ namespace Apollo.Core.Extensions.Plugins
         /// <param name="contractName">The contract name for the group import.</param>
         /// <param name="insertPoint">The point at which the imported schedule will be placed in the group schedule.</param>
         /// <param name="importsToSatisfy">The imports that should be satisfied.</param>
-        void DefineImport(string contractName, EditableInsertVertex insertPoint, IEnumerable<ImportRegistrationId> importsToSatisfy);
+        void DefineImport(string contractName, InsertVertex insertPoint, IEnumerable<ImportRegistrationId> importsToSatisfy);
 
         /// <summary>
         /// Registers a group with the currently stored data.

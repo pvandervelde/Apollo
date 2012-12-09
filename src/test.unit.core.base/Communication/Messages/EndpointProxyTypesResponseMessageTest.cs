@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Base.Plugins;
 using MbUnit.Framework;
 
 namespace Apollo.Core.Base.Communication.Messages
@@ -23,7 +24,7 @@ namespace Apollo.Core.Base.Communication.Messages
             var response = new MessageId();
             var commands = new List<Type> 
                 { 
-                    typeof(IHostCommands),
+                    typeof(ICompositionCommands),
                     typeof(IDatasetApplicationCommands)
                 };
 
@@ -43,7 +44,7 @@ namespace Apollo.Core.Base.Communication.Messages
             var response = new MessageId();
             var commands = new List<Type> 
                 { 
-                    typeof(IHostCommands),
+                    typeof(ICompositionCommands),
                     typeof(IDatasetApplicationCommands)
                 };
             var msg = new EndpointProxyTypesResponseMessage(id, response, commands.ToArray());

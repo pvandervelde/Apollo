@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using System.ComponentModel.Composition.ReflectionModel;
@@ -17,9 +17,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Apollo.Core.Base.Plugins;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
-using Apollo.Core.Extensions.Scheduling;
-using Apollo.Core.Host.Plugins.Definitions;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
 
@@ -30,42 +30,93 @@ namespace Apollo.Core.Host.Plugins
     /// </summary>
     internal sealed class RemoteAssemblyScanner : MarshalByRefObject, IAssemblyScanner
     {
-        private static Func<Type, SerializedTypeIdentity> IdentityFactory(ConcurrentDictionary<string, SerializedTypeDefinition> typeStorage)
+        private static Func<Type, TypeIdentity> IdentityFactory(IPluginRepository typeStorage, IDictionary<Type, TypeIdentity> currentlyBuilding)
         {
             // Fake out the compiler because we need the function inside the function itself
-            Func<Type, SerializedTypeIdentity> createTypeIdentity = null;
+            Func<Type, TypeIdentity> createTypeIdentity = null;
             createTypeIdentity =
                 t =>
                 {
-                    if (!typeStorage.ContainsKey(t.AssemblyQualifiedName))
+                    // First make sure we're not already creating a definition for this type. If so then we just
+                    // return the identity because at some point we'll get the definition being added.
+                    // This is necessary because if we don't check this there is a good possibility that
+                    // we end-up in an infinite loop. e.g. trying to handle
+                    // System.Boolean means we have to process System.IComparable<System.Boolean> which means ....
+                    if (currentlyBuilding.ContainsKey(t))
                     {
-                        var typeDefinition = SerializedTypeDefinition.CreateDefinition(t, createTypeIdentity);
-                        typeStorage.TryAdd(typeDefinition.Identity.AssemblyQualifiedName, typeDefinition);
+                        return currentlyBuilding[t];
                     }
 
-                    return typeStorage[t.AssemblyQualifiedName].Identity;
+                    // Create the type full name ourselves because generic type parameters don't have one (see
+                    // http://blogs.msdn.com/b/haibo_luo/archive/2006/02/17/534480.aspx).
+                    var name = 
+                        t.AssemblyQualifiedName 
+                        ?? string.Format(CultureInfo.InvariantCulture, "{0}.{1}, {2}", t.Namespace, t.Name, t.Assembly.FullName);
+                    if (!typeStorage.ContainsDefinitionForType(name))
+                    {
+                        try
+                        {
+                            // Create a local version of the TypeIdentity and store that
+                            var typeIdentity = TypeIdentity.CreateDefinition(t);
+                            currentlyBuilding.Add(t, typeIdentity);
+
+                            var typeDefinition = TypeDefinition.CreateDefinition(t, createTypeIdentity);
+                            typeStorage.AddType(typeDefinition);
+                        }
+                        finally
+                        {
+                            // Once we add the real definition then we can just remove the local copy
+                            // from the stack.
+                            currentlyBuilding.Remove(t);
+                        }
+                    }
+
+                    return typeStorage.IdentityByName(name);
                 };
 
             return createTypeIdentity;
         }
 
-        private static SerializedExportDefinition CreateMethodExport(
+        private static Type ExtractRequiredType(IEnumerable<Attribute> memberAttributes, Type memberType)
+        {
+            // This is really rather ugly but we can't get the RequiredTypeIdentity straight from the import
+            // (eventhough it has a property named as such) because we want an actual type and the 
+            // MEF ImportDefinition.RequiredTypeIdentity is a string that has been mangled, e.g. for 
+            // delegates the type name is <RETURNTYPE>(<PARAMETERTYPES>), which means we don't know
+            // exactly what the type is. Also MEF strips the Lazy<T> type and replaces it with T. Hence
+            // we go straight to the actual import attribute and get it from there.
+            var attribute = memberAttributes
+                .Where(a => a is ImportAttribute)
+                .Select(a => (ImportAttribute)a)
+                .FirstOrDefault();
+            Debug.Assert(attribute != null, "There should be an import attribute.");
+
+            var requiredType = attribute.ContractType ?? memberType;
+            if (requiredType == null)
+            {
+                return null;
+            }
+
+            return requiredType;
+        }
+
+        private static SerializableExportDefinition CreateMethodExport(
             ExportDefinition export,
             LazyMemberInfo memberInfo,
-            Func<Type, SerializedTypeIdentity> identityGenerator)
+            Func<Type, TypeIdentity> identityGenerator)
         {
             Debug.Assert(memberInfo.GetAccessors().Count() == 1, "Only expecting one accessor for a method export.");
             Debug.Assert(memberInfo.GetAccessors().First() is MethodInfo, "Expecting the method export to be an MethodInfo object.");
-            return SerializedExportOnMethodDefinition.CreateDefinition(
+            return MethodBasedExportDefinition.CreateDefinition(
                 export.ContractName,
                 memberInfo.GetAccessors().First() as MethodInfo,
                 identityGenerator);
         }
 
-        private static SerializedExportDefinition CreatePropertyExport(
+        private static SerializableExportDefinition CreatePropertyExport(
             ExportDefinition export,
             LazyMemberInfo memberInfo,
-            Func<Type, SerializedTypeIdentity> identityGenerator)
+            Func<Type, TypeIdentity> identityGenerator)
         {
             // this is really ugly because we assume that the underlying methods for a property are named as:
             // get_PROPERTYNAME and set_PROPERTYNAME. In this case we assume that exports always
@@ -73,28 +124,28 @@ namespace Apollo.Core.Host.Plugins
             var getMember = memberInfo.GetAccessors().Where(m => m.Name.Contains("get_")).First();
             var name = getMember.Name.Substring("get_".Length);
             var property = getMember.DeclaringType.GetProperty(name);
-            return SerializedExportOnPropertyDefinition.CreateDefinition(
+            return PropertyBasedExportDefinition.CreateDefinition(
                 export.ContractName,
                 property,
                 identityGenerator);
         }
 
-        private static SerializedExportDefinition CreateTypeExport(
+        private static SerializableExportDefinition CreateTypeExport(
             ExportDefinition export,
             LazyMemberInfo memberInfo,
-            Func<Type, SerializedTypeIdentity> identityGenerator)
+            Func<Type, TypeIdentity> identityGenerator)
         {
             Debug.Assert(memberInfo.GetAccessors().Count() == 1, "Only expecting one accessor for a type export.");
             Debug.Assert(memberInfo.GetAccessors().First() is Type, "Expecting the export to be a Type.");
-            return SerializedExportOnTypeDefinition.CreateDefinition(
+            return TypeBasedExportDefinition.CreateDefinition(
                 export.ContractName,
                 memberInfo.GetAccessors().First() as Type,
                 identityGenerator);
         }
 
-        private static SerializedImportDefinition CreatePropertyImport(
-            ImportDefinition import,
-            Func<Type, SerializedTypeIdentity> identityGenerator)
+        private static SerializableImportDefinition CreatePropertyImport(
+            ContractBasedImportDefinition import,
+            Func<Type, TypeIdentity> identityGenerator)
         {
             var memberInfo = ReflectionModelServices.GetImportingMember(import);
             if (memberInfo.MemberType != MemberTypes.Property)
@@ -108,22 +159,52 @@ namespace Apollo.Core.Host.Plugins
             var getMember = memberInfo.GetAccessors().Where(m => m.Name.Contains("set_")).First();
             var name = getMember.Name.Substring("set_".Length);
             var property = getMember.DeclaringType.GetProperty(name);
-            return SerializedImportOnPropertyDefinition.CreateDefinition(
+
+            var requiredType = ExtractRequiredType(property.GetCustomAttributes(), property.PropertyType);
+            if (requiredType == null)
+            {
+                return null;
+            }
+
+            return PropertyBasedImportDefinition.CreateDefinition(
                 import.ContractName,
+                TypeIdentity.CreateDefinition(requiredType),
+                import.Cardinality,
+                import.IsRecomposable,
+                import.RequiredCreationPolicy,
                 property,
                 identityGenerator);
         }
 
-        private static SerializedImportDefinition CreateConstructorParameterImport(
-            ImportDefinition import,
-            Func<Type, SerializedTypeIdentity> identityGenerator)
+        private static SerializableImportDefinition CreateConstructorParameterImport(
+            ContractBasedImportDefinition import,
+            Func<Type, TypeIdentity> identityGenerator)
         {
             var parameterInfo = ReflectionModelServices.GetImportingParameter(import);
-            return SerializedImportOnConstructorDefinition.CreateDefinition(
+            var requiredType = ExtractRequiredType(parameterInfo.Value.GetCustomAttributes(), parameterInfo.Value.ParameterType);
+            if (requiredType == null)
+            {
+                return null;
+            }
+
+            return ConstructorBasedImportDefinition.CreateDefinition(
                 import.ContractName,
+                TypeIdentity.CreateDefinition(requiredType),
+                import.Cardinality,
+                import.RequiredCreationPolicy,
                 parameterInfo.Value,
                 identityGenerator);
         }
+
+        /// <summary>
+        /// The object that stores all the information about the parts and the part groups.
+        /// </summary>
+        private readonly IPluginRepository m_Repository;
+
+        /// <summary>
+        /// The object that provides methods for part import matching.
+        /// </summary>
+        private readonly IConnectParts m_ImportEngine;
 
         /// <summary>
         /// The object that will pass through the log messages.
@@ -138,21 +219,37 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoteAssemblyScanner"/> class.
         /// </summary>
+        /// <param name="repository">The object that stores all the information about the parts and the part groups.</param>
+        /// <param name="importEngine">The object that provides methods for part import matching.</param>
         /// <param name="logger">The object that passes through the log messages.</param>
         /// <param name="scheduleBuilder">The function that returns a schedule building object.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="repository"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="importEngine"/> is <see langword="null" />.
+        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="scheduleBuilder"/> is <see langword="null" />.
         /// </exception>
-        public RemoteAssemblyScanner(ILogMessagesFromRemoteAppDomains logger, Func<IBuildFixedSchedules> scheduleBuilder)
+        public RemoteAssemblyScanner(
+            IPluginRepository repository,
+            IConnectParts importEngine,
+            ILogMessagesFromRemoteAppDomains logger, 
+            Func<IBuildFixedSchedules> scheduleBuilder)
         {
             {
+                Lokad.Enforce.Argument(() => repository);
+                Lokad.Enforce.Argument(() => importEngine);
                 Lokad.Enforce.Argument(() => logger);
                 Lokad.Enforce.Argument(() => scheduleBuilder);
             }
 
+            m_Repository = repository;
+            m_ImportEngine = importEngine;
             m_Logger = logger;
             m_ScheduleBuilder = scheduleBuilder;
         }
@@ -164,26 +261,15 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="assemblyFilesToScan">
         /// The collection that contains the file paths to all the assemblies to be scanned.
         /// </param>
-        /// <param name="plugins">The collection that describes the plugin information in the given assembly files.</param>
-        /// <param name="types">
-        /// The collection that provides information about all the types which are required to complete the type hierarchy
-        /// for the plugin types.
-        /// </param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="assemblyFilesToScan"/> is <see langword="null" />.
         /// </exception>
-        public void Scan(
-            IEnumerable<string> assemblyFilesToScan, 
-            out IEnumerable<PluginInfo> plugins, 
-            out IEnumerable<SerializedTypeDefinition> types)
+        public void Scan(IEnumerable<string> assemblyFilesToScan)
         {
             {
                 Lokad.Enforce.Argument(() => assemblyFilesToScan);
             }
 
-            var pluginStorage = new ConcurrentBag<PluginInfo>();
-            var nonPluginStorage = new ConcurrentDictionary<string, SerializedTypeDefinition>();
-            
             // It is expected that the loading of an assembly will take more
             // time than the scanning of that assembly. 
             // Because we're dealing with disk IO we want to optimize the load
@@ -194,11 +280,8 @@ namespace Apollo.Core.Host.Plugins
                 a => 
                 { 
                     var assembly = LoadAssembly(a);
-                    ScanAssembly(assembly, pluginStorage, nonPluginStorage);
+                    ScanAssembly(assembly);
                 });
-
-            plugins = pluginStorage.ToList();
-            types = nonPluginStorage.Values.ToList();
         }
 
         private Assembly LoadAssembly(string file)
@@ -268,24 +351,37 @@ namespace Apollo.Core.Host.Plugins
         
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "Will catch an log here because we don't actually know what exceptions can happen due to the ExtractGroups() call.")]
-        private void ScanAssembly(
-            Assembly assembly,
-            ConcurrentBag<PluginInfo> storage,
-            ConcurrentDictionary<string, SerializedTypeDefinition> typeStorage)
+        private void ScanAssembly(Assembly assembly)
         {
-            var path = assembly.LocalFilePath();
-            var info = new PluginInfo
-                {
-                    FileInfo = new PluginFileInfo(path, File.GetLastWriteTimeUtc(path)),
-                };
-
             try
             {
-                ExtractImportsAndExports(assembly, typeStorage, info);
-                ExtractActionsAndConditions(assembly, typeStorage, info);
-                ExtractGroups(assembly, typeStorage, storage.SelectMany(s => s.Types).Union(info.Types), info);
+                var createTypeIdentity = IdentityFactory(m_Repository, new Dictionary<Type, TypeIdentity>());
+                var mefParts = ExtractImportsAndExports(assembly, createTypeIdentity);
+                var parts = mefParts.Select(p => ExtractActionsAndConditions(p.Item1, p.Item2, createTypeIdentity));
+                foreach (var part in parts)
+                {
+                    m_Repository.AddPart(part);
+                }
 
-                storage.Add(info);
+                var groupExporters = assembly.GetTypes().Where(t => typeof(IExportGroupDefinitions).IsAssignableFrom(t));
+                foreach (var t in groupExporters)
+                {
+                    try
+                    {
+                        var builder = new GroupDefinitionBuilder(
+                            m_Repository,
+                            m_ImportEngine, 
+                            createTypeIdentity,
+                            m_ScheduleBuilder);
+
+                        var exporter = Activator.CreateInstance(t) as IExportGroupDefinitions;
+                        exporter.RegisterGroups(builder);
+                    }
+                    catch (Exception e)
+                    {
+                        m_Logger.Log(LogSeverityProxy.Warning, e.ToString());
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -299,21 +395,16 @@ namespace Apollo.Core.Host.Plugins
             }
         }
 
-        private void ExtractImportsAndExports(
-            Assembly assembly,
-            ConcurrentDictionary<string, SerializedTypeDefinition> typeStorage,
-            PluginInfo info)
+        private IEnumerable<Tuple<Type, PartDefinition>> ExtractImportsAndExports(Assembly assembly, Func<Type, TypeIdentity> createTypeIdentity)
         {
-            var createTypeIdentity = IdentityFactory(typeStorage);
-
             var catalog = new AssemblyCatalog(assembly);
             foreach (var part in catalog.Parts)
             {
-                var exports = new List<SerializedExportDefinition>();
+                var exports = new List<SerializableExportDefinition>();
                 foreach (var export in part.ExportDefinitions)
                 {
                     var memberInfo = ReflectionModelServices.GetExportingMember(export);
-                    SerializedExportDefinition exportDefinition = null;
+                    SerializableExportDefinition exportDefinition = null;
                     switch (memberInfo.MemberType)
                     {
                         case MemberTypes.Method:
@@ -340,14 +431,27 @@ namespace Apollo.Core.Host.Plugins
                                 "Discovered export: {0}",
                                 exportDefinition));
                     }
+                    else 
+                    {
+                        m_Logger.Log(
+                            LogSeverityProxy.Warning,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Unable to process export: {0} on a {1}",
+                                export.ContractName,
+                                memberInfo.MemberType));
+                    }
                 }
 
-                var imports = new List<SerializedImportDefinition>();
+                var imports = new List<SerializableImportDefinition>();
                 foreach (var import in part.ImportDefinitions)
                 {
-                    SerializedImportDefinition importDefinition = !ReflectionModelServices.IsImportingParameter(import)
-                        ? importDefinition = CreatePropertyImport(import, createTypeIdentity)
-                        : importDefinition = CreateConstructorParameterImport(import, createTypeIdentity);
+                    Debug.Assert(import is ContractBasedImportDefinition, "All import objects should be ContractBasedImportDefinition objects.");
+                    var contractImport = import as ContractBasedImportDefinition;
+
+                    SerializableImportDefinition importDefinition = !ReflectionModelServices.IsImportingParameter(contractImport)
+                        ? importDefinition = CreatePropertyImport(contractImport, createTypeIdentity)
+                        : importDefinition = CreateConstructorParameterImport(contractImport, createTypeIdentity);
 
                     if (importDefinition != null)
                     {
@@ -359,154 +463,110 @@ namespace Apollo.Core.Host.Plugins
                                 "Discovered import: {0}",
                                 importDefinition));
                     }
+                    else
+                    {
+                        m_Logger.Log(
+                            LogSeverityProxy.Warning,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Unable to process import: {0}",
+                                import.ContractName));
+                    }
                 }
 
-                info.AddType(
-                    new PluginTypeInfo
-                    {
-                        Type = createTypeIdentity(ReflectionModelServices.GetPartType(part).Value),
-                        Exports = exports,
-                        Imports = imports,
-                        Actions = Enumerable.Empty<SerializedScheduleActionDefinition>(),
-                        Conditions = Enumerable.Empty<SerializedScheduleConditionDefinition>(),
-                    });
+                var type = ReflectionModelServices.GetPartType(part).Value;
+                yield return new Tuple<Type, PartDefinition>( 
+                    type,
+                    new PartDefinition
+                        {
+                            Identity = createTypeIdentity(type),
+                            Exports = exports,
+                            Imports = imports,
+                            Actions = Enumerable.Empty<ScheduleActionDefinition>(),
+                            Conditions = Enumerable.Empty<ScheduleConditionDefinition>(),
+                        });
             }
         }
 
-        private void ExtractActionsAndConditions(
-            Assembly assembly,
-            ConcurrentDictionary<string, SerializedTypeDefinition> typeStorage,
-            PluginInfo info)
+        private PartDefinition ExtractActionsAndConditions(Type type, PartDefinition part, Func<Type, TypeIdentity> createTypeIdentity)
         {
-            var createTypeIdentity = IdentityFactory(typeStorage);
-            foreach (var t in assembly.GetTypes())
+            var actions = new List<ScheduleActionDefinition>();
+            var conditions = new List<ScheduleConditionDefinition>();
+            foreach (var method in type.GetMethods())
             {
-                var actions = new List<SerializedScheduleActionDefinition>();
-                var conditions = new List<SerializedScheduleConditionDefinition>();
-                foreach (var method in t.GetMethods())
+                if (method.ReturnType == typeof(void) && !method.GetParameters().Any())
                 {
-                    if (method.ReturnType == typeof(void) && !method.GetParameters().Any())
+                    var actionAttribute = method.GetCustomAttribute<ScheduleActionAttribute>(true);
+                    if (actionAttribute != null)
                     {
-                        var actionAttribute = method.GetCustomAttribute<ScheduleActionAttribute>(true);
-                        if (actionAttribute != null)
-                        {
-                            var actionDefinition = SerializedScheduleActionDefinition.CreateDefinition(
-                                actionAttribute.Name, 
-                                method, 
-                                createTypeIdentity);
-                            actions.Add(actionDefinition);
+                        var actionDefinition = ScheduleActionDefinition.CreateDefinition(
+                            actionAttribute.Name, 
+                            method, 
+                            createTypeIdentity);
+                        actions.Add(actionDefinition);
                             
-                            m_Logger.Log(
-                                LogSeverityProxy.Info,
-                                string.Format(
-                                    CultureInfo.InvariantCulture,
-                                    "Discovered action: {0}",
-                                    actionDefinition));
-                        }
-
-                        continue;
+                        m_Logger.Log(
+                            LogSeverityProxy.Info,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Discovered action: {0}",
+                                actionDefinition));
                     }
 
-                    if (method.ReturnType == typeof(bool) && !method.GetParameters().Any())
-                    {
-                        var conditionAttribute = method.GetCustomAttribute<ScheduleConditionAttribute>(true);
-                        if (conditionAttribute != null)
-                        {
-                            var conditionDefinition = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(
-                                conditionAttribute.Name,
-                                method,
-                                createTypeIdentity);
-                            conditions.Add(conditionDefinition);
-
-                            m_Logger.Log(
-                                LogSeverityProxy.Info,
-                                string.Format(
-                                    CultureInfo.InvariantCulture,
-                                    "Discovered condition: {0}",
-                                    conditionDefinition));
-                        }
-                    }
+                    continue;
                 }
 
-                foreach (var property in t.GetProperties())
+                if (method.ReturnType == typeof(bool) && !method.GetParameters().Any())
                 {
-                    if (property.PropertyType == typeof(bool))
+                    var conditionAttribute = method.GetCustomAttribute<ScheduleConditionAttribute>(true);
+                    if (conditionAttribute != null)
                     {
-                        var conditionAttribute = property.GetCustomAttribute<ScheduleConditionAttribute>(true);
-                        if (conditionAttribute != null)
-                        {
-                            var conditionDefinition = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(
-                                conditionAttribute.Name,
-                                property,
-                                createTypeIdentity);
-                            conditions.Add(conditionDefinition);
-
-                            m_Logger.Log(
-                                LogSeverityProxy.Info,
-                                string.Format(
-                                    CultureInfo.InvariantCulture,
-                                    "Discovered condition: {0}",
-                                    conditionDefinition));
-                        }
-                    }
-                }
-
-                if (actions.Count > 0 || conditions.Count > 0)
-                {
-                    var identity = createTypeIdentity(t);
-                    PluginTypeInfo typeInfo = info.Types.Where(p => p.Type == identity).FirstOrDefault();
-                    if (typeInfo == null)
-                    {
-                        typeInfo = new PluginTypeInfo();
-                        info.AddType(typeInfo);
-                    }
-
-                    typeInfo.Actions = actions;
-                    typeInfo.Conditions = conditions;
-                }
-            }
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "Catch an log here because we don't actually know what exceptions can happen due to the exporter.RegisterGroups() call")]
-        private void ExtractGroups(
-            Assembly assembly, 
-            ConcurrentDictionary<string, SerializedTypeDefinition> typeStorage, 
-            IEnumerable<PluginTypeInfo> knownPlugins,
-            PluginInfo info)
-        {
-            var groupExporters = assembly.GetTypes().Where(t => typeof(IExportGroupDefinitions).IsAssignableFrom(t));
-            foreach (var t in groupExporters)
-            {
-                try
-                {
-                    PluginGroupInfo group = null;
-                    var builder = new GroupDefinitionBuilder(
-                        knownPlugins, 
-                        IdentityFactory(typeStorage), 
-                        m_ScheduleBuilder, 
-                        g => group = g);
-
-                    var exporter = Activator.CreateInstance(t) as IExportGroupDefinitions;
-                    exporter.RegisterGroups(builder);
-
-                    if (group != null)
-                    {
-                        info.AddGroup(group);
+                        var conditionDefinition = MethodBasedScheduleConditionDefinition.CreateDefinition(
+                            conditionAttribute.Name,
+                            method,
+                            createTypeIdentity);
+                        conditions.Add(conditionDefinition);
 
                         m_Logger.Log(
                             LogSeverityProxy.Info,
                             string.Format(
                                 CultureInfo.InvariantCulture,
                                 "Discovered condition: {0}",
-                                group));
+                                conditionDefinition));
                     }
                 }
-                catch (Exception e)
+            }
+
+            foreach (var property in type.GetProperties())
+            {
+                if (property.PropertyType == typeof(bool))
                 {
-                    m_Logger.Log(LogSeverityProxy.Warning, e.ToString());
+                    var conditionAttribute = property.GetCustomAttribute<ScheduleConditionAttribute>(true);
+                    if (conditionAttribute != null)
+                    {
+                        var conditionDefinition = PropertyBasedScheduleConditionDefinition.CreateDefinition(
+                            conditionAttribute.Name,
+                            property,
+                            createTypeIdentity);
+                        conditions.Add(conditionDefinition);
+
+                        m_Logger.Log(
+                            LogSeverityProxy.Info,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Discovered condition: {0}",
+                                conditionDefinition));
+                    }
                 }
             }
+
+            if (actions.Count > 0 || conditions.Count > 0)
+            {
+                part.Actions = actions;
+                part.Conditions = conditions;
+            }
+
+            return part;
         }
     }
 }

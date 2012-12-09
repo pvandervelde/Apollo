@@ -6,10 +6,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Extensions.Scheduling;
 
@@ -84,7 +82,7 @@ namespace Apollo.Core.Host.Plugins
         /// The location where a sub-schedule can be inserted in the schedule owned by the group that
         /// published the current import.
         /// </summary>
-        private readonly EditableInsertVertex m_InsertPoint;
+        private readonly InsertVertex m_InsertPoint;
 
         /// <summary>
         /// The collection of object imports that should be satisfied.
@@ -106,7 +104,7 @@ namespace Apollo.Core.Host.Plugins
         /// <exception cref="ArgumentException">
         ///     Thrown if <paramref name="contractName"/> is an empty string.
         /// </exception>
-        public GroupImportMap(string contractName, EditableInsertVertex insertPoint = null, IEnumerable<ImportRegistrationId> objectImports = null)
+        public GroupImportMap(string contractName, InsertVertex insertPoint = null, IEnumerable<ImportRegistrationId> objectImports = null)
         {
             {
                 Lokad.Enforce.Argument(() => contractName);
@@ -133,7 +131,7 @@ namespace Apollo.Core.Host.Plugins
         /// Gets the location where a sub-schedule can be inserted in the schedule owned by the group that
         /// published the current import.
         /// </summary>
-        public EditableInsertVertex InsertPoint
+        public InsertVertex InsertPoint
         {
             get
             {

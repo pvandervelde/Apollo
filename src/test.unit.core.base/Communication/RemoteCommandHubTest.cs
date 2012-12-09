@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Base.Communication.Messages;
+using Apollo.Core.Base.Plugins;
 using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
@@ -391,7 +392,7 @@ namespace Apollo.Core.Base.Communication
             };
 
             layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
-            Assert.Throws<CommandNotSupportedException>(() => hub.CommandsFor<IHostCommands>(connectionInfo.Id));
+            Assert.Throws<CommandNotSupportedException>(() => hub.CommandsFor<ICompositionCommands>(connectionInfo.Id));
         }
 
         [Test]

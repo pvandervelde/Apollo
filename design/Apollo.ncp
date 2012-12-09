@@ -5435,7 +5435,7 @@ How are we going to let plug-ins provide all the information they want to provid
       </Entity>
       <Entity type="Interface">
         <Name>ISelectComponentGroups</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="3154" top="872" />
         <Size width="642" height="146" />
         <Collapsed>False</Collapsed>
@@ -5452,20 +5452,19 @@ How are we going to let plug-ins provide all the information they want to provid
       </Entity>
       <Entity type="Class">
         <Name>GroupDescriptor</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="3041" top="1102" />
-        <Size width="360" height="145" />
+        <Size width="335" height="128" />
         <Collapsed>False</Collapsed>
-        <Member type="Property">public string Name { get; }</Member>
-        <Member type="Property">public string Description { get; }</Member>
-        <Member type="Property">public IEnumerable&lt;Tuple&lt;object, object&gt;&gt; Characteristics { get; }</Member>
+        <Member type="Property">public string ContractName { get; }</Member>
+        <Member type="Property">public IEnumerable&lt;Tuple&lt;object, object&gt;&gt; MetaData { get; }</Member>
         <Member type="Method">public IPluginGroup Select()</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Interface">
         <Name>IPluginGroup</Name>
         <Access>Public</Access>
-        <Location left="2760" top="473" />
+        <Location left="3912" top="761" />
         <Size width="286" height="146" />
         <Collapsed>False</Collapsed>
         <Member type="Method">IEnumerable&lt;GroupProperty&gt; Properties()</Member>
@@ -5474,7 +5473,7 @@ How are we going to let plug-ins provide all the information they want to provid
       <Entity type="Class">
         <Name>GroupConnections</Name>
         <Access>Internal</Access>
-        <Location left="2531" top="63" />
+        <Location left="3683" top="351" />
         <Size width="274" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -5482,7 +5481,7 @@ How are we going to let plug-ins provide all the information they want to provid
       <Entity type="Class">
         <Name>ComponentGroup</Name>
         <Access>Internal</Access>
-        <Location left="2922" top="205" />
+        <Location left="4074" top="493" />
         <Size width="162" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -5490,7 +5489,7 @@ How are we going to let plug-ins provide all the information they want to provid
       <Entity type="Interface">
         <Name>IConnectComponentGroups</Name>
         <Access>Public</Access>
-        <Location left="2551" top="247" />
+        <Location left="3703" top="535" />
         <Size width="268" height="78" />
         <Collapsed>False</Collapsed>
         <Member type="Method">IEnumerable&lt;IPluginGroup&gt; Groups()</Member>
@@ -5868,8 +5867,8 @@ How are we going to let plug-ins provide all the information they want to provid
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2629</X>
-          <Y>165</Y>
+          <X>3781</X>
+          <Y>453</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="16" second="25">
@@ -8304,13 +8303,12 @@ How are we going to let plug-ins provide all the information they want to provid
         <Size width="160" height="50" />
       </Entity>
       <Entity type="Comment">
-        <Text>
-                    - Allow access to the currently open controls?
-                    - Allow access to the data structures?
-                    - Provide access so the UI commands?
+        <Text>- Allow access to the currently open controls?
+- Allow access to the data structures?
+- Provide access so the UI commands?
                 </Text>
         <Location left="1659" top="2097" />
-        <Size width="280" height="105" />
+        <Size width="288" height="75" />
       </Entity>
       <Entity type="Comment">
         <Text>MarshalByRefObject</Text>
@@ -8436,11 +8434,6 @@ How are we going to let plug-ins provide all the information they want to provid
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
       </Entity>
-      <Entity type="Comment">
-        <Text>How do we decide on an engine?</Text>
-        <Location left="1322" top="1608" />
-        <Size width="160" height="75" />
-      </Entity>
       <Entity type="Interface">
         <Name>IExecuteScripts</Name>
         <Access>Internal</Access>
@@ -8455,11 +8448,6 @@ How are we going to let plug-ins provide all the information they want to provid
         <Text>These objects shadow the real facades so that the script is unable to pass anything across the remoting boundary that is not defined by Apollo itself. This means we only push primitives and known objects / structs across the boundary.</Text>
         <Location left="1933" top="458" />
         <Size width="192" height="149" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>Set the variables that allow you to interact with the system. If possible we throw in only one variable which is an object that holds everything.</Text>
-        <Location left="1325" top="1952" />
-        <Size width="189" height="106" />
       </Entity>
       <Entity type="Comment">
         <Text>Execute scripts in a different AppDomain so that we can unload after we're done.</Text>
@@ -8598,7 +8586,7 @@ How are we going to let plug-ins provide all the information they want to provid
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="16" second="32">
+      <Relationship type="Association" first="16" second="30">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -8622,13 +8610,13 @@ How are we going to let plug-ins provide all the information they want to provid
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="29" second="3">
+      <Relationship type="Association" first="27" second="3">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="4" second="25">
+      <Relationship type="Comment" first="4" second="24">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -8652,7 +8640,7 @@ How are we going to let plug-ins provide all the information they want to provid
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="10" second="25">
+      <Relationship type="Comment" first="10" second="24">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
@@ -8684,7 +8672,7 @@ How are we going to let plug-ins provide all the information they want to provid
           <Y>1769</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="26" second="17">
+      <Relationship type="Comment" first="25" second="17">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -8696,7 +8684,7 @@ How are we going to let plug-ins provide all the information they want to provid
           <Y>837</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="26" second="18">
+      <Relationship type="Comment" first="25" second="18">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -8708,7 +8696,7 @@ How are we going to let plug-ins provide all the information they want to provid
           <Y>821</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="26" second="16">
+      <Relationship type="Comment" first="25" second="16">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -8740,7 +8728,7 @@ How are we going to let plug-ins provide all the information they want to provid
           <Y>752</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="17" second="34">
+      <Relationship type="Association" first="17" second="32">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
@@ -8748,7 +8736,7 @@ How are we going to let plug-ins provide all the information they want to provid
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="18" second="33">
+      <Relationship type="Association" first="18" second="31">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
@@ -8756,7 +8744,7 @@ How are we going to let plug-ins provide all the information they want to provid
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="21" second="25">
+      <Relationship type="Association" first="21" second="24">
         <Label>As Proxy</Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
@@ -8791,27 +8779,15 @@ How are we going to let plug-ins provide all the information they want to provid
           <Y>1945</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="19" second="25">
+      <Relationship type="Realization" first="19" second="24">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Realization" first="21" second="29">
+      <Relationship type="Realization" first="21" second="27">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="24" second="25">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1297</X>
-          <Y>1642</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1278</X>
-          <Y>1643</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="28" second="25">
+      <Relationship type="Comment" first="26" second="24">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -8823,7 +8799,7 @@ How are we going to let plug-ins provide all the information they want to provid
           <Y>1558</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="31" second="30">
+      <Relationship type="Association" first="29" second="28">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
@@ -8839,7 +8815,7 @@ How are we going to let plug-ins provide all the information they want to provid
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="33" second="34">
+      <Relationship type="Association" first="31" second="32">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
@@ -8847,7 +8823,7 @@ How are we going to let plug-ins provide all the information they want to provid
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="32" second="33">
+      <Relationship type="Association" first="30" second="31">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>

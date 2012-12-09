@@ -4,10 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading;
 using Apollo.Core.Extensions.Scheduling;
 
 namespace Apollo.Core.Dataset.Scheduling

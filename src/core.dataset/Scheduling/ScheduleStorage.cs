@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Dataset.Properties;
 using Apollo.Core.Extensions.Scheduling;
 using Apollo.Utilities;
@@ -35,7 +36,7 @@ namespace Apollo.Core.Dataset.Scheduling
             /// <summary>
             /// The schedule.
             /// </summary>
-            private readonly IEditableSchedule m_Schedule;
+            private readonly ISchedule m_Schedule;
 
             /// <summary>
             /// The information describing the schedule.
@@ -47,7 +48,7 @@ namespace Apollo.Core.Dataset.Scheduling
             /// </summary>
             /// <param name="information">The information describing the schedule.</param>
             /// <param name="schedule">The schedule.</param>
-            public ScheduleMap(ScheduleInformation information, IEditableSchedule schedule)
+            public ScheduleMap(ScheduleInformation information, ISchedule schedule)
             {
                 {
                     Debug.Assert(information != null, "The schedule information should not be a null reference.");
@@ -72,7 +73,7 @@ namespace Apollo.Core.Dataset.Scheduling
             /// <summary>
             /// Gets the schedule.
             /// </summary>
-            public IEditableSchedule Schedule
+            public ISchedule Schedule
             {
                 get
                 {
@@ -85,7 +86,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// Creates a default storage that isn't linked to a timeline.
         /// </summary>
         /// <returns>The newly created instance.</returns>
-        internal static ScheduleStorage BuildStorageWithoutTimeline()
+        internal static ScheduleStorage CreateInstanceWithoutTimeline()
         {
             return new ScheduleStorage(new HistoryId(), new DictionaryHistory<ScheduleId, ScheduleMap>());
         }
@@ -97,7 +98,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <param name="members">The collection containing all the member collections.</param>
         /// <param name="constructorArguments">The constructor arguments.</param>
         /// <returns>The newly created instance.</returns>
-        public static ScheduleStorage BuildStorage(
+        public static ScheduleStorage CreateInstance(
             HistoryId id,
             IEnumerable<Tuple<byte, IStoreTimelineValues>> members,
             params object[] constructorArguments)
@@ -163,40 +164,26 @@ namespace Apollo.Core.Dataset.Scheduling
         }
 
         /// <summary>
-        /// Adds the <see cref="IEditableSchedule"/> object with the variables it affects and the dependencies for that schedule.
+        /// Adds the <see cref="ISchedule"/> object with the variables it affects and the dependencies for that schedule.
         /// </summary>
         /// <param name="schedule">The schedule that should be stored.</param>
         /// <param name="name">The name of the schedule that is being described by this information object.</param>
-        /// <param name="summary">The summary of the schedule that is being described by this information object.</param>
         /// <param name="description">The description of the schedule that is being described by this information object.</param>
-        /// <param name="produces">The variables that are affected by the schedule.</param>
-        /// <param name="dependsOn">The variables for which data should be available in order to execute the schedule.</param>
         /// <returns>An object identifying and describing the schedule.</returns>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="schedule"/> is <see langword="null" />.
         /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="produces"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="dependsOn"/> is <see langword="null" />.
-        /// </exception>
         public ScheduleInformation Add(
-            IEditableSchedule schedule,
+            ISchedule schedule,
             string name,
-            string summary,
-            string description,
-            IEnumerable<IScheduleVariable> produces,
-            IEnumerable<IScheduleDependency> dependsOn)
+            string description)
         {
             {
                 Lokad.Enforce.Argument(() => schedule);
-                Lokad.Enforce.Argument(() => produces);
-                Lokad.Enforce.Argument(() => dependsOn);
             }
 
             var id = new ScheduleId();
-            var info = new ScheduleInformation(id, name, summary, description, produces, dependsOn);
+            var info = new ScheduleInformation(id, name, description);
             m_Schedules.Add(id, new ScheduleMap(info, schedule));
 
             return info;
@@ -218,7 +205,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// </exception>
         public void Update(
             ScheduleId scheduleToReplace,
-            IEditableSchedule newSchedule)
+            ISchedule newSchedule)
         {
             {
                 Lokad.Enforce.Argument(() => scheduleToReplace);
@@ -232,10 +219,7 @@ namespace Apollo.Core.Dataset.Scheduling
             var info = new ScheduleInformation(
                 scheduleToReplace,
                 oldInfo.Name,
-                oldInfo.Summary,
-                oldInfo.Description,
-                oldInfo.Produces(),
-                oldInfo.DependsOn());
+                oldInfo.Description);
             m_Schedules[scheduleToReplace] = new ScheduleMap(info, newSchedule);
         }
 
@@ -276,7 +260,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <exception cref="UnknownScheduleException">
         ///     Thrown if <paramref name="id"/> is not linked to a known schedule.
         /// </exception>
-        public IEditableSchedule Schedule(ScheduleId id)
+        public ISchedule Schedule(ScheduleId id)
         {
             {
                 Lokad.Enforce.Argument(() => id);

@@ -10,9 +10,9 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Scheduling;
 using Apollo.Utilities;
-using QuickGraph;
 
 namespace Apollo.Core.Dataset.Scheduling
 {
@@ -210,92 +210,6 @@ namespace Apollo.Core.Dataset.Scheduling
         }
 
         /// <summary>
-        /// The collection that maps an <see cref="IEditableScheduleVertex"/> type to a function that can create the
-        /// equivalent <see cref="IExecutableScheduleVertex"/>.
-        /// </summary>
-        private static readonly Dictionary<Type, Func<IEditableScheduleVertex, IExecutableScheduleVertex>> s_VertexBuilder
-            = new Dictionary<Type, Func<IEditableScheduleVertex, IExecutableScheduleVertex>>
-            {
-                { 
-                    typeof(EditableStartVertex), 
-                    vertex => new ExecutableStartVertex(vertex.Index) 
-                },
-                { 
-                    typeof(EditableEndVertex), 
-                    vertex => new ExecutableEndVertex(vertex.Index) 
-                },
-                { 
-                    typeof(EditableInsertVertex), 
-                    vertex => new ExecutableNoOpVertex(vertex.Index) 
-                },
-                { 
-                    typeof(EditableMarkHistoryVertex), 
-                    vertex => new ExecutableMarkHistoryVertex(vertex.Index) 
-                },
-                { 
-                    typeof(EditableSynchronizationStartVertex), 
-                    vertex => new ExecutableSynchronizationStartVertex(
-                        vertex.Index, 
-                        ((EditableSynchronizationStartVertex)vertex).VariablesToSynchronizeOn)
-                },
-                { 
-                    typeof(EditableSynchronizationEndVertex), 
-                    vertex => new ExecutableSynchronizationEndVertex(vertex.Index) 
-                },
-                {
-                    typeof(EditableExecutingActionVertex),
-                    vertex => new ExecutableActionVertex(
-                        vertex.Index,
-                        ((EditableExecutingActionVertex)vertex).ActionToExecute)
-                },
-                { 
-                    typeof(EditableSubScheduleVertex), 
-                    vertex => new ExecutableSubScheduleVertex(
-                        vertex.Index, 
-                        ((EditableSubScheduleVertex)vertex).ScheduleToExecute) 
-                },
-            };
-
-        private static ExecutableSchedule TransformToExecutableSchedule(ScheduleId id, IEditableSchedule editableSchedule)
-        {
-            var map = new Dictionary<IEditableScheduleVertex, IExecutableScheduleVertex>();
-            var newSchedule = new AdjacencyGraph<IExecutableScheduleVertex, ExecutableScheduleEdge>();
-
-            var start = new ExecutableStartVertex(editableSchedule.Start.Index);
-            newSchedule.AddVertex(start);
-            map.Add(editableSchedule.Start, start);
-
-            var end = new ExecutableEndVertex(editableSchedule.End.Index);
-            newSchedule.AddVertex(end);
-            map.Add(editableSchedule.End, end);
-
-            editableSchedule.TraverseSchedule(
-                editableSchedule.Start,
-                true,
-                (vertex, edges) =>
-                {
-                    foreach (var pair in edges)
-                    {
-                        var target = pair.Item2;
-                        if (!map.ContainsKey(target))
-                        {
-                            var executableVertex = s_VertexBuilder[target.GetType()](target);
-                            map.Add(target, executableVertex);
-                            newSchedule.AddVertex(executableVertex);
-                        }
-
-                        var executableSource = map[vertex];
-                        var executableTarget = map[target];
-                        newSchedule.AddEdge(new ExecutableScheduleEdge(executableSource, executableTarget, pair.Item1));
-                    }
-
-                    return true;
-                });
-
-            return new ExecutableSchedule(id, newSchedule, start, end);
-        }
-
-        /// <summary>
         /// The object used to lock on.
         /// </summary>
         private readonly ILockObject m_Lock = new LockObject();
@@ -312,44 +226,32 @@ namespace Apollo.Core.Dataset.Scheduling
         private readonly IStoreSchedules m_KnownSchedules;
 
         /// <summary>
-        /// The object that handles sending out the events.
-        /// </summary>
-        private readonly IScheduleExecutionNotificationInvoker m_Notifications;
-
-        /// <summary>
         /// The function that creates an <see cref="IExecuteSchedules"/> object with the given 
         /// executable schedule.
         /// </summary>
-        private readonly Func<ExecutableSchedule, ScheduleExecutionInfo, IExecuteSchedules> m_LoadExecutor;
+        private readonly Func<ISchedule, ScheduleId, ScheduleExecutionInfo, IExecuteSchedules> m_LoadExecutor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScheduleDistributor"/> class.
         /// </summary>
         /// <param name="knownSchedules">The collection of known schedules.</param>
-        /// <param name="notifications">The object that handles the notifications for the schedule execution.</param>
         /// <param name="executorBuilder">The function that is used to create a new <see cref="IExecuteSchedules"/> object.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="knownSchedules"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="notifications"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="executorBuilder"/> is <see langword="null" />.
         /// </exception>
         public ScheduleDistributor(
             IStoreSchedules knownSchedules,
-            IScheduleExecutionNotificationInvoker notifications,
-            Func<ExecutableSchedule, ScheduleExecutionInfo, IExecuteSchedules> executorBuilder)
+            Func<ISchedule, ScheduleId, ScheduleExecutionInfo, IExecuteSchedules> executorBuilder)
         {
             {
                 Lokad.Enforce.Argument(() => knownSchedules);
-                Lokad.Enforce.Argument(() => notifications);
                 Lokad.Enforce.Argument(() => executorBuilder);
             }
 
             m_KnownSchedules = knownSchedules;
-            m_Notifications = notifications;
             m_LoadExecutor = executorBuilder;
         }
 
@@ -414,35 +316,18 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             // Translate the schedule to an executable schedule
             var editableSchedule = m_KnownSchedules.Schedule(scheduleId);
-            var executableSchedule = TransformToExecutableSchedule(scheduleId, editableSchedule);
 
             // Create a new executor and provide it with the schedule
-            var executor = m_LoadExecutor(executableSchedule, executionInfo);
+            var executor = m_LoadExecutor(editableSchedule, scheduleId, executionInfo);
             {
                 // Attach to events. We want to remove the executor from the collection as soon as it's finished
-                executor.OnStart += HandleScheduleExecutionStart;
-                executor.OnPause += HandleScheduleExecutionPause;
                 executor.OnFinish += HandleScheduleExecutionFinish;
-                executor.OnExecutionProgress += HandleScheduleExecutionProgress;
-                executor.OnVertexProcess += HandleScheduleExecutionVertexProgress;
                 m_RunningExecutors.Add(new ExecutingScheduleKey(scheduleId, scheduleParameters), executor);
                 
                 executor.Start(scheduleParameters);
             }
 
             return executor;
-        }
-
-        private void HandleScheduleExecutionStart(object sender, EventArgs e)
-        {
-            var executor = sender as IExecuteSchedules;
-            m_Notifications.RaiseOnStart(executor.Schedule);
-        }
-
-        private void HandleScheduleExecutionPause(object sender, EventArgs e)
-        {
-            var executor = sender as IExecuteSchedules;
-            m_Notifications.RaiseOnPause(executor.Schedule);
         }
 
         private void HandleScheduleExecutionFinish(object sender, ScheduleExecutionStateEventArgs e)
@@ -452,26 +337,10 @@ namespace Apollo.Core.Dataset.Scheduling
                 var executor = sender as IExecuteSchedules;
                 Debug.Assert(executor != null, "Received the event from a non-IExecuteSchedules object.");
 
-                executor.OnStart -= HandleScheduleExecutionStart;
-                executor.OnPause -= HandleScheduleExecutionPause;
                 executor.OnFinish -= HandleScheduleExecutionFinish;
-                executor.OnExecutionProgress -= HandleScheduleExecutionProgress;
-                executor.OnVertexProcess -= HandleScheduleExecutionVertexProgress;
 
-                m_Notifications.RaiseOnFinish(executor.Schedule);
                 m_RunningExecutors.Remove(new ExecutingScheduleKey(executor.Schedule, executor.Parameters));
             }
-        }
-
-        private void HandleScheduleExecutionProgress(object sender, ProgressEventArgs e)
-        {
-            m_Notifications.RaiseOnExecutionProgress(e.Progress, e.CurrentlyProcessing);
-        }
-
-        private void HandleScheduleExecutionVertexProgress(object sender, ExecutingVertexEventArgs e)
-        {
-            var executor = sender as IExecuteSchedules;
-            m_Notifications.RaiseOnVertexProcess(executor.Schedule, e.Vertex);
         }
     }
 }

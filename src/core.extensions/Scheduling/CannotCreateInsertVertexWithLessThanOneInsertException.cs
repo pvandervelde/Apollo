@@ -11,7 +11,7 @@ using Apollo.Core.Extensions.Properties;
 namespace Apollo.Core.Extensions.Scheduling
 {
     /// <summary>
-    /// An exception thrown when the user tries to create a <see cref="EditableInsertVertex"/> with less than 1 inserts left.
+    /// An exception thrown when the user tries to create a <see cref="InsertVertex"/> with less than 1 inserts left.
     /// </summary>
     [Serializable]
     public sealed class CannotCreateInsertVertexWithLessThanOneInsertException : Exception

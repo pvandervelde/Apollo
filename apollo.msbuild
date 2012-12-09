@@ -275,6 +275,8 @@
                                    Exclude="$(DirBuildBin)\*vshost*.*"/>
         </ItemGroup>
         <ItemGroup>
+            <!-- Exclude: 1000: Do not declare static members on generic types -->
+            <FxCopRules Include="-Microsoft.Rules.Managed.CA1000" />
             <!-- Exclude: 1006: do not nest generic types in member signatures -->
             <FxCopRules Include="-Microsoft.Rules.Managed.CA1006" />
             <!-- Exclude: 1020: Avoid namespaces with few types -->

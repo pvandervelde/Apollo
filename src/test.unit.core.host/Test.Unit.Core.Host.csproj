@@ -94,6 +94,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\test.srconly\Mocks\Actions.cs">
+      <Link>Mocks\Actions.cs</Link>
+    </Compile>
+    <Compile Include="..\test.srconly\Mocks\Conditions.cs">
+      <Link>Mocks\Conditions.cs</Link>
+    </Compile>
+    <Compile Include="..\test.srconly\Mocks\Exports.cs">
+      <Link>Mocks\Exports.cs</Link>
+    </Compile>
+    <Compile Include="..\test.srconly\Mocks\GroupExporter.cs">
+      <Link>Mocks\GroupExporter.cs</Link>
+    </Compile>
+    <Compile Include="..\test.srconly\Mocks\Imports.cs">
+      <Link>Mocks\Imports.cs</Link>
+    </Compile>
     <Compile Include="CannotUninstallNonequivalentServiceExceptionTest.cs" />
     <Compile Include="CoreProxyTest.cs" />
     <Compile Include="KernelNotInInstallReadyStateExceptionTest.cs" />
@@ -101,33 +116,15 @@
     <Compile Include="KernelStartupFailedExceptionTest.cs" />
     <Compile Include="KernelTest.cs" />
     <Compile Include="MissingServiceDependencyExceptionTest.cs" />
-    <Compile Include="Mocks\Actions.cs" />
-    <Compile Include="Mocks\Conditions.cs" />
-    <Compile Include="Mocks\Exports.cs" />
-    <Compile Include="Mocks\GroupExporter.cs" />
-    <Compile Include="Mocks\Imports.cs" />
     <Compile Include="NotificationNameTest.cs" />
-    <Compile Include="Plugins\Definitions\SerializedAssemblyDefinitionTest.cs" />
-    <Compile Include="Plugins\Definitions\SerializedConstructorDefinitionTest.cs" />
-    <Compile Include="Plugins\Definitions\SerializedExportOnMethodDefinitionTest.cs" />
-    <Compile Include="Plugins\Definitions\SerializedExportOnPropertyDefinitionTest.cs" />
-    <Compile Include="Plugins\Definitions\SerializedExportOnTypeDefinitionTest.cs" />
-    <Compile Include="Plugins\Definitions\SerializedGroupExportDefinitionTest.cs" />
-    <Compile Include="Plugins\Definitions\SerializedGroupImportDefinitionTest.cs" />
-    <Compile Include="Plugins\Definitions\SerializedImportOnConstructorDefinitionTest.cs" />
-    <Compile Include="Plugins\Definitions\SerializedImportOnPropertyDefinitionTest.cs" />
-    <Compile Include="Plugins\Definitions\SerializedMethodDefinitionTest.cs" />
-    <Compile Include="Plugins\Definitions\SerializedParameterDefinitionTest.cs" />
-    <Compile Include="Plugins\Definitions\SerializedPropertyDefinitionTest.cs" />
-    <Compile Include="Plugins\Definitions\SerializedScheduleActionDefinitionTest.cs" />
-    <Compile Include="Plugins\Definitions\SerializedScheduleConditionOnMethodDefinitionTest.cs" />
-    <Compile Include="Plugins\Definitions\SerializedScheduleConditionOnPropertyDefinitionTest.cs" />
-    <Compile Include="Plugins\Definitions\SerializedScheduleDefinitionTest.cs" />
-    <Compile Include="Plugins\Definitions\SerializedTypeDefinitionTest.cs" />
-    <Compile Include="Plugins\Definitions\SerializedTypeIdentityTest.cs" />
+    <Compile Include="Plugins\DuplicateContractNameExceptionTest.cs" />
     <Compile Include="Plugins\GroupDefinitionBuilderTest.cs" />
     <Compile Include="Plugins\GroupExportMapTest.cs" />
+    <Compile Include="Plugins\GroupImportEngineTest.cs" />
     <Compile Include="Plugins\GroupImportMapTest.cs" />
+    <Compile Include="Projects\CompositionLayerProxyTest.cs" />
+    <Compile Include="Projects\GroupSelectorTest.cs" />
+    <Compile Include="Plugins\PartImportEngineTest.cs" />
     <Compile Include="Plugins\PluginDetectorTest.cs" />
     <Compile Include="Plugins\RemoteAssemblyScannerTest.cs" />
     <Compile Include="Plugins\ScheduleDefinitionBuilderTest.cs" />

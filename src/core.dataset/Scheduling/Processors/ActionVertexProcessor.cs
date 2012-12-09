@@ -7,12 +7,13 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Scheduling;
 
 namespace Apollo.Core.Dataset.Scheduling.Processors
 {
     /// <summary>
-    /// Defines the actions taken when a <see cref="ExecutableActionVertex"/> is encountered while processing
+    /// Defines the actions taken when a <see cref="ExecutingActionVertex"/> is encountered while processing
     /// an executable schedule.
     /// </summary>
     internal sealed class ActionVertexProcessor : IProcesExecutableScheduleVertices
@@ -39,14 +40,14 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         }
 
         /// <summary>
-        /// Gets the type of the <see cref="IExecutableScheduleVertex"/> that will be processed by
+        /// Gets the type of the <see cref="IScheduleVertex"/> that will be processed by
         /// this processor.
         /// </summary>
         public Type VertexTypeToProcess
         {
             get
             {
-                return typeof(ExecutableActionVertex);
+                return typeof(ExecutingActionVertex);
             }
         }
 
@@ -56,9 +57,9 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         /// <param name="vertex">The vertex.</param>
         /// <param name="executionInfo">The object that stores the information about the execution of the schedule.</param>
         /// <returns>A value indicating if the execution of the schedule should continue.</returns>
-        public ScheduleExecutionState Process(IExecutableScheduleVertex vertex, ScheduleExecutionInfo executionInfo)
+        public ScheduleExecutionState Process(IScheduleVertex vertex, ScheduleExecutionInfo executionInfo)
         {
-            var actionVertex = vertex as ExecutableActionVertex;
+            var actionVertex = vertex as ExecutingActionVertex;
             if (actionVertex == null)
             {
                 Debug.Assert(false, "The vertex is of the incorrect type.");

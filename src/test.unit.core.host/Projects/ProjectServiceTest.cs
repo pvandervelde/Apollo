@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
+using Apollo.Core.Host.Plugins;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
 using MbUnit.Framework;
@@ -55,8 +56,15 @@ namespace Apollo.Core.Host.Projects
             var distributor = new Mock<IHelpDistributingDatasets>();
             var builder = new Mock<IBuildProjects>();
 
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
             var service = new ProjectService(
                 () => timeline,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object),
                 distributor.Object,
                 builder.Object);
 
@@ -95,13 +103,24 @@ namespace Apollo.Core.Host.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
+                builder.Setup(b => b.WithDataStorageBuilder(It.IsAny<Func<DatasetOnlineInformation, DatasetStorageProxy>>()))
+                    .Returns(builder.Object)
+                    .Verifiable();
+
                 builder.Setup(b => b.Build())
                     .Returns(project.Object)
                     .Verifiable();
             }
 
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
             var service = new ProjectService(
                 () => timeline,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object),
                 distributor.Object,
                 builder.Object);
 
@@ -140,13 +159,24 @@ namespace Apollo.Core.Host.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
+                builder.Setup(b => b.WithDataStorageBuilder(It.IsAny<Func<DatasetOnlineInformation, DatasetStorageProxy>>()))
+                    .Returns(builder.Object)
+                    .Verifiable();
+
                 builder.Setup(b => b.Build())
                     .Returns(project.Object)
                     .Verifiable();
             }
 
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
             var service = new ProjectService(
                 () => timeline,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object),
                 distributor.Object,
                 builder.Object);
 
@@ -166,8 +196,15 @@ namespace Apollo.Core.Host.Projects
             var distributor = new Mock<IHelpDistributingDatasets>();
             var builder = new Mock<IBuildProjects>();
 
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
             var service = new ProjectService(
                 () => timeline,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object),
                 distributor.Object,
                 builder.Object);
 
@@ -200,13 +237,24 @@ namespace Apollo.Core.Host.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
+                builder.Setup(b => b.WithDataStorageBuilder(It.IsAny<Func<DatasetOnlineInformation, DatasetStorageProxy>>()))
+                    .Returns(builder.Object)
+                    .Verifiable();
+
                 builder.Setup(b => b.Build())
                     .Returns(project.Object)
                     .Verifiable();
             }
 
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
             var service = new ProjectService(
                 () => timeline,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object),
                 distributor.Object,
                 builder.Object);
 
@@ -246,12 +294,23 @@ namespace Apollo.Core.Host.Projects
                 builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>>>()))
                     .Returns(builder.Object);
 
+                builder.Setup(b => b.WithDataStorageBuilder(It.IsAny<Func<DatasetOnlineInformation, DatasetStorageProxy>>()))
+                    .Returns(builder.Object)
+                    .Verifiable();
+
                 builder.Setup(b => b.Build())
                     .Returns(project.Object);
             }
 
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
             var service = new ProjectService(
                 () => timeline,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object),
                 distributor.Object,
                 builder.Object);
 

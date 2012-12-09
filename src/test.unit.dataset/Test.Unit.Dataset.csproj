@@ -37,6 +37,7 @@
       <HintPath>..\..\packages\QuickGraph\lib\net4\QuickGraph.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
@@ -61,24 +62,36 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\test.srconly\Mocks\Actions.cs">
+      <Link>Mocks\Actions.cs</Link>
+    </Compile>
+    <Compile Include="..\test.srconly\Mocks\Conditions.cs">
+      <Link>Mocks\Conditions.cs</Link>
+    </Compile>
+    <Compile Include="..\test.srconly\Mocks\Exports.cs">
+      <Link>Mocks\Exports.cs</Link>
+    </Compile>
+    <Compile Include="..\test.srconly\Mocks\GroupExporter.cs">
+      <Link>Mocks\GroupExporter.cs</Link>
+    </Compile>
+    <Compile Include="..\test.srconly\Mocks\Imports.cs">
+      <Link>Mocks\Imports.cs</Link>
+    </Compile>
+    <Compile Include="DatasetLockKeyTest.cs" />
     <Compile Include="DatasetLockTest.cs" />
     <Compile Include="InvalidCommandLineArgumentsExceptionTest.cs" />
+    <Compile Include="Plugins\CompositionCommandsTest.cs" />
+    <Compile Include="Plugins\CompositionLayerTest.cs" />
+    <Compile Include="Plugins\PartCompositionIdTest.cs" />
+    <Compile Include="Plugins\PartInstanceIdTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduling\CannotExecuteScheduleWithoutProcessorsExceptionTest.cs" />
-    <Compile Include="Scheduling\ExecutableActionVertexTest.cs" />
-    <Compile Include="Scheduling\ExecutableEndVertexTest.cs" />
-    <Compile Include="Scheduling\ExecutableMarkHistoryVertexTest.cs" />
-    <Compile Include="Scheduling\ExecutableNoOpVertexTest.cs" />
-    <Compile Include="Scheduling\ExecutableScheduleEdgeTest.cs" />
-    <Compile Include="Scheduling\ExecutableScheduleTest.cs" />
-    <Compile Include="Scheduling\ExecutableStartVertexTest.cs" />
-    <Compile Include="Scheduling\ExecutableSubScheduleVertexTest.cs" />
-    <Compile Include="Scheduling\ExecutableSynchronizationEndVertexTest.cs" />
-    <Compile Include="Scheduling\ExecutableSynchronizationStartVertexTest.cs" />
+    <Compile Include="Scheduling\DuplicateScheduleElementIdExceptionTest.cs" />
+    <Compile Include="Scheduling\DuplicateScheduleIdExceptionTest.cs" />
     <Compile Include="Scheduling\Processors\ActionVertexProcessorTest.cs" />
     <Compile Include="Scheduling\Processors\EndVertexProcessorTest.cs" />
     <Compile Include="Scheduling\Processors\MarkHistoryVertexProcessorTest.cs" />
-    <Compile Include="Scheduling\Processors\NoOpVertexProcessorTest.cs" />
+    <Compile Include="Scheduling\Processors\InsertVertexProcessorTest.cs" />
     <Compile Include="Scheduling\Processors\StartVertexProcessorTest.cs" />
     <Compile Include="Scheduling\Processors\SubScheduleVertexProcessorTest.cs" />
     <Compile Include="Scheduling\ScheduleActionStorageTest.cs" />

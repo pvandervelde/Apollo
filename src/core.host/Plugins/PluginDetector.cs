@@ -6,11 +6,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using Apollo.Core.Host.Plugins.Definitions;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
 
@@ -22,7 +20,7 @@ namespace Apollo.Core.Host.Plugins
     internal sealed class PluginDetector
     {
         /// <summary>
-        /// The object that stores information about all the known plugins.
+        /// The object that stores information about all the parts and the part groups.
         /// </summary>
         private readonly IPluginRepository m_Repository;
 
@@ -30,7 +28,7 @@ namespace Apollo.Core.Host.Plugins
         /// The function that returns a reference to an assembly scanner which has been
         /// created in the given AppDomain.
         /// </summary>
-        private readonly Func<IAssemblyScanner> m_ScannerBuilder;
+        private readonly Func<IPluginRepository, IAssemblyScanner> m_ScannerBuilder;
 
         /// <summary>
         /// The abstraction layer for the file system.
@@ -45,7 +43,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginDetector"/> class.
         /// </summary>
-        /// <param name="repository">The object that stores information about all the known plugins.</param>
+        /// <param name="repository">The object that stores information about all the parts and the part groups.</param>
         /// <param name="scannerBuilder">The function that is used to create an assembly scanner.</param>
         /// <param name="fileSystem">The abstraction layer for the file system.</param>
         /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the application.</param>
@@ -63,7 +61,7 @@ namespace Apollo.Core.Host.Plugins
         /// </exception>
         public PluginDetector(
             IPluginRepository repository,
-            Func<IAssemblyScanner> scannerBuilder,
+            Func<IPluginRepository, IAssemblyScanner> scannerBuilder,
             IVirtualizeFileSystems fileSystem,
             SystemDiagnostics systemDiagnostics)
         {
@@ -173,13 +171,8 @@ namespace Apollo.Core.Host.Plugins
                 return;
             }
 
-            var scanner = m_ScannerBuilder();
-
-            IEnumerable<PluginInfo> plugins;
-            IEnumerable<SerializedTypeDefinition> types;
-            scanner.Scan(filesToScan, out plugins, out types);
-
-            m_Repository.Store(plugins, types);
+            var scanner = m_ScannerBuilder(m_Repository);
+            scanner.Scan(filesToScan);
         }
     }
 }

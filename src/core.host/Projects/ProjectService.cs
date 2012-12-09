@@ -9,14 +9,13 @@ using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
-using Lokad;
 
 namespace Apollo.Core.Host.Projects
 {
     /// <summary>
     /// Defines the <see cref="KernelService"/> that handles the project interaction with the kernel.
     /// </summary>
-    internal sealed partial class ProjectService : KernelService
+    internal sealed class ProjectService : KernelService
     {
         /// <summary>
         /// The object used to lock on.
@@ -27,6 +26,11 @@ namespace Apollo.Core.Host.Projects
         /// The function that returns a new timeline each time it is called.
         /// </summary>
         private readonly Func<ITimeline> m_TimelineBuilder;
+
+        /// <summary>
+        /// The function which returns a storage proxy for a newly loaded dataset.
+        /// </summary>
+        private readonly Func<DatasetOnlineInformation, DatasetStorageProxy> m_DataStorageProxyBuilder;
 
         /// <summary>
         /// The object that handles loading of datasets either on the local machine or
@@ -48,10 +52,14 @@ namespace Apollo.Core.Host.Projects
         /// Initializes a new instance of the <see cref="ProjectService"/> class.
         /// </summary>
         /// <param name="timelineBuilder">The function that returns a new <see cref="ITimeline"/> object each time it is called.</param>
+        /// <param name="dataStorageProxyBuilder">The function which returns a storage proxy for a newly loaded dataset.</param>
         /// <param name="datasetDistributor">The object that handles the distribution of datasets.</param>
         /// <param name="projectBuilder">The object that builds new projects.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="timelineBuilder"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="dataStorageProxyBuilder"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="datasetDistributor"/> is <see langword="null"/>.
@@ -61,19 +69,22 @@ namespace Apollo.Core.Host.Projects
         /// </exception>
         public ProjectService(
             Func<ITimeline> timelineBuilder,
+            Func<DatasetOnlineInformation, DatasetStorageProxy> dataStorageProxyBuilder,
             IHelpDistributingDatasets datasetDistributor,
             IBuildProjects projectBuilder)
             : base()
         {
             {
-                Enforce.Argument(() => timelineBuilder);
-                Enforce.Argument(() => datasetDistributor);
-                Enforce.Argument(() => projectBuilder);
+                Lokad.Enforce.Argument(() => timelineBuilder);
+                Lokad.Enforce.Argument(() => dataStorageProxyBuilder);
+                Lokad.Enforce.Argument(() => datasetDistributor);
+                Lokad.Enforce.Argument(() => projectBuilder);
             }
 
             // No locks are necessary because we're in the constructor, no other
             // methods have been called or can be called.
             m_TimelineBuilder = timelineBuilder;
+            m_DataStorageProxyBuilder = dataStorageProxyBuilder;
             m_DatasetDistributor = datasetDistributor;
             m_Builder = projectBuilder;
         }
@@ -90,6 +101,7 @@ namespace Apollo.Core.Host.Projects
                 m_Current = m_Builder.Define()
                     .WithTimeline(m_TimelineBuilder())
                     .WithDatasetDistributor((request, token) => m_DatasetDistributor.ProposeDistributionFor(request, token))
+                    .WithDataStorageBuilder(m_DataStorageProxyBuilder)
                     .Build();
             }
         }
@@ -108,7 +120,7 @@ namespace Apollo.Core.Host.Projects
         public void LoadProject(IPersistenceInformation persistenceInfo)
         {
             {
-                Enforce.Argument(() => persistenceInfo);
+                Lokad.Enforce.Argument(() => persistenceInfo);
             }
 
             UnloadProject();
@@ -118,6 +130,7 @@ namespace Apollo.Core.Host.Projects
                 m_Current = m_Builder.Define()
                     .WithTimeline(m_TimelineBuilder())
                     .WithDatasetDistributor((request, token) => m_DatasetDistributor.ProposeDistributionFor(request, token))
+                    .WithDataStorageBuilder(m_DataStorageProxyBuilder)
                     .FromStorage(persistenceInfo)
                     .Build();
             }

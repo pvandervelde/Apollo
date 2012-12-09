@@ -7,8 +7,7 @@
 namespace Apollo.Core.Extensions.Scheduling
 {
     /// <summary>
-    /// Defines the type of integrity failure found in a schedule by the
-    /// <see cref="IVerifyScheduleIntegrity"/> object.
+    /// Defines the type of integrity failure found in a schedule by the verifier object.
     /// </summary>
     public enum ScheduleIntegrityFailureType
     {

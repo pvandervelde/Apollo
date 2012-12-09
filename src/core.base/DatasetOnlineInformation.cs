@@ -113,6 +113,11 @@ namespace Apollo.Core.Base
                         m_IsEditMode = false;
                         RaiseOnSwitchToExecutingMode();
                     };
+                notifications.OnTimelineUpdate +=
+                    (s, e) =>
+                    {
+                        RaiseOnTimelineUpdate();
+                    };
             }
         }
 
@@ -230,6 +235,20 @@ namespace Apollo.Core.Base
         private void RaiseOnSwitchToExecutingMode()
         {
             var local = OnSwitchToExecutingMode;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// An event fired when the timeline on the dataset is rolled back or rolled forward.
+        /// </summary>
+        public event EventHandler<EventArgs> OnTimelineUpdate;
+
+        private void RaiseOnTimelineUpdate()
+        {
+            var local = OnTimelineUpdate;
             if (local != null)
             {
                 local(this, EventArgs.Empty);
