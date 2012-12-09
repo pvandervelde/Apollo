@@ -65,13 +65,15 @@
     <Compile Include="ApplicationStartingProgressMark.cs" />
     <Compile Include="ApplicationStartupEventArgs.cs" />
     <Compile Include="ApplicationStartupFinishedProgressMark.cs" />
+    <Compile Include="CoreConfigurationKeys.cs" />
     <Compile Include="INotificationArguments.cs" />
     <Compile Include="Plugins\AppDomainOwningPluginScanner.cs" />
     <Compile Include="Plugins\AppDomainPluginClassLoader.cs" />
     <Compile Include="Plugins\IConnectGroups.cs" />
     <Compile Include="Plugins\IConnectParts.cs" />
     <Compile Include="Plugins\PluginService.cs" />
-    <Compile Include="Projects\CompositionLayerProxy.cs" />
+    <Compile Include="Projects\DatasetStorageProxy.cs" />
+    <Compile Include="Projects\ProxyCompositionLayer.cs" />
     <Compile Include="Projects\CompositionLayerGroupEdge.cs" />
     <Compile Include="Projects\GroupDescriptor.cs" />
     <Compile Include="Plugins\GroupImportEngine.cs" />
@@ -109,7 +111,7 @@
     <Compile Include="Projects\IHoldSceneScheduleConditionData.cs" />
     <Compile Include="Projects\IHoldSceneScheduleData.cs" />
     <Compile Include="Projects\IHoldSchedulingData.cs" />
-    <Compile Include="Projects\IProxyCommandSet.cs" />
+    <Compile Include="Projects\IProxyCompositionLayer.cs" />
     <Compile Include="Projects\ProjectHistoryStorage.cs" />
     <Compile Include="Projects\UnknownPartGroupException.cs" />
     <Compile Include="SrcOnlyResources.cs" />
@@ -151,7 +153,6 @@
     <Compile Include="Projects\ProjectBuilder.cs" />
     <Compile Include="Projects\ProjectModule.cs" />
     <Compile Include="Projects\ProjectService.cs" />
-    <Compile Include="Projects\ProxyCommandSet.cs" />
     <Compile Include="Projects\UnknownDatasetException.cs" />
     <Compile Include="AutoLoadAttribute.cs" />
     <Compile Include="Bootstrapper.cs" />

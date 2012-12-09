@@ -23,7 +23,7 @@ namespace Apollo.Core.Host.UserInterfaces
     /// Defines the <see cref="KernelService"/> that handles the User Interface interaction with the kernel.
     /// </summary>
     [AutoLoad]
-    internal sealed partial class UserInterfaceService : KernelService, IUserInterfaceService
+    internal sealed class UserInterfaceService : KernelService, IUserInterfaceService
     {
         /// <summary>
         /// The collection of notifications that must be passed on to the user interface.

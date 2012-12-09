@@ -47,7 +47,7 @@ namespace Apollo.Core.Host.Projects
             }
 
             var connector = new Mock<IConnectGroups>();
-            var layer = new CompositionLayerProxy(commands.Object, connector.Object);
+            var layer = new ProxyCompositionLayer(commands.Object, connector.Object);
 
             var definition = new GroupDefinition("Group1");
             var task = layer.Add(definition);
@@ -90,7 +90,7 @@ namespace Apollo.Core.Host.Projects
             }
 
             var connector = new Mock<IConnectGroups>();
-            var layer = new CompositionLayerProxy(commands.Object, connector.Object);
+            var layer = new ProxyCompositionLayer(commands.Object, connector.Object);
 
             var definition = new GroupDefinition("Group1");
             var task = layer.Add(definition);
@@ -149,7 +149,7 @@ namespace Apollo.Core.Host.Projects
                     .Returns(Enumerable.Empty<PartImportToPartExportMap>());
             }
 
-            var layer = new CompositionLayerProxy(commands.Object, connector.Object);
+            var layer = new ProxyCompositionLayer(commands.Object, connector.Object);
 
             var exportingDefinition = new GroupDefinition("Group1");
             var addTask = layer.Add(exportingDefinition);
@@ -196,7 +196,7 @@ namespace Apollo.Core.Host.Projects
             }
 
             var connector = new Mock<IConnectGroups>();
-            var layer = new CompositionLayerProxy(commands.Object, connector.Object);
+            var layer = new ProxyCompositionLayer(commands.Object, connector.Object);
 
             var exportingGroup = new GroupDefinition("Group1");
             var task = layer.Add(exportingGroup);
@@ -225,7 +225,7 @@ namespace Apollo.Core.Host.Projects
             }
 
             var connector = new Mock<IConnectGroups>();
-            var layer = new CompositionLayerProxy(commands.Object, connector.Object);
+            var layer = new ProxyCompositionLayer(commands.Object, connector.Object);
 
             var exportingGroup = new GroupDefinition("Group1");
             var task = layer.Add(exportingGroup);
@@ -273,7 +273,7 @@ namespace Apollo.Core.Host.Projects
                     .Returns(Enumerable.Empty<PartImportToPartExportMap>());
             }
 
-            var layer = new CompositionLayerProxy(commands.Object, connector.Object);
+            var layer = new ProxyCompositionLayer(commands.Object, connector.Object);
 
             var exportingDefinition = new GroupDefinition("Group1");
             var addTask = layer.Add(exportingDefinition);
@@ -338,7 +338,7 @@ namespace Apollo.Core.Host.Projects
                     .Returns(Enumerable.Empty<PartImportToPartExportMap>());
             }
 
-            var layer = new CompositionLayerProxy(commands.Object, connector.Object);
+            var layer = new ProxyCompositionLayer(commands.Object, connector.Object);
 
             var exportingDefinition = new GroupDefinition("Group1");
             var addTask = layer.Add(exportingDefinition);
@@ -412,7 +412,7 @@ namespace Apollo.Core.Host.Projects
                     .Returns(Enumerable.Empty<PartImportToPartExportMap>());
             }
 
-            var layer = new CompositionLayerProxy(commands.Object, connector.Object);
+            var layer = new ProxyCompositionLayer(commands.Object, connector.Object);
 
             var exportingDefinition = new GroupDefinition("Group1");
             var addTask = layer.Add(exportingDefinition);
@@ -449,7 +449,7 @@ namespace Apollo.Core.Host.Projects
         {
             var commands = new Mock<ICompositionCommands>();
             var connector = new Mock<IConnectGroups>();
-            var layer = new CompositionLayerProxy(commands.Object, connector.Object);
+            var layer = new ProxyCompositionLayer(commands.Object, connector.Object);
 
             var importDefinition = GroupImportDefinition.CreateDefinition(
                 "a",
@@ -466,7 +466,7 @@ namespace Apollo.Core.Host.Projects
         {
             var commands = new Mock<ICompositionCommands>();
             var connector = new Mock<IConnectGroups>();
-            var layer = new CompositionLayerProxy(commands.Object, connector.Object);
+            var layer = new ProxyCompositionLayer(commands.Object, connector.Object);
 
             var importDefinition = GroupImportDefinition.CreateDefinition(
                 "a",
@@ -484,7 +484,7 @@ namespace Apollo.Core.Host.Projects
         {
             var commands = new Mock<ICompositionCommands>();
             var connector = new Mock<IConnectGroups>();
-            var layer = new CompositionLayerProxy(commands.Object, connector.Object);
+            var layer = new ProxyCompositionLayer(commands.Object, connector.Object);
 
             var importDefinition = GroupImportDefinition.CreateDefinition(
                 "a",
@@ -534,7 +534,7 @@ namespace Apollo.Core.Host.Projects
             }
 
             var connector = new Mock<IConnectGroups>();
-            var layer = new CompositionLayerProxy(commands.Object, connector.Object);
+            var layer = new ProxyCompositionLayer(commands.Object, connector.Object);
             var task = layer.ReloadFromDataset();
             task.Wait();
 

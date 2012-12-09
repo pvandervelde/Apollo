@@ -14,6 +14,7 @@ using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Loaders;
+using Apollo.Core.Host.Plugins;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
 using MbUnit.Framework;
@@ -75,7 +76,16 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            return new Project(timeline, distributor);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            return new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
         }
 
         private static DatasetProxy GenerateDataset(IProject project)
@@ -146,7 +156,16 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(timeline, distributor);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var project = new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
             var dataset = project.BaseDataset();
 
             Assert.IsNotNull(dataset);
@@ -178,7 +197,16 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(timeline, distributor);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var project = new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
             var dataset = project.BaseDataset();
 
             var name = string.Empty;
@@ -218,7 +246,16 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(timeline, distributor);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var project = new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
             var dataset = project.BaseDataset();
 
             var summary = string.Empty;
@@ -258,7 +295,16 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(timeline, distributor);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var project = new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
             var dataset = project.BaseDataset();
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                 l => new SelectedProposal(plan);
@@ -308,7 +354,16 @@ namespace Apollo.Core.Host.Projects
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
 
-            var project = new Project(timeline, distributor);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var project = new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
             var dataset = project.BaseDataset();
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                 l => new SelectedProposal(plan);
@@ -352,7 +407,16 @@ namespace Apollo.Core.Host.Projects
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
 
-            var project = new Project(timeline, distributor);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var project = new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
             var dataset = project.BaseDataset();
 
             // Explicitly return nothing so that we cancel the process
@@ -410,7 +474,16 @@ namespace Apollo.Core.Host.Projects
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
 
-            var project = new Project(timeline, distributor);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var project = new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
             var dataset = project.BaseDataset();
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                 l => new SelectedProposal(plan);
@@ -477,7 +550,16 @@ namespace Apollo.Core.Host.Projects
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
 
-            var project = new Project(timeline, distributor);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var project = new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
             var dataset = project.BaseDataset();
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                 l => new SelectedProposal(plan);
@@ -519,7 +601,16 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(timeline, distributor);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var project = new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
             var dataset = project.BaseDataset();
 
             var creationInformation = new DatasetCreationInformation()
@@ -563,7 +654,16 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(timeline, distributor);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var project = new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
             var dataset = project.BaseDataset();
 
             Assert.Throws<ArgumentNullException>(() => dataset.CreateNewChild(null));
@@ -594,7 +694,16 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(timeline, distributor);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var project = new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
             var dataset = project.BaseDataset();
 
             var creationInformation = new DatasetCreationInformation()
@@ -633,7 +742,16 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(timeline, distributor);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var project = new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
             var dataset = project.BaseDataset();
 
             bool wasInvoked = false;
@@ -687,7 +805,16 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(timeline, distributor);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var project = new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
             var dataset = project.BaseDataset();
 
             Assert.Throws<ArgumentNullException>(() => dataset.CreateNewChildren(null));
@@ -718,7 +845,16 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(timeline, distributor);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var project = new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
             var dataset = project.BaseDataset();
 
             Assert.Throws<ArgumentException>(() => dataset.CreateNewChildren(new List<DatasetCreationInformation>()));
@@ -749,7 +885,16 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(timeline, distributor);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var project = new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
             var dataset = project.BaseDataset();
 
             var creationInformation = new DatasetCreationInformation()
@@ -798,7 +943,16 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(timeline, distributor);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var project = new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
             var root = project.BaseDataset();
 
             var creationInformation = new DatasetCreationInformation()
@@ -842,7 +996,16 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(timeline, distributor);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var project = new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
             var root = project.BaseDataset();
 
             Assert.Throws<CannotDeleteDatasetException>(() => root.Delete());
@@ -873,7 +1036,16 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(timeline, distributor);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var project = new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
             var root = project.BaseDataset();
 
             var creationInformation = new DatasetCreationInformation()
@@ -928,7 +1100,17 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(timeline, distributor);
+
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var project = new Project(
+                timeline, 
+                distributor,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object));
             var root = project.BaseDataset();
 
             bool projectWasNotified = false;

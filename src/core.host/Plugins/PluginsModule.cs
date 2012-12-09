@@ -5,14 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Base;
-using Apollo.Core.Base.Plugins;
-using Apollo.Core.Base.Scheduling;
-using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
+using Apollo.Utilities.Configuration;
 using Autofac;
 
 namespace Apollo.Core.Host.Plugins
@@ -34,9 +29,9 @@ namespace Apollo.Core.Host.Plugins
         /// </remarks>
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c => new AppDomainOwningPluginScanner(
+            builder.Register((c, p) => new AppDomainOwningPluginScanner(
                     c.Resolve<Func<string, AppDomainPaths, AppDomain>>(),
-                    c.Resolve<IPluginRepository>(),
+                    p.TypedAs<IPluginRepository>(),
                     c.Resolve<SystemDiagnostics>()))
                 .As<IAssemblyScanner>();
 
@@ -44,7 +39,7 @@ namespace Apollo.Core.Host.Plugins
                     c =>
                     {
                         var ctx = c.Resolve<IComponentContext>();
-                        return r => ctx.Resolve<IAssemblyScanner>();
+                        return r => ctx.Resolve<IAssemblyScanner>(new TypedParameter(typeof(IPluginRepository), r));
                     });
 
             builder.Register(c => new PluginDetector(
@@ -53,6 +48,20 @@ namespace Apollo.Core.Host.Plugins
                     c.Resolve<IVirtualizeFileSystems>(),
                     c.Resolve<SystemDiagnostics>()))
                 .As<PluginDetector>();
+
+            builder.Register(c => new PluginService(
+                    c.Resolve<IConfiguration>(),
+                    c.Resolve<PluginDetector>()))
+                .As<PluginService>();
+
+            builder.Register(c => new GroupImportEngine( 
+                    c.Resolve<ISatisfyPluginRequests>(),
+                    c.Resolve<IConnectParts>()))
+                .As<IConnectGroups>();
+
+            builder.Register(c => new PartImportEngine(
+                    c.Resolve<ISatisfyPluginRequests>()))
+                .As<IConnectParts>();
         }
     }
 }

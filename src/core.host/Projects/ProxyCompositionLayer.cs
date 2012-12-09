@@ -21,7 +21,7 @@ namespace Apollo.Core.Host.Projects
     /// Defines a proxy for the group composition graph in a dataset. Also caches the current state of the graph for faster
     /// access.
     /// </summary>
-    internal sealed class CompositionLayerProxy : ICompositionLayer, IAmProxyForDataset
+    internal sealed class ProxyCompositionLayer : IProxyCompositionLayer
     {
         /// <summary>
         /// The object used to lock on.
@@ -54,7 +54,7 @@ namespace Apollo.Core.Host.Projects
         private readonly IConnectGroups m_Connector;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CompositionLayerProxy"/> class.
+        /// Initializes a new instance of the <see cref="ProxyCompositionLayer"/> class.
         /// </summary>
         /// <param name="commands">The object that provides the commands for the composition of part groups.</param>
         /// <param name="groupConnector">The object that handles the connection of part groups.</param>
@@ -64,7 +64,7 @@ namespace Apollo.Core.Host.Projects
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="groupConnector"/> is <see langword="null" />.
         /// </exception>
-        public CompositionLayerProxy(
+        public ProxyCompositionLayer(
             ICompositionCommands commands,
             IConnectGroups groupConnector)
         {

@@ -8,11 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
-using Lokad;
 
 namespace Apollo.Core.Host.Projects
 {
@@ -31,6 +31,11 @@ namespace Apollo.Core.Host.Projects
         /// <c>DatasetRequest</c>.
         /// </summary>
         private Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> m_Distributor;
+
+        /// <summary>
+        /// The function which returns a storage proxy for a newly loaded dataset.
+        /// </summary>
+        private Func<DatasetOnlineInformation, DatasetStorageProxy> m_StorageBuilder;
 
         /// <summary>
         /// The object describes how the project was persisted.
@@ -61,7 +66,7 @@ namespace Apollo.Core.Host.Projects
         public IBuildProjects WithTimeline(ITimeline timeline)
         {
             {
-                Enforce.Argument(() => timeline);
+                Lokad.Enforce.Argument(() => timeline);
             }
 
             m_Timeline = timeline;
@@ -82,10 +87,27 @@ namespace Apollo.Core.Host.Projects
         public IBuildProjects WithDatasetDistributor(Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor)
         {
             {
-                Enforce.Argument(() => distributor);
+                Lokad.Enforce.Argument(() => distributor);
             }
 
             m_Distributor = distributor;
+            return this;
+        }
+
+        /// <summary>
+        /// Provides the function which creates a <see cref="DatasetStorageProxy"/> for a newly loaded dataset.
+        /// </summary>
+        /// <param name="storageBuilder">The function which returns a storage proxy for a newly loaded dataset.</param>
+        /// <returns>
+        /// The current builder instance with the stream containing the project stored.
+        /// </returns>
+        public IBuildProjects WithDataStorageBuilder(Func<DatasetOnlineInformation, DatasetStorageProxy> storageBuilder)
+        {
+            {
+                Lokad.Enforce.Argument(() => storageBuilder);
+            }
+
+            m_StorageBuilder = storageBuilder;
             return this;
         }
 
@@ -101,7 +123,7 @@ namespace Apollo.Core.Host.Projects
         public IBuildProjects FromStorage(IPersistenceInformation persistenceInfo)
         {
             {
-                Enforce.Argument(() => persistenceInfo);
+                Lokad.Enforce.Argument(() => persistenceInfo);
             }
 
             m_ProjectStorage = persistenceInfo;
@@ -117,16 +139,16 @@ namespace Apollo.Core.Host.Projects
         public IProject Build()
         {
             {
-                Enforce.With<CannotCreateProjectWithoutTimelineException>(
+                Lokad.Enforce.With<CannotCreateProjectWithoutTimelineException>(
                     m_Timeline != null,
                     Resources.Exceptions_Messages_CannotCreateProjectWithoutTimeline);
 
-                Enforce.With<CannotCreateProjectWithoutDatasetDistributorException>(
+                Lokad.Enforce.With<CannotCreateProjectWithoutDatasetDistributorException>(
                     m_Distributor != null,
                     Resources.Exceptions_Messages_CannotCreateProjectWithoutDatasetDistributor);
             }
 
-            return new Project(m_Timeline, m_Distributor, m_ProjectStorage);
+            return new Project(m_Timeline, m_Distributor, m_StorageBuilder, m_ProjectStorage);
         }
     }
 }

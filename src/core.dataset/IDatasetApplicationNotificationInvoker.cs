@@ -38,5 +38,12 @@ namespace Apollo.Core.Dataset
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
             Justification = "This method is used to raise an event, hence the naming.")]
         void RaiseOnSwitchToExecutingMode();
+
+        /// <summary>
+        /// Raises the <see cref="IDatasetApplicationNotifications.OnTimelineUpdate"/> event.
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to raise an event, hence the naming.")]
+        void RaiseOnTimelineUpdate();
     }
 }

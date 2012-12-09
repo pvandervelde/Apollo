@@ -175,9 +175,9 @@ namespace Apollo.Core.Host.Projects
         event EventHandler<EventArgs> OnSwitchToExecutingMode;
 
         /// <summary>
-        /// Gets a value indicating the set of commands that apply to the current dataset.
+        /// Gets the object that provides access to the data stored in the dataset.
         /// </summary>
-        IProxyCommandSet Commands
+        DatasetStorageProxy Data
         {
             get;
         }

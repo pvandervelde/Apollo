@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Loaders;
+using Apollo.Core.Host.Plugins;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
 using MbUnit.Framework;
@@ -112,9 +113,18 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
+
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
             var project = builder.Define()
                 .WithTimeline(timeline)
                 .WithDatasetDistributor(distributor)
+                .WithDataStorageBuilder(
+                    d => new DatasetStorageProxy(
+                        d,
+                        new GroupSelector(
+                            new Mock<IConnectGroups>().Object,
+                            proxyLayer.Object),
+                        proxyLayer.Object))
                 .Build();
 
             Assert.IsNotNull(project);
@@ -144,10 +154,18 @@ namespace Apollo.Core.Host.Projects
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
 
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
             var project = builder.Define()
                 .WithTimeline(timeline)
                 .WithDatasetDistributor(distributor)
                 .FromStorage(new Mock<IPersistenceInformation>().Object)
+                .WithDataStorageBuilder(
+                    d => new DatasetStorageProxy(
+                        d,
+                        new GroupSelector(
+                            new Mock<IConnectGroups>().Object,
+                            proxyLayer.Object),
+                        proxyLayer.Object))
                 .Build();
 
             Assert.IsNotNull(project);

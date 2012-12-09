@@ -192,11 +192,11 @@ namespace Apollo.Utilities
             builder.RegisterSource(new ValueTimelineRegistrationSource());
 
             builder.Register(
-                c => 
-                {
-                    var ctx = c.Resolve<IComponentContext>();
-                    return new Timeline(t => { return ctx.Resolve(t) as IStoreTimelineValues; }); 
-                })
+                    c => 
+                    {
+                        var ctx = c.Resolve<IComponentContext>();
+                        return new Timeline(t => { return ctx.Resolve(t) as IStoreTimelineValues; }); 
+                    })
                 .As<ITimeline>()
                 .SingleInstance();
         }

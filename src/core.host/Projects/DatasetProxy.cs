@@ -24,10 +24,10 @@ namespace Apollo.Core.Host.Projects
     /// <summary>
     /// Mirrors the storage of dataset information.
     /// </summary>
-    internal sealed class DatasetProxy 
-        : IProxyDataset, 
-          IAmHistoryEnabled, 
-          INeedNotificationOnHistoryChange, 
+    internal sealed class DatasetProxy
+        : IProxyDataset,
+          IAmHistoryEnabled,
+          INeedNotificationOnHistoryChange,
           IEquatable<DatasetProxy>
     {
         /// <summary>
@@ -116,6 +116,7 @@ namespace Apollo.Core.Host.Projects
         {
             {
                 Debug.Assert(members.Count() == 3, "There should only be three members.");
+                Debug.Assert(constructorArguments.Length == 2, "There should be only two constructor arguments.");
             }
 
             IVariableTimeline<string> name = null;
@@ -146,6 +147,7 @@ namespace Apollo.Core.Host.Projects
 
             return new DatasetProxy(
                 constructorArguments[0] as DatasetConstructionParameters,
+                constructorArguments[1] as Func<DatasetOnlineInformation, DatasetStorageProxy>,
                 historyId,
                 name,
                 summary,
@@ -156,6 +158,11 @@ namespace Apollo.Core.Host.Projects
         /// The constructor arguments.
         /// </summary>
         private readonly DatasetConstructionParameters m_ConstructorArgs;
+
+        /// <summary>
+        /// The function that is used to create the proxy for the data inside the dataset.
+        /// </summary>
+        private readonly Func<DatasetOnlineInformation, DatasetStorageProxy> m_ProxyBuilder;
 
         /// <summary>
         /// The ID used by the timeline to uniquely identify the current object.
@@ -187,6 +194,11 @@ namespace Apollo.Core.Host.Projects
         private DatasetOnlineInformation m_Connection;
 
         /// <summary>
+        /// The object that provides the proxy for the actual data stored in the dataset.
+        /// </summary>
+        private DatasetStorageProxy m_DataProxy;
+
+        /// <summary>
         /// Indicates if the dataset is currently loading.
         /// </summary>
         private volatile bool m_IsLoading;
@@ -200,6 +212,7 @@ namespace Apollo.Core.Host.Projects
         /// Initializes a new instance of the <see cref="DatasetProxy"/> class.
         /// </summary>
         /// <param name="constructorArgs">The object that holds all the constructor arguments that do not belong to the timeline.</param>
+        /// <param name="proxyBuilder">The function that is used to create the proxy for the data inside the dataset.</param>
         /// <param name="historyId">The ID for use in the history system.</param>
         /// <param name="name">The datastructure that stores the history information for the name of the dataset.</param>
         /// <param name="summary">The datastructure that stores the history information for the summary of the dataset.</param>
@@ -208,6 +221,9 @@ namespace Apollo.Core.Host.Projects
         /// </param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="constructorArgs"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="proxyBuilder"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="historyId"/> is <see langword="null" />.
@@ -223,13 +239,15 @@ namespace Apollo.Core.Host.Projects
         /// </exception>
         private DatasetProxy(
             DatasetConstructionParameters constructorArgs,
-            HistoryId historyId, 
+            Func<DatasetOnlineInformation, DatasetStorageProxy> proxyBuilder,
+            HistoryId historyId,
             IVariableTimeline<string> name,
             IVariableTimeline<string> summary,
             IVariableTimeline<NetworkIdentifier> loadedLocation)
         {
             {
                 Lokad.Enforce.Argument(() => constructorArgs);
+                Lokad.Enforce.Argument(() => proxyBuilder);
                 Lokad.Enforce.Argument(() => historyId);
                 Lokad.Enforce.Argument(() => name);
                 Lokad.Enforce.Argument(() => summary);
@@ -237,6 +255,7 @@ namespace Apollo.Core.Host.Projects
             }
 
             m_ConstructorArgs = constructorArgs;
+            m_ProxyBuilder = proxyBuilder;
             m_HistoryId = historyId;
             m_Name = name;
             m_Summary = summary;
@@ -269,7 +288,7 @@ namespace Apollo.Core.Host.Projects
                     // and if we can't find it then grab the first machine in the selection.
                     // At some point we should make this a whole lot smarter but for now it'll do.
                     var original = m_LoadedLocation.Current;
-                    Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector = 
+                    Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                         c =>
                         {
                             var selected = from suggestion in c
@@ -292,7 +311,7 @@ namespace Apollo.Core.Host.Projects
                         false);
                 }
             }
-            else 
+            else
             {
                 if (m_Connection != null)
                 {
@@ -469,7 +488,7 @@ namespace Apollo.Core.Host.Projects
             {
                 if (!string.Equals(m_Summary.Current, value))
                 {
-                    m_Summary.Current = value; 
+                    m_Summary.Current = value;
                     RaiseOnSummaryChanged(value);
                 }
             }
@@ -588,7 +607,7 @@ namespace Apollo.Core.Host.Projects
         {
             {
                 Lokad.Enforce.With<ArgumentException>(
-                    !Owner.IsClosed, 
+                    !Owner.IsClosed,
                     Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
                 Lokad.Enforce.With<CannotLoadDatasetWithoutLoadingLocationException>(
                     preferredLocation != LoadingLocations.None,
@@ -663,23 +682,28 @@ namespace Apollo.Core.Host.Projects
                 task.ContinueWith(
                     t =>
                     {
-                        var online = t.Result;
-                        m_Connection = online;
-                        m_Connection.OnSwitchToEditMode += HandleOnSwitchToEditMode;
-                        m_Connection.OnSwitchToExecutingMode += HandleOnSwitchToExecutingMode;
+                        if (t.Exception == null)
+                        {
+                            var online = t.Result;
+                            m_Connection = online;
+                            m_Connection.OnSwitchToEditMode += HandleOnSwitchToEditMode;
+                            m_Connection.OnSwitchToExecutingMode += HandleOnSwitchToExecutingMode;
 
-                        RaiseOnLoaded();
+                            m_DataProxy = m_ProxyBuilder(m_Connection);
+
+                            if (storeLocation)
+                            {
+                                m_LoadedLocation.Current = selectedPlan.Plan.MachineToDistributeTo;
+                            }
+
+                            RaiseOnLoaded();
+                        }
+
+                        m_IsLoading = false;
                     },
-                    TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnRanToCompletion);
-
-                // Have to do this now because as soon as we get out of this method we may be committing 
-                // information to the timeline. Note however that we are not done loading yet ....
-                if (storeLocation)
-                {
-                    m_LoadedLocation.Current = selectedPlan.Plan.MachineToDistributeTo;
-                }
+                    TaskContinuationOptions.ExecuteSynchronously);
             }
-            finally
+            catch (Exception)
             {
                 m_IsLoading = false;
             }
@@ -715,6 +739,7 @@ namespace Apollo.Core.Host.Projects
 
             m_Connection.Close();
             m_Connection = null;
+            m_DataProxy = null;
 
             if (storeUnloadData)
             {
@@ -961,13 +986,13 @@ namespace Apollo.Core.Host.Projects
         }
 
         /// <summary>
-        /// Gets a value indicating the set of commands that apply to the current dataset.
+        /// Gets the object that provides access to the data stored in the dataset.
         /// </summary>
-        public IProxyCommandSet Commands
+        public DatasetStorageProxy Data
         {
             get
             {
-                throw new NotImplementedException();
+                return m_DataProxy;
             }
         }
 

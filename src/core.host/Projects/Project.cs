@@ -44,6 +44,11 @@ namespace Apollo.Core.Host.Projects
         private readonly Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> m_DatasetDistributor;
 
         /// <summary>
+        /// The function which returns a storage proxy for a newly loaded dataset.
+        /// </summary>
+        private readonly Func<DatasetOnlineInformation, DatasetStorageProxy> m_DataStorageProxyBuilder;
+
+        /// <summary>
         /// Stores the history of the project information.
         /// </summary>
         private readonly ProjectHistoryStorage m_ProjectInformation;
@@ -86,13 +91,18 @@ namespace Apollo.Core.Host.Projects
         /// The function which returns a <see cref="DistributionPlan"/> for a given
         /// <see cref="DatasetRequest"/>.
         /// </param>
+        /// <param name="dataStorageProxyBuilder">The function which returns a storage proxy for a newly loaded dataset.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="distributor"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="dataStorageProxyBuilder"/> is <see langword="null" />.
+        /// </exception>
         public Project(
             ITimeline timeline,
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor)
-            : this(timeline, distributor, null)
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor,
+            Func<DatasetOnlineInformation, DatasetStorageProxy> dataStorageProxyBuilder)
+            : this(timeline, distributor, dataStorageProxyBuilder, null)
         {
         }
 
@@ -104,6 +114,7 @@ namespace Apollo.Core.Host.Projects
         /// The function which returns a <see cref="DistributionPlan"/> for a given
         /// <see cref="DatasetRequest"/>.
         /// </param>
+        /// <param name="dataStorageProxyBuilder">The function which returns a storage proxy for a newly loaded dataset.</param>
         /// <param name="persistenceInfo">
         /// The object that describes how the project was persisted.
         /// </param>
@@ -113,14 +124,19 @@ namespace Apollo.Core.Host.Projects
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="distributor"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="dataStorageProxyBuilder"/> is <see langword="null" />.
+        /// </exception>
         public Project(
             ITimeline timeline,
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor,
+            Func<DatasetOnlineInformation, DatasetStorageProxy> dataStorageProxyBuilder,
             IPersistenceInformation persistenceInfo)
         {
             {
                 Enforce.Argument(() => timeline);
                 Enforce.Argument(() => distributor);
+                Enforce.Argument(() => dataStorageProxyBuilder);
             }
 
             m_Timeline = timeline;
@@ -133,6 +149,8 @@ namespace Apollo.Core.Host.Projects
             m_Datasets = m_Timeline.AddToTimeline<DatasetHistoryStorage>(DatasetHistoryStorage.CreateInstance);
 
             m_DatasetDistributor = distributor;
+            m_DataStorageProxyBuilder = dataStorageProxyBuilder;
+
             if (persistenceInfo != null)
             {
                 RestoreFromStore(persistenceInfo);
@@ -550,7 +568,8 @@ namespace Apollo.Core.Host.Projects
 
             var newDataset = m_Timeline.AddToTimeline<DatasetProxy>(
                 DatasetProxy.CreateInstance,
-                parameters);
+                parameters,
+                m_DataStorageProxyBuilder);
 
             return newDataset;
         }

@@ -69,5 +69,24 @@ namespace Apollo.Core.Dataset
                 local(this, EventArgs.Empty);
             }
         }
+
+        /// <summary>
+        /// An event raised when the dataset history is rolled back or rolled forward.
+        /// </summary>
+        public event EventHandler<EventArgs> OnTimelineUpdate;
+
+        /// <summary>
+        /// Raises the <see cref="IDatasetApplicationNotifications.OnTimelineUpdate"/> event.
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to raise an event, hence the naming.")]
+        public void RaiseOnTimelineUpdate()
+        {
+            var local = OnTimelineUpdate;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
     }
 }

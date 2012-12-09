@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
@@ -48,6 +49,15 @@ namespace Apollo.Core.Host.Projects
         /// The current builder instance with the function stored.
         /// </returns>
         IBuildProjects WithDatasetDistributor(Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor);
+
+        /// <summary>
+        /// Provides the function which creates a <see cref="DatasetStorageProxy"/> for a newly loaded dataset.
+        /// </summary>
+        /// <param name="storageBuilder">The function which returns a storage proxy for a newly loaded dataset.</param>
+        /// <returns>
+        /// The current builder instance with the stream containing the project stored.
+        /// </returns>
+        IBuildProjects WithDataStorageBuilder(Func<DatasetOnlineInformation, DatasetStorageProxy> storageBuilder);
 
         /// <summary>
         /// Provides the <see cref="Stream"/> from which the project must be loaded.
