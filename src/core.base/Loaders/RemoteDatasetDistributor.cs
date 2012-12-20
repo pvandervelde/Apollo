@@ -171,7 +171,7 @@ namespace Apollo.Core.Base.Loaders
         /// The collection that stores all the uploads waiting to be
         /// started.
         /// </summary>
-        private readonly WaitingUploads m_Uploads;
+        private readonly IStoreUploads m_Uploads;
 
         /// <summary>
         /// The function that returns a <see cref="DatasetOnlineInformation"/>.
@@ -229,7 +229,7 @@ namespace Apollo.Core.Base.Loaders
             ISendCommandsToRemoteEndpoints commandHub,
             INotifyOfRemoteEndpointEvents notificationHub,
             IConfiguration configuration,
-            WaitingUploads uploads,
+            IStoreUploads uploads,
             Func<DatasetId, EndpointId, NetworkIdentifier, DatasetOnlineInformation> datasetInformationBuilder,
             ICommunicationLayer communicationLayer,
             SystemDiagnostics systemDiagnostics,

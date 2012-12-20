@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -98,7 +99,7 @@ namespace Apollo.Core.Base.Plugins
 
             return new ConstructorDefinition(
                 identityGenerator(constructor.DeclaringType),
-                constructor.GetParameters().Select(p => ParameterDefinition.CreateDefinition(p, identityGenerator)).ToArray());
+                constructor.GetParameters().Select(p => ParameterDefinition.CreateDefinition(p, identityGenerator)).ToList());
         }
 
         /// <summary>
@@ -122,7 +123,7 @@ namespace Apollo.Core.Base.Plugins
         /// <summary>
         /// The collection of parameters for the constructor.
         /// </summary>
-        private readonly ParameterDefinition[] m_Parameters;
+        private readonly List<ParameterDefinition> m_Parameters;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConstructorDefinition"/> class.
@@ -131,7 +132,7 @@ namespace Apollo.Core.Base.Plugins
         /// <param name="parameters">The array containing the definitions for the constructor parameters.</param>
         private ConstructorDefinition(
             TypeIdentity declaringType,
-            ParameterDefinition[] parameters)
+            List<ParameterDefinition> parameters)
         {
             {
                 Debug.Assert(declaringType != null, "The declaring type should not be null.");
@@ -156,11 +157,11 @@ namespace Apollo.Core.Base.Plugins
         /// <summary>
         /// Gets the collection containing the parameters for the constructor.
         /// </summary>
-        public IEnumerable<ParameterDefinition> Parameters
+        public ReadOnlyCollection<ParameterDefinition> Parameters
         {
             get
             {
-                return m_Parameters;
+                return m_Parameters.AsReadOnly();
             }
         }
 

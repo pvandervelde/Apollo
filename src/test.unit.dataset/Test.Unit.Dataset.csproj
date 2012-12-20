@@ -80,8 +80,10 @@
     <Compile Include="DatasetLockKeyTest.cs" />
     <Compile Include="DatasetLockTest.cs" />
     <Compile Include="InvalidCommandLineArgumentsExceptionTest.cs" />
+    <Compile Include="PluginLoadingAssemblyResolverTest.cs" />
     <Compile Include="Plugins\CompositionCommandsTest.cs" />
     <Compile Include="Plugins\CompositionLayerTest.cs" />
+    <Compile Include="Plugins\InstanceLayerTest.cs" />
     <Compile Include="Plugins\PartCompositionIdTest.cs" />
     <Compile Include="Plugins\PartInstanceIdTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

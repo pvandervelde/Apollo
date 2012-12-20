@@ -51,6 +51,11 @@ namespace Apollo.Core.Dataset.Plugins
         private const byte PartConnectionIndex = 4;
 
         /// <summary>
+        /// The history index of the part instance field.
+        /// </summary>
+        private const byte PartInstanceIndex = 5;
+
+        /// <summary>
         /// Creates a default layer that isn't linked to a timeline.
         /// </summary>
         /// <remarks>
@@ -65,7 +70,8 @@ namespace Apollo.Core.Dataset.Plugins
                 new DictionaryHistory<GroupCompositionId, GroupRegistrationId>(),
                 new BidirectionalGraphHistory<GroupCompositionId, GroupCompositionGraphEdge>(),
                 new DictionaryHistory<PartCompositionId, PartCompositionInfo>(),
-                new BidirectionalGraphHistory<PartCompositionId, PartCompositionGraphEdge>());
+                new BidirectionalGraphHistory<PartCompositionId, PartImportExportEdge<PartCompositionId>>(),
+                new ValueHistory<IStoreInstances>());
         }
 
         /// <summary>
@@ -89,7 +95,8 @@ namespace Apollo.Core.Dataset.Plugins
             IDictionaryTimelineStorage<GroupCompositionId, GroupRegistrationId> groups = null;
             IBidirectionalGraphHistory<GroupCompositionId, GroupCompositionGraphEdge> graph = null;
             IDictionaryTimelineStorage<PartCompositionId, PartCompositionInfo> parts = null;
-            IBidirectionalGraphHistory<PartCompositionId, PartCompositionGraphEdge> partConnections = null;
+            IBidirectionalGraphHistory<PartCompositionId, PartImportExportEdge<PartCompositionId>> partConnections = null;
+            IVariableTimeline<IStoreInstances> instances = null;
             foreach (var member in members)
             {
                 if (member.Item1 == GroupDefinitionIndex)
@@ -118,14 +125,27 @@ namespace Apollo.Core.Dataset.Plugins
 
                 if (member.Item1 == PartConnectionIndex)
                 {
-                    partConnections = member.Item2 as IBidirectionalGraphHistory<PartCompositionId, PartCompositionGraphEdge>;
+                    partConnections = member.Item2 as IBidirectionalGraphHistory<PartCompositionId, PartImportExportEdge<PartCompositionId>>;
+                    continue;
+                }
+
+                if (member.Item1 == PartInstanceIndex)
+                {
+                    instances = member.Item2 as IVariableTimeline<IStoreInstances>;
                     continue;
                 }
 
                 throw new UnknownMemberException();
             }
 
-            return new CompositionLayer(id, definitions, groups, graph, parts, partConnections);
+            return new CompositionLayer(
+                id,
+                definitions,
+                groups,
+                graph,
+                parts,
+                partConnections,
+                instances);
         }
 
         /// <summary>
@@ -167,7 +187,13 @@ namespace Apollo.Core.Dataset.Plugins
         /// Note that the edges point from the export to the import.
         /// </design>
         [FieldIndexForHistoryTracking(PartConnectionIndex)]
-        private readonly IBidirectionalGraphHistory<PartCompositionId, PartCompositionGraphEdge> m_PartConnections;
+        private readonly IBidirectionalGraphHistory<PartCompositionId, PartImportExportEdge<PartCompositionId>> m_PartConnections;
+
+        /// <summary>
+        /// The object that stores the instances of the objects.
+        /// </summary>
+        [FieldIndexForHistoryTracking(PartInstanceIndex)]
+        private readonly IVariableTimeline<IStoreInstances> m_Instances;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompositionLayer"/> class.
@@ -178,13 +204,15 @@ namespace Apollo.Core.Dataset.Plugins
         /// <param name="groupConnections">The graph that describes the connections between the groups.</param>
         /// <param name="parts">The collection that contains all the parts for the currently selected groups.</param>
         /// <param name="partConnections">The graph that determines how the different parts are connected.</param>
+        /// <param name="instances">The object that stores the instances of the parts.</param>
         private CompositionLayer(
             HistoryId id,
             IDictionaryTimelineStorage<GroupRegistrationId, GroupDefinition> definitions,
             IDictionaryTimelineStorage<GroupCompositionId, GroupRegistrationId> groups,
             IBidirectionalGraphHistory<GroupCompositionId, GroupCompositionGraphEdge> groupConnections,
             IDictionaryTimelineStorage<PartCompositionId, PartCompositionInfo> parts,
-            IBidirectionalGraphHistory<PartCompositionId, PartCompositionGraphEdge> partConnections)
+            IBidirectionalGraphHistory<PartCompositionId, PartImportExportEdge<PartCompositionId>> partConnections,
+            IVariableTimeline<IStoreInstances> instances)
         {
             {
                 Debug.Assert(id != null, "The ID object should not be a null reference.");
@@ -193,6 +221,7 @@ namespace Apollo.Core.Dataset.Plugins
                 Debug.Assert(groupConnections != null, "The group connection graph should not be a null reference.");
                 Debug.Assert(parts != null, "The parts collection should not be a null reference.");
                 Debug.Assert(partConnections != null, "The part connection graph should not be a null reference.");
+                Debug.Assert(instances != null, "The instance collection should not be a null reference.");
             }
 
             m_HistoryId = id;
@@ -201,6 +230,18 @@ namespace Apollo.Core.Dataset.Plugins
             m_GroupConnections = groupConnections;
             m_Parts = parts;
             m_PartConnections = partConnections;
+            m_Instances = instances;
+        }
+
+        /// <summary>
+        /// Gets the current value for the instance store.
+        /// </summary>
+        private IStoreInstances Instances
+        {
+            get
+            {
+                return m_Instances.Current;
+            }
         }
 
         /// <summary>
@@ -271,9 +312,110 @@ namespace Apollo.Core.Dataset.Plugins
                 foreach (var export in map.Exports)
                 {
                     var exportingPart = exportingParts.Where(p => p.Item2.RegisteredExports.Contains(export)).FirstOrDefault();
-                    m_PartConnections.AddEdge(new PartCompositionGraphEdge(importingPart.Item1, map.Import, exportingPart.Item1, export));
+                    m_PartConnections.AddEdge(
+                        new PartImportExportEdge<PartCompositionId>(
+                            importingPart.Item1,
+                            map.Import,
+                            exportingPart.Item1,
+                            export));
                 }
             }
+
+            ConstructInstancesIfComplete(importingParts.Select(p => p.Item1));
+        }
+
+        private void ConstructInstancesIfComplete(IEnumerable<PartCompositionId> potentialCompleteParts)
+        {
+            foreach (var partId in potentialCompleteParts)
+            {
+                ConstructInstance(partId);
+            }
+        }
+
+        private void ConstructInstance(PartCompositionId partId)
+        {
+            if (CanPartBeInstantiated(partId))
+            {
+                var satisfiedPartImports = SatisfiedPartImports(partId);
+                foreach (var importPair in satisfiedPartImports)
+                {
+                    var exportingPartInfo = m_Parts[importPair.Item2];
+                    if (exportingPartInfo.Instance == null)
+                    {
+                        ConstructInstance(importPair.Item2);
+                    }
+                }
+
+                var partImports = ImportInformationForPart(satisfiedPartImports);
+                var info = m_Parts[partId];
+                if (info.Instance != null)
+                {
+                    var updatedInstances = Instances.UpdateIfRequired(info.Instance, partImports);
+                    foreach (var instance in updatedInstances)
+                    {
+                        if (instance.Change == InstanceChange.Removed)
+                        {
+                            var updatedInfo = m_Parts.Where(p => instance.Instance.Equals(p.Value.Instance)).FirstOrDefault();
+                            updatedInfo.Value.Instance = null;
+                        }
+                    }
+                }
+                else
+                {
+                    info.Instance = Instances.Construct(
+                        info.Definition,
+                        partImports);
+                }
+            }
+        }
+
+        private IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>> ImportInformationForPart(
+            IEnumerable<Tuple<ImportRegistrationId, PartCompositionId, ExportRegistrationId>> satisfiedPartImports)
+        {
+            return satisfiedPartImports
+                .Where(p => m_Parts[p.Item2].Instance != null)
+                .Select(
+                    p => new Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>(
+                        p.Item1,
+                        m_Parts[p.Item2].Instance,
+                        p.Item3));
+        }
+
+        private IEnumerable<Tuple<ImportRegistrationId, PartCompositionId, ExportRegistrationId>> SatisfiedPartImports(PartCompositionId partId)
+        {
+            return m_PartConnections
+                    .InEdges(partId)
+                    .Select(
+                        edge => new Tuple<ImportRegistrationId, PartCompositionId, ExportRegistrationId>(
+                            edge.ImportRegistration,
+                            edge.Source,
+                            edge.ExportRegistration));
+        }
+
+        private bool AreRequiredPartImportsSatisfied(PartCompositionId partId, IEnumerable<ImportRegistrationId> satisfiedRequiredImports)
+        {
+            var info = m_Parts[partId];
+            var unsatisfiedImports = info.Definition.RegisteredImports.Where(id => !satisfiedRequiredImports.Any(p => p.Equals(id)));
+            return !unsatisfiedImports.Any();
+        }
+
+        private bool CanPartsBeInstantiated(IEnumerable<PartCompositionId> parts)
+        {
+            return parts.Aggregate(true, (b, p) => b && CanPartBeInstantiated(p));
+        }
+
+        private bool CanPartBeInstantiated(PartCompositionId partId)
+        {
+            var info = m_Parts[partId];
+            if (info.Instance != null)
+            {
+                return true;
+            }
+
+            var satisfiedPartImports = SatisfiedPartImports(partId);
+            var satisfiedRequiredPartImports = satisfiedPartImports.Where(p => info.Definition.Import(p.Item1).IsPrerequisite);
+            return AreRequiredPartImportsSatisfied(partId, satisfiedRequiredPartImports.Select(p => p.Item1))
+                && CanPartsBeInstantiated(satisfiedRequiredPartImports.Select(p => p.Item2));
         }
 
         /// <summary>
@@ -297,12 +439,18 @@ namespace Apollo.Core.Dataset.Plugins
 
             foreach (var part in definition.Parts)
             {
-                var key = new PartCompositionId(group, part.Id);
-                Debug.Assert(m_PartConnections.ContainsVertex(key), "The part connections graph should have the given part ID.");
-                m_PartConnections.RemoveVertex(key);
+                var partId = new PartCompositionId(group, part.Id);
+                Debug.Assert(m_Parts.ContainsKey(partId), "The part collection should have the given part ID.");
+                Debug.Assert(m_PartConnections.ContainsVertex(partId), "The part connections graph should have the given part ID.");
 
-                Debug.Assert(m_Parts.ContainsKey(key), "The part collection should have the given part ID.");
-                m_Parts.Remove(key);
+                var info = m_Parts[partId];
+                if (info.Instance != null)
+                {
+                    ReleaseInstance(partId);
+                }
+
+                m_PartConnections.RemoveVertex(partId);
+                m_Parts.Remove(partId);
             }
 
             Debug.Assert(m_GroupConnections.ContainsVertex(group), "The connections graph should have the given group ID.");
@@ -312,6 +460,69 @@ namespace Apollo.Core.Dataset.Plugins
             if (!m_Groups.Where(p => p.Value.Equals(definitionId)).Any())
             {
                 m_Definitions.Remove(definitionId);
+            }
+        }
+
+        private void ReleaseInstance(PartCompositionId partId)
+        {
+            var info = m_Parts[partId];
+            if (info.Instance != null)
+            {
+                DisconnectPartInstanceFromImportingParts(partId);
+
+                var updatedInstances = Instances.Release(info.Instance);
+                foreach (var instance in updatedInstances)
+                {
+                    if (instance.Change == InstanceChange.Removed)
+                    {
+                        var updatedInfo = m_Parts.Where(p => instance.Instance.Equals(p.Value.Instance)).FirstOrDefault();
+                        updatedInfo.Value.Instance = null;
+                    }
+                }
+            }
+        }
+
+        private void DisconnectPartInstanceFromImportingParts(PartCompositionId partId)
+        {
+            var importingParts = m_PartConnections
+                .OutEdges(partId)
+                .Select(edge => new Tuple<PartCompositionId, ImportRegistrationId>(edge.Target, edge.ImportRegistration));
+
+            var instancesToRelease = new List<PartInstanceId>();
+            foreach (var pair in importingParts)
+            {
+                DisconnectInstanceFromExport(pair.Item1, pair.Item2, partId);
+            }
+        }
+
+        private void DisconnectInstanceFromExport(
+            PartCompositionId importingInstance, 
+            ImportRegistrationId importId, 
+            PartCompositionId exportingInstance)
+        {
+            var importingPartInfo = m_Parts[importingInstance];
+            if (importingPartInfo.Instance != null)
+            {
+                var importDefinition = importingPartInfo.Definition.Import(importId);
+                if (importDefinition.IsPrerequisite)
+                {
+                    ReleaseInstance(importingInstance);
+                }
+                else
+                {
+                    var satisfiedPartImports = SatisfiedPartImports(importingInstance)
+                        .Where(p => !p.Item2.Equals(exportingInstance));
+                    var partImports = ImportInformationForPart(satisfiedPartImports);
+                    var updatedInstances = Instances.UpdateIfRequired(importingPartInfo.Instance, partImports);
+                    foreach (var instance in updatedInstances)
+                    {
+                        if (instance.Change == InstanceChange.Removed)
+                        {
+                            var updatedInfo = m_Parts.Where(p => instance.Instance.Equals(p.Value.Instance)).FirstOrDefault();
+                            updatedInfo.Value.Instance = null;
+                        }
+                    }
+                }
             }
         }
 
@@ -368,7 +579,6 @@ namespace Apollo.Core.Dataset.Plugins
 
             m_GroupConnections.AddEdge(new GroupCompositionGraphEdge(connection.ImportingGroup, connection.GroupImport, connection.ExportingGroup));
 
-            // Parts
             var importingParts = PartsForGroup(connection.ImportingGroup);
             var exportingParts = PartsForGroup(connection.ExportingGroup);
             ConnectParts(connection.PartConnections, importingParts, exportingParts);
@@ -427,6 +637,16 @@ namespace Apollo.Core.Dataset.Plugins
 
             foreach (var importingPart in importingParts)
             {
+                var matchedExports = m_PartConnections
+                    .InEdges(importingPart)
+                    .Where(edge => exportingParts.Contains(edge.Source))
+                    .Select(edge => new Tuple<ImportRegistrationId, PartCompositionId>(edge.ImportRegistration, edge.Source));
+
+                foreach (var pair in matchedExports)
+                {
+                    DisconnectInstanceFromExport(importingPart, pair.Item1, pair.Item2);
+                }
+
                 m_PartConnections.RemoveInEdgeIf(importingPart, edge => exportingParts.Contains(edge.Source));
             }
         }

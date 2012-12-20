@@ -39,6 +39,7 @@
       <HintPath>..\..\packages\QuickGraph\lib\net4\QuickGraph.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Core" />
@@ -91,12 +92,15 @@
     <Compile Include="IDatasetApplicationNotificationInvoker.cs" />
     <Compile Include="InvalidCommandLineArgumentsException.cs" />
     <Compile Include="ITrackDatasetLocks.cs" />
+    <Compile Include="PluginLoadingAssemblyResolver.cs" />
     <Compile Include="Plugins\CompositionCommands.cs" />
     <Compile Include="Plugins\CompositionLayer.cs" />
     <Compile Include="Plugins\GroupCompositionGraphEdge.cs" />
+    <Compile Include="Plugins\InstanceChange.cs" />
+    <Compile Include="Plugins\InstanceUpdate.cs" />
     <Compile Include="Plugins\IStoreGroupsAndConnections.cs" />
     <Compile Include="Plugins\IStoreInstances.cs" />
-    <Compile Include="Plugins\PartCompositionGraphEdge.cs" />
+    <Compile Include="Plugins\PartImportExportEdge.cs" />
     <Compile Include="Plugins\PartInstanceId.cs" />
     <Compile Include="Plugins\InstanceLayer.cs" />
     <Compile Include="Plugins\PartCompositionInfo.cs" />

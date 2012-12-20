@@ -183,6 +183,14 @@ namespace Apollo.Core.Dataset
                 .SingleInstance();
         }
 
+        private static void RegisterAssemblyResolver(ContainerBuilder builder)
+        {
+            builder.Register((c, p) => new PluginLoadingAssemblyResolver(
+                c.Resolve<ISendCommandsToRemoteEndpoints>(),
+                c.Resolve<ICommunicationLayer>(),
+                p.TypedAs<EndpointId>()));
+        }
+
         /// <summary>
         /// Creates the DI container.
         /// </summary>
@@ -214,6 +222,7 @@ namespace Apollo.Core.Dataset
                 RegisterScheduleExecutors(builder);
                 RegisterPartStorage(builder);
                 RegisterDatasetLock(builder);
+                RegisterAssemblyResolver(builder);
             }
 
             result = builder.Build();

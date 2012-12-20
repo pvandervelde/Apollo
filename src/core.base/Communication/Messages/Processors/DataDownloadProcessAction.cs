@@ -23,7 +23,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         /// <summary>
         /// The collection that holds all the uploads.
         /// </summary>
-        private readonly WaitingUploads m_Uploads;
+        private readonly IStoreUploads m_Uploads;
 
         /// <summary>
         /// The object that handles communication with remote endpoints.
@@ -57,7 +57,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         public DataDownloadProcessAction(
-            WaitingUploads uploads,
+            IStoreUploads uploads,
             ICommunicationLayer layer,
             SystemDiagnostics systemDiagnostics,
             TaskScheduler scheduler = null)

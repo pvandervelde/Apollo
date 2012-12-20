@@ -66,6 +66,7 @@
     <Compile Include="ApplicationStartupEventArgs.cs" />
     <Compile Include="ApplicationStartupFinishedProgressMark.cs" />
     <Compile Include="CoreConfigurationKeys.cs" />
+    <Compile Include="HostApplicationCommands.cs" />
     <Compile Include="INotificationArguments.cs" />
     <Compile Include="Plugins\AppDomainOwningPluginScanner.cs" />
     <Compile Include="Plugins\AppDomainPluginClassLoader.cs" />

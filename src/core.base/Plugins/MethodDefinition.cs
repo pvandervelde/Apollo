@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -100,7 +101,7 @@ namespace Apollo.Core.Base.Plugins
                 identityGenerator(method.DeclaringType), 
                 method.Name, 
                 !method.ReturnType.Equals(typeof(void)) ? identityGenerator(method.ReturnType) : null, 
-                method.GetParameters().Select(p => ParameterDefinition.CreateDefinition(p, identityGenerator)).ToArray());
+                method.GetParameters().Select(p => ParameterDefinition.CreateDefinition(p, identityGenerator)).ToList());
         }
 
         /// <summary>
@@ -134,7 +135,7 @@ namespace Apollo.Core.Base.Plugins
         /// <summary>
         /// The collection of parameters for the method.
         /// </summary>
-        private readonly ParameterDefinition[] m_Parameters;
+        private readonly List<ParameterDefinition> m_Parameters;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MethodDefinition"/> class.
@@ -146,8 +147,8 @@ namespace Apollo.Core.Base.Plugins
         private MethodDefinition(
             TypeIdentity declaringType, 
             string name, 
-            TypeIdentity returnType, 
-            ParameterDefinition[] parameters)
+            TypeIdentity returnType,
+            List<ParameterDefinition> parameters)
         {
             {
                 Debug.Assert(declaringType != null, "The declaring type should not be null.");
@@ -197,11 +198,11 @@ namespace Apollo.Core.Base.Plugins
         /// <summary>
         /// Gets the collection containing the parameters for the method.
         /// </summary>
-        public IEnumerable<ParameterDefinition> Parameters
+        public ReadOnlyCollection<ParameterDefinition> Parameters
         {
             get
             {
-                return m_Parameters;
+                return m_Parameters.AsReadOnly();
             }
         }
 

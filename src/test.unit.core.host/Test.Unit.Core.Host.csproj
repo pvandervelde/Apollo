@@ -111,6 +111,7 @@
     </Compile>
     <Compile Include="CannotUninstallNonequivalentServiceExceptionTest.cs" />
     <Compile Include="CoreProxyTest.cs" />
+    <Compile Include="HostApplicationCommandsTest.cs" />
     <Compile Include="KernelNotInInstallReadyStateExceptionTest.cs" />
     <Compile Include="KernelServiceStartupFailedExceptionTest.cs" />
     <Compile Include="KernelStartupFailedExceptionTest.cs" />

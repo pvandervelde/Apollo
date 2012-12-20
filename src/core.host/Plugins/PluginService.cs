@@ -53,6 +53,7 @@ namespace Apollo.Core.Host.Plugins
         /// </summary>
         protected override void StartService()
         {
+            // @Todo: Note that these paths are defined in Apollo.ProjectExplorer.Utilities.UtilitiesModule
             if (!m_Configuration.HasValueFor(CoreConfigurationKeys.PluginLocation))
             {
                 return;

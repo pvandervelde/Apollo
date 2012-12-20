@@ -36,7 +36,7 @@ namespace Apollo.Core.Base
                         c.Resolve<ISendCommandsToRemoteEndpoints>(),
                         c.Resolve<INotifyOfRemoteEndpointEvents>(),
                         c.Resolve<IConfiguration>(),
-                        c.Resolve<WaitingUploads>(),
+                        c.Resolve<IStoreUploads>(),
                         (dataset, endpoint, network) =>
                         {
                             return new DatasetOnlineInformation(
@@ -65,7 +65,7 @@ namespace Apollo.Core.Base
                        c.Resolve<IApplicationLoader>(),
                        c.Resolve<ISendCommandsToRemoteEndpoints>(),
                        c.Resolve<INotifyOfRemoteEndpointEvents>(),
-                       c.Resolve<WaitingUploads>(),
+                       c.Resolve<IStoreUploads>(),
                        (dataset, endpoint, network) =>
                        {
                            return new DatasetOnlineInformation(
@@ -82,32 +82,6 @@ namespace Apollo.Core.Base
                 .As<IGenerateDistributionProposals>()
                 .As<ILoadDatasets>()
                 .SingleInstance();
-        }
-
-        private static void RegisterCommandHub(ContainerBuilder builder)
-        {
-            builder.Register(c => new RemoteCommandHub(
-                    c.Resolve<ICommunicationLayer>(),
-                    c.ResolveKeyed<IReportNewProxies>(typeof(ICommandSet)),
-                    c.Resolve<CommandProxyBuilder>(),
-                    c.Resolve<SystemDiagnostics>()))
-                .As<ISendCommandsToRemoteEndpoints>()
-                .SingleInstance();
-
-            builder.Register(
-                c =>
-                {
-                    // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
-                    // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
-                    var ctx = c.Resolve<IComponentContext>();
-                    return new CommandProxyBuilder(
-                        EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                        (endpoint, msg) =>
-                        {
-                            return ctx.Resolve<ICommunicationLayer>().SendMessageAndWaitForResponse(endpoint, msg);
-                        },
-                        c.Resolve<SystemDiagnostics>());
-                });
         }
 
         private static void RegisterNotificationHub(ContainerBuilder builder)
@@ -151,10 +125,6 @@ namespace Apollo.Core.Base
 
         private static void RegisterMessageProcessingActions(ContainerBuilder builder)
         {
-            builder.Register(c => new NewCommandRegisteredProcessAction(
-                    c.ResolveKeyed<IAcceptExternalProxyInformation>(typeof(ICommandSet))))
-                .As<IMessageProcessAction>();
-
             builder.Register(c => new NewNotificationRegisteredProcessAction(
                     c.ResolveKeyed<IAcceptExternalProxyInformation>(typeof(INotificationSet))))
                 .As<IMessageProcessAction>();
@@ -174,7 +144,6 @@ namespace Apollo.Core.Base
             base.Load(builder);
 
             RegisterDistributors(builder);
-            RegisterCommandHub(builder);
             RegisterNotificationHub(builder);
             RegisterProxyDiscoverySources(builder);
             RegisterMessageProcessingActions(builder);

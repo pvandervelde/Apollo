@@ -11,9 +11,10 @@ using QuickGraph;
 namespace Apollo.Core.Dataset.Plugins
 {
     /// <summary>
-    /// Defines an <see cref="Edge{T}"/> that links a part export to a part import in the <see cref="CompositionLayer"/>.
+    /// Defines an <see cref="Edge{T}"/> that links a part export to a part import.
     /// </summary>
-    internal sealed class PartCompositionGraphEdge : Edge<PartCompositionId>
+    /// <typeparam name="T">The type of vertex that the current edge type creates a connection between.</typeparam>
+    internal sealed class PartImportExportEdge<T> : Edge<T>
     {
         /// <summary>
         /// The registration ID of the import.
@@ -26,16 +27,16 @@ namespace Apollo.Core.Dataset.Plugins
         private ExportRegistrationId m_Export;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PartCompositionGraphEdge"/> class.
+        /// Initializes a new instance of the <see cref="PartImportExportEdge{T}"/> class.
         /// </summary>
-        /// <param name="importPart">The composition ID of the part that provides the import.</param>
+        /// <param name="importPart">The ID of the part that provides the import.</param>
         /// <param name="importId">The registration ID of the import.</param>
-        /// <param name="exportPart">The composition ID of the part that provides the export.</param>
+        /// <param name="exportPart">The ID of the part that provides the export.</param>
         /// <param name="exportId">The registration ID of the export.</param>
-        public PartCompositionGraphEdge(
-            PartCompositionId importPart, 
+        public PartImportExportEdge(
+            T importPart, 
             ImportRegistrationId importId, 
-            PartCompositionId exportPart, 
+            T exportPart, 
             ExportRegistrationId exportId)
             : base(exportPart, importPart)
         {

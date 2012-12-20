@@ -15,7 +15,7 @@ namespace Apollo.Core.Base.Communication
     /// Stores a collection of file paths for files that should be
     /// uploaded.
     /// </summary>
-    internal sealed class WaitingUploads
+    internal sealed class WaitingUploads : IStoreUploads
     {
         /// <summary>
         /// The collection that maps tokens to file paths.
@@ -62,14 +62,6 @@ namespace Apollo.Core.Base.Communication
             }
 
             m_Uploads.Add(token, path);
-        }
-
-        /// <summary>
-        /// Removes all file registrations.
-        /// </summary>
-        public void DeregisterAll()
-        {
-            m_Uploads.Clear();
         }
 
         /// <summary>
