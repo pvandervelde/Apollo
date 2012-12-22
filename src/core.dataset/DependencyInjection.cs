@@ -188,6 +188,7 @@ namespace Apollo.Core.Dataset
             builder.Register((c, p) => new PluginLoadingAssemblyResolver(
                 c.Resolve<ISendCommandsToRemoteEndpoints>(),
                 c.Resolve<ICommunicationLayer>(),
+                c.Resolve<IVirtualizeFileSystems>(),
                 p.TypedAs<EndpointId>()));
         }
 

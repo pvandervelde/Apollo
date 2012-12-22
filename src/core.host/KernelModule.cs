@@ -7,6 +7,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
+using Apollo.Utilities;
 using Apollo.Utilities.Commands;
 using Apollo.Utilities.Configuration;
 using Autofac;
@@ -39,6 +40,7 @@ namespace Apollo.Core.Host
                 .As<ICommandContainer>();
 
             builder.Register(c => new HostApplicationCommands(
+                    c.Resolve<IVirtualizeFileSystems>(),
                     c.Resolve<IStoreUploads>(),
                     c.Resolve<IConfiguration>()))
                 .OnActivated(

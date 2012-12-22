@@ -58,12 +58,15 @@ namespace Apollo.Core.Dataset.Plugins
         /// <summary>
         /// Creates a default layer that isn't linked to a timeline.
         /// </summary>
+        /// <param name="instanceStorage">The object that stores the instances of the parts.</param>
         /// <remarks>
         /// This method is provided for testing purposes only.
         /// </remarks>
         /// <returns>The newly created instance.</returns>
-        internal static CompositionLayer CreateInstanceWithoutTimeline()
+        internal static CompositionLayer CreateInstanceWithoutTimeline(IStoreInstances instanceStorage)
         {
+            var history = new ValueHistory<IStoreInstances>();
+            history.Current = instanceStorage;
             return new CompositionLayer(
                 new HistoryId(),
                 new DictionaryHistory<GroupRegistrationId, GroupDefinition>(),
@@ -71,7 +74,7 @@ namespace Apollo.Core.Dataset.Plugins
                 new BidirectionalGraphHistory<GroupCompositionId, GroupCompositionGraphEdge>(),
                 new DictionaryHistory<PartCompositionId, PartCompositionInfo>(),
                 new BidirectionalGraphHistory<PartCompositionId, PartImportExportEdge<PartCompositionId>>(),
-                new ValueHistory<IStoreInstances>());
+                history);
         }
 
         /// <summary>
@@ -395,7 +398,10 @@ namespace Apollo.Core.Dataset.Plugins
         private bool AreRequiredPartImportsSatisfied(PartCompositionId partId, IEnumerable<ImportRegistrationId> satisfiedRequiredImports)
         {
             var info = m_Parts[partId];
-            var unsatisfiedImports = info.Definition.RegisteredImports.Where(id => !satisfiedRequiredImports.Any(p => p.Equals(id)));
+            var unsatisfiedImports = info.Definition
+                .RegisteredImports
+                .Where(id => info.Definition.Import(id).IsPrerequisite)
+                .Except(satisfiedRequiredImports);
             return !unsatisfiedImports.Any();
         }
 

@@ -48,15 +48,5 @@ namespace Apollo.Core.Dataset.Plugins
         /// <param name="instance">The ID of the part instance.</param>
         /// <returns>A collection containing the state information for all instances that were touched.</returns>
         IEnumerable<InstanceUpdate> Release(PartInstanceId instance);
-
-        /// <summary>
-        /// Removes all the part instances of which the IDs are given by the collection.
-        /// </summary>
-        /// <remarks>
-        /// Note that removing a part may also remove other parts if the current part was used as a constructor parameter for those parts.
-        /// </remarks>
-        /// <param name="instances">The collection containing all the instance IDs of the instances that should be removed.</param>
-        /// <returns>A collection containing the state information for all instances that were touched.</returns>
-        IEnumerable<InstanceUpdate> Release(IEnumerable<PartInstanceId> instances);
     }
 }
