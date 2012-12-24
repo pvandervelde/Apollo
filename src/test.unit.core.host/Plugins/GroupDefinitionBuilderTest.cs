@@ -84,7 +84,7 @@ namespace Apollo.Core.Host.Plugins
                             Exports = new List<SerializableExportDefinition> 
                                 {
                                     PropertyBasedExportDefinition.CreateDefinition(
-                                        typeof(IExportOnProperty).FullName, 
+                                        typeof(IExportingInterface).FullName, 
                                         typeof(ExportOnProperty).GetProperty("ExportingProperty"))
                                 },
                             Imports = new List<SerializableImportDefinition>(),
@@ -101,8 +101,8 @@ namespace Apollo.Core.Host.Plugins
                             Imports = new List<SerializableImportDefinition>
                                 {
                                     PropertyBasedImportDefinition.CreateDefinition(
-                                        typeof(IExportOnProperty).FullName,
-                                        TypeIdentity.CreateDefinition(typeof(IExportOnProperty)),
+                                        typeof(IExportingInterface).FullName,
+                                        TypeIdentity.CreateDefinition(typeof(IExportingInterface)),
                                         ImportCardinality.ExactlyOne,
                                         false,
                                         CreationPolicy.Shared,

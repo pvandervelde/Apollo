@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
 
@@ -48,5 +49,16 @@ namespace Apollo.Core.Dataset.Plugins
         /// <param name="instance">The ID of the part instance.</param>
         /// <returns>A collection containing the state information for all instances that were touched.</returns>
         IEnumerable<InstanceUpdate> Release(PartInstanceId instance);
+
+        /// <summary>
+        /// Returns a value indicating if an instance exists for the given instance ID.
+        /// </summary>
+        /// <param name="instance">The ID of the instance.</param>
+        /// <returns>
+        ///     <see langword="true" /> if an instance exists for the given ID; otherwise, <see langword="false" />.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        bool HasInstanceFor(PartInstanceId instance);
     }
 }

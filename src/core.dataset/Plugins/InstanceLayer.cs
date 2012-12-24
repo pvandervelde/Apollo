@@ -8,9 +8,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Apollo.Core.Base.Plugins;
+using Apollo.Core.Dataset.Properties;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Utilities.History;
 using QuickGraph;
@@ -77,6 +80,23 @@ namespace Apollo.Core.Dataset.Plugins
         }
 
         /// <summary>
+        /// Creates a default layer that isn't linked to a timeline.
+        /// </summary>
+        /// <remarks>
+        /// This method is provided for testing purposes only.
+        /// </remarks>
+        /// <returns>The newly created instance.</returns>
+        internal static InstanceLayer CreateInstanceWithoutTimeline()
+        {
+            return new InstanceLayer(
+                new HistoryId(),
+                new DictionaryHistory<PartRegistrationId, GroupPartDefinition>(),
+                new DictionaryHistory<PartInstanceId, PartRegistrationId>(),
+                new DictionaryHistory<PartInstanceId, IAmHistoryEnabled>(),
+                new BidirectionalGraphHistory<PartInstanceId, PartImportExportEdge<PartInstanceId>>());
+        }
+
+        /// <summary>
         /// Creates a new instance of the <see cref="InstanceLayer"/> class with the given 
         /// history information.
         /// </summary>
@@ -133,10 +153,48 @@ namespace Apollo.Core.Dataset.Plugins
                 instanceConnections);
         }
 
+        /// <summary>
+        /// Loads the <see cref="Type"/> for the given identity.
+        /// </summary>
+        /// <param name="typeIdentity">The identity of the type that should be loaded.</param>
+        /// <returns>The requested type.</returns>
+        /// <exception cref="UnableToLoadPluginTypeException">
+        ///     Thrown when something goes wrong while loading the assembly containing the type or the type.
+        /// </exception>
         private static Type LoadType(TypeIdentity typeIdentity)
         {
-            var assembly = Assembly.Load(new AssemblyName(typeIdentity.Assembly.FullName));
-            return Type.GetType(typeIdentity.AssemblyQualifiedName, true, false);
+            try
+            {
+                return Type.GetType(typeIdentity.AssemblyQualifiedName, true, false);
+            }
+            catch (TargetInvocationException e)
+            {
+                // Type initializer throw an exception
+                throw new UnableToLoadPluginTypeException(Resources.Exceptions_Messages_UnableToLoadPluginType, e);
+            }
+            catch (TypeLoadException e)
+            {
+                // Type is not found, typeName contains invalid characters, typeName represents an array type with an invalid size,
+                // typeName represents and array of TypedReference
+                throw new UnableToLoadPluginTypeException(Resources.Exceptions_Messages_UnableToLoadPluginType, e);
+            }
+            catch (ArgumentException e)
+            {
+                // typeName contains invalid syntax, typeName represents a generic type that has a pointer, a ByRef type or Void as one of
+                // its type arguments, typeName represents a generic type that has an incorrect number of type arguments, typeName
+                // represents a generic type, and one of its arguments does not satisfy the constraints for the corresponding type parameter
+                throw new UnableToLoadPluginTypeException(Resources.Exceptions_Messages_UnableToLoadPluginType, e);
+            }
+            catch (FileNotFoundException e)
+            {
+                // The assembly or one of its dependencies was not found
+                throw new UnableToLoadPluginTypeException(Resources.Exceptions_Messages_UnableToLoadPluginType, e);
+            }
+            catch (BadImageFormatException e)
+            {
+                // The assembly or one of its dependencies was not valid
+                throw new UnableToLoadPluginTypeException(Resources.Exceptions_Messages_UnableToLoadPluginType, e);
+            }
         }
 
         private static object GetDefaultValue(Type type)
@@ -187,6 +245,11 @@ namespace Apollo.Core.Dataset.Plugins
                 };
 
             return func;
+        }
+
+        private static MethodInfo MethodInfoForDelegate(Type delegateType)
+        {
+            return delegateType.GetMethod("Invoke");
         }
 
         /// <summary>
@@ -334,10 +397,21 @@ namespace Apollo.Core.Dataset.Plugins
         /// <param name="partDefinition">The part definition of which an instance should be created.</param>
         /// <param name="importConnections">The collection mapping the part imports to the exports and the parts that provide those exports.</param>
         /// <returns>The ID of the newly created part.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="partDefinition"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="importConnections"/> is <see langword="null" />.
+        /// </exception>
         public PartInstanceId Construct(
             GroupPartDefinition partDefinition,
             IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>> importConnections)
         {
+            {
+                Lokad.Enforce.Argument(() => partDefinition);
+                Lokad.Enforce.Argument(() => importConnections);
+            }
+
             // First store the definition and the instance ID, then we 
             // pretend that this whole thing is an update from the empty state (which it sort of is)
             // and let the UpdateIfRequired function figure it all out
@@ -350,7 +424,12 @@ namespace Apollo.Core.Dataset.Plugins
             m_InstanceToDefinitionMap.Add(instanceId, partDefinition.Id);
             m_InstanceConnections.AddVertex(instanceId);
 
-            UpdateIfRequired(instanceId, importConnections);
+            var result = UpdateIfRequired(instanceId, importConnections, false, false);
+            if (!result.Any(i => i.Instance.Equals(instanceId)))
+            {
+                throw new ConstructionOfPluginTypeFailedException();
+            }
+
             return instanceId;
         }
 
@@ -363,11 +442,22 @@ namespace Apollo.Core.Dataset.Plugins
         /// The collection mapping the part imports to the exports and the parts that provides those exports.
         /// </param>
         /// <returns>A collection containing the state information for all instances that were touched.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="instance"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="importConnections"/> is <see langword="null" />.
+        /// </exception>
         public IEnumerable<InstanceUpdate> UpdateIfRequired(
             PartInstanceId instance,
             IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>> importConnections)
         {
-            return UpdateIfRequired(instance, importConnections, false);
+            {
+                Lokad.Enforce.Argument(() => instance);
+                Lokad.Enforce.Argument(() => importConnections);
+            }
+
+            return UpdateIfRequired(instance, importConnections, false, false);
         }
 
         /// <summary>
@@ -378,13 +468,20 @@ namespace Apollo.Core.Dataset.Plugins
         /// <param name="importConnections">
         /// The collection mapping the part imports to the exports and the parts that provides those exports.
         /// </param>
+        /// <param name="shouldDeleteInstance">A flag that indicates if the instance should be removed.</param>
         /// <param name="forceUpdate">A flag that indicate if all imports should be forced to update.</param>
         /// <returns>A collection containing the state information for all instances that were touched.</returns>
         private IEnumerable<InstanceUpdate> UpdateIfRequired(
             PartInstanceId instance,
             IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>> importConnections,
+            bool shouldDeleteInstance,
             bool forceUpdate)
         {
+            {
+                Debug.Assert(instance != null, "The instance ID should not be a null reference.");
+                Debug.Assert(importConnections != null, "The import connections collection should not be a null reference.");
+            }
+
             var updatedInstances = new List<InstanceUpdate>();
             if (!m_InstanceToDefinitionMap.ContainsKey(instance))
             {
@@ -392,42 +489,37 @@ namespace Apollo.Core.Dataset.Plugins
             }
 
             // Determine if there are any changes that need to be applied to the object
-            bool shouldUpdate = forceUpdate;
-            bool shouldRecreate = InstanceById(instance) == null || forceUpdate;
+            var importEdges = m_InstanceConnections.InEdges(instance);
+            var differentImports = importEdges
+                .Select(
+                    e => new Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>(
+                        e.ImportRegistration,
+                        e.Source,
+                        e.ExportRegistration))
+                .Except(importConnections);
 
-            bool shouldDelete = !importConnections.Any();
-            if (!shouldDelete && !shouldRecreate && !shouldUpdate)
+            if (!differentImports.Any() && (InstanceById(instance) != null) && !shouldDeleteInstance && !forceUpdate)
             {
-                var importEdges = m_InstanceConnections.InEdges(instance);
-                var differentImports = importEdges
-                    .Select(
-                        e => new Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>(
-                            e.ImportRegistration,
-                            e.Source,
-                            e.ExportRegistration))
-                    .Except(importConnections);
-
-                if (!differentImports.Any() && (InstanceById(instance) != null))
-                {
-                    return updatedInstances;
-                }
-
-                // The definition should always either have more imports defined or the same number, never less
-                // because the excessive imports are not recognized. Hence doing this comparison will tell us
-                // if we're missing required imports
-                var definition = DefinitionForInstance(instance);
-                var missingRequiredImports = definition
-                    .RegisteredImports
-                    .Where(i => definition.Import(i).IsPrerequisite)
-                    .Except(
-                        differentImports
-                            .Where(t => definition.Import(t.Item1).IsPrerequisite)
-                            .Select(t => t.Item1));
-
-                shouldUpdate = shouldUpdate || differentImports.Any();
-                shouldRecreate = shouldRecreate || differentImports.Any(p => definition.Import(p.Item1).IsPrerequisite);
-                shouldDelete = shouldDelete || missingRequiredImports.Any();
+                return updatedInstances;
             }
+
+            // The definition should always either have more imports defined or the same number, never less
+            // because the excessive imports are not recognized. Hence doing this comparison will tell us
+            // if we're missing required imports
+            var definition = DefinitionForInstance(instance);
+            var missingRequiredImports = definition
+                .RegisteredImports
+                .Where(i => definition.Import(i).IsPrerequisite)
+                .Except(
+                    importConnections
+                        .Where(t => definition.Import(t.Item1).IsPrerequisite)
+                        .Select(t => t.Item1));
+
+            bool shouldRecreate = InstanceById(instance) == null 
+                || forceUpdate 
+                || differentImports.Any(p => definition.Import(p.Item1).IsPrerequisite);
+            bool shouldUpdate = forceUpdate || shouldRecreate || differentImports.Any();
+            bool shouldDelete = (shouldDeleteInstance || missingRequiredImports.Any()) && (InstanceById(instance) != null);
 
             if (!shouldDelete && (shouldUpdate || shouldRecreate))
             {
@@ -542,7 +634,37 @@ namespace Apollo.Core.Dataset.Plugins
 
             var parameterObjects = ConstructorImports(constructorImports);
             var type = LoadType(definition.Identity);
-            return Activator.CreateInstance(type, parameterObjects);
+            try
+            {
+                return Activator.CreateInstance(type, parameterObjects);
+            }
+            catch (NotSupportedException e)
+            {
+                // type is a TypeBuilder, Type is a TypeReference, ArgIterator, Void, RuntimeArgumentHandle or an array of either
+                // one of those types, the assembly that contains type is a dynamic assembly that was created with 
+                // AssemblyBuilderAccess.Save, the constructor that best matches args has varargs arguments
+                throw new ConstructionOfPluginTypeFailedException(Resources.Exceptions_Messages_ConstructionOfPluginTypeFailed, e);
+            }
+            catch (TargetInvocationException e)
+            {
+                // The constructor being called throws an exception
+                throw new ConstructionOfPluginTypeFailedException(Resources.Exceptions_Messages_ConstructionOfPluginTypeFailed, e);
+            }
+            catch (MissingMethodException e)
+            {
+                // No matching public constructor was found
+                throw new ConstructionOfPluginTypeFailedException(Resources.Exceptions_Messages_ConstructionOfPluginTypeFailed, e);
+            }
+            catch (MethodAccessException e)
+            {
+                // The caller does not have permission to call this constructor
+                throw new ConstructionOfPluginTypeFailedException(Resources.Exceptions_Messages_ConstructionOfPluginTypeFailed, e);
+            }
+            catch (MemberAccessException e)
+            {
+                // Cannot create an instance of an abstract class or this method was invoked with a late-binding mechanism
+                throw new ConstructionOfPluginTypeFailedException(Resources.Exceptions_Messages_ConstructionOfPluginTypeFailed, e);
+            }
         }
 
         /// <summary>
@@ -553,6 +675,11 @@ namespace Apollo.Core.Dataset.Plugins
         private object[] ConstructorImports(
             IEnumerable<Tuple<ConstructorBasedImportDefinition, PartInstanceId, ExportRegistrationId>> constructorImports)
         {
+            if (!constructorImports.Any())
+            {
+                return new object[0];
+            }
+
             // MEF only allows one constructor to have the ImportingConstructorAttribute
             // so all the constructor imports for the current type are from the same
             // constructor
@@ -632,7 +759,7 @@ namespace Apollo.Core.Dataset.Plugins
                     var lazyType = typeof(Lazy<>).MakeGenericType(genericParameters[0]);
                     return Activator.CreateInstance(
                         lazyType,
-                        ParameterlessFunctionFromExport(genericParameters[0], exportingPart, exportDefinition));
+                        ParameterlessFunctionFromExport(typeof(Func<>).MakeGenericType(genericParameters[0]), exportingPart, exportDefinition));
                 }
 
                 if (genericBaseType.Equals(typeof(Lazy<,>)))
@@ -642,7 +769,7 @@ namespace Apollo.Core.Dataset.Plugins
 
                 if (genericBaseType.Equals(typeof(Func<>)))
                 {
-                    return ParameterlessFunctionFromExport(genericParameters[0], exportingPart, exportDefinition);
+                    return ParameterlessFunctionFromExport(parameterType, exportingPart, exportDefinition);
                 }
 
                 // The only other option(s) that we support is that the export could be a method
@@ -671,7 +798,7 @@ namespace Apollo.Core.Dataset.Plugins
         }
 
         private object ParameterlessFunctionFromExport(
-            Type parameterType,
+            Type delegateType,
             PartInstanceId exportingInstance,
             SerializableExportDefinition exportDefinition)
         {
@@ -681,25 +808,28 @@ namespace Apollo.Core.Dataset.Plugins
             if (methodExport != null)
             {
                 var exportedMethod = GetMethodInfoFromDefinition(LoadType(methodExport.DeclaringType), methodExport.Method);
-                Debug.Assert(IsMethodCompatibleWithDelegate(parameterType, exportedMethod), "The exported method should match the import Func<>.");
+                if (!IsMethodCompatibleWithDelegate(delegateType, exportedMethod))
+                {
+                    throw new ConstructionOfPluginTypeFailedException();
+                }
 
-                return CreateDelegateFromMethod(parameterType, exportingInstance, exportedMethod);
+                return CreateDelegateFromMethod(delegateType, exportingInstance, exportedMethod);
             }
 
             var propertyExport = exportDefinition as PropertyBasedExportDefinition;
             if (propertyExport != null)
             {
-                return PropertyExportToFuncImport(parameterType, obj, propertyExport);
+                return PropertyExportToFuncImport(delegateType, obj, propertyExport);
             }
 
             var typeExport = exportDefinition as TypeBasedExportDefinition;
             Debug.Assert(typeExport != null, "The export should really be a type export.");
-            return TypeExportToFuncImport(parameterType, obj, typeExport);
+            return TypeExportToFuncImport(delegateType, obj, typeExport);
         }
 
-        private bool IsMethodCompatibleWithDelegate(Type parameterType, MethodInfo exportedMethod)
+        private bool IsMethodCompatibleWithDelegate(Type delegateType, MethodInfo exportedMethod)
         {
-            var delegateMethod = parameterType.GetMethod("Invoke");
+            var delegateMethod = MethodInfoForDelegate(delegateType);
 
             bool isCompatible = delegateMethod.ReturnType.IsAssignableFrom(exportedMethod.ReturnType);
             isCompatible = isCompatible && delegateMethod.GetParameters().SequenceEqual(
@@ -709,13 +839,13 @@ namespace Apollo.Core.Dataset.Plugins
             return isCompatible;
         }
 
-        private object CreateDelegateFromMethod(Type parameterType, PartInstanceId instance, MethodInfo method)
+        private object CreateDelegateFromMethod(Type delegateType, PartInstanceId instance, MethodInfo method)
         {
             var obj = InstanceById(instance);
-            return Delegate.CreateDelegate(parameterType, obj, method);
+            return Delegate.CreateDelegate(delegateType, obj, method);
         }
 
-        private object PropertyExportToFuncImport(Type parameterType, object exportingObject, PropertyBasedExportDefinition propertyExport)
+        private object PropertyExportToFuncImport(Type delegateType, object exportingObject, PropertyBasedExportDefinition propertyExport)
         {
             var propertyInfo = GetPropertyInfoFromDefinition(exportingObject.GetType(), propertyExport.Property);
             var method = GetType()
@@ -725,11 +855,11 @@ namespace Apollo.Core.Dataset.Plugins
                     null,
                     new Type[] { typeof(object), typeof(PropertyInfo) },
                     null)
-                .MakeGenericMethod(parameterType);
+                .MakeGenericMethod(MethodInfoForDelegate(delegateType).ReturnType);
             return method.Invoke(null, new object[] { exportingObject, propertyInfo });
         }
 
-        private object TypeExportToFuncImport(Type parameterType, object exportingObject, TypeBasedExportDefinition typeExport)
+        private object TypeExportToFuncImport(Type delegateType, object exportingObject, TypeBasedExportDefinition typeExport)
         {
             var method = GetType()
                 .GetMethod(
@@ -738,7 +868,7 @@ namespace Apollo.Core.Dataset.Plugins
                     null,
                     new Type[] { typeof(object) },
                     null)
-                .MakeGenericMethod(parameterType);
+                .MakeGenericMethod(MethodInfoForDelegate(delegateType).ReturnType);
             return method.Invoke(null, new object[] { exportingObject });
         }
 
@@ -749,7 +879,11 @@ namespace Apollo.Core.Dataset.Plugins
             var methodExport = exportDefinition as MethodBasedExportDefinition;
             if (methodExport != null)
             {
-                Debug.Assert(methodExport.Method.Parameters.Count == 0, "Can only invoke a parameterless method.");
+                if (methodExport.Method.Parameters.Count != 0)
+                {
+                    throw new ConstructionOfPluginTypeFailedException();
+                }
+
                 var methodInfo = GetMethodInfoFromDefinition(obj.GetType(), methodExport.Method);
                 return methodInfo.Invoke(obj, null);
             }
@@ -821,25 +955,28 @@ namespace Apollo.Core.Dataset.Plugins
                 var index = sortedImports.FindIndex(p => p.Item1.Equals(property));
                 if (index > 1)
                 {
-                    var tuple = sortedImports[index];
-                    tuple.Item2.Add(new Tuple<PartInstanceId, ExportRegistrationId>(pair.Item2, pair.Item3));
+                    if (pair.Item2 != null)
+                    {
+                        var tuple = sortedImports[index];
+                        tuple.Item2.Add(new Tuple<PartInstanceId, ExportRegistrationId>(pair.Item2, pair.Item3));
+                    }
                 }
                 else
                 {
-                    sortedImports.Add(
-                        new Tuple<PropertyDefinition, List<Tuple<PartInstanceId, ExportRegistrationId>>>(
-                            property,
-                            new List<Tuple<PartInstanceId, ExportRegistrationId>> 
-                                {
-                                    new Tuple<PartInstanceId, ExportRegistrationId>(pair.Item2, pair.Item3)
-                                }));
+                    var list = new List<Tuple<PartInstanceId, ExportRegistrationId>>();
+                    if (pair.Item2 != null)
+                    {
+                        list.Add(new Tuple<PartInstanceId, ExportRegistrationId>(pair.Item2, pair.Item3));
+                    }
+
+                    sortedImports.Add(new Tuple<PropertyDefinition, List<Tuple<PartInstanceId, ExportRegistrationId>>>(property, list));
                 }
             }
 
             foreach (var pair in sortedImports)
             {
                 var type = LoadType(pair.Item1.PropertyType);
-                var exportObject = (pair.Item2 != null) ? ExportsForImportedType(type, pair.Item2) : GetDefaultValue(type);
+                var exportObject = (pair.Item2.Count != 0) ? ExportsForImportedType(type, pair.Item2) : GetDefaultValue(type);
 
                 var info = GetPropertyInfoFromDefinition(importObject.GetType(), pair.Item1);
                 info.SetValue(importObject, exportObject);
@@ -860,7 +997,7 @@ namespace Apollo.Core.Dataset.Plugins
                             e.ImportRegistration,
                             e.Source,
                             e.ExportRegistration));
-                var list = UpdateIfRequired(dependant, newExports, true);
+                var list = UpdateIfRequired(dependant, newExports, false, true);
                 result.AddRange(list);
             }
 
@@ -871,7 +1008,7 @@ namespace Apollo.Core.Dataset.Plugins
         {
             var result = new List<InstanceUpdate>();
 
-            var dependantInstances = m_InstanceConnections.OutEdges(instance).Select(e => e.Target);
+            var dependantInstances = m_InstanceConnections.OutEdges(instance).Select(e => e.Target).ToList();
             foreach (var dependant in dependantInstances)
             {
                 var newExports = m_InstanceConnections
@@ -882,7 +1019,7 @@ namespace Apollo.Core.Dataset.Plugins
                             e.ImportRegistration,
                             e.Source,
                             e.ExportRegistration));
-                var list = UpdateIfRequired(dependant, newExports, false);
+                var list = UpdateIfRequired(dependant, newExports, false, false);
                 result.AddRange(list);
             }
 
@@ -923,7 +1060,21 @@ namespace Apollo.Core.Dataset.Plugins
         /// <returns>A collection containing the state information for all instances that were touched.</returns>
         public IEnumerable<InstanceUpdate> Release(PartInstanceId instance)
         {
-            return UpdateIfRequired(instance, Enumerable.Empty<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>());
+            return UpdateIfRequired(instance, Enumerable.Empty<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>(), true, true);
+        }
+
+        /// <summary>
+        /// Returns a value indicating if an instance exists for the given instance ID.
+        /// </summary>
+        /// <param name="instance">The ID of the instance.</param>
+        /// <returns>
+        ///     <see langword="true" /> if an instance exists for the given ID; otherwise, <see langword="false" />.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        public bool HasInstanceFor(PartInstanceId instance)
+        {
+            return m_InstanceToDefinitionMap.ContainsKey(instance);
         }
 
         /// <summary>
@@ -934,12 +1085,7 @@ namespace Apollo.Core.Dataset.Plugins
         /// </returns>
         public IEnumerator<PartInstanceId> GetEnumerator()
         {
-            foreach (var pair in m_HistoryInstances)
-            {
-                yield return pair.Key;
-            }
-
-            foreach (var pair in m_NonHistoryInstances)
+            foreach (var pair in m_InstanceToDefinitionMap)
             {
                 yield return pair.Key;
             }

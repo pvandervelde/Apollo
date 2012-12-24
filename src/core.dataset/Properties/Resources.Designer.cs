@@ -106,6 +106,15 @@ namespace Apollo.Core.Dataset.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The instantiation of a plug-in type failed..
+        /// </summary>
+        internal static string Exceptions_Messages_ConstructionOfPluginTypeFailed {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ConstructionOfPluginTypeFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The given schedule element ID is already registered..
         /// </summary>
         internal static string Exceptions_Messages_DuplicateScheduleElementId {
@@ -138,6 +147,15 @@ namespace Apollo.Core.Dataset.Properties {
         internal static string Exceptions_Messages_InvalidCommandLineArguments {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_InvalidCommandLineArguments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to load the requested Type..
+        /// </summary>
+        internal static string Exceptions_Messages_UnableToLoadPluginType {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnableToLoadPluginType", resourceCulture);
             }
         }
         

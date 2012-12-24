@@ -162,4 +162,10 @@
   <data name="Exceptions_Messages_UnknownScheduleVertex" xml:space="preserve">
     <value>The given schedule vertex is not part of the current schedule.</value>
   </data>
+  <data name="Exceptions_Messages_UnableToLoadPluginType" xml:space="preserve">
+    <value>Unable to load the requested Type.</value>
+  </data>
+  <data name="Exceptions_Messages_ConstructionOfPluginTypeFailed" xml:space="preserve">
+    <value>The instantiation of a plug-in type failed.</value>
+  </data>
 </root>
