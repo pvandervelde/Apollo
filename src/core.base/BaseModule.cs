@@ -203,6 +203,60 @@ namespace Apollo.Core.Base
                         c.Resolve<SystemDiagnostics>());
                 })
                 .As<IMessageProcessAction>();
+
+            builder.Register(c => new NewCommandRegisteredProcessAction(
+                    c.ResolveKeyed<IAcceptExternalProxyInformation>(typeof(ICommandSet))))
+                .As<IMessageProcessAction>();
+
+            builder.Register(
+                   c =>
+                   {
+                       // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
+                       // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
+                       var ctx = c.Resolve<IComponentContext>();
+                       return new CommandInformationRequestProcessAction(
+                           EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
+                           (endpoint, msg) => ctx.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
+                           c.Resolve<ICommandCollection>(),
+                           c.Resolve<SystemDiagnostics>());
+                   })
+               .As<IMessageProcessAction>();
+
+            builder.Register(
+                    c =>
+                    {
+                        // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
+                        // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
+                        var ctx = c.Resolve<IComponentContext>();
+                        return new CommandInvokedProcessAction(
+                            EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
+                            (endpoint, msg) => ctx.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
+                            c.Resolve<ICommandCollection>(),
+                            c.Resolve<SystemDiagnostics>());
+                    })
+                .As<IMessageProcessAction>();
+
+            builder.Register(
+                    c =>
+                    {
+                        // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
+                        // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
+                        var ctx = c.Resolve<IComponentContext>();
+                        return new NotificationInformationRequestProcessAction(
+                            EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
+                            (endpoint, msg) => ctx.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
+                            c.Resolve<INotificationSendersCollection>(),
+                            c.Resolve<SystemDiagnostics>());
+                    })
+                .As<IMessageProcessAction>();
+
+            builder.Register(c => new RegisterForNotificationProcessAction(
+                    c.Resolve<ISendNotifications>()))
+                .As<IMessageProcessAction>();
+
+            builder.Register(c => new UnregisterFromNotificationProcessAction(
+                    c.Resolve<ISendNotifications>()))
+                .As<IMessageProcessAction>();
         }
 
         private static void RegisterCommunicationChannel(ContainerBuilder builder)
@@ -290,9 +344,44 @@ namespace Apollo.Core.Base
                 .As<TcpChannelType>();
         }
 
+        private static void RegisterCommandHub(ContainerBuilder builder)
+        {
+            builder.Register(c => new RemoteCommandHub(
+                    c.Resolve<ICommunicationLayer>(),
+                    c.ResolveKeyed<IReportNewProxies>(typeof(ICommandSet)),
+                    c.Resolve<CommandProxyBuilder>(),
+                    c.Resolve<SystemDiagnostics>()))
+                .As<ISendCommandsToRemoteEndpoints>()
+                .SingleInstance();
+
+            builder.Register(
+                c =>
+                {
+                    // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
+                    // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
+                    var ctx = c.Resolve<IComponentContext>();
+                    return new CommandProxyBuilder(
+                        EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
+                        (endpoint, msg) =>
+                        {
+                            return ctx.Resolve<ICommunicationLayer>().SendMessageAndWaitForResponse(endpoint, msg);
+                        },
+                        c.Resolve<SystemDiagnostics>());
+                });
+        }
+
+        private static void RegisterCommandCollection(ContainerBuilder builder)
+        {
+            builder.Register(c => new LocalCommandCollection(
+                    c.Resolve<ICommunicationLayer>()))
+                .As<ICommandCollection>()
+                .SingleInstance();
+        }
+
         private static void RegisterUploads(ContainerBuilder builder)
         {
             builder.Register(c => new WaitingUploads())
+                .As<IStoreUploads>()
                 .SingleInstance();
         }
 
@@ -337,6 +426,8 @@ namespace Apollo.Core.Base
             RegisterCommunicationChannel(builder);
             RegisterEndpoints(builder);
             RegisterChannelTypes(builder, m_AllowChannelDiscovery);
+            RegisterCommandHub(builder);
+            RegisterCommandCollection(builder);
             RegisterUploads(builder);
 
             RegisterStartables(builder);

@@ -84,7 +84,7 @@ namespace Apollo.Core.Host.Plugins
                             Exports = new List<SerializableExportDefinition> 
                                 {
                                     PropertyBasedExportDefinition.CreateDefinition(
-                                        typeof(IExportOnProperty).FullName, 
+                                        typeof(IExportingInterface).FullName, 
                                         typeof(ExportOnProperty).GetProperty("ExportingProperty"))
                                 },
                             Imports = new List<SerializableImportDefinition>(),
@@ -101,8 +101,8 @@ namespace Apollo.Core.Host.Plugins
                             Imports = new List<SerializableImportDefinition>
                                 {
                                     PropertyBasedImportDefinition.CreateDefinition(
-                                        typeof(IExportOnProperty).FullName,
-                                        TypeIdentity.CreateDefinition(typeof(IExportOnProperty)),
+                                        typeof(IExportingInterface).FullName,
+                                        TypeIdentity.CreateDefinition(typeof(IExportingInterface)),
                                         ImportCardinality.ExactlyOne,
                                         false,
                                         CreationPolicy.Shared,
@@ -124,7 +124,12 @@ namespace Apollo.Core.Host.Plugins
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
-            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
+            var builder = new GroupDefinitionBuilder(
+                repository.Object, 
+                importEngine.Object, 
+                identityGenerator, 
+                scheduleBuilder, 
+                new PluginFileInfo("a", DateTimeOffset.Now));
             Assert.Throws<UnknownPluginTypeException>(() => builder.RegisterObject(typeof(ExportOnPropertyWithName)));
         }
 
@@ -142,7 +147,12 @@ namespace Apollo.Core.Host.Plugins
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
-            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
+            var builder = new GroupDefinitionBuilder(
+                repository.Object, 
+                importEngine.Object, 
+                identityGenerator, 
+                scheduleBuilder,
+                new PluginFileInfo("a", DateTimeOffset.Now));
             var info = builder.RegisterObject(typeof(ActionOnMethod));
 
             Assert.IsFalse(info.RegisteredConditions.Any());
@@ -168,7 +178,12 @@ namespace Apollo.Core.Host.Plugins
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
-            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
+            var builder = new GroupDefinitionBuilder(
+                repository.Object, 
+                importEngine.Object, 
+                identityGenerator, 
+                scheduleBuilder,
+                new PluginFileInfo("a", DateTimeOffset.Now));
             var firstInfo = builder.RegisterObject(typeof(ActionOnMethod));
             var secondInfo = builder.RegisterObject(typeof(ActionOnMethod));
 
@@ -189,7 +204,12 @@ namespace Apollo.Core.Host.Plugins
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
-            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
+            var builder = new GroupDefinitionBuilder(
+                repository.Object, 
+                importEngine.Object, 
+                identityGenerator, 
+                scheduleBuilder,
+                new PluginFileInfo("a", DateTimeOffset.Now));
             var firstInfo = builder.RegisterObject(typeof(ImportOnProperty));
             var secondInfo = builder.RegisterObject(typeof(ActionOnMethod));
             Assert.Throws<CannotMapExportToImportException>(
@@ -205,8 +225,8 @@ namespace Apollo.Core.Host.Plugins
             {
                 repository.Setup(r => r.Parts())
                     .Returns(plugins);
-                repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>()))
-                    .Callback<GroupDefinition>(g => groupInfo = g);
+                repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>(), It.IsAny<PluginFileInfo>()))
+                    .Callback<GroupDefinition, PluginFileInfo>((g, f) => groupInfo = g);
             }
 
             var importEngine = new Mock<IConnectParts>();
@@ -218,7 +238,12 @@ namespace Apollo.Core.Host.Plugins
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
             
-            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
+            var builder = new GroupDefinitionBuilder(
+                repository.Object, 
+                importEngine.Object, 
+                identityGenerator, 
+                scheduleBuilder,
+                new PluginFileInfo("a", DateTimeOffset.Now));
             var firstInfo = builder.RegisterObject(typeof(ImportOnProperty));
             var secondInfo = builder.RegisterObject(typeof(ExportOnProperty));
             builder.Connect(firstInfo.RegisteredImports.First(), secondInfo.RegisteredExports.First());
@@ -241,8 +266,8 @@ namespace Apollo.Core.Host.Plugins
             {
                 repository.Setup(r => r.Parts())
                     .Returns(plugins);
-                repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>()))
-                    .Callback<GroupDefinition>(g => groupInfo = g);
+                repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>(), It.IsAny<PluginFileInfo>()))
+                    .Callback<GroupDefinition, PluginFileInfo>((g, f) => groupInfo = g);
             }
 
             var importEngine = new Mock<IConnectParts>();
@@ -254,7 +279,12 @@ namespace Apollo.Core.Host.Plugins
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
-            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
+            var builder = new GroupDefinitionBuilder(
+                repository.Object, 
+                importEngine.Object, 
+                identityGenerator, 
+                scheduleBuilder,
+                new PluginFileInfo("a", DateTimeOffset.Now));
             var firstInfo = builder.RegisterObject(typeof(ImportOnProperty));
             var secondInfo = builder.RegisterObject(typeof(ExportOnProperty));
             builder.Connect(firstInfo.RegisteredImports.First(), secondInfo.RegisteredExports.First());
@@ -280,8 +310,8 @@ namespace Apollo.Core.Host.Plugins
             {
                 repository.Setup(r => r.Parts())
                     .Returns(plugins);
-                repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>()))
-                    .Callback<GroupDefinition>(g => groupInfo = g);
+                repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>(), It.IsAny<PluginFileInfo>()))
+                    .Callback<GroupDefinition, PluginFileInfo>((g, f) => groupInfo = g);
             }
 
             var importEngine = new Mock<IConnectParts>();
@@ -293,7 +323,12 @@ namespace Apollo.Core.Host.Plugins
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
-            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
+            var builder = new GroupDefinitionBuilder(
+                repository.Object, 
+                importEngine.Object, 
+                identityGenerator, 
+                scheduleBuilder,
+                new PluginFileInfo("a", DateTimeOffset.Now));
             var actionInfo = builder.RegisterObject(typeof(ActionOnMethod));
             var conditionInfo = builder.RegisterObject(typeof(ConditionOnProperty));
 
@@ -322,8 +357,8 @@ namespace Apollo.Core.Host.Plugins
             {
                 repository.Setup(r => r.Parts())
                     .Returns(plugins);
-                repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>()))
-                    .Callback<GroupDefinition>(g => groupInfo = g);
+                repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>(), It.IsAny<PluginFileInfo>()))
+                    .Callback<GroupDefinition, PluginFileInfo>((g, f) => groupInfo = g);
             }
 
             var importEngine = new Mock<IConnectParts>();
@@ -335,7 +370,12 @@ namespace Apollo.Core.Host.Plugins
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
-            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
+            var builder = new GroupDefinitionBuilder(
+                repository.Object, 
+                importEngine.Object, 
+                identityGenerator, 
+                scheduleBuilder,
+                new PluginFileInfo("a", DateTimeOffset.Now));
             var firstInfo = builder.RegisterObject(typeof(ImportOnProperty));
             var secondInfo = builder.RegisterObject(typeof(ExportOnProperty));
             var thirdInfo = builder.RegisterObject(typeof(ActionOnMethod));
@@ -379,8 +419,8 @@ namespace Apollo.Core.Host.Plugins
             {
                 repository.Setup(r => r.Parts())
                     .Returns(plugins);
-                repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>()))
-                    .Callback<GroupDefinition>(g => groupInfo = g);
+                repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>(), It.IsAny<PluginFileInfo>()))
+                    .Callback<GroupDefinition, PluginFileInfo>((g, f) => groupInfo = g);
             }
 
             var importEngine = new Mock<IConnectParts>();
@@ -392,7 +432,12 @@ namespace Apollo.Core.Host.Plugins
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
-            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
+            var builder = new GroupDefinitionBuilder(
+                repository.Object, 
+                importEngine.Object, 
+                identityGenerator, 
+                scheduleBuilder,
+                new PluginFileInfo("a", DateTimeOffset.Now));
             var firstInfo = builder.RegisterObject(typeof(ImportOnProperty));
 
             var registrator = builder.RegisterSchedule();
@@ -423,8 +468,8 @@ namespace Apollo.Core.Host.Plugins
             {
                 repository.Setup(r => r.Parts())
                     .Returns(plugins);
-                repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>()))
-                    .Callback<GroupDefinition>(g => groupInfo = g);
+                repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>(), It.IsAny<PluginFileInfo>()))
+                    .Callback<GroupDefinition, PluginFileInfo>((g, f) => groupInfo = g);
             }
 
             var importEngine = new Mock<IConnectParts>();
@@ -436,7 +481,12 @@ namespace Apollo.Core.Host.Plugins
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
-            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
+            var builder = new GroupDefinitionBuilder(
+                repository.Object, 
+                importEngine.Object, 
+                identityGenerator, 
+                scheduleBuilder,
+                new PluginFileInfo("a", DateTimeOffset.Now));
             var firstInfo = builder.RegisterObject(typeof(ImportOnProperty));
 
             var groupImportName = "groupImport";

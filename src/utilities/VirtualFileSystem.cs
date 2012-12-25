@@ -42,6 +42,15 @@ namespace Apollo.Utilities
         }
 
         /// <summary>
+        /// Creates a uniquely named, zero-byte temporary file on disk and returns the full path of that file.
+        /// </summary>
+        /// <returns>The full path of the temporary file.</returns>
+        public string GetTempFileName()
+        {
+            return Path.GetTempFileName();
+        }
+
+        /// <summary>
         /// Gets the files in the given directory.
         /// </summary>
         /// <param name="directoryPath">The full path to the directory.</param>
@@ -56,6 +65,19 @@ namespace Apollo.Utilities
                 directoryPath, 
                 searchPattern, 
                 searchSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+        }
+
+        /// <summary>
+        /// Opens a stream to the given file with the provided access mode and creation mode.
+        /// </summary>
+        /// <param name="path">The full path to the file that should be opened.</param>
+        /// <param name="fileMode">A flag indicating how the file should be opened.</param>
+        /// <param name="fileAccess">A flag indicating how the file should be shared while it is open.</param>
+        /// <returns>An file stream object.</returns>
+        public IVirtualFileStream Open(string path, FileMode fileMode, FileAccess fileAccess)
+        {
+            var stream = new FileStream(path, fileMode, fileAccess);
+            return new VirtualFileStream(stream);
         }
     }
 }

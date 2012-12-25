@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
@@ -192,6 +193,74 @@ namespace Apollo.Utilities
             }
 
             return propertiesText.ToString();
+        }
+
+        /// <summary>
+        /// Returns a value indicating if the given assembly name is an exact match for the current assembly name.
+        /// </summary>
+        /// <param name="current">The current assembly name.</param>
+        /// <param name="other">The assembly name that should be compared to the current assembly name.</param>
+        /// <returns>
+        /// <see langword="true" /> if the given assembly name is an exact match for the current assembly name;
+        /// otherwise, <see langword="false"/>.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        public static bool IsSame(this AssemblyName current, AssemblyName other)
+        {
+            var isMatch = string.Equals(current.Name, other.Name, StringComparison.Ordinal);
+            isMatch = isMatch
+                && (((current.CultureInfo != null) && current.CultureInfo.Equals(other.CultureInfo))
+                || ((current.CultureInfo == null) && other.CultureInfo == null));
+
+            isMatch = isMatch && current.Version.Equals(other.Version);
+            
+            var currentPublicKey = current.GetPublicKey();
+            var namePublicKey = other.GetPublicKey();
+            isMatch = isMatch
+                && (((currentPublicKey != null) && (namePublicKey != null) && current.GetPublicKey().SequenceEqual(other.GetPublicKey()))
+                || ((currentPublicKey == null) && (namePublicKey == null)));
+
+            return isMatch;
+        }
+
+        /// <summary>
+        /// Returns a value indicating if the current assembly name belongs to the same assembly as the assembly with the other name, or
+        /// a later version of that assembly.
+        /// </summary>
+        /// <param name="current">The current assembly name.</param>
+        /// <param name="other">The assembly name that should be compared to the current assembly name.</param>
+        /// <returns>
+        /// <see langword="true" /> if the current assembly name belongs to the same assembly as the assembly with the other name, or
+        /// a later version of that assembly; otherwise, <see langword="false"/>.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        public static bool IsMatch(this AssemblyName current, AssemblyName other)
+        {
+            var isMatch = string.Equals(current.Name, other.Name, StringComparison.Ordinal);
+            isMatch = isMatch
+                && (((current.CultureInfo != null) && current.CultureInfo.Equals(other.CultureInfo))
+                || ((current.CultureInfo == null) && other.CultureInfo == null));
+
+            var currentPublicKey = current.GetPublicKey();
+            var namePublicKey = other.GetPublicKey();
+            isMatch = isMatch
+                && (((currentPublicKey != null) && (namePublicKey != null))
+                || ((currentPublicKey == null) && (namePublicKey == null)));
+
+            if ((current.GetPublicKey() != null) && (current.GetPublicKey().Length > 0))
+            {
+                isMatch = isMatch
+                    && current.GetPublicKey().SequenceEqual(other.GetPublicKey())
+                    && current.Version.Equals(other.Version);
+            }
+            else 
+            {
+                isMatch = isMatch && (current.Version >= other.Version);
+            }
+
+            return isMatch;
         }
     }
 }

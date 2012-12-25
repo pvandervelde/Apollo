@@ -5,7 +5,11 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Base;
+using Apollo.Core.Base.Communication;
+using Apollo.Utilities;
 using Apollo.Utilities.Commands;
+using Apollo.Utilities.Configuration;
 using Autofac;
 
 namespace Apollo.Core.Host
@@ -34,6 +38,20 @@ namespace Apollo.Core.Host
 
             builder.Register(c => new CommandFactory())
                 .As<ICommandContainer>();
+
+            builder.Register(c => new HostApplicationCommands(
+                    c.Resolve<IVirtualizeFileSystems>(),
+                    c.Resolve<IStoreUploads>(),
+                    c.Resolve<IConfiguration>()))
+                .OnActivated(
+                    a =>
+                    {
+                        var collection = a.Context.Resolve<ICommandCollection>();
+                        collection.Register(typeof(IDatasetApplicationCommands), a.Instance);
+                    })
+                .As<IHostApplicationCommands>()
+                .As<ICommandSet>()
+                .SingleInstance();
         }
     }
 }

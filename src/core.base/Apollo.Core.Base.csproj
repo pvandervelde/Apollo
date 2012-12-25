@@ -101,6 +101,7 @@
     <Compile Include="Communication\ISendCommandsToRemoteEndpoints.cs" />
     <Compile Include="Communication\ISendNotifications.cs" />
     <Compile Include="Communication\ISerializedEventRegistration.cs" />
+    <Compile Include="Communication\IStoreUploads.cs" />
     <Compile Include="Communication\LocalCommandCollection.cs" />
     <Compile Include="Communication\LocalNotificationCollection.cs" />
     <Compile Include="Communication\ManualProxyRegistrationReporter.cs" />
@@ -198,6 +199,7 @@
     <Compile Include="Communication\UploadToken.cs" />
     <Compile Include="Communication\WaitingUploads.cs" />
     <Compile Include="Communication\UseNetDataContractSerializerAttribute.cs" />
+    <Compile Include="IHostApplicationCommands.cs" />
     <Compile Include="Loaders\DatasetTrackingJob.cs" />
     <Compile Include="IDatasetApplicationCommands.cs" />
     <Compile Include="IDatasetApplicationNotifications.cs" />
@@ -260,6 +262,7 @@
     <Compile Include="Plugins\TypeBasedExportDefinition.cs" />
     <Compile Include="Plugins\TypeDefinition.cs" />
     <Compile Include="Plugins\TypeIdentity.cs" />
+    <Compile Include="Plugins\TypeExtensions.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

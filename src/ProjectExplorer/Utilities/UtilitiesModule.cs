@@ -12,6 +12,7 @@ using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
 using Apollo.ProjectExplorer.Utilities;
+using Apollo.Utilities;
 using Apollo.Utilities.Configuration;
 using Apollo.Utilities.ExceptionHandling;
 using Apollo.Utilities.History;
@@ -23,7 +24,7 @@ using NManto;
 using NManto.Reporting;
 using NSarrac.Framework;
 
-namespace Apollo.Utilities
+namespace Apollo.ProjectExplorer.Utilities
 {
     /// <summary>
     /// Handles the component registrations for the utilities part 
@@ -56,6 +57,7 @@ namespace Apollo.Utilities
                 directoryPaths.Add(Assembly.GetExecutingAssembly().LocalDirectoryPath());
             }
 
+            // @Todo: Note that the Apollo.Core.Host.Plugins.PluginService needs these paths ...
             if ((paths & AppDomainPaths.Plugins) == AppDomainPaths.Plugins)
             {
                 // Plugins can be found in:

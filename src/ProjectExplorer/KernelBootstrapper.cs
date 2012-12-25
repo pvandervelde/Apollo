@@ -79,7 +79,7 @@ namespace Apollo.ProjectExplorer
         {
             return new List<IModule> 
                 { 
-                    new UtilitiesModule(),
+                    new Utilities.UtilitiesModule(),
                     new BaseModule(true),
                     new BaseModuleForLoaders(),
                     new BaseModuleForHosts(),

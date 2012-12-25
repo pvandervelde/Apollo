@@ -18,29 +18,37 @@ namespace Test.Mocks
     {
     }
 
+    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
+        Justification = "Unit tests do not need documentation.")]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
+        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
+    public class MockExportingInterfaceImplementation : IExportingInterface
+    { 
+    }
+
+    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
+        Justification = "Unit tests do not need documentation.")]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
+        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
+    public sealed class MockChildExportingInterfaceImplementation : MockExportingInterfaceImplementation
+    {
+    }
+
     [Export("OnTypeWithName")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public sealed class ExportOnTypeWithName
+    public sealed class ExportOnTypeWithName : IExportingInterface
     {
     }
 
+    [Export(typeof(IExportingInterface))]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public interface IExportOnTypeWithType : IExportingInterface
-    {
-    }
-
-    [Export(typeof(IExportOnTypeWithType))]
-    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
-        Justification = "Unit tests do not need documentation.")]
-    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
-        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public sealed class ExportOnTypeWithType
+    public sealed class ExportOnTypeWithType : IExportingInterface
     {
     }
 
@@ -49,7 +57,7 @@ namespace Test.Mocks
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public sealed class ExportOnType
+    public sealed class ExportOnType : IExportingInterface
     {
     }
 
@@ -59,20 +67,21 @@ namespace Test.Mocks
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
     public sealed class ExportOnPropertyWithName
     {
-        [Export("OnPropertyWithName")]
-        public int ExportingProperty
-        {
-            get;
-            set;
-        }
-    }
+        private IExportingInterface m_Value = new MockExportingInterfaceImplementation();
 
-    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
-        Justification = "Unit tests do not need documentation.")]
-    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
-        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public interface IExportOnPropertyWithType : IExportingInterface
-    {
+        [Export("OnPropertyWithName")]
+        public IExportingInterface ExportingProperty
+        {
+            get
+            {
+                return m_Value;
+            }
+
+            set
+            {
+                m_Value = value;
+            }
+        }
     }
 
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
@@ -81,20 +90,21 @@ namespace Test.Mocks
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
     public sealed class ExportOnPropertyWithType
     {
-        [Export(typeof(IExportOnPropertyWithType))]
-        public int ExportingProperty
-        {
-            get;
-            set;
-        }
-    }
+        private IExportingInterface m_Value = new MockExportingInterfaceImplementation();
 
-    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
-        Justification = "Unit tests do not need documentation.")]
-    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
-        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public interface IExportOnProperty : IExportingInterface
-    {
+        [Export(typeof(IExportingInterface))]
+        public IExportingInterface ExportingProperty
+        {
+            get
+            {
+                return m_Value;
+            }
+
+            set
+            {
+                m_Value = value;
+            }
+        }
     }
 
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
@@ -103,11 +113,20 @@ namespace Test.Mocks
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
     public sealed class ExportOnProperty
     {
+        private IExportingInterface m_Value = new MockExportingInterfaceImplementation();
+
         [Export]
-        public IExportOnProperty ExportingProperty
+        public IExportingInterface ExportingProperty
         {
-            get;
-            set;
+            get
+            {
+                return m_Value;
+            }
+
+            set
+            {
+                m_Value = value;
+            }
         }
     }
 
@@ -117,19 +136,13 @@ namespace Test.Mocks
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
     public sealed class ExportOnMethodWithName
     {
-        [Export("OnMethodWithName")]
-        public int ExportingMethod()
-        {
-            throw new NotImplementedException();
-        }
-    }
+        private IExportingInterface m_Value = new MockExportingInterfaceImplementation();
 
-    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
-        Justification = "Unit tests do not need documentation.")]
-    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
-        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public interface IExportOnMethodWithType : IExportingInterface
-    {
+        [Export("OnMethodWithName")]
+        public IExportingInterface ExportingMethod()
+        {
+            return m_Value;
+        }
     }
 
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
@@ -138,19 +151,13 @@ namespace Test.Mocks
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
     public sealed class ExportOnMethodWithType
     {
-        [Export(typeof(IExportOnMethodWithType))]
-        public int ExportingMethod()
-        {
-            throw new NotImplementedException();
-        }
-    }
+        private IExportingInterface m_Value = new MockExportingInterfaceImplementation();
 
-    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
-        Justification = "Unit tests do not need documentation.")]
-    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
-        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public interface IExportOnMethod : IExportingInterface
-    {
+        [Export(typeof(IExportingInterface))]
+        public IExportingInterface ExportingMethod()
+        {
+            return m_Value;
+        }
     }
 
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
@@ -159,10 +166,27 @@ namespace Test.Mocks
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
     public sealed class ExportOnMethod
     {
+        private IExportingInterface m_Value = new MockExportingInterfaceImplementation();
+
         [Export]
-        public IExportOnMethod ExportingMethod()
+        public IExportingInterface ExportingMethod()
         {
-            throw new NotImplementedException();
+            return m_Value;
+        }
+    }
+
+    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
+        Justification = "Unit tests do not need documentation.")]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
+        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
+    public sealed class ExportOnMultiParameterMethod
+    {
+        private IExportingInterface m_Value = new MockExportingInterfaceImplementation();
+
+        [Export]
+        public IExportingInterface ExportingMethod(bool input1, bool input2)
+        {
+            return m_Value;
         }
     }
 }

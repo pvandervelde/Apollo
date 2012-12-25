@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
 using MbUnit.Framework;
+using Moq;
 using Test.Mocks;
 
 namespace Apollo.Core.Dataset.Plugins
@@ -134,7 +135,7 @@ namespace Apollo.Core.Dataset.Plugins
                     Parts = new List<GroupPartDefinition>
                                     {
                                         new GroupPartDefinition(
-                                            TypeIdentity.CreateDefinition(typeof(string)),
+                                            TypeIdentity.CreateDefinition(typeof(List<string>)),
                                             0,
                                             new Dictionary<ExportRegistrationId, SerializableExportDefinition>(),
                                             new Dictionary<ImportRegistrationId, SerializableImportDefinition>
@@ -153,20 +154,23 @@ namespace Apollo.Core.Dataset.Plugins
                                             new Dictionary<ScheduleActionRegistrationId, ScheduleActionDefinition>(),
                                             new Dictionary<ScheduleConditionRegistrationId, ScheduleConditionDefinition>()),
                                         new GroupPartDefinition(
-                                            TypeIdentity.CreateDefinition(typeof(string)),
+                                            TypeIdentity.CreateDefinition(typeof(List<double>)),
                                             1,
                                             new Dictionary<ExportRegistrationId, SerializableExportDefinition>(),
                                             new Dictionary<ImportRegistrationId, SerializableImportDefinition>
                                                 {
                                                     { 
                                                         new ImportRegistrationId(typeof(string), 1, "PartContract2"),
-                                                        PropertyBasedImportDefinition.CreateDefinition(
+                                                        ConstructorBasedImportDefinition.CreateDefinition(
                                                             "PartContract2", 
                                                             TypeIdentity.CreateDefinition(typeof(string)),
                                                             ImportCardinality.ExactlyOne,
-                                                            false,
                                                             CreationPolicy.Any,
-                                                            typeof(ImportOnPropertyWithEnumerable).GetProperty("ImportingProperty"))
+                                                            typeof(Version).GetConstructor(
+                                                                new[] 
+                                                                { 
+                                                                    typeof(string) 
+                                                                }).GetParameters().First())
                                                     }
                                                 },
                                             new Dictionary<ScheduleActionRegistrationId, ScheduleActionDefinition>(),
@@ -190,25 +194,159 @@ namespace Apollo.Core.Dataset.Plugins
         [Test]
         public void Add()
         {
-            var layer = CompositionLayer.CreateInstanceWithoutTimeline();
-            
-            var id = new GroupCompositionId();
             var definition = CreateExportingDefinition();
 
+            int index = -1;
+            var instanceIds = new List<PartInstanceId> 
+                {
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                };
+            var storage = new Mock<IStoreInstances>();
+            {
+                storage.Setup(
+                        s => s.Construct(
+                            It.IsAny<GroupPartDefinition>(),
+                            It.IsAny<IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>()))
+                    .Callback<GroupPartDefinition, IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>(
+                        (d, i) =>
+                        {
+                            if (d.Identity.Equals(TypeIdentity.CreateDefinition(typeof(int))))
+                            {
+                                Assert.IsFalse(i.Any());
+                                return;
+                            }
+
+                            if (d.Identity.Equals(TypeIdentity.CreateDefinition(typeof(string))))
+                            {
+                                Assert.IsFalse(i.Any());
+                                return;
+                            }
+
+                            if (d.Identity.Equals(TypeIdentity.CreateDefinition(typeof(Version))))
+                            {
+                                Assert.IsFalse(i.Any());
+                                return;
+                            }
+
+                            if (d.Identity.Equals(TypeIdentity.CreateDefinition(typeof(DateTime))))
+                            {
+                                Assert.IsFalse(i.Any());
+                                return;
+                            }
+
+                            if (d.Identity.Equals(TypeIdentity.CreateDefinition(typeof(List<int>))))
+                            {
+                                Assert.AreEqual(1, i.Count());
+                                Assert.AreEqual(definition.Parts.ElementAt(4).RegisteredImports.First(), i.First().Item1);
+                                Assert.AreEqual(instanceIds[index], i.First().Item2);
+                                Assert.AreEqual(definition.Parts.ElementAt(3).RegisteredExports.First(), i.First().Item3);
+                                return;
+                            }
+
+                            Assert.Fail();
+                        })
+                    .Returns<GroupPartDefinition, IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>(
+                        (d, i) => 
+                        {
+                            index++;
+                            return instanceIds[index];
+                        })
+                    .Verifiable();
+            }
+
+            var layer = CompositionLayer.CreateInstanceWithoutTimeline(storage.Object);
+            
+            var id = new GroupCompositionId();
             layer.Add(id, definition);
 
             Assert.AreEqual(1, layer.Groups().Count());
             Assert.AreSame(id, layer.Groups().First());
             Assert.AreSame(definition, layer.Group(id));
+
+            storage.Verify(
+                s => s.Construct(
+                    It.IsAny<GroupPartDefinition>(), 
+                    It.IsAny<IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>()), 
+                Times.Exactly(5));
         }
 
         [Test]
         public void AddMultipleInstanceWithSameDefinition()
         {
-            var layer = CompositionLayer.CreateInstanceWithoutTimeline();
+            var firstDefinition = CreateExportingDefinition();
+
+            int index = -1;
+            var instanceIds = new List<PartInstanceId> 
+                {
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                };
+            var storage = new Mock<IStoreInstances>();
+            {
+                storage.Setup(
+                        s => s.Construct(
+                            It.IsAny<GroupPartDefinition>(),
+                            It.IsAny<IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>()))
+                    .Callback<GroupPartDefinition, IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>(
+                        (d, i) =>
+                        {
+                            if (d.Identity.Equals(TypeIdentity.CreateDefinition(typeof(int))))
+                            {
+                                Assert.IsFalse(i.Any());
+                                return;
+                            }
+
+                            if (d.Identity.Equals(TypeIdentity.CreateDefinition(typeof(string))))
+                            {
+                                Assert.IsFalse(i.Any());
+                                return;
+                            }
+
+                            if (d.Identity.Equals(TypeIdentity.CreateDefinition(typeof(Version))))
+                            {
+                                Assert.IsFalse(i.Any());
+                                return;
+                            }
+
+                            if (d.Identity.Equals(TypeIdentity.CreateDefinition(typeof(DateTime))))
+                            {
+                                Assert.IsFalse(i.Any());
+                                return;
+                            }
+
+                            if (d.Identity.Equals(TypeIdentity.CreateDefinition(typeof(List<int>))))
+                            {
+                                Assert.AreEqual(1, i.Count());
+                                Assert.AreEqual(instanceIds[index], i.First().Item2);
+                                return;
+                            }
+
+                            Assert.Fail();
+                        })
+                    .Returns<GroupPartDefinition, IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>(
+                        (d, i) =>
+                        {
+                            index++;
+                            return instanceIds[index];
+                        })
+                    .Verifiable();
+            }
+
+            var layer = CompositionLayer.CreateInstanceWithoutTimeline(storage.Object);
 
             var firstId = new GroupCompositionId();
-            var firstDefinition = CreateExportingDefinition();
             layer.Add(firstId, firstDefinition);
 
             var secondId = new GroupCompositionId();
@@ -218,30 +356,133 @@ namespace Apollo.Core.Dataset.Plugins
             Assert.AreEqual(2, layer.Groups().Count());
             Assert.AreSame(firstDefinition, layer.Group(firstId));
             Assert.AreSame(firstDefinition, layer.Group(secondId));
+
+            storage.Verify(
+                s => s.Construct(
+                    It.IsAny<GroupPartDefinition>(),
+                    It.IsAny<IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>()),
+                Times.Exactly(10));
         }
 
         [Test]
         public void Remove()
         {
-            var layer = CompositionLayer.CreateInstanceWithoutTimeline();
+            int index = -1;
+            var instanceIds = new List<PartInstanceId> 
+                {
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                };
+            var storage = new Mock<IStoreInstances>();
+            {
+                storage.Setup(
+                        s => s.Construct(
+                            It.IsAny<GroupPartDefinition>(),
+                            It.IsAny<IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>()))
+                    .Returns(
+                        () =>
+                        {
+                            index++;
+                            return instanceIds[index];
+                        });
 
-            var id = new GroupCompositionId();
+                storage.Setup(s => s.Release(It.IsAny<PartInstanceId>()))
+                    .Returns<PartInstanceId>(
+                        i =>
+                        {
+                            return new List<InstanceUpdate> 
+                                { 
+                                    new InstanceUpdate 
+                                        {
+                                            Instance = i,
+                                            Change = InstanceChange.Removed,
+                                        }
+                                };
+                        })
+                    .Verifiable();
+            }
+
+            var layer = CompositionLayer.CreateInstanceWithoutTimeline(storage.Object);
+
+            var groupId = new GroupCompositionId();
             var definition = CreateExportingDefinition();
 
-            layer.Add(id, definition);
+            layer.Add(groupId, definition);
 
             Assert.AreEqual(1, layer.Groups().Count());
-            Assert.AreSame(id, layer.Groups().First());
-            Assert.AreSame(definition, layer.Group(id));
+            Assert.AreSame(groupId, layer.Groups().First());
+            Assert.AreSame(definition, layer.Group(groupId));
 
-            layer.Remove(id);
+            layer.Remove(groupId);
             Assert.AreEqual(0, layer.Groups().Count());
+            storage.Verify(s => s.Release(It.IsAny<PartInstanceId>()), Times.Exactly(5));
         }
 
         [Test]
         public void RemoveWithConnectedGroups()
         {
-            var layer = CompositionLayer.CreateInstanceWithoutTimeline();
+            int index = -1;
+            var instanceIds = new List<PartInstanceId> 
+                {
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                };
+            var storage = new Mock<IStoreInstances>();
+            {
+                storage.Setup(
+                        s => s.Construct(
+                            It.IsAny<GroupPartDefinition>(),
+                            It.IsAny<IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>()))
+                    .Returns(
+                        () =>
+                        {
+                            index++;
+                            return instanceIds[index];
+                        });
+
+                storage.Setup(
+                        s => s.UpdateIfRequired(
+                            It.IsAny<PartInstanceId>(),
+                            It.IsAny<IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>()))
+                    .Returns<PartInstanceId, IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>(
+                        (i, l) =>
+                        {
+                            return new List<InstanceUpdate> 
+                                { 
+                                    new InstanceUpdate 
+                                        {
+                                            Instance = i,
+                                            Change = InstanceChange.Updated,
+                                        }
+                                };
+                        })
+                    .Verifiable();
+
+                storage.Setup(s => s.Release(It.IsAny<PartInstanceId>()))
+                    .Returns<PartInstanceId>(
+                        i =>
+                        {
+                            return new List<InstanceUpdate> 
+                                { 
+                                    new InstanceUpdate 
+                                        {
+                                            Instance = i,
+                                            Change = InstanceChange.Removed,
+                                        }
+                                };
+                        })
+                    .Verifiable();
+            }
+
+            var layer = CompositionLayer.CreateInstanceWithoutTimeline(storage.Object);
 
             var firstId = new GroupCompositionId();
             var firstDefinition = CreateExportingDefinition();
@@ -287,12 +528,81 @@ namespace Apollo.Core.Dataset.Plugins
 
             Assert.IsFalse(layer.SatisfiedImports(secondId).Any());
             Assert.AreElementsSameIgnoringOrder(secondDefinition.GroupImports, layer.UnsatisfiedImports(secondId));
+            storage.Verify(s => s.Release(It.IsAny<PartInstanceId>()), Times.Exactly(6));
         }
 
         [Test]
         public void Connect()
         {
-            var layer = CompositionLayer.CreateInstanceWithoutTimeline();
+            int index = -1;
+            var instanceIds = new List<PartInstanceId> 
+                {
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                };
+            var storage = new Mock<IStoreInstances>();
+            {
+                storage.Setup(
+                        s => s.Construct(
+                            It.IsAny<GroupPartDefinition>(),
+                            It.IsAny<IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>()))
+                    .Callback<GroupPartDefinition, IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>(
+                        (d, i) =>
+                        {
+                            if (d.Identity.Equals(TypeIdentity.CreateDefinition(typeof(List<string>))))
+                            {
+                                Assert.AreEqual(0, i.Count());
+                            }
+
+                            if (d.Identity.Equals(TypeIdentity.CreateDefinition(typeof(List<double>))))
+                            {
+                                Assert.AreEqual(2, i.Count());
+                                Assert.AreEqual(instanceIds[1], i.ElementAt(0).Item2);
+                                Assert.AreEqual(instanceIds[2], i.ElementAt(1).Item2);
+                            }
+                        })
+                    .Returns<GroupPartDefinition, IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>(
+                        (d, i) =>
+                        {
+                            index++;
+                            return instanceIds[index];
+                        })
+                    .Verifiable();
+
+                storage.Setup(
+                        s => s.UpdateIfRequired(
+                            It.IsAny<PartInstanceId>(),
+                            It.IsAny<IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>()))
+                    .Callback<PartInstanceId, IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>(
+                        (i, l) =>
+                        {
+                            if (i.Equals(instanceIds[5]))
+                            {
+                                Assert.AreEqual(1, l.Count());
+                                Assert.AreEqual(instanceIds[0], l.ElementAt(0).Item2);
+                            }
+                        })
+                    .Returns<PartInstanceId, IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>(
+                        (i, l) =>
+                        {
+                            return new List<InstanceUpdate> 
+                                { 
+                                    new InstanceUpdate 
+                                        {
+                                            Instance = i,
+                                            Change = InstanceChange.Updated,
+                                        }
+                                };
+                        })
+                    .Verifiable();
+            }
+
+            var layer = CompositionLayer.CreateInstanceWithoutTimeline(storage.Object);
 
             var firstId = new GroupCompositionId();
             var firstDefinition = CreateExportingDefinition();
@@ -333,12 +643,58 @@ namespace Apollo.Core.Dataset.Plugins
                         new Tuple<GroupImportDefinition, GroupCompositionId>(secondDefinition.GroupImports.First(), firstId)
                     },
                 layer.SatisfiedImports(secondId));
+
+            storage.Verify(
+                s => s.Construct(
+                    It.IsAny<GroupPartDefinition>(),
+                    It.IsAny<IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>()),
+                Times.Exactly(7));
         }
 
         [Test]
         public void DisconnectImportFromExports()
         {
-            var layer = CompositionLayer.CreateInstanceWithoutTimeline();
+            int index = -1;
+            var instanceIds = new List<PartInstanceId> 
+                {
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                };
+            var storage = new Mock<IStoreInstances>();
+            {
+                storage.Setup(
+                        s => s.Construct(
+                            It.IsAny<GroupPartDefinition>(),
+                            It.IsAny<IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>()))
+                    .Returns(
+                        () =>
+                        {
+                            index++;
+                            return instanceIds[index];
+                        });
+
+                storage.Setup(s => s.Release(It.IsAny<PartInstanceId>()))
+                    .Returns<PartInstanceId>(
+                        i =>
+                        {
+                            return new List<InstanceUpdate> 
+                                { 
+                                    new InstanceUpdate 
+                                        {
+                                            Instance = i,
+                                            Change = InstanceChange.Removed,
+                                        }
+                                };
+                        })
+                    .Verifiable();
+            }
+
+            var layer = CompositionLayer.CreateInstanceWithoutTimeline(storage.Object);
 
             var firstId = new GroupCompositionId();
             var firstDefinition = CreateExportingDefinition();
@@ -384,12 +740,53 @@ namespace Apollo.Core.Dataset.Plugins
 
             Assert.IsFalse(layer.SatisfiedImports(secondId).Any());
             Assert.AreElementsSameIgnoringOrder(secondDefinition.GroupImports, layer.UnsatisfiedImports(secondId));
+            storage.Verify(s => s.Release(It.IsAny<PartInstanceId>()), Times.Exactly(1));
         }
 
         [Test]
         public void DisconnectFromAll()
         {
-            var layer = CompositionLayer.CreateInstanceWithoutTimeline();
+            int index = -1;
+            var instanceIds = new List<PartInstanceId> 
+                {
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                    new PartInstanceId(),
+                };
+            var storage = new Mock<IStoreInstances>();
+            {
+                storage.Setup(
+                        s => s.Construct(
+                            It.IsAny<GroupPartDefinition>(),
+                            It.IsAny<IEnumerable<Tuple<ImportRegistrationId, PartInstanceId, ExportRegistrationId>>>()))
+                    .Returns(
+                        () =>
+                        {
+                            index++;
+                            return instanceIds[index];
+                        });
+
+                storage.Setup(s => s.Release(It.IsAny<PartInstanceId>()))
+                    .Returns<PartInstanceId>(
+                        i =>
+                        {
+                            return new List<InstanceUpdate> 
+                                { 
+                                    new InstanceUpdate 
+                                        {
+                                            Instance = i,
+                                            Change = InstanceChange.Removed,
+                                        }
+                                };
+                        })
+                    .Verifiable();
+            }
+
+            var layer = CompositionLayer.CreateInstanceWithoutTimeline(storage.Object);
 
             var firstId = new GroupCompositionId();
             var firstDefinition = CreateExportingDefinition();
@@ -435,6 +832,7 @@ namespace Apollo.Core.Dataset.Plugins
 
             Assert.IsFalse(layer.SatisfiedImports(secondId).Any());
             Assert.AreElementsSameIgnoringOrder(secondDefinition.GroupImports, layer.UnsatisfiedImports(secondId));
+            storage.Verify(s => s.Release(It.IsAny<PartInstanceId>()), Times.Exactly(1));
         }
     }
 }

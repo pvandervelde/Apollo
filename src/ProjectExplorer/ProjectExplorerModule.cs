@@ -123,7 +123,7 @@ namespace Apollo.ProjectExplorer
             var builder = new ContainerBuilder();
             {
                 // Register the utilities elements. These are 'shared' with the core
-                builder.RegisterModule(new UtilitiesModule());
+                builder.RegisterModule(new Utilities.UtilitiesModule());
                 builder.RegisterModule(new CommonUIModule());
 
                 // Get all the registrations from Apollo.UI.Common

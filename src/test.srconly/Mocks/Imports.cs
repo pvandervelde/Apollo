@@ -11,14 +11,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Test.Mocks
 {
-    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
-        Justification = "Unit tests do not need documentation.")]
-    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
-        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public interface IImportingInterface
-    {
-    }
-
     [Export]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
@@ -27,7 +19,7 @@ namespace Test.Mocks
     public sealed class ImportOnConstructorWithName
     {
         [ImportingConstructor]
-        public ImportOnConstructorWithName([Import("ImportOnConstructor")]int input)
+        public ImportOnConstructorWithName([Import("ImportOnConstructor")]IExportingInterface input)
         { 
         }
     }
@@ -40,7 +32,7 @@ namespace Test.Mocks
     public sealed class ImportOnConstructorWithType
     {
         [ImportingConstructor]
-        public ImportOnConstructorWithType([Import(typeof(IImportingInterface))]int input)
+        public ImportOnConstructorWithType([Import(typeof(IExportingInterface))]IExportingInterface input)
         { 
         }
     }
@@ -53,7 +45,7 @@ namespace Test.Mocks
     public sealed class ImportOnConstructor
     {
         [ImportingConstructor]
-        public ImportOnConstructor([Import]int input)
+        public ImportOnConstructor([Import]IExportingInterface input)
         {
         }
     }
@@ -66,7 +58,7 @@ namespace Test.Mocks
     public sealed class ImportOnConstructorWithEnumerable
     {
         [ImportingConstructor]
-        public ImportOnConstructorWithEnumerable([Import("ContractName")]IEnumerable<int> input)
+        public ImportOnConstructorWithEnumerable([Import("ContractName")]IEnumerable<IExportingInterface> input)
         {
         }
     }
@@ -79,7 +71,7 @@ namespace Test.Mocks
     public sealed class ImportOnConstructorWithLazy
     {
         [ImportingConstructor]
-        public ImportOnConstructorWithLazy([Import("ContractName")]Lazy<int> input)
+        public ImportOnConstructorWithLazy([Import("ContractName")]Lazy<IExportingInterface> input)
         {
         }
     }
@@ -92,7 +84,7 @@ namespace Test.Mocks
     public sealed class ImportOnConstructorWithFunc
     {
         [ImportingConstructor]
-        public ImportOnConstructorWithFunc([Import("ContractName")]Func<int, bool> input)
+        public ImportOnConstructorWithFunc([Import("ContractName")]Func<IExportingInterface> input)
         {
         }
     }
@@ -102,10 +94,36 @@ namespace Test.Mocks
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public sealed class ImportOnConstructorWithAction
+    public sealed class ImportOnConstructorWithMultiParameterFunc
     {
         [ImportingConstructor]
-        public ImportOnConstructorWithAction([Import("ContractName")]Action<int, bool> input)
+        public ImportOnConstructorWithMultiParameterFunc([Import("ContractName")]Func<IExportingInterface, bool, bool> input)
+        {
+        }
+    }
+
+    [Export]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
+        Justification = "Unit tests do not need documentation.")]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
+        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
+    public sealed class ImportOnConstructorWithCollectionOfLazy
+    {
+        [ImportingConstructor]
+        public ImportOnConstructorWithCollectionOfLazy([Import("ContractName")]IEnumerable<Lazy<IExportingInterface>> input)
+        {
+        }
+    }
+
+    [Export]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
+        Justification = "Unit tests do not need documentation.")]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
+        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
+    public sealed class ImportOnConstructorWithCollectionOfFunc
+    {
+        [ImportingConstructor]
+        public ImportOnConstructorWithCollectionOfFunc([Import("ContractName")]IEnumerable<Func<IExportingInterface>> input)
         {
         }
     }
@@ -118,7 +136,7 @@ namespace Test.Mocks
     public sealed class ImportOnPropertyWithName
     {
         [Import("ImportOnProperty")]
-        public int ImportingProperty
+        public IExportingInterface ImportingProperty
         {
             get;
             set;
@@ -132,8 +150,8 @@ namespace Test.Mocks
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
     public sealed class ImportOnPropertyWithType
     {
-        [Import(typeof(IImportingInterface))]
-        public int ImportingProperty
+        [Import(typeof(IExportingInterface))]
+        public IExportingInterface ImportingProperty
         {
             get;
             set;
@@ -148,7 +166,7 @@ namespace Test.Mocks
     public sealed class ImportOnProperty
     {
         [Import]
-        public IExportOnProperty ImportingProperty
+        public IExportingInterface ImportingProperty
         {
             get;
             set;
@@ -163,7 +181,7 @@ namespace Test.Mocks
     public sealed class ImportOnPropertyWithEnumerable
     {
         [Import("ContractName")]
-        public IEnumerable<string> ImportingProperty
+        public IEnumerable<IExportingInterface> ImportingProperty
         {
             get;
             set;
@@ -178,7 +196,7 @@ namespace Test.Mocks
     public sealed class ImportOnPropertyWithLazy
     {
         [Import("ContractName")]
-        public Lazy<string> ImportingProperty
+        public Lazy<IExportingInterface> ImportingProperty
         {
             get;
             set;
@@ -193,7 +211,7 @@ namespace Test.Mocks
     public sealed class ImportOnPropertyWithFunc
     {
         [Import("ContractName")]
-        public Func<string, bool> ImportingProperty
+        public Func<IExportingInterface> ImportingProperty
         {
             get;
             set;
@@ -205,10 +223,10 @@ namespace Test.Mocks
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public sealed class ImportOnPropertyWithAction
+    public sealed class ImportOnPropertyWithMultiParameterFunc
     {
         [Import("ContractName")]
-        public Action<string, bool> ImportingProperty
+        public Func<IExportingInterface, bool, bool> ImportingProperty
         {
             get;
             set;

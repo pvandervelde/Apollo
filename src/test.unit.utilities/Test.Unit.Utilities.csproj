@@ -96,6 +96,7 @@
     <Compile Include="History\ValueAtTimeTest.cs" />
     <Compile Include="History\ValueHistoryTest.cs" />
     <Compile Include="IdTest.cs" />
+    <Compile Include="ReflectionExtensionsTest.cs" />
     <Compile Include="TimeBasedProgressTrackerTest.cs" />
     <Compile Include="TypeEqualityComparerTest.cs" />
   </ItemGroup>

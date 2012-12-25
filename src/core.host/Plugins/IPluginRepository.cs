@@ -38,12 +38,14 @@ namespace Apollo.Core.Host.Plugins
         /// Adds a new part to the repository.
         /// </summary>
         /// <param name="part">The part definition.</param>
-        void AddPart(PartDefinition part);
+        /// <param name="pluginFileInfo">The file info of the assembly which owns the part.</param>
+        void AddPart(PartDefinition part, PluginFileInfo pluginFileInfo);
 
         /// <summary>
         /// Adds a new part group to the repository.
         /// </summary>
         /// <param name="group">The part group definition.</param>
-        void AddGroup(GroupDefinition group);
+        /// <param name="pluginFileInfo">The file info of the assembly which owns the group.</param>
+        void AddGroup(GroupDefinition group, PluginFileInfo pluginFileInfo);
     }
 }

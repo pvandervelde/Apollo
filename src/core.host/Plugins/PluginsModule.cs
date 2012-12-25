@@ -62,6 +62,11 @@ namespace Apollo.Core.Host.Plugins
             builder.Register(c => new PartImportEngine(
                     c.Resolve<ISatisfyPluginRequests>()))
                 .As<IConnectParts>();
+
+            builder.Register(c => new PluginRepository())
+                .As<IPluginRepository>()
+                .As<ISatisfyPluginRequests>()
+                .SingleInstance();
         }
     }
 }

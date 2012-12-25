@@ -66,18 +66,6 @@ namespace Apollo.Core.Base.Communication
         }
 
         [Test]
-        public void DeregisterAll()
-        {
-            var file = @"c:\temp\myfile.txt";
-
-            var uploads = new WaitingUploads();
-            var token = uploads.Register(file);
-            uploads.DeregisterAll();
-
-            Assert.IsFalse(uploads.HasRegistration(token));
-        }
-
-        [Test]
         public void DeregisterWithUnknownToken()
         {
             var token = new UploadToken();

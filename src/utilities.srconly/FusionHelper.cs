@@ -273,6 +273,7 @@ namespace Apollo.Utilities
             Debug.Assert(assemblyFullName != null, "Expected a non-null assembly name string.");
             Debug.Assert(assemblyFullName.Length != 0, "Expected a non-empty assembly name string.");
 
+            // @todo: We should be able to use an AssemblyName because we can just load it from a string.
             // It is not possible to use the AssemblyName class because that attempts to load the 
             // assembly. Obviously we are currently trying to find the assembly.
             // So parse the actual assembly name from the name string

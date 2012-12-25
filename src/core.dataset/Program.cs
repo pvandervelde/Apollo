@@ -10,9 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 using System.Windows.Forms;
-using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
-using Apollo.Utilities;
 using Apollo.Utilities.Applications;
 using Autofac;
 using Mono.Options;
@@ -109,15 +107,19 @@ namespace Apollo.Core.Dataset
             // when we exit the main message loop.
             var container = DependencyInjection.Load(context);
 
-            // Register all global commands and notifications
-            // Just resolving the commands makes it all happen.
-            container.Resolve<IDatasetApplicationCommands>();
-            container.Resolve<IDatasetApplicationNotifications>();
-
             // Notify the host app that we're alive, after which the 
             // rest of the app should pick up the loading of the dataset etc.
+            // Note that this call to the container also registers all global commands and initializes the
+            // communication channels etc.
             var resolver = container.Resolve<Action<string, string, string>>();
             resolver(hostId, channelType, channelUri);
+
+            // Connect to the assembly resolve event so that we can intercept assembly loads for plugins etc.
+            var assemblyResolver = container.Resolve<PluginLoadingAssemblyResolver>(
+                new TypedParameter(
+                    typeof(EndpointId), 
+                    EndpointIdExtensions.Deserialize(hostId)));
+            AppDomain.CurrentDomain.AssemblyResolve += assemblyResolver.LocatePluginAssembly;
 
             // Start with the message processing loop and then we 
             // wait for it to either get terminated or until we kill ourselves.
