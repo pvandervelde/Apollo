@@ -42,6 +42,12 @@ namespace Apollo.Core.Host.Plugins
         private readonly IConnectParts m_ImportEngine;
 
         /// <summary>
+        /// The object that stores the file information for the assembly that contains
+        /// the group exporter.
+        /// </summary>
+        private readonly PluginFileInfo m_FileInfo;
+       
+        /// <summary>
         /// The collection that holds the objects that have been registered for the
         /// current group.
         /// </summary>
@@ -89,6 +95,7 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="importEngine">The object that matches part imports with part exports.</param>
         /// <param name="identityGenerator">The function that generates type identity objects.</param>
         /// <param name="builderGenerator">The function that is used to create schedule builders.</param>
+        /// <param name="fileInfo">The file info for the assembly that owns the group exporter.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="repository"/> is <see langword="null" />.
         /// </exception>
@@ -101,23 +108,29 @@ namespace Apollo.Core.Host.Plugins
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="builderGenerator"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="fileInfo"/> is <see langword="null" />.
+        /// </exception>
         public GroupDefinitionBuilder(
             IPluginRepository repository,
             IConnectParts importEngine,
             Func<Type, TypeIdentity> identityGenerator,
-            Func<IBuildFixedSchedules> builderGenerator)
+            Func<IBuildFixedSchedules> builderGenerator,
+            PluginFileInfo fileInfo)
         {
             {
                 Lokad.Enforce.Argument(() => repository);
                 Lokad.Enforce.Argument(() => importEngine);
                 Lokad.Enforce.Argument(() => identityGenerator);
                 Lokad.Enforce.Argument(() => builderGenerator);
+                Lokad.Enforce.Argument(() => fileInfo);
             }
 
             m_BuilderGenerator = builderGenerator;
             m_ImportEngine = importEngine;
             m_IdentityGenerator = identityGenerator;
             m_Repository = repository;
+            m_FileInfo = fileInfo;
         }
 
         /// <summary>
@@ -335,7 +348,7 @@ namespace Apollo.Core.Host.Plugins
 
             Clear();
 
-            m_Repository.AddGroup(definition);
+            m_Repository.AddGroup(definition, m_FileInfo);
             return definition.Id;
         }
 

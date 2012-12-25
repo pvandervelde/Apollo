@@ -30,53 +30,6 @@ namespace Apollo.Core.Host.Plugins
     /// </summary>
     internal sealed class RemoteAssemblyScanner : MarshalByRefObject, IAssemblyScanner
     {
-        private static Func<Type, TypeIdentity> IdentityFactory(IPluginRepository typeStorage, IDictionary<Type, TypeIdentity> currentlyBuilding)
-        {
-            // Fake out the compiler because we need the function inside the function itself
-            Func<Type, TypeIdentity> createTypeIdentity = null;
-            createTypeIdentity =
-                t =>
-                {
-                    // First make sure we're not already creating a definition for this type. If so then we just
-                    // return the identity because at some point we'll get the definition being added.
-                    // This is necessary because if we don't check this there is a good possibility that
-                    // we end-up in an infinite loop. e.g. trying to handle
-                    // System.Boolean means we have to process System.IComparable<System.Boolean> which means ....
-                    if (currentlyBuilding.ContainsKey(t))
-                    {
-                        return currentlyBuilding[t];
-                    }
-
-                    // Create the type full name ourselves because generic type parameters don't have one (see
-                    // http://blogs.msdn.com/b/haibo_luo/archive/2006/02/17/534480.aspx).
-                    var name = 
-                        t.AssemblyQualifiedName 
-                        ?? string.Format(CultureInfo.InvariantCulture, "{0}.{1}, {2}", t.Namespace, t.Name, t.Assembly.FullName);
-                    if (!typeStorage.ContainsDefinitionForType(name))
-                    {
-                        try
-                        {
-                            // Create a local version of the TypeIdentity and store that
-                            var typeIdentity = TypeIdentity.CreateDefinition(t);
-                            currentlyBuilding.Add(t, typeIdentity);
-
-                            var typeDefinition = TypeDefinition.CreateDefinition(t, createTypeIdentity);
-                            typeStorage.AddType(typeDefinition);
-                        }
-                        finally
-                        {
-                            // Once we add the real definition then we can just remove the local copy
-                            // from the stack.
-                            currentlyBuilding.Remove(t);
-                        }
-                    }
-
-                    return typeStorage.IdentityByName(name);
-                };
-
-            return createTypeIdentity;
-        }
-
         private static Type ExtractRequiredType(IEnumerable<Attribute> memberAttributes, Type memberType)
         {
             // This is really rather ugly but we can't get the RequiredTypeIdentity straight from the import
@@ -355,12 +308,15 @@ namespace Apollo.Core.Host.Plugins
         {
             try
             {
-                var createTypeIdentity = IdentityFactory(m_Repository, new Dictionary<Type, TypeIdentity>());
+                var file = new FileInfo(assembly.LocalFilePath());
+                var fileInfo = new PluginFileInfo(file.FullName, file.LastWriteTimeUtc);
+
+                var createTypeIdentity = TypeIdentityBuilder.IdentityFactory(m_Repository, new Dictionary<Type, TypeIdentity>());
                 var mefParts = ExtractImportsAndExports(assembly, createTypeIdentity);
                 var parts = mefParts.Select(p => ExtractActionsAndConditions(p.Item1, p.Item2, createTypeIdentity));
                 foreach (var part in parts)
                 {
-                    m_Repository.AddPart(part);
+                    m_Repository.AddPart(part, fileInfo);
                 }
 
                 var groupExporters = assembly.GetTypes().Where(t => typeof(IExportGroupDefinitions).IsAssignableFrom(t));
@@ -372,7 +328,8 @@ namespace Apollo.Core.Host.Plugins
                             m_Repository,
                             m_ImportEngine, 
                             createTypeIdentity,
-                            m_ScheduleBuilder);
+                            m_ScheduleBuilder,
+                            fileInfo);
 
                         var exporter = Activator.CreateInstance(t) as IExportGroupDefinitions;
                         exporter.RegisterGroups(builder);

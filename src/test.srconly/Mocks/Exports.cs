@@ -22,8 +22,16 @@ namespace Test.Mocks
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public sealed class MockExportingInterfaceImplementation : IExportingInterface
+    public class MockExportingInterfaceImplementation : IExportingInterface
     { 
+    }
+
+    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
+        Justification = "Unit tests do not need documentation.")]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
+        Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
+    public sealed class MockChildExportingInterfaceImplementation : MockExportingInterfaceImplementation
+    {
     }
 
     [Export("OnTypeWithName")]

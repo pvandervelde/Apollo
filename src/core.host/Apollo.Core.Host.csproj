@@ -70,9 +70,17 @@
     <Compile Include="INotificationArguments.cs" />
     <Compile Include="Plugins\AppDomainOwningPluginScanner.cs" />
     <Compile Include="Plugins\AppDomainPluginClassLoader.cs" />
+    <Compile Include="Plugins\DuplicateGroupDefinitionException.cs" />
+    <Compile Include="Plugins\DuplicatePartDefinitionException.cs" />
+    <Compile Include="Plugins\DuplicateTypeDefinitionException.cs" />
     <Compile Include="Plugins\IConnectGroups.cs" />
     <Compile Include="Plugins\IConnectParts.cs" />
+    <Compile Include="Plugins\PluginRepository.cs" />
     <Compile Include="Plugins\PluginService.cs" />
+    <Compile Include="Plugins\TypeIdentityBuilder.cs" />
+    <Compile Include="Plugins\UnknownGroupDefinitionException.cs" />
+    <Compile Include="Plugins\UnknownPartDefinitionException.cs" />
+    <Compile Include="Plugins\UnknownTypeDefinitionException.cs" />
     <Compile Include="Projects\DatasetStorageProxy.cs" />
     <Compile Include="Projects\ProxyCompositionLayer.cs" />
     <Compile Include="Projects\CompositionLayerGroupEdge.cs" />

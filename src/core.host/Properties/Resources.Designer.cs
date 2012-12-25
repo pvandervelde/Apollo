@@ -304,6 +304,33 @@ namespace Apollo.Core.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A group with the given ID has already been registered..
+        /// </summary>
+        internal static string Exceptions_Messages_DuplicateGroupDefinition {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_DuplicateGroupDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A part with the given type identity is already registered..
+        /// </summary>
+        internal static string Exceptions_Messages_DuplicatePartDefinition {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_DuplicatePartDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A type with the given type identity is already registered..
+        /// </summary>
+        internal static string Exceptions_Messages_DuplicateTypeDefinition {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_DuplicateTypeDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The creation of a new project failed..
         /// </summary>
         internal static string Exceptions_Messages_FailedToCreateProject {
@@ -601,6 +628,15 @@ namespace Apollo.Core.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The requested group definition is not registered..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownGroupDefinition {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownGroupDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No kernel service of the given type is installed..
         /// </summary>
         internal static string Exceptions_Messages_UnknownKernelServiceType {
@@ -628,11 +664,29 @@ namespace Apollo.Core.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The requested part definition is not registered..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownPartDefinition {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownPartDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The given ID does not belong to a known part group..
         /// </summary>
         internal static string Exceptions_Messages_UnknownPartGroup {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_UnknownPartGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The requested type definition is not registered..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownTypeDefinition {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownTypeDefinition", resourceCulture);
             }
         }
         

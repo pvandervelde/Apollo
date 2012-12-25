@@ -387,4 +387,22 @@
   <data name="Exceptions_Messages_UnknownPartGroup" xml:space="preserve">
     <value>The given ID does not belong to a known part group.</value>
   </data>
+  <data name="Exceptions_Messages_DuplicateGroupDefinition" xml:space="preserve">
+    <value>A group with the given ID has already been registered.</value>
+  </data>
+  <data name="Exceptions_Messages_DuplicatePartDefinition" xml:space="preserve">
+    <value>A part with the given type identity is already registered.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownGroupDefinition" xml:space="preserve">
+    <value>The requested group definition is not registered.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownPartDefinition" xml:space="preserve">
+    <value>The requested part definition is not registered.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownTypeDefinition" xml:space="preserve">
+    <value>The requested type definition is not registered.</value>
+  </data>
+  <data name="Exceptions_Messages_DuplicateTypeDefinition" xml:space="preserve">
+    <value>A type with the given type identity is already registered.</value>
+  </data>
 </root>

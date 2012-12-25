@@ -70,10 +70,10 @@ namespace Apollo.Core.Host.Plugins
                         .Returns(parts);
                     repository.Setup(r => r.AddType(It.IsAny<TypeDefinition>()))
                         .Callback<TypeDefinition>(t => types.Add(t));
-                    repository.Setup(r => r.AddPart(It.IsAny<PartDefinition>()))
-                        .Callback<PartDefinition>(p => parts.Add(p));
-                    repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>()))
-                        .Callback<GroupDefinition>(g => groups.Add(g));
+                    repository.Setup(r => r.AddPart(It.IsAny<PartDefinition>(), It.IsAny<PluginFileInfo>()))
+                        .Callback<PartDefinition, PluginFileInfo>((p, f) => parts.Add(p));
+                    repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>(), It.IsAny<PluginFileInfo>()))
+                        .Callback<GroupDefinition, PluginFileInfo>((g, f) => groups.Add(g));
                 }
 
                 var importEngine = new Mock<IConnectParts>();
