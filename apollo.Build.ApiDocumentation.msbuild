@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0"
+         DefaultTargets="Run"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- Build flags -->
+        <ShouldClean>true</ShouldClean>
+        <ShouldCleanPackages>false</ShouldCleanPackages>
+        
+        <!-- Build configuration -->
+        <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+        <Platform Condition=" '$(Platform)' == ''">Any CPU</Platform>
+        <PlatformTranslated>$(Platform.Replace(" ",""))</PlatformTranslated>
+        
+        <!-- Directories -->
+        <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
+        <DirPackages>$(DirWorkspace)\packages</DirPackages>
+        <DirTools>$(DirWorkspace)\tools</DirTools>
+        <DirTemplates>$(DirWorkspace)\templates</DirTemplates>
+        <DirBuild>$(DirWorkspace)\build</DirBuild>
+        <DirBuildBin>$(DirBuild)\bin\$(PlatformTranslated)\$(Configuration)</DirBuildBin>
+        <DirBuildDoc>$(DirBuild)\doc</DirBuildDoc>
+        <DirBuildLogs>$(DirBuild)\logs</DirBuildLogs>
+        <DirBuildTemp>$(DirBuild)\temp</DirBuildTemp>
+        
+        <!-- Version number -->
+        <VersionMajor>0</VersionMajor>
+        <VersionMinor>0</VersionMinor>
+        <VersionBuild>0</VersionBuild>
+        <VersionRevision>0</VersionRevision>
+        
+        <!-- Tools -->
+        <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
+        
+        <!-- Jenkins, the build system adds the BZR_REVISION environment variable so we can get that here -->
+        <BZR_REVISION Condition="'$(BZR_REVISION)' == '' ">-1</BZR_REVISION>
+        <ScmRevision>$(BZR_REVISION)</ScmRevision>
+    </PropertyGroup>
+    
+    <Import Project="$(MsBuildExtensionsPath)\SetEnvironmentVariable.msbuild"
+            Condition="Exists('$(MsBuildExtensionsPath)\SetEnvironmentVariable.msbuild')"/>
+    <Import Project="$(MsBuildExtensionsPath)\TemplateFile.msbuild"
+            Condition="Exists('$(MsBuildExtensionsPath)\TemplateFile.msbuild')"/>
+            
+    <Import Project="$(DirWorkspace)\version.xml"
+            Condition="Exists('$(DirWorkspace)\version.xml')"/>
+
+    <!-- Display info -->
+    <Target Name="_DisplayInfo">
+        <Message Text="Preparing workspace ..." />
+    </Target>
+    
+    <PropertyGroup>
+        <DirSandcastle>$(DirPackages)\Sandcastle</DirSandcastle>
+        <DirSandcastleHelpFileBuilder>$(DirPackages)\SandcastleHelpFileBuilder</DirSandcastleHelpFileBuilder>
+        <DirSandcastleReferenceData>$(DirSandcastle)\Data</DirSandcastleReferenceData>
+        <FileTemplateSandcastle>$(DirTemplates)\sandcastle.shfbproj.in</FileTemplateSandcastle>
+        <FileGeneratedSandcastle>$(DirBuildTemp)\apollo.shfbproj</FileGeneratedSandcastle>
+        <FileSandcastleReferenceSln>$(DirSandcastle)\fxReflection.proj</FileSandcastleReferenceSln>
+        <ReferenceDataMsBuildCommandLine>"$(MSBuildToolsPath)/msbuild.exe" "$(FileSandcastleReferenceSln)"</ReferenceDataMsBuildCommandLine>
+        <ShfbMsBuildCommandLine>"$(MSBuildToolsPath)/msbuild.exe" "$(FileGeneratedSandcastle)" /p:SHFBROOT=$(DirSandcastleHelpFileBuilder)</ShfbMsBuildCommandLine>
+    </PropertyGroup>
+    <Target Name="Run" DependsOnTargets="_DisplayInfo">
+        <MakeDir Directories="$(DirBuildTemp)" Condition="!Exists('$(DirBuildTemp)')" />
+        <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
+        <MakeDir Directories="$(DirBuildDoc)" Condition="!Exists('$(DirBuildDoc)')" />
+        
+        <ItemGroup>
+            <SandcastleTokens Include="DirTools">
+                <ReplacementValue>$(DirPackages)</ReplacementValue>
+            </SandcastleTokens>
+            <SandcastleTokens Include="DirDoc">
+                <ReplacementValue>$(DirBuildDoc)</ReplacementValue>
+            </SandcastleTokens>
+            <SandcastleTokens Include="DirLogs">
+                <ReplacementValue>$(DirBuildLogs)</ReplacementValue>
+            </SandcastleTokens>
+            <SandcastleTokens Include="DirBin">
+                <ReplacementValue>$(DirBuildBin)</ReplacementValue>
+            </SandcastleTokens>
+        </ItemGroup>
+        <TemplateFile Template="$(FileTemplateSandcastle)" OutputFileName="$(FileGeneratedSandcastle)" Tokens="@(SandcastleTokens)" />
+        
+        <!-- 
+            This doesn't stick because:
+            a) MsBuild never reloads the Environment variables and the msbuild target
+               runs the same instance of msbuild
+            b) They're only set for the current process so ....
+        -->
+        <SetEnvironmentVariable Name="DXROOT" Value="$(DirSandcastle)" />
+        
+        <!-- 
+            Build reference data via msbuild. We need to do this via the 
+            Exec task because we need a child process so that the change in environment 
+            variables is picked up (MsBuild doesn't listen for changes in environment variables)
+        -->
+        <Exec Command="$(ReferenceDataMsBuildCommandLine)" Condition="!Exists('$(DirSandcastleReferenceData)')" />
+        
+        <!-- Run sandcastle via msbuild -->
+        <Exec Command="$(ShfbMsBuildCommandLine)" />
+    </Target>
+ </Project>

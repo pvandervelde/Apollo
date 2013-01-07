@@ -1,6 +1,6 @@
 ﻿<Project DefaultTargets="Build"
          xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
-         ToolsVersion="3.5">
+         ToolsVersion="4.0">
     <PropertyGroup>
         <SHFBROOT>${DirTools}\sandcastlehelpfilebuilder</SHFBROOT>
         <SandcastlePath>${DirTools}\sandcastle\</SandcastlePath>
@@ -34,60 +34,15 @@
         <ShowFeedbackControl>True</ShowFeedbackControl>
         <VisibleItems>Attributes, ExplicitInterfaceImplementations, InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
         <DocumentationSources>
-            <DocumentationSource sourceFile="${DirBin}\Apollo.Core.Host.dll" />
-            <DocumentationSource sourceFile="${DirBin}\Apollo.Core.Host.xml" />
-			<DocumentationSource sourceFile="${DirBin}\Apollo.Core.Base.dll" />
-            <DocumentationSource sourceFile="${DirBin}\Apollo.Core.Base.xml" />
-			<DocumentationSource sourceFile="${DirBin}\Apollo.Core.Dataset.exe" />
-            <DocumentationSource sourceFile="${DirBin}\Apollo.Core.Dataset.xml" />
-            <DocumentationSource sourceFile="${DirBin}\Apollo.ProjectExplorer.exe" />
-            <DocumentationSource sourceFile="${DirBin}\Apollo.ProjectExplorer.xml" />
-            <DocumentationSource sourceFile="${DirBin}\Apollo.UI.Common.dll" />
-            <DocumentationSource sourceFile="${DirBin}\Apollo.UI.Common.xml" />
-            <DocumentationSource sourceFile="${DirBin}\Apollo.Utilities.dll" />
-            <DocumentationSource sourceFile="${DirBin}\Apollo.Utilities.xml" />
+            <DocumentationSource sourceFile="${DirBin}\Apollo.Core.Extensions.dll" />
+            <DocumentationSource sourceFile="${DirBin}\Apollo.Core.Extensions.xml" />
         </DocumentationSources>
         <FeedbackEMailAddress>petrikvandervelde+apollofeedback%40gmail.com</FeedbackEMailAddress>
         <FeedbackEMailLinkText>Send feedback</FeedbackEMailLinkText>
         <FooterText>All items copyright %28c%29 - P. van der Velde</FooterText>
         <SyntaxFilters>CSharp, VisualBasic, CPlusPlus, FSharp, XamlUsage</SyntaxFilters>
         <MissingTags>Summary, Parameter, Returns, Namespace, TypeParameter, IncludeTargets</MissingTags>
-        <ApiFilter>
-            <Filter entryType="Namespace"
-                    fullName=""
-                    isExposed="False"
-                    xmlns="" />
-            <Filter entryType="Namespace"
-                    fullName="System"
-                    isExposed="True"
-                    xmlns="">
-                <Filter entryType="Class"
-                        fullName="System.MarshalByRefObject"
-                        filterName="MarshalByRefObject"
-                        isExposed="False" />
-                <Filter entryType="Class"
-                        fullName="System.Object"
-                        filterName="Object"
-                        isExposed="False">
-                    <Filter entryType="Method"
-                            fullName="System.Object.Equals"
-                            filterName="Equals"
-                            isExposed="True" />
-                    <Filter entryType="Method"
-                            fullName="System.Object.GetHashCode"
-                            filterName="GetHashCode"
-                            isExposed="True" />
-                    <Filter entryType="Method"
-                            fullName="System.Object.GetType"
-                            filterName="GetType"
-                            isExposed="True" />
-                    <Filter entryType="Method"
-                            fullName="System.Object.ToString"
-                            filterName="ToString"
-                            isExposed="True" />
-                </Filter>
-            </Filter>
-        </ApiFilter>
+        <ApiFilter />
     </PropertyGroup>
     <!-- There are no properties for these two groups but they need to appear in
        order for Visual Studio to perform the build. -->

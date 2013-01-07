@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0"
+         DefaultTargets="Run"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- Directories -->
+        <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
+        <DirBuild>$(DirWorkspace)\build</DirBuild>
+        <DirBuildTemp>$(DirBuild)\temp</DirBuildTemp>
+        
+        <!-- Version number -->
+        <VersionMajor>0</VersionMajor>
+        <VersionMinor>0</VersionMinor>
+        <VersionBuild>0</VersionBuild>
+        <VersionRevision>0</VersionRevision>
+        
+        <!-- nfermi information necessary to get the release notes -->
+        <ApplicationName>Apollo</ApplicationName>
+        <!-- We don't expect this to change but if we do change it then we can at least override it -->
+        <ProjectName Condition=" '$(ProjectName)' == ''">Apollo</ProjectName>
+        <FixedIn Condition=" '$(FixedIn)' == '' "></FixedIn>
+        <IssueFile Condition=" '$(IssueFile)' == ''">$(DirBuildTemp)\fixedissues.xml</IssueFile>
+    </PropertyGroup>
+    
+    <Import Project="$(DirWorkspace)\version.xml"
+            Condition="Exists('$(DirWorkspace)\version.xml')"/>
+    
+    <!-- Display info -->
+    <Target Name="_DisplayInfo">
+        <Message Text="Gathering release notes..." />
+        <Message Text="Fixed in placeholder: $(FixedIn)" />
+        <Message Text="NFermi tools directory: $(DirNFermi)" />
+    </Target>
+    
+    <PropertyGroup>
+        <ExeNFermi>$(DirNFermi)\nfermi.exe</ExeNFermi>
+    </PropertyGroup>
+    <Target Name="Run" DependsOnTargets="_DisplayInfo" Condition="Exists('$(DirNFermi)')" >
+        <MakeDir Directories="$(DirBuildTemp)" Condition="!Exists('$(DirBuildTemp)')" />
+    
+        <Exec Command="$(ExeNFermi) --ApplicationName=&quot;$(ApplicationName)&quot; --ApplicationVersion=$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision) --ProjectName=&quot;$(ProjectName)&quot; --FixedInTag=&quot;$(FixedIn)&quot; --IssuesToRelease=$(IssueFile) --Output=&quot;$(DirBuildTemp)&quot;"
+              WorkingDirectory="$(DirBuildTemp)" />
+    </Target>
+ </Project>
