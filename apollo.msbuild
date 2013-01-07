@@ -11,400 +11,96 @@
         <!-- Build configuration -->
         <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
         <Platform Condition=" '$(Platform)' == ''">Any CPU</Platform>
-        <PlatformTranslated>$(Platform.Replace(" ",""))</PlatformTranslated>
         
         <!-- Directories -->
         <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
-        <DirInstall>$(DirWorkspace)\install</DirInstall>
-        <DirPackages>$(DirWorkspace)\packages</DirPackages>
-        <DirSrc>$(DirWorkspace)\src</DirSrc>
-        <DirTemplates>$(DirWorkspace)\templates</DirTemplates>
-        <DirTools>$(DirWorkspace)\tools</DirTools>
-        <DirBuild>$(DirWorkspace)\build</DirBuild>
-        <DirBuildBin>$(DirBuild)\bin\$(PlatformTranslated)\$(Configuration)</DirBuildBin>
-        <DirBuildDeploy>$(DirBuild)\deploy</DirBuildDeploy>
-        <DirBuildDoc>$(DirBuild)\doc</DirBuildDoc>
-        <DirBuildLogs>$(DirBuild)\logs</DirBuildLogs>
-        <DirBuildTemp>$(DirBuild)\temp</DirBuildTemp>
-        
-        <!-- Version number -->
-        <VersionMajor>0</VersionMajor>
-        <VersionMinor>0</VersionMinor>
-        <VersionBuild>0</VersionBuild>
-        <VersionRevision>0</VersionRevision>
-        
-        <!-- nfermi information necessary to get the release notes -->
-        <ApplicationName>Apollo</ApplicationName>
-        <!-- We don't expect this to change but if we do change it then we can at least override it -->
-        <ProjectName Condition=" '$(ProjectName)' == ''">Apollo</ProjectName>
-        <FixedIn Condition=" '$(FixedIn)' == '' "></FixedIn>
-        <ShouldMarkAsReleased Condition=" '$(ShouldMarkAsReleased)' == ''">false</ShouldMarkAsReleased>
-        
-        <!-- Tools -->
-        <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
     </PropertyGroup>
-    
-    <Import Project="$(MsBuildExtensionsPath)\Ccm.msbuild"
-            Condition="Exists('$(MsBuildExtensionsPath)\Ccm.msbuild')"/>
-    <Import Project="$(MsBuildExtensionsPath)\FxCop.msbuild"
-            Condition="Exists('$(MsBuildExtensionsPath)\FxCop.msbuild')"/>
-    <Import Project="$(MsBuildExtensionsPath)\MbUnit.msbuild"
-            Condition="Exists('$(MsBuildExtensionsPath)\MbUnit.msbuild')"/>
-    <Import Project="$(MsBuildExtensionsPath)\NugetGatherDependencies.msbuild"
-            Condition="Exists('$(MsBuildExtensionsPath)\NugetGatherDependencies.msbuild')"/>
-    <Import Project="$(MsBuildExtensionsPath)\NugetPack.msbuild"
-            Condition="Exists('$(MsBuildExtensionsPath)\NugetPack.msbuild')"/>
-    <Import Project="$(MsBuildExtensionsPath)\NugetRestore.msbuild"
-            Condition="Exists('$(MsBuildExtensionsPath)\NugetRestore.msbuild')"/>
-    <Import Project="$(MsBuildExtensionsPath)\OpenCover.msbuild"
-            Condition="Exists('$(MsBuildExtensionsPath)\OpenCover.msbuild')"/>
-    <Import Project="$(MsBuildExtensionsPath)\ReportGenerator.msbuild"
-            Condition="Exists('$(MsBuildExtensionsPath)\ReportGenerator.msbuild')"/>
-    <Import Project="$(MsBuildExtensionsPath)\ReportGeneratorOutputToCsv.msbuild"
-            Condition="Exists('$(MsBuildExtensionsPath)\ReportGeneratorOutputToCsv.msbuild')"/>
-    <Import Project="$(MsBuildExtensionsPath)\SetEnvironmentVariable.msbuild"
-            Condition="Exists('$(MsBuildExtensionsPath)\SetEnvironmentVariable.msbuild')"/>
-    <Import Project="$(MsBuildExtensionsPath)\SourceMonitor.msbuild"
-            Condition="Exists('$(MsBuildExtensionsPath)\SourceMonitor.msbuild')"/>
-    <Import Project="$(MsBuildExtensionsPath)\SourceMonitorOutputToCsv.msbuild"
-            Condition="Exists('$(MsBuildExtensionsPath)\SourceMonitorOutputToCsv.msbuild')"/>
-    <Import Project="$(MsBuildExtensionsPath)\TemplateFile.msbuild"
-            Condition="Exists('$(MsBuildExtensionsPath)\TemplateFile.msbuild')"/>
-            
-    <Import Project="$(DirWorkspace)\version.xml"
-            Condition="Exists('$(DirWorkspace)\version.xml')"/>
 
-    <Target Name="Run" DependsOnTargets="_Clean;_BuildBinaries;_ExecuteUnitTests;_CodeAnalysis;_Package">
+    <Target Name="Run" DependsOnTargets="_PrepareWorkspace;_BuildBinaries;_ExecuteUnitTests;_BuildApiDocumentation;_CodeAnalysisCcm;_CodeAnalysisSourceMonitor;_CodeAnalysisMoma;_PackageMsi">
         <!-- Do nothing here -->
     </Target>
     
     <!-- Display info -->
     <Target Name="_DisplayInfo">
-        <Message Text="Configuration = $(Configuration)" />
-        <Message Text="Platform = $(Platform)" />
-        
-        <Message Text="External properties:" />
-        <Message Text="Version: $(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)" />
-        <Message Text="Fixed in placeholder: $(FixedIn)" />
-        <Message Text="NFermi tools directory: $(DirNFermi)" />
+        <Message Text="Building Apollo ..." />
     </Target>
     
     <!-- Clean -->
     <PropertyGroup>
-        <FileSln>$(DirSrc)\apollo.sln</FileSln>
-        <FileMsiSln>$(DirInstall)\apollo.sln</FileMsiSln>
+        <MsBuildPrepareWorkspace>$(DirWorkspace)\apollo.PrepareWorkspace.msbuild</MsBuildPrepareWorkspace>
     </PropertyGroup>
-    <Target Name="_Clean" DependsOnTargets="_DisplayInfo" Condition="$(ShouldClean)">
-        <!-- 
-            Only clean the source solution and not the installer solution because for that
-            we need to be able to load Wix which might not be there yet (because it is obtained via NuGet)
-        -->
-        <MSBuild Projects="$(FileSln)" Targets="Clean" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
-       
-        <!-- 
-            Don't try to delete the directory because that fails randomly because
-            some file is being locked. This then leads to a failing task, but ..
-            the next task is run and then the delete command still executes (delayed 
-            by the OS). Unfortunately the next task is the task that puts the directories
-            back ...
-        -->
-        <ItemGroup>
-            <BuildFilesToDelete Include="$(DirBuild)\**\*.*"/>
-        </ItemGroup>
-        <Delete Files="@(BuildFilesToDelete)" />
-        
-        <RemoveDir Directories="$(DirBuildTemp)" />
-        <RemoveDir Directories="$(DirBuildDeploy)" />
-        <RemoveDir Directories="$(DirBuildLogs)" />
-        <RemoveDir Directories="$(DirBuildDoc)" />
-
-        <RemoveDir Directories="$(DirPackages)" Condition="$(ShouldCleanPackages)" />
+    <Target Name="_PrepareWorkspace" DependsOnTargets="_DisplayInfo">
+        <MSBuild Projects="$(MsBuildPrepareWorkspace)" Properties="ShouldClean=$(ShouldClean);ShouldCleanPackages=$(ShouldCleanPackages)" />
     </Target>
     
     <!-- Build binaries -->
-    <Target Name="_BuildBinaries" DependsOnTargets="_DisplayInfo">
-        <MakeDir Directories="$(DirBuild);" Condition="!Exists('$(DirBuild)')" />
-        <MakeDir Directories="$(DirBuildBin)" Condition="!Exists('$(DirBuildBin)')" />
-        
-        <MSBuild Projects="$(FileSln)" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
-    </Target>
-    
-    <!-- Run Nuget for the global build -->
     <PropertyGroup>
-        <PackagesConfig>$([System.IO.Path]::Combine($(DirWorkspace), "packages.config"))</PackagesConfig>
+        <MsBuildBuildBinaries>$(DirWorkspace)\apollo.Build.Binaries.msbuild</MsBuildBuildBinaries>
     </PropertyGroup>
-    <Target Name="_RestorePackages" DependsOnTargets="_DisplayInfo;_Clean">
-        <NugetRestore NugetPath="nuget" PackageFile="$(PackagesConfig)" PackageDirectory="$(DirPackages)" />
+    <Target Name="_BuildBinaries" DependsOnTargets="_PrepareWorkspace">
+        <MSBuild Projects="$(MsBuildBuildBinaries)" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
     </Target>
     
     <!-- Run unit tests -->
-    <Target Name="_ExecuteUnitTests" DependsOnTargets="_BuildBinaries;_RestorePackages;_ExecuteUnitTestsWithoutCoverage;_ExecuteUnitTestsWithCoverage" Condition=" '$(Configuration)' != 'Deploy'">
-    </Target>
-    
     <PropertyGroup>
-        <MbUnitExe>Gallio.Echo.x86.exe</MbUnitExe>
-        <MbUnitDir>$(DirPackages)\Gallio.Complete</MbUnitDir>
+        <MsBuildExecuteUnitTest>$(DirWorkspace)\apollo.Test.Unit.msbuild</MsBuildExecuteUnitTest>
     </PropertyGroup>
-    <Target Name="_ExecuteUnitTestsWithoutCoverage" Condition="!$(ShouldHaveCoverage) AND '$(Configuration)' != 'Deploy'" DependsOnTargets="_BuildBinaries;_RestorePackages">
-        <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
-        
-        <ItemGroup>
-            <MbUnitTestAssemblies Include="$(DirBuildBin)\**\test.unit.*.dll" />
-        </ItemGroup>
-        
-        <MbUnit MbUnitExe="$(MbUnitExe)"
-                MbUnitDir="$(MbUnitDir)"
-                OutputDir="$(DirBuildLogs)"
-                TargetAssemblies="@(MbUnitTestAssemblies)"/>
-    </Target>
-    
-    <PropertyGroup>
-        <FileOpenCoverReport>$(DirBuildLogs)\opencover.xml</FileOpenCoverReport>
-        <OpenCoverExe>opencover.console.exe</OpenCoverExe>
-        <OpenCoverDir>$(DirPackages)\opencover</OpenCoverDir>
-        <ReportGeneratorExe>ReportGenerator.exe</ReportGeneratorExe>
-        <ReportGeneratorDir>$(DirPackages)\reportgenerator</ReportGeneratorDir>
-        <ReportGeneratorOutputDir>$(DirBuildLogs)\coverage</ReportGeneratorOutputDir>
-        <ReportGeneratorXmlSummaryFile>$(ReportGeneratorOutputDir)\Summary.xml</ReportGeneratorXmlSummaryFile>
-        <CoverageCsvFile>$(DirBuildLogs)\coverage.csv</CoverageCsvFile>
-    </PropertyGroup>
-    <Target Name="_ExecuteUnitTestsWithCoverage" Condition="$(ShouldHaveCoverage) AND '$(Configuration)' != 'Deploy'" DependsOnTargets="_BuildBinaries;_RestorePackages">
-        <MakeDir Directories="$(DirBuildTemp)" Condition="!Exists('$(DirBuildTemp)')" />
-        <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
-        <MakeDir Directories="$(ReportGeneratorOutputDir)" Condition="!Exists('$(ReportGeneratorOutputDir)')" />
-        
-        <ItemGroup>
-            <MbUnitTestAssemblies Include="$(DirBuildBin)\**\test.unit.*.dll" />
-        </ItemGroup>
-        <ItemGroup>
-            <OpenCoverIgnoreAttributes Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
-            <OpenCoverIgnoreAttributes Include="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-        </ItemGroup>
-                                  
-        <OpenCover OpenCoverExe="$(OpenCoverExe)"
-                   OpenCoverDir="$(OpenCoverDir)"
-                   OpenCoverOutput="$(FileOpenCoverReport)"
-                   OpenCoverFilters="+[Apollo.*]* -[*Test.Unit*]* -[Gallio]* -[Gallio.*]*"
-                   OpenCoverExcludeAttributes="@(OpenCoverIgnoreAttributes)"
-                   UnitTestDir="$(MbUnitDir)"
-                   UnitTestExe="$(MbUnitExe)"
-                   UnitTestArguments="/hd:&quot;$(MbUnitDir)&quot; /sc /v:Verbose /rt:Xhtml-Condensed /rt:Xml-inline /rt:Text-Condensed /rt:Html-Condensed /rd:&quot;$(DirBuildLogs)&quot; /r:Local @(MbUnitTestAssemblies->'%22%(FullPath)%22', ' ')"
-                   BinDir="$(DirBuildBin)" />
-        
-        <ReportGenerator ReportGeneratorExe="$(ReportGeneratorExe)"
-                         ReportGeneratorDir="$(ReportGeneratorDir)"
-                         OpenCoverOutputFile="$(FileOpenCoverReport)"
-                         OutputDir="$(ReportGeneratorOutputDir)" />
-                         
-        <ReportGeneratorOutputToCsv InputFile="$(ReportGeneratorXmlSummaryFile)"
-                                    OutputFile="$(CoverageCsvFile)" />
+    <Target Name="_ExecuteUnitTests" DependsOnTargets="_BuildBinaries">
+        <MSBuild Projects="$(MsBuildExecuteUnitTest)" Properties="ShouldHaveCoverage=$(ShouldHaveCoverage)" />
     </Target>
 
-    <!-- Link all documentation targets -->
-    <Target Name="_GenerateDocumentation" DependsOnTargets="_RestorePackages;_GenerateApiDocumentation">
-    </Target>
-    
-    <!-- Generate the API docs -->
+    <!-- Build documentation -->
     <PropertyGroup>
-        <DirSandcastle>$(DirPackages)\Sandcastle</DirSandcastle>
-        <DirSandcastleHelpFileBuilder>$(DirPackages)\SandcastleHelpFileBuilder</DirSandcastleHelpFileBuilder>
-        <DirSandcastleReferenceData>$(DirSandcastle)\Data</DirSandcastleReferenceData>
-        <FileTemplateSandcastle>$(DirTemplates)\sandcastle.shfbproj.in</FileTemplateSandcastle>
-        <FileGeneratedSandcastle>$(DirBuildTemp)\apollo.shfbproj</FileGeneratedSandcastle>
-        <FileSandcastleReferenceSln>$(DirSandcastle)\fxReflection.proj</FileSandcastleReferenceSln>
-        <ReferenceDataMsBuildCommandLine>"$(MSBuildToolsPath)/msbuild.exe" "$(FileSandcastleReferenceSln)"</ReferenceDataMsBuildCommandLine>
-        <ShfbMsBuildCommandLine>"$(MSBuildToolsPath)/msbuild.exe" "$(FileGeneratedSandcastle)" /p:SHFBROOT=$(DirSandcastleHelpFileBuilder)</ShfbMsBuildCommandLine>
+        <MsBuildBuildApiDocumentation>$(DirWorkspace)\apollo.Build.ApiDocumentation.msbuild</MsBuildBuildApiDocumentation>
     </PropertyGroup>
-    <Target Name="_GenerateApiDocumentation" DependsOnTargets="_BuildBinaries;_RestorePackages">
-        <MakeDir Directories="$(DirBuildTemp)" Condition="!Exists('$(DirBuildTemp)')" />
-        <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
-        <MakeDir Directories="$(DirBuildDoc)" Condition="!Exists('$(DirBuildDoc)')" />
-        
-        <ItemGroup>
-            <SandcastleTokens Include="DirTools">
-                <ReplacementValue>$(DirPackages)</ReplacementValue>
-            </SandcastleTokens>
-            <SandcastleTokens Include="DirDoc">
-                <ReplacementValue>$(DirBuildDoc)</ReplacementValue>
-            </SandcastleTokens>
-            <SandcastleTokens Include="DirLogs">
-                <ReplacementValue>$(DirBuildLogs)</ReplacementValue>
-            </SandcastleTokens>
-            <SandcastleTokens Include="DirBin">
-                <ReplacementValue>$(DirBuildBin)</ReplacementValue>
-            </SandcastleTokens>
-        </ItemGroup>
-        <TemplateFile Template="$(FileTemplateSandcastle)" OutputFileName="$(FileGeneratedSandcastle)" Tokens="@(SandcastleTokens)" />
-        
-        <!-- 
-            This doesn't stick because:
-            a) MsBuild never reloads the Environment variables and the msbuild target
-               runs the same instance of msbuild
-            b) They're only set for the current process so ....
-        -->
-        <SetEnvironmentVariable Name="DXROOT" Value="$(DirSandcastle)" />
-        
-        <!-- 
-            Build reference data via msbuild. We need to do this via the 
-            Exec task because we need a child process so that the change in environment 
-            variables is picked up (MsBuild doesn't listen for changes in environment variables)
-        -->
-        <Exec Command="$(ReferenceDataMsBuildCommandLine)" Condition="!Exists('$(DirSandcastleReferenceData)')" />
-        
-        <!-- Run sandcastle via msbuild -->
-        <Exec Command="$(ShfbMsBuildCommandLine)" />
+    <Target Name="_BuildApiDocumentation" DependsOnTargets="_BuildBinaries">
+        <MSBuild Projects="$(MsBuildBuildApiDocumentation)" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
     </Target>
     
-    <!-- Link all code analysis targets -->
-    <Target Name="_CodeAnalysis" DependsOnTargets="_BuildBinaries;_RestorePackages;_CodeAnalysisFxCop;_CodeAnalysisMoma;_CodeAnalysisCcm;_CodeAnalysisSourceMonitor">
-    </Target>
-    
+    <!-- Run Ccm -->
     <PropertyGroup>
-        <FxCopDir>$(DirPackages)\FxCop</FxCopDir>
-        <FxCopCustomDictionary>$(FxCopDir)\CustomDictionary.xml</FxCopCustomDictionary>
-        <FxCopOutputFile>$(DirBuildLogs)\fxcop.xml</FxCopOutputFile>
+        <MsBuildAnalyzeCcm>$(DirWorkspace)\apollo.Analyze.Ccm.msbuild</MsBuildAnalyzeCcm>
     </PropertyGroup>
-    <Target Name="_CodeAnalysisFxCop" DependsOnTargets="_BuildBinaries;_RestorePackages" Condition=" '$(Configuration)' != 'Deploy'">
-        <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
-        
-        <ItemGroup>
-            <FxCopRuleAssemblies Include="$(DirFxCop)\Rules\*.dll" />
-        </ItemGroup>
-        <ItemGroup>
-            <FxCopTargetAssemblies Include="$(DirBuildBin)\Apollo*.dll;$(DirBuildBin)\Apollo*.exe"
-                                   Exclude="$(DirBuildBin)\*vshost*.*"/>
-        </ItemGroup>
-        <ItemGroup>
-            <!-- Exclude: 1000: Do not declare static members on generic types -->
-            <FxCopRules Include="-Microsoft.Rules.Managed.CA1000" />
-            <!-- Exclude: 1006: do not nest generic types in member signatures -->
-            <FxCopRules Include="-Microsoft.Rules.Managed.CA1006" />
-            <!-- Exclude: 1020: Avoid namespaces with few types -->
-            <FxCopRules Include="-Microsoft.Rules.Managed.CA1020" />
-            <!-- Exclude: 1026: Default parameters should not be used -->
-            <FxCopRules Include="-Microsoft.Rules.Managed.CA1026" />
-            <!-- Exclude: 1030: use events where appropriate -->
-            <FxCopRules Include="-Microsoft.Rules.Managed.CA1030" />
-        </ItemGroup>
-            
-        <FxCop FxCopDir="$(FxCopDir)"
-               FxCopOutputFile="$(FxCopOutputFile)"
-               FxCopCustomDictionary="${FxCopCustomDictionary}"
-               FxCopTargetAssemblies="@(FxCopTargetAssemblies)"
-               FxCopRuleAssemblies="@(FxCopruleAssemblies)"
-               FxCopRules="@(FxCopRules)" />
+    <Target Name="_CodeAnalysisCcm" DependsOnTargets="_PrepareWorkspace">
+        <MSBuild Projects="$(MsBuildAnalyzeCcm)" />
+    </Target>
+    
+    <!-- Run SourceMonitor -->
+    <PropertyGroup>
+        <MsBuildAnalyzeSourceMonitor>$(DirWorkspace)\apollo.Analyze.SourceMonitor.msbuild</MsBuildAnalyzeSourceMonitor>
+    </PropertyGroup>
+    <Target Name="_CodeAnalysisSourceMonitor" DependsOnTargets="_PrepareWorkspace">
+        <MSBuild Projects="$(MsBuildAnalyzeSourceMonitor)" />
+    </Target>
+    
+    <!-- Run FxCop -->
+    <PropertyGroup>
+        <MsBuildAnalyzeFxCop>$(DirWorkspace)\apollo.Analyze.FxCop.msbuild</MsBuildAnalyzeFxCop>
+    </PropertyGroup>
+    <Target Name="_CodeAnalysisFxCop" DependsOnTargets="_BuildBinaries" Condition=" '$(Configuration)' != 'Deploy'">
+        <MSBuild Projects="$(MsBuildAnalyzeFxCop)" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
     </Target>
 
+    <!-- Run Moma -->
     <PropertyGroup>
-        <DirMoma>$(DirPackages)\Moma</DirMoma>
-        <ExeMoma>$(DirMoma)\MoMA.exe</ExeMoma>
-        <DirMomaOutput>$(DirBuildLogs)\moma</DirMomaOutput>
-        <MomaOutputFile>$(DirMomaOutput)\moma.html</MomaOutputFile>
+        <MsBuildAnalyzeMoma>$(DirWorkspace)\apollo.Analyze.Moma.msbuild</MsBuildAnalyzeMoma>
     </PropertyGroup>
-    <Target Name="_CodeAnalysisMoma" DependsOnTargets="_BuildBinaries;_RestorePackages">
-        <MakeDir Directories="$(DirMomaOutput)" Condition="!Exists('$(DirMomaOutput)')" />
-        
-        <ItemGroup>
-            <MomaFiles Include="$(DirBuildBin)\Apollo.Core.Base.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Apollo.Core.Extensions.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Apollo.Core.Dataset.exe"/>
-            <MomaFiles Include="$(DirBuildBin)\Apollo.Core.Host.dll"/>
-            <MomaFiles Include="$(DirBuildBin)\Apollo.Core.LoaderApplication.exe" />
-            <MomaFiles Include="$(DirBuildBin)\Apollo.Utilities.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Autofac.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Castle.Core.dll" />
-            <MomaFiles Include="$(DirBuildBin)\IronPython.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Lokad.Shared.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Microsoft.Scripting.dll" />
-            <MomaFiles Include="$(DirBuildBin)\NManto.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Mono.Options.dll" />
-            <MomaFiles Include="$(DirBuildBin)\NLog.dll" />
-            <MomaFiles Include="$(DirBuildBin)\NSarrac.Framework.dll" />
-            <MomaFiles Include="$(DirBuildBin)\QuickGraph.dll" />
-            <MomaFiles Include="$(DirBuildBin)\System.Reactive.dll" />
-        </ItemGroup>
-        
-        <Exec Command="$(ExeMoma) --nogui --out &quot;$(MomaOutputFile)&quot; @(MomaFiles->'%22%(FullPath)%22', ' ')"
-              WorkingDirectory="$(DirBuildTemp)" />
-    </Target>
-
-    <PropertyGroup>
-        <ExePathCcm>$(DirPackages)\Ccm\Ccm.exe</ExePathCcm>
-        <FileTemplateCcm>$(DirTemplates)\ccm.xml.in</FileTemplateCcm>
-        <FileGeneratedCcm>$(DirBuildTemp)\ccm.xml</FileGeneratedCcm>
-    </PropertyGroup>
-    <Target Name="_CodeAnalysisCcm" DependsOnTargets="_BuildBinaries;_RestorePackages">
-        <MakeDir Directories="$(DirBuildTemp)" Condition="!Exists('$(DirBuildTemp)')" />
-        <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
-        
-        <ItemGroup>
-            <CcmTokens Include="DirSrc">
-                <ReplacementValue>$(DirSrc)</ReplacementValue>
-            </CcmTokens>
-        </ItemGroup>
-        <TemplateFile Template="$(FileTemplateCcm)" OutputFileName="$(FileGeneratedCcm)" Tokens="@(CcmTokens)" />
-    
-        <Ccm CcmExe="$(ExePathCcm)"
-             ConfigFile="$(FileGeneratedCcm)"
-             OutputFile="$(DirBuildLogs)\apollo.ccm.xml" />
+    <Target Name="_CodeAnalysisMoma" DependsOnTargets="_BuildBinaries">
+        <MSBuild Projects="$(MsBuildAnalyzeMoma)" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
     </Target>
     
     <PropertyGroup>
-        <ExePathSourceMonitor>$(DirPackages)\Sourcemonitor\SourceMonitor.exe</ExePathSourceMonitor>
-        <FileTemplateSourceMonitor>$(DirTemplates)\sourcemonitor.xml.in</FileTemplateSourceMonitor>
-        <FileGeneratedSourceMonitor>$(DirBuildTemp)\sourcemonitor.xml</FileGeneratedSourceMonitor>
-        <FileSourceMonitorOutput>$(DirBuildLogs)\apollo.sourcemonitor.xml</FileSourceMonitorOutput>
-        <Now>$([System.DateTime]::Now.ToString("yyyy-MM-ddTHH:mm:ss"))</Now>
+        <MsBuildPackageGetReleaseNotes>$(DirWorkspace)\apollo.Package.GatherReleaseNotes.msbuild</MsBuildPackageGetReleaseNotes>
     </PropertyGroup>
-    <Target Name="_CodeAnalysisSourceMonitor" DependsOnTargets="_BuildBinaries;_RestorePackages">
-        <MakeDir Directories="$(DirBuildTemp)" Condition="!Exists('$(DirBuildTemp)')" />
-        <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
-        
-        <ItemGroup>
-            <SourceMonitorTokens Include="ProjectFileName">
-                <ReplacementValue>$(DirBuildTemp)\apollo.smp</ReplacementValue>
-            </SourceMonitorTokens>
-            <SourceMonitorTokens Include="DirSrc">
-                <ReplacementValue>$(DirSrc)</ReplacementValue>
-            </SourceMonitorTokens>
-            <SourceMonitorTokens Include="Now">
-                <ReplacementValue>$(Now)</ReplacementValue>
-            </SourceMonitorTokens>
-            <SourceMonitorTokens Include="FileOutputSourceMonitor">
-                <ReplacementValue>$(FileSourceMonitorOutput)</ReplacementValue>
-            </SourceMonitorTokens>
-        </ItemGroup>
-        <TemplateFile Template="$(FileTemplateSourceMonitor)" OutputFileName="$(FileGeneratedSourceMonitor)" Tokens="@(SourceMonitorTokens)" />
-    
-        <SourceMonitor SourceMonitorExe="$(ExePathSourceMonitor)"
-                       ConfigFile="$(FileGeneratedSourceMonitor)" />
-                       
-        <SourceMonitorOutputToCsv ProjectName="apollo"
-                                  InputFile="$(FileSourceMonitorOutput)"
-                                  OutputPath="$(DirBuildLogs)" />
-    </Target>
-    
-    <!-- Link all packaging targets -->
-    <Target Name="_Package" DependsOnTargets="_BuildBinaries;_RetrieveReleaseNotes;_PackageMsi">
-    </Target>
-    
-    <PropertyGroup>
-        <ExeNFermi>$(DirNFermi)\nfermi.exe</ExeNFermi>
-    </PropertyGroup>
-    <Target Name="_RetrieveReleaseNotes" Condition="Exists('$(DirNFermi)')" >
-        <Exec Command="$(ExeNFermi) --ApplicationName=&quot;$(ApplicationName)&quot; --ApplicationVersion=$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision) --ProjectName=&quot;$(ProjectName)&quot; --FixedInTag=&quot;$(FixedIn)&quot; --ReleaseVersion=$(ShouldMarkAsReleased) --Output=&quot;$(DirBuildTemp)&quot;"
-              WorkingDirectory="$(DirBuildTemp)" />
+    <Target Name="_RetrieveReleaseNotes" >
+        <MSBuild Projects="$(MsBuildPackageGetReleaseNotes)" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
     </Target>
     
     <!-- Build MSI installers -->
+    <PropertyGroup>
+        <MsBuildPackageMsi>$(DirWorkspace)\apollo.Package.Msi.msbuild</MsBuildPackageMsi>
+    </PropertyGroup>
     <Target Name="_PackageMsi" DependsOnTargets="_BuildBinaries">
-        <MakeDir Directories="$(DirBuildDeploy)" Condition="!Exists('$(DirBuildDeploy)')" />
-        <MSBuild Projects="$(FileMsiSln)" 
-                 Properties="Configuration=Release;Platform=x86;BuildConfiguration=$(Configuration);BuildPlatform=$(Platform)"
-                 Targets="Rebuild" />
-                 
-        <MSBuild Projects="$(FileMsiSln)" 
-                 Properties="Configuration=Release;Platform=x64;BuildConfiguration=$(Configuration);BuildPlatform=$(Platform)"
-                 Targets="Rebuild" />
+        <MSBuild Projects="$(MsBuildPackageMsi)" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
     </Target>
 </Project>
