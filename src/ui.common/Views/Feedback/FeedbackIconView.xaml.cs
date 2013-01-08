@@ -12,7 +12,7 @@ using System.Windows.Input;
 using Apollo.Utilities;
 using NManto;
 
-namespace Apollo.UI.Common.Views.Feedback
+namespace Apollo.UI.Wpf.Views.Feedback
 {
     /// <summary>
     /// Interaction logic for FeedbackIconView.xaml.

@@ -6,10 +6,10 @@
 
 using System;
 using System.Windows.Threading;
-using Apollo.UI.Common;
+using Apollo.UI.Wpf;
 using Lokad;
 
-namespace Apollo.ProjectExplorer
+namespace Apollo.UI.Explorer
 {
     /// <summary>
     /// A wrapper for the <see cref="Dispatcher"/> for the UI thread.

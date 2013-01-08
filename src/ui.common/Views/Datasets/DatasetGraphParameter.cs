@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Apollo.UI.Common.Views.Datasets
+namespace Apollo.UI.Wpf.Views.Datasets
 {
     /// <summary>
     /// A paramete for the dataset graph view.

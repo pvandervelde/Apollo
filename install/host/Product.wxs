@@ -147,7 +147,7 @@
                  ConfigurableDirectory="INSTALLLOCATION"
                  Display="1"
                  Level="1">
-            <FeatureRef Id="F.Apollo.UI.ProjectExplorer" />
+            <FeatureRef Id="F.Apollo.UI.Explorer" />
                      
             <!-- Include the clean-up actis for the start menu item(s) -->
             <ComponentRef Id="C.CleanApolloStartMenu" />

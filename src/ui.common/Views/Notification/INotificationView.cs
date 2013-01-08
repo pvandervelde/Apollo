@@ -6,7 +6,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Apollo.UI.Common.Views.Notification
+namespace Apollo.UI.Wpf.Views.Notification
 {
     /// <summary>
     /// Defines the interface for objects that display information about

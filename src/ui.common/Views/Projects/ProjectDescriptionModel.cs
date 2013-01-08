@@ -8,7 +8,7 @@ using System;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Lokad;
 
-namespace Apollo.UI.Common.Views.Projects
+namespace Apollo.UI.Wpf.Views.Projects
 {
     /// <summary>
     /// Defines the viewmodel for the project description.

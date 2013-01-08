@@ -9,15 +9,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
-using Apollo.ProjectExplorer.Properties;
-using Apollo.ProjectExplorer.Views.Welcome;
-using Apollo.UI.Common;
-using Apollo.UI.Common.Commands;
+using Apollo.UI.Explorer.Properties;
+using Apollo.UI.Explorer.Views.Welcome;
+using Apollo.UI.Wpf;
+using Apollo.UI.Wpf.Commands;
 using Autofac;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 
-namespace Apollo.ProjectExplorer.Views
+namespace Apollo.UI.Explorer.Views
 {
     /// <summary>
     /// Builds composite commands.

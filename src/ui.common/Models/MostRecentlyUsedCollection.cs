@@ -13,7 +13,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace Apollo.UI.Common.Models
+namespace Apollo.UI.Wpf.Models
 {
     /// <summary>
     /// Stores a collection of most recently used items.

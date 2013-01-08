@@ -5,9 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Apollo.UI.Common;
+using Apollo.UI.Wpf;
 
-namespace Apollo.ProjectExplorer.Views.StatusBar
+namespace Apollo.UI.Explorer.Views.StatusBar
 {
     [SuppressMessage("Microsoft.Design", "CA1040:AvoidEmptyInterfaces",
         Justification = "We need an interface for the view because Prism needs it.")]

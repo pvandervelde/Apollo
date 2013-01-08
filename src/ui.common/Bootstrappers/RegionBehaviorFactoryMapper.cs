@@ -7,7 +7,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Practices.Prism.Regions;
 
-namespace Apollo.UI.Common.Bootstrappers
+namespace Apollo.UI.Wpf.Bootstrappers
 {
     /// <summary>
     /// Provides a mapping object for <see cref="IRegionBehaviorFactory"/> objects.

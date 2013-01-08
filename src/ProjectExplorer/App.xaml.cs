@@ -15,7 +15,7 @@ using Apollo.Utilities.ExceptionHandling;
 using Autofac;
 using Autofac.Core;
 
-namespace Apollo.ProjectExplorer
+namespace Apollo.UI.Explorer
 {
     /// <summary>
     /// Interaction logic for App.xaml.
@@ -36,7 +36,7 @@ namespace Apollo.ProjectExplorer
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string DefaultErrorFileName = "projectexplorer.error.log";
+        private const string DefaultErrorFileName = "explorer.error.log";
 
         /// <summary>
         /// Application Entry Point.

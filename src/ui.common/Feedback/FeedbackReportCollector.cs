@@ -12,7 +12,7 @@ using System.Linq;
 using Apollo.Utilities;
 using Lokad;
 
-namespace Apollo.UI.Common.Feedback
+namespace Apollo.UI.Wpf.Feedback
 {
     /// <summary>
     /// Collect the feedback reports which are stored on the disk.

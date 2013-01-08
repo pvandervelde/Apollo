@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
-using Apollo.ProjectExplorer.Utilities;
+using Apollo.UI.Explorer.Utilities;
 using Apollo.Utilities;
 using Apollo.Utilities.Configuration;
 using Apollo.Utilities.ExceptionHandling;
@@ -24,7 +24,7 @@ using NManto;
 using NManto.Reporting;
 using NSarrac.Framework;
 
-namespace Apollo.ProjectExplorer.Utilities
+namespace Apollo.UI.Explorer.Utilities
 {
     /// <summary>
     /// Handles the component registrations for the utilities part 
@@ -36,12 +36,12 @@ namespace Apollo.ProjectExplorer.Utilities
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string DefaultInfoFileName = "projectexplorer.info.log";
+        private const string DefaultInfoFileName = "explorer.info.log";
 
         /// <summary>
         /// The default name for the profiler log.
         /// </summary>
-        private const string DefaultProfilerFileName = "projectexplorer.profile";
+        private const string DefaultProfilerFileName = "explorer.profile";
 
         /// <summary>
         /// The name for the plugins directory.

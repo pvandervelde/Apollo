@@ -10,7 +10,7 @@ using System.Windows.Input;
 using Apollo.Utilities;
 using NManto;
 
-namespace Apollo.ProjectExplorer.Views.Menu
+namespace Apollo.UI.Explorer.Views.Menu
 {
     /// <summary>
     /// A view for a top level menu.

@@ -12,21 +12,21 @@ using System.Windows;
 using Apollo.Core.Host;
 using Apollo.Core.Host.UserInterfaces.Application;
 using Apollo.Core.Host.UserInterfaces.Projects;
-using Apollo.ProjectExplorer.Properties;
-using Apollo.ProjectExplorer.Views.Menu;
-using Apollo.ProjectExplorer.Views.Shell;
-using Apollo.ProjectExplorer.Views.StatusBar;
-using Apollo.ProjectExplorer.Views.Welcome;
-using Apollo.UI.Common;
-using Apollo.UI.Common.Events;
-using Apollo.UI.Common.Events.Listeners;
-using Apollo.UI.Common.Views.Datasets;
-using Apollo.UI.Common.Views.Feedback;
-using Apollo.UI.Common.Views.Notification;
-using Apollo.UI.Common.Views.Profiling;
-using Apollo.UI.Common.Views.Progress;
-using Apollo.UI.Common.Views.Projects;
-using Apollo.UI.Common.Views.Scripting;
+using Apollo.UI.Explorer.Properties;
+using Apollo.UI.Explorer.Views.Menu;
+using Apollo.UI.Explorer.Views.Shell;
+using Apollo.UI.Explorer.Views.StatusBar;
+using Apollo.UI.Explorer.Views.Welcome;
+using Apollo.UI.Wpf;
+using Apollo.UI.Wpf.Events;
+using Apollo.UI.Wpf.Events.Listeners;
+using Apollo.UI.Wpf.Views.Datasets;
+using Apollo.UI.Wpf.Views.Feedback;
+using Apollo.UI.Wpf.Views.Notification;
+using Apollo.UI.Wpf.Views.Profiling;
+using Apollo.UI.Wpf.Views.Progress;
+using Apollo.UI.Wpf.Views.Projects;
+using Apollo.UI.Wpf.Views.Scripting;
 using Apollo.Utilities;
 using Apollo.Utilities.Configuration;
 using Apollo.Utilities.ExceptionHandling;
@@ -35,11 +35,11 @@ using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Modularity;
 using NSarrac.Framework;
 
-namespace Apollo.ProjectExplorer
+namespace Apollo.UI.Explorer
 {
     /// <summary>
     /// Defines a <see cref="IModule"/> which handles the registrations for 
-    /// the UI portion of the ProjectExplorer application.
+    /// the UI portion of the Explorer application.
     /// </summary>
     /// <remarks>
     /// Note that this module only contains the UI controls and UI related classes,
@@ -47,12 +47,12 @@ namespace Apollo.ProjectExplorer
     /// the <see cref="KernelBootstrapper"/>.
     /// </remarks>
     [ExcludeFromCodeCoverage]
-    internal sealed class ProjectExplorerModule : IModule
+    internal sealed class ExplorerModule : IModule
     {
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string DefaultErrorFileName = "projectexplorer.error.log";
+        private const string DefaultErrorFileName = "explorer.error.log";
 
         /// <summary>
         /// The IOC container that holds the references.
@@ -75,11 +75,11 @@ namespace Apollo.ProjectExplorer
         private readonly bool m_ShowWelcomePage;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProjectExplorerModule"/> class.
+        /// Initializes a new instance of the <see cref="ExplorerModule"/> class.
         /// </summary>
         /// <param name="container">The IOC container that will hold the references.</param>
         /// <param name="resetEvent">The reset event that is used to signal the application that it is safe to shut down.</param>
-        public ProjectExplorerModule(IContainer container, AutoResetEvent resetEvent)
+        public ExplorerModule(IContainer container, AutoResetEvent resetEvent)
         {
             {
                 Debug.Assert(container != null, "The container should exist.");
@@ -126,7 +126,7 @@ namespace Apollo.ProjectExplorer
                 builder.RegisterModule(new Utilities.UtilitiesModule());
                 builder.RegisterModule(new CommonUIModule());
 
-                // Get all the registrations from Apollo.UI.Common
+                // Get all the registrations from Apollo.UI.Wpf
                 var commonUiAssembly = typeof(Observable).Assembly;
                 builder.RegisterAssemblyTypes(commonUiAssembly)
                    .Where(t => t.FullName.EndsWith("Presenter", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)

@@ -7,7 +7,7 @@
 using System;
 using System.Collections.ObjectModel;
 
-namespace Apollo.UI.Common.Utilities
+namespace Apollo.UI.Wpf.Utilities
 {
     /// <summary>
     /// Defines extension methods for the <see cref="ObservableCollection{T}"/>.

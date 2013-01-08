@@ -14,7 +14,7 @@ using Apollo.Utilities;
 using Autofac.Core;
 using Lokad;
 
-namespace Apollo.ProjectExplorer
+namespace Apollo.UI.Explorer
 {
     /// <summary>
     /// Defines the bootstrapper which will initialize the kernel.

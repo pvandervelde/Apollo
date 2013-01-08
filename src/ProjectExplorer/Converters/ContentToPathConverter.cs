@@ -10,7 +10,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace Apollo.ProjectExplorer.Converters
+namespace Apollo.UI.Explorer.Converters
 {
     /// <summary>
     /// Creates a non-rectangular path for a tab control.

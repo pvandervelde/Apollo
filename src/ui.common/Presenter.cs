@@ -9,7 +9,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Practices.Prism.Events;
 
-namespace Apollo.UI.Common
+namespace Apollo.UI.Wpf
 {
     /// <summary>
     /// A base class for presenters.

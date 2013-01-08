@@ -6,7 +6,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Apollo.UI.Common.Views.Profiling
+namespace Apollo.UI.Wpf.Views.Profiling
 {
     /// <summary>
     /// Defines the interface for objects that provide a view onto a 

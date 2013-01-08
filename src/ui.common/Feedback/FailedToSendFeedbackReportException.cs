@@ -6,9 +6,9 @@
 
 using System;
 using System.Runtime.Serialization;
-using Apollo.UI.Common.Properties;
+using Apollo.UI.Wpf.Properties;
 
-namespace Apollo.UI.Common.Feedback
+namespace Apollo.UI.Wpf.Feedback
 {
     /// <summary>
     /// An exception thrown when the tries to send a feedback report but the 

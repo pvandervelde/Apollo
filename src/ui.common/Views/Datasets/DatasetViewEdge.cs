@@ -7,7 +7,7 @@
 using System;
 using QuickGraph;
 
-namespace Apollo.UI.Common.Views.Datasets
+namespace Apollo.UI.Wpf.Views.Datasets
 {
     /// <summary>
     /// A graph edge which connects different <see cref="DatasetViewVertex"/> objects.

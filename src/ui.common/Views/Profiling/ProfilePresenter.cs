@@ -4,10 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.UI.Common.Profiling;
+using Apollo.UI.Wpf.Profiling;
 using Autofac;
 
-namespace Apollo.UI.Common.Views.Profiling
+namespace Apollo.UI.Wpf.Views.Profiling
 {
     /// <summary>
     /// Defines a presenter that creates <see cref="ProfileModel"/> objects and connects them to

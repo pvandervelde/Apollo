@@ -6,7 +6,7 @@
 
 using GraphSharp.Controls;
 
-namespace Apollo.UI.Common.Views.Datasets
+namespace Apollo.UI.Wpf.Views.Datasets
 {
     /// <summary>
     /// Defines the layout for the <see cref="DatasetViewGraph"/>.

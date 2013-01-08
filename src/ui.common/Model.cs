@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Apollo.UI.Common
+namespace Apollo.UI.Wpf
 {
     /// <summary>
     /// A base class for Models, which are used as the data context for views.

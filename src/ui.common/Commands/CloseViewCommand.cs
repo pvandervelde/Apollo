@@ -6,11 +6,11 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
-using Apollo.UI.Common.Events;
+using Apollo.UI.Wpf.Events;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 
-namespace Apollo.UI.Common.Commands
+namespace Apollo.UI.Wpf.Commands
 {
     /// <summary>
     /// An <see cref="ICommand"/> that closes a given view.

@@ -7,10 +7,10 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using Apollo.UI.Common.Feedback;
+using Apollo.UI.Wpf.Feedback;
 using Microsoft.Practices.Prism.Commands;
 
-namespace Apollo.UI.Common.Commands
+namespace Apollo.UI.Wpf.Commands
 {
     /// <summary>
     /// Handles the sending of feedback reports to a remote server.

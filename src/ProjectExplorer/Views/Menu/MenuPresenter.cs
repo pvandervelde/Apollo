@@ -4,15 +4,15 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.ProjectExplorer.Commands;
-using Apollo.ProjectExplorer.Views.Welcome;
-using Apollo.UI.Common;
-using Apollo.UI.Common.Commands;
+using Apollo.UI.Explorer.Commands;
+using Apollo.UI.Explorer.Views.Welcome;
+using Apollo.UI.Wpf;
+using Apollo.UI.Wpf.Commands;
 using Autofac;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 
-namespace Apollo.ProjectExplorer.Views.Menu
+namespace Apollo.UI.Explorer.Views.Menu
 {
     /// <summary>
     /// Defines the presenter for the <see cref="MenuModel"/>.

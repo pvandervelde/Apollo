@@ -6,7 +6,7 @@
 
 using System.Windows;
 
-namespace Apollo.UI.Common.Utilities
+namespace Apollo.UI.Wpf.Utilities
 {
     /// <summary>
     /// Defines a set of helper methods and properties for drag and drop operations.

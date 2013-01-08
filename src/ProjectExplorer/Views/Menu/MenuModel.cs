@@ -6,9 +6,9 @@
 
 using System;
 using System.Windows.Input;
-using Apollo.UI.Common;
+using Apollo.UI.Wpf;
 
-namespace Apollo.ProjectExplorer.Views.Menu
+namespace Apollo.UI.Explorer.Views.Menu
 {
     /// <summary>
     /// The <see cref="Model"/> for the menu.

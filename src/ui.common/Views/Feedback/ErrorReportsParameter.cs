@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Apollo.UI.Common.Views.Feedback
+namespace Apollo.UI.Wpf.Views.Feedback
 {
     /// <summary>
     /// Defines a parameter for the <see cref="ErrorReportsModel"/>.

@@ -6,7 +6,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Apollo.UI.Common.Views.Projects
+namespace Apollo.UI.Wpf.Views.Projects
 {
     /// <summary>
     /// The interface for objects that display the description for

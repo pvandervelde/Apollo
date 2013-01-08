@@ -7,7 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Apollo.UI.Common.Bootstrappers
+namespace Apollo.UI.Wpf.Bootstrappers
 {
     /// <summary>
     /// Interface for adapter facilitating simple type registration and 

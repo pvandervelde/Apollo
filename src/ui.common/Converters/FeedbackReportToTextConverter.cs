@@ -8,10 +8,10 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Windows.Data;
-using Apollo.UI.Common.Properties;
-using Apollo.UI.Common.Views.Feedback;
+using Apollo.UI.Wpf.Properties;
+using Apollo.UI.Wpf.Views.Feedback;
 
-namespace Apollo.UI.Common.Converters
+namespace Apollo.UI.Wpf.Converters
 {
     /// <summary>
     /// Converts an <see cref="FeedbackFileModel"/> object to a string representation.

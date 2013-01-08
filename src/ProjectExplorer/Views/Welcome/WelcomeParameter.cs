@@ -5,9 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Apollo.UI.Common;
+using Apollo.UI.Wpf;
 
-namespace Apollo.ProjectExplorer.Views.Welcome
+namespace Apollo.UI.Explorer.Views.Welcome
 {
     /// <summary>
     /// A <see cref="Parameter"/> used by the welcome view.

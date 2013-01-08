@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Apollo.UI.Common
+namespace Apollo.UI.Wpf
 {
     /// <summary>
     /// Defines the common PRISM regions.

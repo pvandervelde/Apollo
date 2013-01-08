@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Apollo.Core.Base.Loaders;
 
-namespace Apollo.UI.Common.Views.Datasets
+namespace Apollo.UI.Wpf.Views.Datasets
 {
     /// <summary>
     /// Interaction logic for MachineSelectorView.xaml.

@@ -6,9 +6,9 @@
 
 using System;
 using System.IO;
-using Apollo.UI.Common.Models;
+using Apollo.UI.Wpf.Models;
 
-namespace Apollo.UI.Common.Views.Settings
+namespace Apollo.UI.Wpf.Views.Settings
 {
     /// <summary>
     /// Defines a <see cref="Model"/> that describes a file that was opened recently with the application.

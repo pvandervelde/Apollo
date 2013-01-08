@@ -6,12 +6,12 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Projects;
-using Apollo.UI.Common.Events;
-using Apollo.UI.Common.Views.Datasets;
+using Apollo.UI.Wpf.Events;
+using Apollo.UI.Wpf.Views.Datasets;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 
-namespace Apollo.UI.Common.Commands
+namespace Apollo.UI.Wpf.Commands
 {
     /// <summary>
     /// Handles the showing of the dataset detail view.

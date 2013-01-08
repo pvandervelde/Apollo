@@ -4,9 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.UI.Common;
+using Apollo.UI.Wpf;
 
-namespace Apollo.ProjectExplorer.Views.About
+namespace Apollo.UI.Explorer.Views.About
 {
     /// <summary>
     /// The view for the <see cref="AboutModel"/>.

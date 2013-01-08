@@ -4,13 +4,13 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.ProjectExplorer.Views.About;
-using Apollo.UI.Common;
-using Apollo.UI.Common.Events;
+using Apollo.UI.Explorer.Views.About;
+using Apollo.UI.Wpf;
+using Apollo.UI.Wpf.Events;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 
-namespace Apollo.ProjectExplorer.Commands
+namespace Apollo.UI.Explorer.Commands
 {
     /// <summary>
     /// Handles the showing of the About window.

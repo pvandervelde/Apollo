@@ -7,7 +7,7 @@
 using System;
 using System.ComponentModel;
 
-namespace Apollo.UI.Common
+namespace Apollo.UI.Wpf
 {
     /// <summary>
     /// Implemented by views.

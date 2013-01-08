@@ -6,7 +6,7 @@
 
 using System.Windows.Controls;
 
-namespace Apollo.UI.Common.Views.Progress
+namespace Apollo.UI.Wpf.Views.Progress
 {
     /// <summary>
     /// Interaction logic for ProgressView.xaml.

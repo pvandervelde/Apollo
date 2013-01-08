@@ -9,7 +9,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
-namespace Apollo.UI.Common.Models
+namespace Apollo.UI.Wpf.Models
 {
     /// <summary>
     /// A converter that converts the <see cref="MostRecentlyUsed"/> class to a string for serialization purposes.

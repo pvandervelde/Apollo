@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Apollo.UI.Common.Views.Projects
+namespace Apollo.UI.Wpf.Views.Projects
 {
     /// <summary>
     /// A parameter for the project view.

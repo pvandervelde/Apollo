@@ -11,7 +11,7 @@ using System.Text;
 using System.Windows.Data;
 using System.Windows.Input;
 
-namespace Apollo.UI.Common.Converters
+namespace Apollo.UI.Wpf.Converters
 {
     /// <summary>
     /// Converts a <see cref="RoutedUICommand"/> to a tool tip text representation.

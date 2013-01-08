@@ -8,7 +8,7 @@ using System;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Apollo.UI.Common.Converters
+namespace Apollo.UI.Wpf.Converters
 {
     /// <summary>
     /// Converts a boolean value into a visibility.

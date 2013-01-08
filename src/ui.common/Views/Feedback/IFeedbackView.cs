@@ -6,7 +6,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Apollo.UI.Common.Views.Feedback
+namespace Apollo.UI.Wpf.Views.Feedback
 {
     /// <summary>
     /// Defines the interface for objects that provide a view onto a 

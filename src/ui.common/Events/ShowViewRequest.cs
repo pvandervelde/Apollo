@@ -8,7 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Practices.Prism.Regions;
 
-namespace Apollo.UI.Common.Events
+namespace Apollo.UI.Wpf.Events
 {
     /// <summary>
     /// Handles requests to show a view.

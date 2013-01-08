@@ -4,10 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.UI.Common;
+using Apollo.UI.Wpf;
 using Autofac;
 
-namespace Apollo.ProjectExplorer.Views.About
+namespace Apollo.UI.Explorer.Views.About
 {
     /// <summary>
     /// The presenter for the <see cref="AboutModel"/>.

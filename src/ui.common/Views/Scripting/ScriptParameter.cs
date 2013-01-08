@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Apollo.UI.Common.Views.Scripting
+namespace Apollo.UI.Wpf.Views.Scripting
 {
     /// <summary>
     /// A parameter for the script view.

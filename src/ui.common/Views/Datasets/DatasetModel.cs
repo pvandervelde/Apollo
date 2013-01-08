@@ -7,12 +7,12 @@
 using System;
 using Apollo.Core.Base;
 using Apollo.Core.Host.UserInterfaces.Projects;
-using Apollo.UI.Common.Properties;
+using Apollo.UI.Wpf.Properties;
 using Apollo.Utilities;
 using Lokad;
 using ICommand = System.Windows.Input.ICommand;
 
-namespace Apollo.UI.Common.Views.Datasets
+namespace Apollo.UI.Wpf.Views.Datasets
 {
     /// <summary>
     /// Defines the viewmodel for a dataset.

@@ -6,11 +6,11 @@
 
 using System;
 using System.IO;
-using Apollo.UI.Common.Properties;
+using Apollo.UI.Wpf.Properties;
 using Lokad;
 using NSarrac.Framework;
 
-namespace Apollo.UI.Common.Feedback
+namespace Apollo.UI.Wpf.Feedback
 {
     /// <summary>
     /// Sends feedback reports to a remote server.

@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Application;
 using Microsoft.Practices.Prism.Commands;
 
-namespace Apollo.UI.Common.Commands
+namespace Apollo.UI.Wpf.Commands
 {
     /// <summary>
     /// Handles the exiting of the application.

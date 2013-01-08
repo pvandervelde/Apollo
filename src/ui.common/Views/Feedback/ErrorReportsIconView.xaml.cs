@@ -10,7 +10,7 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace Apollo.UI.Common.Views.Feedback
+namespace Apollo.UI.Wpf.Views.Feedback
 {
     /// <summary>
     /// Interaction logic for ErrorReportIconView.xaml.

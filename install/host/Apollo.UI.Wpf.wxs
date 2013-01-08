@@ -10,13 +10,13 @@
             reflected in a change to the value of the INSTALLLOCATION directory.
         -->
         <DirectoryRef Id="INSTALLLOCATION">
-            <!-- Apollo.UI.Common.dll -->
-            <Component Id="C.Apollo.UI.Common.dll"
+            <!-- Apollo.UI.Wpf.dll -->
+            <Component Id="C.Apollo.UI.Wpf.dll"
                        Guid="{A4DFEE6C-143C-42E3-902E-C34F13614C61}">
-                <File Id="File.Apollo.UI.Common.dll"
-                      Name="Apollo.UI.Common.dll"
+                <File Id="File.Apollo.UI.Wpf.dll"
+                      Name="Apollo.UI.Wpf.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Apollo.UI.Common.dll"
+                      Source="$(var.Apollo_BinFolder)\Apollo.UI.Wpf.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -141,8 +141,8 @@
             </Component>
         </DirectoryRef>
 
-        <ComponentGroup Id="CGroup.Apollo.Ui.Common">
-            <ComponentRef Id="C.Apollo.UI.Common.dll" />
+        <ComponentGroup Id="CGroup.Apollo.Ui.Wpf">
+            <ComponentRef Id="C.Apollo.UI.Wpf.dll" />
             
             <ComponentRef Id="C.GraphSharp.dll" />
             <ComponentRef Id="C.GraphSharp.Controls.dll" />

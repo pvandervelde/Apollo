@@ -5,12 +5,12 @@
 //-----------------------------------------------------------------------
 
 using System.Windows.Input;
-using Apollo.UI.Common;
-using Apollo.UI.Common.Commands;
+using Apollo.UI.Wpf;
+using Apollo.UI.Wpf.Commands;
 using Autofac;
 using Microsoft.Practices.Prism.Events;
 
-namespace Apollo.ProjectExplorer.Views.Welcome
+namespace Apollo.UI.Explorer.Views.Welcome
 {
     /// <summary>
     /// The presenter for the <see cref="WelcomeModel"/>.

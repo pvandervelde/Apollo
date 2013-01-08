@@ -6,7 +6,7 @@
 
 using System.Windows.Controls;
 
-namespace Apollo.UI.Common.Views.Projects
+namespace Apollo.UI.Wpf.Views.Projects
 {
     /// <summary>
     /// Interaction logic for ProjectView.xaml.

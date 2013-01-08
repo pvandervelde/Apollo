@@ -8,9 +8,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using Apollo.Core.Host.UserInterfaces.Scripting;
-using Apollo.UI.Common.Properties;
+using Apollo.UI.Wpf.Properties;
 
-namespace Apollo.UI.Common.Views.Scripting
+namespace Apollo.UI.Wpf.Views.Scripting
 {
     /// <summary>
     /// Defines the viewmodel for a script.

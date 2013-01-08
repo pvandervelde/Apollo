@@ -7,7 +7,7 @@
 using System;
 using Apollo.Utilities;
 
-namespace Apollo.UI.Common.Views.Progress
+namespace Apollo.UI.Wpf.Views.Progress
 {
     /// <summary>
     /// Defines the model for the progress reporting in the application.

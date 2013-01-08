@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using Apollo.Core.Base.Loaders;
 using Lokad;
 
-namespace Apollo.UI.Common.Views.Datasets
+namespace Apollo.UI.Wpf.Views.Datasets
 {
     /// <summary>
     /// Defines the view model for the selection of a machine onto which a dataset will be loaded.

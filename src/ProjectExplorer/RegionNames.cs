@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Apollo.ProjectExplorer
+namespace Apollo.UI.Explorer
 {
     /// <summary>
     /// Stores the names of the different regions as constants.

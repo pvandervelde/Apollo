@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using Apollo.Core.Base;
 using Lokad;
 
-namespace Apollo.UI.Common.Views.Datasets
+namespace Apollo.UI.Wpf.Views.Datasets
 {
     /// <summary>
     /// A graph vertex that stores a link to a dataset.

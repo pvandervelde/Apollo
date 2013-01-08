@@ -5,9 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Apollo.UI.Common;
+using Apollo.UI.Wpf;
 
-namespace Apollo.ProjectExplorer.Views.StatusBar
+namespace Apollo.UI.Explorer.Views.StatusBar
 {
     /// <summary>
     /// The model for the status bar.

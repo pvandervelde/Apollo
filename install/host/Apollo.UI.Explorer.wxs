@@ -11,14 +11,14 @@
             reflected in a change to the value of the INSTALLLOCATION directory.
         -->
         <DirectoryRef Id="INSTALLLOCATION">
-            <Component Id="C.Apollo.ProjectExplorer.Exe"
+            <Component Id="C.Apollo.UI.Explorer.Exe"
                        Guid="{2846885A-D649-47DD-9820-983B4158741A}">
-                <File Id="File.Apollo.ProjectExplorer.Exe"
-                      Name="Apollo.ProjectExplorer.exe"
+                <File Id="File.Apollo.UI.Explorer.Exe"
+                      Name="Apollo.UI.Explorer.exe"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Apollo.ProjectExplorer.exe"
+                      Source="$(var.Apollo_BinFolder)\Apollo.UI.Explorer.exe"
                       KeyPath="yes">
-                    <Shortcut Id="ShortCut.StartMenu.Apollo.ProjectExplorer"
+                    <Shortcut Id="ShortCut.StartMenu.Apollo.UI.Explorer"
                               Directory="Dir.Menu.Apollo"
                               Name="$(var.Apollo_ProductName)"
                               Icon="Icon.Apollo.ico"
@@ -28,13 +28,13 @@
                 </File>
             </Component>
 
-            <!-- Apollo.ProjectExplorer.exe.config -->
-            <Component Id="C.Apollo.ProjectExplorer.Exe.Config"
+            <!-- Apollo.UI.Explorer.exe.config -->
+            <Component Id="C.Apollo.UI.Explorer.Exe.Config"
                        Guid="{5809AC5B-6BC4-484A-A00D-766DA7D48446}">
-                <File Id="File.Apollo.ProjectExplorer.Exe.Config"
-                      Name="Apollo.ProjectExplorer.exe.config"
+                <File Id="File.Apollo.UI.Explorer.Exe.Config"
+                      Name="Apollo.UI.Explorer.exe.config"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Apollo.ProjectExplorer.exe.config"
+                      Source="$(var.Apollo_BinFolder)\Apollo.UI.Explorer.exe.config"
                       KeyPath="yes" />
             </Component>
         </DirectoryRef>
@@ -48,23 +48,23 @@
             In order to make sure that we don't rerun all of the features (and thus
             maybe lose registry settings etc.) we pack the exe in separate feature.
         -->
-        <Feature Id="F.Apollo.UI.ProjectExplorer.Exe"
+        <Feature Id="F.Apollo.UI.Explorer.Exe"
                  Title="Project explorer"
                  Description="The Project explorer executable"
                  Absent="allow"
                  Level="10">
-            <ComponentRef Id="C.Apollo.ProjectExplorer.Exe" />
-            <ComponentRef Id="C.Apollo.ProjectExplorer.Exe.Config" />
+            <ComponentRef Id="C.Apollo.UI.Explorer.Exe" />
+            <ComponentRef Id="C.Apollo.UI.Explorer.Exe.Config" />
         </Feature>
 
         <!-- The feature for the main program. -->
-        <Feature Id="F.Apollo.UI.ProjectExplorer"
+        <Feature Id="F.Apollo.UI.Explorer"
                  Title="Project explorer support"
                  Description="The support binaries for the Project explorer User Interface."
                  Absent="allow"
                  Level="10">
-            <FeatureRef Id="F.Apollo.UI.ProjectExplorer.Exe" />
-            <ComponentGroupRef Id="CGroup.Apollo.Ui.Common" />
+            <FeatureRef Id="F.Apollo.UI.Explorer.Exe" />
+            <ComponentGroupRef Id="CGroup.Apollo.Ui.Wpf" />
         </Feature>
     </Fragment>
 </Wix>

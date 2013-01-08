@@ -10,7 +10,7 @@ using System.Linq;
 using System.Windows;
 using Microsoft.Practices.Prism.Regions;
 
-namespace Apollo.UI.Common
+namespace Apollo.UI.Wpf
 {
     /// <summary>
     /// A set of extensions to provide presenter and parameter support for Composite WPF's region manager.

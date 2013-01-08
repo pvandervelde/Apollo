@@ -9,7 +9,7 @@ using System.Diagnostics;
 using Apollo.Utilities;
 using NManto;
 
-namespace Apollo.UI.Common.Profiling
+namespace Apollo.UI.Wpf.Profiling
 {
     /// <summary>
     /// Provides an easy way to get a timing interval and store the interval so that it can be displayed in the UI.

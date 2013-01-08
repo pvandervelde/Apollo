@@ -6,7 +6,7 @@
 
 using System.IO;
 
-namespace Apollo.UI.Common.Feedback
+namespace Apollo.UI.Wpf.Feedback
 {
     /// <summary>
     /// Defines the interface for objects that send feedback reports to a remote server.

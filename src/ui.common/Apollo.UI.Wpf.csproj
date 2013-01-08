@@ -4,8 +4,8 @@
     <SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">$(MSBuildProjectDirectory)\..</SolutionDir>
     <ProjectGuid>{ACD26D23-36BA-4035-84CA-6E462A03B033}</ProjectGuid>
     <OutputType>library</OutputType>
-    <RootNamespace>Apollo.UI.Common</RootNamespace>
-    <AssemblyName>Apollo.UI.Common</AssemblyName>
+    <RootNamespace>Apollo.UI.Wpf</RootNamespace>
+    <AssemblyName>Apollo.UI.Wpf</AssemblyName>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>

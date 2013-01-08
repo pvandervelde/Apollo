@@ -7,9 +7,9 @@
 using System;
 using System.Windows.Data;
 using Apollo.Core.Base.Loaders;
-using Apollo.UI.Common.Properties;
+using Apollo.UI.Wpf.Properties;
 
-namespace Apollo.UI.Common.Converters
+namespace Apollo.UI.Wpf.Converters
 {
     /// <summary>
     /// Converts a <see cref="NetworkIdentifier"/> to a text description.

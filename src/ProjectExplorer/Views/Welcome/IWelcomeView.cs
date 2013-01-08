@@ -4,9 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.UI.Common;
+using Apollo.UI.Wpf;
 
-namespace Apollo.ProjectExplorer.Views.Welcome
+namespace Apollo.UI.Explorer.Views.Welcome
 {
     /// <summary>
     /// Defines the interface for objects that act as the welcome view.

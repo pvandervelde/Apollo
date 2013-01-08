@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Apollo.UI.Common
+namespace Apollo.UI.Wpf
 {
     /// <summary>
     /// Defines the interface for objects that are context aware and need to perform

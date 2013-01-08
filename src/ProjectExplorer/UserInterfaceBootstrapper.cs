@@ -7,13 +7,13 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
-using Apollo.UI.Common.Bootstrappers;
+using Apollo.UI.Wpf.Bootstrappers;
 using Autofac;
 using Lokad;
 using Microsoft.Practices.Prism.Logging;
 using Microsoft.Practices.Prism.Modularity;
 
-namespace Apollo.ProjectExplorer
+namespace Apollo.UI.Explorer
 {
     /// <summary>
     /// The bootstrapper for the User Interface.
@@ -60,7 +60,7 @@ namespace Apollo.ProjectExplorer
         ///     Thrown if <paramref name="resetEvent"/> is <see langword="null" />.
         /// </exception>
         public UserInterfaceBootstrapper(IContainer container, AutoResetEvent resetEvent)
-            : base(new AutofacContainerAdapter(container), new ModuleCatalog().AddModule(typeof(ProjectExplorerModule)))
+            : base(new AutofacContainerAdapter(container), new ModuleCatalog().AddModule(typeof(ExplorerModule)))
         {
             {
                 Enforce.Argument(() => container);
@@ -109,7 +109,7 @@ namespace Apollo.ProjectExplorer
                     .ExternallyOwned();
 
                 // Note that this 'module' is a Prism module, not an Autofac one!
-                builder.RegisterType<ProjectExplorerModule>();
+                builder.RegisterType<ExplorerModule>();
             }
             
             builder.Update(m_ShellIocContainer);

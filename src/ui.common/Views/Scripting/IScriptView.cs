@@ -8,7 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Scripting;
 
-namespace Apollo.UI.Common.Views.Scripting
+namespace Apollo.UI.Wpf.Views.Scripting
 {
     /// <summary>
     /// The interface for objects that display information about

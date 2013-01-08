@@ -7,7 +7,7 @@
 using System;
 using QuickGraph;
 
-namespace Apollo.UI.Common.Views.Datasets
+namespace Apollo.UI.Wpf.Views.Datasets
 {
     /// <summary>
     /// Defines a graph that displays the relations between datasets for the <see cref="DatasetGraphView"/>.

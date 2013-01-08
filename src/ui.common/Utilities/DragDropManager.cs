@@ -11,7 +11,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 
-namespace Apollo.UI.Common.Utilities
+namespace Apollo.UI.Wpf.Utilities
 {
     /// <summary>
     /// The class that provides the dependency properties used to handle drag and drop operations.

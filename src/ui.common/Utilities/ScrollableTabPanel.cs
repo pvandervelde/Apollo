@@ -13,7 +13,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
-namespace Apollo.UI.Common.Utilities
+namespace Apollo.UI.Wpf.Utilities
 {
     /// <summary>
     /// A scrollable TabPanel control.

@@ -5,9 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Apollo.UI.Common;
+using Apollo.UI.Wpf;
 
-namespace Apollo.ProjectExplorer.Views.Shell
+namespace Apollo.UI.Explorer.Views.Shell
 {
     /// <summary>
     /// A <see cref="Parameter"/> used by the shell.

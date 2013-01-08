@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Apollo.UI.Common
+namespace Apollo.UI.Wpf
 {
     /// <summary>
     /// Explicitly implemented by presenters to connect the presenter to the view and parameter.

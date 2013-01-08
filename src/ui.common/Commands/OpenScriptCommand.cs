@@ -8,12 +8,12 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Apollo.Core.Host.UserInterfaces.Scripting;
-using Apollo.UI.Common.Views.Scripting;
+using Apollo.UI.Wpf.Views.Scripting;
 using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
 using NManto;
 
-namespace Apollo.UI.Common.Commands
+namespace Apollo.UI.Wpf.Commands
 {
     /// <summary>
     /// Handles the opening of a script from disk.

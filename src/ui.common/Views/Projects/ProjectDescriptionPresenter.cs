@@ -8,7 +8,7 @@ using System.Diagnostics;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Autofac;
 
-namespace Apollo.UI.Common.Views.Projects
+namespace Apollo.UI.Wpf.Views.Projects
 {
     /// <summary>
     /// The presenter for the <see cref="ProjectDescriptionModel"/>.

@@ -10,7 +10,7 @@ using System.Globalization;
 using System.Windows.Data;
 using Apollo.Core.Base;
 
-namespace Apollo.UI.Common.Views.Datasets
+namespace Apollo.UI.Wpf.Views.Datasets
 {
     /// <summary>
     /// Converts between <see cref="DatasetCreator"/> and an opacity value.

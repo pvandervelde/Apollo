@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Scripting;
 
-namespace Apollo.UI.Common.Views.Scripting
+namespace Apollo.UI.Wpf.Views.Scripting
 {
     /// <summary>
     /// Defines the view model for the selection of a script language.

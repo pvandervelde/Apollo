@@ -7,7 +7,7 @@
 using System;
 using Apollo.Utilities;
 
-namespace Apollo.ProjectExplorer.Utilities
+namespace Apollo.UI.Explorer.Utilities
 {
     /// <summary>
     /// Defines methods used to track progress based on inputs from a user.

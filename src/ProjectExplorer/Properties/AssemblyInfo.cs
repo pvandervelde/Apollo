@@ -12,9 +12,9 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Apollo.ProjectExplorer")]
+[assembly: AssemblyTitle("Apollo.UI.Explorer")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyProduct("Apollo.ProjectExplorer")]
+[assembly: AssemblyProduct("Apollo.UI.Explorer")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
 

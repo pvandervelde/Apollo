@@ -29,7 +29,7 @@ namespace Apollo.Utilities.ExceptionHandling
                 {
                     var xmlString = EmbeddedResourceExtracter.LoadEmbeddedTextFile(
                         Assembly.GetExecutingAssembly(),
-                        "Apollo.ProjectExplorer.Properties.NSarracReportPublicKey.xml");
+                        "Apollo.UI.Explorer.Properties.NSarracReportPublicKey.xml");
                     rsa.FromXmlString(xmlString);
                     rsaParameters = rsa.ExportParameters(false);
                 }

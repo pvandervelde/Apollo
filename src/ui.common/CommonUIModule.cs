@@ -8,8 +8,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
-using Apollo.UI.Common.Feedback;
-using Apollo.UI.Common.Profiling;
+using Apollo.UI.Wpf.Feedback;
+using Apollo.UI.Wpf.Profiling;
 using Apollo.Utilities;
 using Apollo.Utilities.Configuration;
 using Autofac;
@@ -17,10 +17,10 @@ using NManto;
 using NManto.Reporting;
 using NSarrac.Framework;
 
-namespace Apollo.UI.Common
+namespace Apollo.UI.Wpf
 {
     /// <summary>
-    /// Handles the component registrations for the Apollo.UI.Common assembly.
+    /// Handles the component registrations for the Apollo.UI.Wpf assembly.
     /// </summary>
     [ExcludeFromCodeCoverage]
     public sealed class CommonUIModule : Module

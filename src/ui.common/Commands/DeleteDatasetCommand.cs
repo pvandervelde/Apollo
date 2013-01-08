@@ -8,12 +8,12 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Apollo.Core.Host.UserInterfaces.Projects;
-using Apollo.UI.Common.Properties;
+using Apollo.UI.Wpf.Properties;
 using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
 using NManto;
 
-namespace Apollo.UI.Common.Commands
+namespace Apollo.UI.Wpf.Commands
 {
     /// <summary>
     /// Handles deletion of a dataset.

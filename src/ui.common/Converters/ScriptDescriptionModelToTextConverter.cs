@@ -7,9 +7,9 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Data;
-using Apollo.UI.Common.Views.Scripting;
+using Apollo.UI.Wpf.Views.Scripting;
 
-namespace Apollo.UI.Common.Converters
+namespace Apollo.UI.Wpf.Converters
 {
     /// <summary>
     /// Converts a <see cref="ScriptDescriptionModel"/> to a text description of the model.

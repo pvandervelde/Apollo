@@ -6,7 +6,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Apollo.UI.Common.Views.Progress
+namespace Apollo.UI.Wpf.Views.Progress
 {
     /// <summary>
     /// Defines the interface for objects that display information about

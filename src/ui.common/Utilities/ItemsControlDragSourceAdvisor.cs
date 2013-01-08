@@ -13,7 +13,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Apollo.UI.Common.Utilities
+namespace Apollo.UI.Wpf.Utilities
 {
     /// <summary>
     /// An <see cref="IDragSourceAdvisor"/> that works on <see cref="ItemsControl"/> objects.

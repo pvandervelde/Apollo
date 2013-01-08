@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace Apollo.UI.Common.Views.Profiling
+namespace Apollo.UI.Wpf.Views.Profiling
 {
     /// <summary>
     /// Interaction logic for ProfileView.xaml.

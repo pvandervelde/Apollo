@@ -5,9 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Apollo.UI.Common;
+using Apollo.UI.Wpf;
 
-namespace Apollo.ProjectExplorer.Views.Menu
+namespace Apollo.UI.Explorer.Views.Menu
 {
     /// <summary>
     /// A parameter for the <see cref="MenuPresenter"/>.

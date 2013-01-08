@@ -1,5 +1,5 @@
 ﻿<Common:RegionView
-    x:Class="Apollo.ProjectExplorer.Views.Menu.MenuView"
+    x:Class="Apollo.UI.Explorer.Views.Menu.MenuView"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,9 +7,9 @@
     xmlns:lexProviders="clr-namespace:WPFLocalizeExtension.Providers;assembly=WPFLocalizeExtension"
     xmlns:lex="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
     lexEngine:LocalizeDictionary.DesignCulture="en"
-    lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.ProjectExplorer"
+    lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Explorer"
     lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
-    xmlns:Common="clr-namespace:Apollo.UI.Common;assembly=Apollo.UI.Common">
+    xmlns:Common="clr-namespace:Apollo.UI.Wpf;assembly=Apollo.UI.Wpf">
     <Common:RegionView.CommandBindings>
         <CommandBinding
             Command="New"

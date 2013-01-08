@@ -5,13 +5,13 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Apollo.ProjectExplorer.Views.Welcome;
-using Apollo.UI.Common;
-using Apollo.UI.Common.Events;
+using Apollo.UI.Explorer.Views.Welcome;
+using Apollo.UI.Wpf;
+using Apollo.UI.Wpf.Events;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 
-namespace Apollo.ProjectExplorer.Commands
+namespace Apollo.UI.Explorer.Commands
 {
     /// <summary>
     /// Handles the showing of the welcome page tab.

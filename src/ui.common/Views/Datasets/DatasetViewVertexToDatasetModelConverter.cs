@@ -8,7 +8,7 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Apollo.UI.Common.Views.Datasets
+namespace Apollo.UI.Wpf.Views.Datasets
 {
     /// <summary>
     /// Converts from a <see cref="DatasetViewVertex"/> to a <see cref="DatasetModel"/>.

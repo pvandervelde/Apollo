@@ -7,7 +7,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Practices.Prism.Events;
 
-namespace Apollo.UI.Common.Events
+namespace Apollo.UI.Wpf.Events
 {
     /// <summary>
     /// Manages publication and subscription of the showing of a view event.

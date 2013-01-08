@@ -6,9 +6,9 @@
 
 using System;
 using System.Runtime.Serialization;
-using Apollo.UI.Common.Properties;
+using Apollo.UI.Wpf.Properties;
 
-namespace Apollo.UI.Common.Commands
+namespace Apollo.UI.Wpf.Commands
 {
     /// <summary>
     /// An exception thrown if the user cancels the loading of an existing script.

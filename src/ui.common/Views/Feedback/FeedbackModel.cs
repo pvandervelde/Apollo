@@ -11,10 +11,10 @@ using System.Management;
 using System.Reflection;
 using System.Text;
 using System.Windows.Input;
-using Apollo.UI.Common.Feedback;
+using Apollo.UI.Wpf.Feedback;
 using NSarrac.Framework;
 
-namespace Apollo.UI.Common.Views.Feedback
+namespace Apollo.UI.Wpf.Views.Feedback
 {
     /// <summary>
     /// Defines the model for a single feedback entry.

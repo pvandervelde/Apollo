@@ -9,7 +9,7 @@ using Autofac;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Regions;
 
-namespace Apollo.UI.Common
+namespace Apollo.UI.Wpf
 {
     /// <summary>
     /// Defines methods for event handling.

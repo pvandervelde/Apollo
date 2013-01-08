@@ -4,9 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.UI.Common;
+using Apollo.UI.Wpf;
 
-namespace Apollo.ProjectExplorer.Views.Menu
+namespace Apollo.UI.Explorer.Views.Menu
 {
     /// <summary>
     /// Defines the interface for the menu.

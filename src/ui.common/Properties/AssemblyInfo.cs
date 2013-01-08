@@ -14,9 +14,9 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Apollo.UI.Common")]
+[assembly: AssemblyTitle("Apollo.UI.Wpf")]
 [assembly: AssemblyDescription("Holds the common user interface components for Apollo")]
-[assembly: AssemblyProduct("Apollo.UI.Common")]
+[assembly: AssemblyProduct("Apollo.UI.Wpf")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
 
@@ -44,41 +44,41 @@ using System.Windows;
     "Microsoft.Naming", 
     "CA1704:IdentifiersShouldBeSpelledCorrectly", 
     Scope = "namespace", 
-    Target = "Apollo.UI.Common.Eventing", 
+    Target = "Apollo.UI.Wpf.Eventing", 
     MessageId = "Eventing")]
 [module: SuppressMessage(
     "Microsoft.Naming", 
     "CA1702:CompoundWordsShouldBeCasedCorrectly", 
     Scope = "type", 
-    Target = "Apollo.UI.Common.Views.Datasets.DatasetViewGraph", 
+    Target = "Apollo.UI.Wpf.Views.Datasets.DatasetViewGraph", 
     MessageId = "ViewGraph")]
 [module: SuppressMessage(
     "Microsoft.Naming", 
     "CA1702:CompoundWordsShouldBeCasedCorrectly", 
     Scope = "member", 
-    Target = "Apollo.UI.Common.Bootstrapper.CompositeBootstrapper.#m_UseDefaultConfiguration", 
+    Target = "Apollo.UI.Wpf.Bootstrapper.CompositeBootstrapper.#m_UseDefaultConfiguration", 
     MessageId = "mUse")]
 [module: SuppressMessage(
     "Microsoft.Performance", 
     "CA1800:DoNotCastUnnecessarily", 
     Scope = "member", 
-    Target = "Apollo.UI.Common.Views.Datasets.DatasetVertexView.#System.Windows.Markup.IComponentConnector.Connect(System.Int32,System.Object)", 
+    Target = "Apollo.UI.Wpf.Views.Datasets.DatasetVertexView.#System.Windows.Markup.IComponentConnector.Connect(System.Int32,System.Object)", 
     Justification = "Generated code")]
 [module: SuppressMessage(
     "Microsoft.Naming", 
     "CA1707:IdentifiersShouldNotContainUnderscores", 
     Scope = "member", 
-    Target = "Apollo.UI.Common.Views.Datasets.DatasetGraphView.#_CreateDelegate(System.Type,System.String)",
+    Target = "Apollo.UI.Wpf.Views.Datasets.DatasetGraphView.#_CreateDelegate(System.Type,System.String)",
     Justification = "Generated code")]
 [module: SuppressMessage(
     "Microsoft.Naming", 
     "CA1703:ResourceStringsShouldBeSpelledCorrectly", 
     Scope = "resource", 
-    Target = "Apollo.UI.Common.Properties.Resources.resources", 
+    Target = "Apollo.UI.Wpf.Properties.Resources.resources", 
     MessageId = "rb")]
 [module: SuppressMessage(
     "Microsoft.Naming", 
     "CA1703:ResourceStringsShouldBeSpelledCorrectly", 
     Scope = "resource", 
-    Target = "Apollo.UI.Common.Properties.Resources.resources", 
+    Target = "Apollo.UI.Wpf.Properties.Resources.resources", 
     MessageId = "py")]

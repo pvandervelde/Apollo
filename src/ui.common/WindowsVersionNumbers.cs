@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Apollo.UI.Common
+namespace Apollo.UI.Wpf
 {
     /// <summary>
     /// Defines the version numbers for the different versions of Microsoft Windows.

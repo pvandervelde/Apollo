@@ -6,7 +6,7 @@
 
 using Autofac;
 
-namespace Apollo.UI.Common.Views.Datasets
+namespace Apollo.UI.Wpf.Views.Datasets
 {
     /// <summary>
     /// The presenter for the <see cref="MachineSelectorModel"/>.

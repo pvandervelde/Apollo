@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Apollo.UI.Common.Profiling
+namespace Apollo.UI.Wpf.Profiling
 {
     /// <summary>
     /// Stores the timing results for a given timing interval.

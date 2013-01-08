@@ -7,7 +7,7 @@
 using System;
 using Apollo.Utilities;
 
-namespace Apollo.UI.Common.Views.Notification
+namespace Apollo.UI.Wpf.Views.Notification
 {
     /// <summary>
     /// Defines the model for the notification reporting in the application.

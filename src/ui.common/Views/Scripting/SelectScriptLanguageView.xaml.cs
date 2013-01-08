@@ -7,7 +7,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Apollo.UI.Common.Views.Scripting
+namespace Apollo.UI.Wpf.Views.Scripting
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml.

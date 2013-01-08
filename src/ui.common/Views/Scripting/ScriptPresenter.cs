@@ -9,14 +9,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using Apollo.Core.Host.UserInterfaces.Scripting;
-using Apollo.UI.Common.Commands;
-using Apollo.UI.Common.Properties;
+using Apollo.UI.Wpf.Commands;
+using Apollo.UI.Wpf.Properties;
 using Autofac;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Win32;
 
-namespace Apollo.UI.Common.Views.Scripting
+namespace Apollo.UI.Wpf.Views.Scripting
 {
     /// <summary>
     /// The presenter for the <see cref="ScriptModel"/>.

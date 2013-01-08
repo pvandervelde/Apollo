@@ -11,7 +11,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Lokad;
 
-namespace Apollo.UI.Common
+namespace Apollo.UI.Wpf
 {
     /// <summary>
     /// A base class for objects that implement the INotifyPropertyChanged interface.

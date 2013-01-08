@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using Apollo.Core.Base.Loaders;
 
-namespace Apollo.UI.Common.Views.Datasets
+namespace Apollo.UI.Wpf.Views.Datasets
 {
     /// <summary>
     /// A parameter for the machine selection view.

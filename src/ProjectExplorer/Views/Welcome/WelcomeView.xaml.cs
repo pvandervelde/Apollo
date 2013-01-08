@@ -18,7 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Apollo.ProjectExplorer.Views.Welcome
+namespace Apollo.UI.Explorer.Views.Welcome
 {
     /// <summary>
     /// Interaction logic for WelcomePage.xaml.

@@ -8,13 +8,13 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
-using Apollo.ProjectExplorer.Properties;
-using Apollo.UI.Common;
-using Apollo.UI.Common.Models;
-using Apollo.UI.Common.Views.Settings;
+using Apollo.UI.Explorer.Properties;
+using Apollo.UI.Wpf;
+using Apollo.UI.Wpf.Models;
+using Apollo.UI.Wpf.Views.Settings;
 using Apollo.Utilities.Configuration;
 
-namespace Apollo.ProjectExplorer.Views.Welcome
+namespace Apollo.UI.Explorer.Views.Welcome
 {
     /// <summary>
     /// The model for the welcome view.

@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Apollo.UI.Common.Views.Progress
+namespace Apollo.UI.Wpf.Views.Progress
 {
     /// <summary>
     /// Defines a parameter for the <see cref="ProgressModel"/>.

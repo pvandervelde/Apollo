@@ -14,7 +14,7 @@ using GraphSharp.Algorithms.Layout.Simple.Tree;
 using GraphSharp.Controls;
 using Lokad;
 
-namespace Apollo.UI.Common.Views.Datasets
+namespace Apollo.UI.Wpf.Views.Datasets
 {
     /// <summary>
     /// Defines the viewmodel for the graph of datasets.

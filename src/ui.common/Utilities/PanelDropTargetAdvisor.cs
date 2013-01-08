@@ -13,7 +13,7 @@ using System.Windows.Markup;
 using System.Windows.Media.Animation;
 using System.Xml;
 
-namespace Apollo.UI.Common.Utilities
+namespace Apollo.UI.Wpf.Utilities
 {
     /// <summary>
     /// A drag target advisor for a panel.

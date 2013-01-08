@@ -6,7 +6,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Apollo.UI.Common.Events
+namespace Apollo.UI.Wpf.Events
 {
     /// <summary>
     /// Handles requests to close a view.

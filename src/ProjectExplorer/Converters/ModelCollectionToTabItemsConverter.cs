@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace Apollo.ProjectExplorer.Converters
+namespace Apollo.UI.Explorer.Converters
 {
     /// <summary>
     /// Gets the TabItems that are related to a collection of Model objects.

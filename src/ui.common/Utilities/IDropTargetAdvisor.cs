@@ -7,7 +7,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
-namespace Apollo.UI.Common.Utilities
+namespace Apollo.UI.Wpf.Utilities
 {
     /// <summary>
     /// Defines the interface for objects that advise on how to handle 

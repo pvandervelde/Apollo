@@ -7,7 +7,7 @@
 using Apollo.Utilities;
 using Autofac;
 
-namespace Apollo.UI.Common.Views.Notification
+namespace Apollo.UI.Wpf.Views.Notification
 {
     /// <summary>
     /// Defines a presenter that creates <see cref="NotificationModel"/> objects and connects them to

@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Apollo.Core.Host.UserInterfaces.Scripting;
-using Apollo.UI.Common.Commands;
+using Apollo.UI.Wpf.Commands;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using Lokad;
 
-namespace Apollo.UI.Common.Views.Scripting
+namespace Apollo.UI.Wpf.Views.Scripting
 {
     /// <summary>
     /// Interaction logic for ScriptView.xaml.
@@ -38,8 +38,8 @@ namespace Apollo.UI.Common.Views.Scripting
         /// </summary>
         private static readonly RoutedUICommand s_RunScriptCommand
             = new RoutedUICommand(
-                Apollo.UI.Common.Properties.Resources.ScriptView_Command_RunScript_Text,
-                Apollo.UI.Common.Properties.Resources.ScriptView_Command_RunScript_Name,
+                Apollo.UI.Wpf.Properties.Resources.ScriptView_Command_RunScript_Text,
+                Apollo.UI.Wpf.Properties.Resources.ScriptView_Command_RunScript_Name,
                 typeof(ScriptView),
                 new InputGestureCollection { new KeyGesture(Key.F5) });
 
@@ -48,8 +48,8 @@ namespace Apollo.UI.Common.Views.Scripting
         /// </summary>
         private static readonly RoutedUICommand s_CancelRunScriptCommand
             = new RoutedUICommand(
-                Apollo.UI.Common.Properties.Resources.ScriptView_Command_CancelRunScript_Text,
-                Apollo.UI.Common.Properties.Resources.ScriptView_Command_CancelRunScript_Name,
+                Apollo.UI.Wpf.Properties.Resources.ScriptView_Command_CancelRunScript_Text,
+                Apollo.UI.Wpf.Properties.Resources.ScriptView_Command_CancelRunScript_Name,
                 typeof(ScriptView),
                 new InputGestureCollection { new KeyGesture(Key.F5, ModifierKeys.Shift) });
 

@@ -8,11 +8,11 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Windows;
-using Apollo.UI.Common.Events;
+using Apollo.UI.Wpf.Events;
 using Autofac;
 using Microsoft.Practices.Prism.Regions;
 
-namespace Apollo.UI.Common.Events.Listeners
+namespace Apollo.UI.Wpf.Events.Listeners
 {
     /// <summary>
     /// An <see cref="EventListener"/> which is responsible for showing views.

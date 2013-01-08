@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Apollo.UI.Common.Views.Scripting.ScriptView"
+﻿<UserControl x:Class="Apollo.UI.Wpf.Views.Scripting.ScriptView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -8,10 +8,10 @@
              xmlns:lexProviders="clr-namespace:WPFLocalizeExtension.Providers;assembly=WPFLocalizeExtension"
              xmlns:lex="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
                         lexEngine:LocalizeDictionary.DesignCulture="en"
-                        lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Common"
+                        lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Wpf"
                         lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
              xmlns:gi="clr-namespace:GreyableImage;assembly=GreyableImage"
-             xmlns:converters="clr-namespace:Apollo.UI.Common.Converters"
+             xmlns:converters="clr-namespace:Apollo.UI.Wpf.Converters"
              mc:Ignorable="d"
              d:DesignHeight="480"
              d:DesignWidth="640">

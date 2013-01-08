@@ -1,10 +1,10 @@
-﻿<common:RegionView x:Class="Apollo.ProjectExplorer.Views.StatusBar.StatusBarView"
+﻿<common:RegionView x:Class="Apollo.UI.Explorer.Views.StatusBar.StatusBarView"
                    x:ClassModifier="internal"
                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:regions="http://www.codeplex.com/prism"
                    xmlns:lex="http://schemas.root-project.org/xaml/presentation"
-                   xmlns:common="clr-namespace:Apollo.UI.Common;assembly=Apollo.UI.Common">
+                   xmlns:common="clr-namespace:Apollo.UI.Wpf;assembly=Apollo.UI.Wpf">
     <StatusBar>
         <StatusBar.ItemsPanel>
             <ItemsPanelTemplate>

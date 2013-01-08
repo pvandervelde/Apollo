@@ -6,7 +6,7 @@
 
 using Autofac;
 
-namespace Apollo.UI.Common.Views.Scripting
+namespace Apollo.UI.Wpf.Views.Scripting
 {
     /// <summary>
     /// The presenter for the <see cref="SelectScriptLanguageModel"/>.

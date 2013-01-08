@@ -8,9 +8,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
-using Apollo.UI.Common;
+using Apollo.UI.Wpf;
 
-namespace Apollo.ProjectExplorer.Views.About
+namespace Apollo.UI.Explorer.Views.About
 {
     /// <summary>
     /// The model for the about window.

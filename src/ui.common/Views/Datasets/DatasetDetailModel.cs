@@ -8,11 +8,11 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Apollo.Core.Host.UserInterfaces.Projects;
-using Apollo.UI.Common.Properties;
+using Apollo.UI.Wpf.Properties;
 using Apollo.Utilities;
 using ICommand = System.Windows.Input.ICommand;
 
-namespace Apollo.UI.Common.Views.Datasets
+namespace Apollo.UI.Wpf.Views.Datasets
 {
     /// <summary>
     /// Defines the viewmodel for detail view of the dataset.

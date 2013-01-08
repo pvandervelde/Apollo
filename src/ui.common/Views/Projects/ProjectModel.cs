@@ -7,9 +7,9 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
-using Apollo.UI.Common.Properties;
+using Apollo.UI.Wpf.Properties;
 
-namespace Apollo.UI.Common.Views.Projects
+namespace Apollo.UI.Wpf.Views.Projects
 {
     /// <summary>
     /// Defines the viewmodel for the project.

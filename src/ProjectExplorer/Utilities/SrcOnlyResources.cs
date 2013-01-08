@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Apollo.ProjectExplorer.Properties;
+using Apollo.UI.Explorer.Properties;
 using Apollo.Utilities.Logging;
 
 namespace Apollo.Utilities

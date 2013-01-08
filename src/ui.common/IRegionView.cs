@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Apollo.UI.Common
+namespace Apollo.UI.Wpf
 {
     /// <summary>
     /// Implemented by views which are shown in a region.

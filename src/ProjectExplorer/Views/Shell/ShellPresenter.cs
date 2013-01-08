@@ -4,9 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.UI.Common;
+using Apollo.UI.Wpf;
 
-namespace Apollo.ProjectExplorer.Views.Shell
+namespace Apollo.UI.Explorer.Views.Shell
 {
     /// <summary>
     /// The presenter for the shell.

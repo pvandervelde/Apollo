@@ -7,9 +7,9 @@
 using System;
 using System.Collections.Generic;
 using Apollo.Core.Host.UserInterfaces.Scripting;
-using Apollo.UI.Common.Properties;
+using Apollo.UI.Wpf.Properties;
 
-namespace Apollo.UI.Common.Views.Scripting
+namespace Apollo.UI.Wpf.Views.Scripting
 {
     /// <summary>
     /// The view model that describes a scripting language.

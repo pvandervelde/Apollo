@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Apollo.UI.Common.Profiling
+namespace Apollo.UI.Wpf.Profiling
 {
     /// <summary>
     /// Stores a collection of timing reports.

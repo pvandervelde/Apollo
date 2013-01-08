@@ -8,9 +8,9 @@ using System;
 using System.ComponentModel;
 using System.Configuration;
 using System.Globalization;
-using Apollo.UI.Common.Properties;
+using Apollo.UI.Wpf.Properties;
 
-namespace Apollo.UI.Common.Models
+namespace Apollo.UI.Wpf.Models
 {
     /// <summary>
     /// Stores data about a file that was recently opened by the current application.

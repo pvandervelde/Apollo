@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Apollo.UI.Common.Views.Profiling
+namespace Apollo.UI.Wpf.Views.Profiling
 {
     /// <summary>
     /// Defines a parameter for the <see cref="ProfileModel"/>.

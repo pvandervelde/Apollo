@@ -8,9 +8,9 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
-using Apollo.UI.Common.Profiling;
+using Apollo.UI.Wpf.Profiling;
 
-namespace Apollo.UI.Common.Views.Profiling
+namespace Apollo.UI.Wpf.Views.Profiling
 {
     /// <summary>
     /// Defines the model for a single feedback entry.

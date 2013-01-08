@@ -7,10 +7,10 @@
 using System;
 using System.Globalization;
 using System.Runtime.Serialization;
-using Apollo.ProjectExplorer.Properties;
+using Apollo.UI.Explorer.Properties;
 using Apollo.Utilities;
 
-namespace Apollo.ProjectExplorer
+namespace Apollo.UI.Explorer
 {
     /// <summary>
     /// An exception thrown when the user request the start-up time

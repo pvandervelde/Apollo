@@ -4,10 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.UI.Common.Commands;
+using Apollo.UI.Wpf.Commands;
 using Autofac;
 
-namespace Apollo.UI.Common.Views.Projects
+namespace Apollo.UI.Wpf.Views.Projects
 {
     /// <summary>
     /// The presenter for the <see cref="ProjectModel"/>.

@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Navigation;
 
-namespace Apollo.ProjectExplorer.Views.About
+namespace Apollo.UI.Explorer.Views.About
 {
     /// <summary>
     /// Interaction logic for AboutWindow.xaml.

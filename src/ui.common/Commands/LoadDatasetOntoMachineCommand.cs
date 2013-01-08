@@ -14,7 +14,7 @@ using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
 using NManto;
 
-namespace Apollo.UI.Common.Commands
+namespace Apollo.UI.Wpf.Commands
 {
     /// <summary>
     /// Handles the loading of a dataset onto a machine.

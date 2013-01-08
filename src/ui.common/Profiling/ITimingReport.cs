@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Apollo.UI.Common.Profiling
+namespace Apollo.UI.Wpf.Profiling
 {
     /// <summary>
     /// Defines the interface for objects that store information about a profiling report.

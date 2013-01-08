@@ -6,7 +6,7 @@
 
 using System.Windows.Controls;
 
-namespace Apollo.UI.Common.Views.Notification
+namespace Apollo.UI.Wpf.Views.Notification
 {
     /// <summary>
     /// Interaction logic for NotificationView.xaml.

@@ -8,7 +8,7 @@ using System;
 using Lokad;
 using Lokad.Rules;
 
-namespace Apollo.UI.Common.Views.Feedback
+namespace Apollo.UI.Wpf.Views.Feedback
 {
     /// <summary>
     /// Defines the model for a single feedback report.

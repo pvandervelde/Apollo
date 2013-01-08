@@ -7,7 +7,7 @@
 using Apollo.Utilities;
 using Autofac;
 
-namespace Apollo.UI.Common.Views.Progress
+namespace Apollo.UI.Wpf.Views.Progress
 {
     /// <summary>
     /// Defines a presenter that creates <see cref="ProgressModel"/> objects and connects them to

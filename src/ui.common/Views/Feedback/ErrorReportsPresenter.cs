@@ -4,11 +4,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.UI.Common.Commands;
-using Apollo.UI.Common.Feedback;
+using Apollo.UI.Wpf.Commands;
+using Apollo.UI.Wpf.Feedback;
 using Autofac;
 
-namespace Apollo.UI.Common.Views.Feedback
+namespace Apollo.UI.Wpf.Views.Feedback
 {
     /// <summary>
     /// Defines a presenter that creates <see cref="ErrorReportsModel"/> objects and connects them to

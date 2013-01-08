@@ -10,9 +10,9 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Apollo.UI.Common.Feedback;
+using Apollo.UI.Wpf.Feedback;
 
-namespace Apollo.UI.Common.Views.Feedback
+namespace Apollo.UI.Wpf.Views.Feedback
 {
     /// <summary>
     /// Defines the model for a collection of error reports.

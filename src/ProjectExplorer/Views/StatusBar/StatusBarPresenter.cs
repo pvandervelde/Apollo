@@ -4,9 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.UI.Common;
+using Apollo.UI.Wpf;
 
-namespace Apollo.ProjectExplorer.Views.StatusBar
+namespace Apollo.UI.Explorer.Views.StatusBar
 {
     /// <summary>
     /// The presenter for the status bar.

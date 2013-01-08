@@ -10,7 +10,7 @@ using Apollo.Core.Host;
 using Apollo.Utilities;
 using Lokad;
 
-namespace Apollo.ProjectExplorer
+namespace Apollo.UI.Explorer
 {
     /// <summary>
     /// Stores marker times for the Project Explorer.

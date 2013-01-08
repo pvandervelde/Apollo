@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Apollo.ProjectExplorer.Converters
+namespace Apollo.UI.Explorer.Converters
 {
     /// <summary>
     /// Creates a margin.

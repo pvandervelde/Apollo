@@ -8,11 +8,11 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Shell;
-using Apollo.UI.Common.Commands;
+using Apollo.UI.Wpf.Commands;
 using Apollo.Utilities;
 using Lokad;
 
-namespace Apollo.ProjectExplorer.Views.Shell
+namespace Apollo.UI.Explorer.Views.Shell
 {
     /// <summary>
     /// Interaction logic for ShellWindow.xaml.

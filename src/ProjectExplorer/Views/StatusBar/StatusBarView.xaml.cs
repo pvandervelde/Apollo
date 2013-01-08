@@ -6,7 +6,7 @@
 
 using System.Windows.Controls;
 
-namespace Apollo.ProjectExplorer.Views.StatusBar
+namespace Apollo.UI.Explorer.Views.StatusBar
 {
     /// <summary>
     /// Interaction logic for StatusBarView.xaml.
