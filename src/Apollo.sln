@@ -11,13 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Utilities", "utiliti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Utilities.SrcOnly", "utilities.srconly\Apollo.Utilities.SrcOnly.csproj", "{A4E93835-9467-48E1-BDFF-A107CF3784C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.UI.Explorer", "ProjectExplorer\Apollo.UI.Explorer.csproj", "{60F9649B-6C4B-43D4-AE8C-D68F04E2C3DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.UI.Explorer", "ui.explorer\Apollo.UI.Explorer.csproj", "{60F9649B-6C4B-43D4-AE8C-D68F04E2C3DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.UI.Wpf", "ui.common\Apollo.UI.Wpf.csproj", "{ACD26D23-36BA-4035-84CA-6E462A03B033}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.UI.Wpf", "ui.wpf\Apollo.UI.Wpf.csproj", "{ACD26D23-36BA-4035-84CA-6E462A03B033}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Manual.Console", "Test.Manual.Console\Test.Manual.Console.csproj", "{F04CC16B-8422-403E-919B-1189D0C637CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Dataset", "test.unit.dataset\Test.Unit.Dataset.csproj", "{7CCDFF95-66CF-4347-AF7A-7197805757F4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Core.Dataset", "test.unit.core.dataset\Test.Unit.Core.Dataset.csproj", "{7CCDFF95-66CF-4347-AF7A-7197805757F4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Core.Base", "test.unit.core.base\Test.Unit.Core.Base.csproj", "{8E03F1B6-AA16-4D87-B6B4-91797555EE56}"
 EndProject

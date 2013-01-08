@@ -5,7 +5,7 @@
     <ProjectGuid>{7CCDFF95-66CF-4347-AF7A-7197805757F4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Apollo.Core.Dataset</RootNamespace>
-    <AssemblyName>Test.Unit.Dataset</AssemblyName>
+    <AssemblyName>Test.Unit.Core.Dataset</AssemblyName>
     <ShouldDoDocumentation>false</ShouldDoDocumentation>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
