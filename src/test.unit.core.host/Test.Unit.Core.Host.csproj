@@ -68,11 +68,15 @@
       <Project>{ee14fafe-8e78-11e1-b5d3-6df7bbe59b18}</Project>
       <Name>Apollo.Core.Extensions</Name>
     </ProjectReference>
+    <ProjectReference Include="..\core.scripting\Apollo.Core.Scripting.csproj">
+      <Project>{626db086-d3e7-47a6-92b5-2afc58e8e18e}</Project>
+      <Name>Apollo.Core.Scripting</Name>
+    </ProjectReference>
     <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
       <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>
       <Name>SolutionLevel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ui.common\Apollo.UI.Common.csproj">
+    <ProjectReference Include="..\ui.wpf\Apollo.UI.Wpf.csproj">
       <Project>{ACD26D23-36BA-4035-84CA-6E462A03B033}</Project>
       <Name>Apollo.UI.Common</Name>
     </ProjectReference>
@@ -84,7 +88,7 @@
       <Project>{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}</Project>
       <Name>Apollo.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ProjectExplorer\Apollo.ProjectExplorer.csproj">
+    <ProjectReference Include="..\ui.explorer\Apollo.UI.Explorer.csproj">
       <Project>{60F9649B-6C4B-43D4-AE8C-D68F04E2C3DF}</Project>
       <Name>Apollo.ProjectExplorer</Name>
     </ProjectReference>
@@ -175,18 +179,18 @@
     <Compile Include="UserInterfaces\Projects\ProjectFacadeTest.cs" />
     <Compile Include="UserInterfaces\Projects\ProjectHubTest.cs" />
     <Compile Include="UserInterfaces\Projects\UnloadProjectCommandTest.cs" />
-    <Compile Include="UserInterfaces\Scripting\CancelScriptTokenTest.cs" />
-    <Compile Include="UserInterfaces\Scripting\CannotInterruptRunningScriptExceptionTest.cs" />
-    <Compile Include="UserInterfaces\Scripting\DatasetFacadeForScriptsTest.cs" />
-    <Compile Include="UserInterfaces\Scripting\InvalidScriptLanguageExceptionTest.cs" />
-    <Compile Include="UserInterfaces\Scripting\ProjectFacadeForScriptsTest.cs" />
-    <Compile Include="UserInterfaces\Scripting\ProjectHubForScriptsTest.cs" />
-    <Compile Include="UserInterfaces\Scripting\RemoteScriptRunnerTest.cs" />
-    <Compile Include="UserInterfaces\Scripting\ScriptErrorInformationTest.cs" />
-    <Compile Include="UserInterfaces\Scripting\ScriptExecutionFailureExceptionTest.cs" />
-    <Compile Include="UserInterfaces\Scripting\ScriptHostTest.cs" />
-    <Compile Include="UserInterfaces\Scripting\ScriptOutputPipeTest.cs" />
-    <Compile Include="UserInterfaces\Scripting\SourceErrorListenerTest.cs" />
+    <Compile Include="Scripting\CancelScriptTokenTest.cs" />
+    <Compile Include="Scripting\CannotInterruptRunningScriptExceptionTest.cs" />
+    <Compile Include="Scripting\Projects\DatasetFacadeForScriptsTest.cs" />
+    <Compile Include="Scripting\InvalidScriptLanguageExceptionTest.cs" />
+    <Compile Include="Scripting\Projects\ProjectFacadeForScriptsTest.cs" />
+    <Compile Include="Scripting\Projects\ProjectHubForScriptsTest.cs" />
+    <Compile Include="Scripting\RemoteScriptRunnerTest.cs" />
+    <Compile Include="Scripting\ScriptErrorInformationTest.cs" />
+    <Compile Include="Scripting\ScriptExecutionFailureExceptionTest.cs" />
+    <Compile Include="Scripting\ScriptHostTest.cs" />
+    <Compile Include="Scripting\ScriptOutputPipeTest.cs" />
+    <Compile Include="Scripting\SourceErrorListenerTest.cs" />
     <Compile Include="UserInterfaces\UserInterfaceServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>

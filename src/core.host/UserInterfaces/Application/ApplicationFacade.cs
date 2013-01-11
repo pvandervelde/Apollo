@@ -50,8 +50,6 @@ namespace Apollo.Core.Host.UserInterfaces.Application
                 () => new SystemInformationStorage() { StartupTime = DateTimeOffset.Now });
         }
 
-        #region Implementation of IAbstractApplications
-
         /// <summary>
         /// Shuts the application down.
         /// </summary>
@@ -90,7 +88,5 @@ namespace Apollo.Core.Host.UserInterfaces.Application
         {
             m_Service.RegisterNotification(name, callback);
         }
-
-        #endregion
     }
 }

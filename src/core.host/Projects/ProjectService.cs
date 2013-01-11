@@ -174,8 +174,6 @@ namespace Apollo.Core.Host.Projects
             current.Close();
         }
 
-        #region Overrides
-
         /// <summary>
         /// Unloads the current project before shutting down the service.
         /// </summary>
@@ -183,7 +181,5 @@ namespace Apollo.Core.Host.Projects
         {
             UnloadProject();
         }
-
-        #endregion
     }
 }

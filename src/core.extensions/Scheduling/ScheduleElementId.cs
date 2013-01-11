@@ -42,8 +42,6 @@ namespace Apollo.Core.Extensions.Scheduling
             }
         }
 
-        #region Overrides of Id<ScheduleId,Guid>
-
         /// <summary>
         /// Performs the actual act of creating a copy of the current ID number.
         /// </summary>
@@ -87,7 +85,5 @@ namespace Apollo.Core.Extensions.Scheduling
         {
             return string.Format(CultureInfo.InvariantCulture, "Schedule action [{0}]", InternalValue);
         }
-
-        #endregion
     }
 }

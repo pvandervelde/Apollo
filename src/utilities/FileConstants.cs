@@ -35,8 +35,6 @@ namespace Apollo.Utilities
             m_Constants = constants;
         }
 
-        #region Implementation of IFileConstants
-
         /// <summary>
         /// Gets the extension for an assembly file.
         /// </summary>
@@ -135,7 +133,5 @@ namespace Apollo.Utilities
 
             return logDirectory;
         }
-
-        #endregion
     }
 }

@@ -29,8 +29,6 @@ namespace Apollo.Core.Host
         /// </summary>
         private readonly NotificationName m_SystemShuttingDown = new NotificationName("SystemShuttingDown");
 
-        #region Implementation of INotificationNameConstants
-
         /// <summary>
         /// Gets the <see cref="NotificationName"/> that is used
         /// for the notification upon the completion of startup.
@@ -69,7 +67,5 @@ namespace Apollo.Core.Host
                 return m_SystemShuttingDown;
             }
         }
-
-        #endregion
     }
 }

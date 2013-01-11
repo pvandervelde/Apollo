@@ -43,8 +43,6 @@ namespace Apollo.Core.Host
             m_Action = shutdownAction;
         }
 
-        #region Implementation of ICommand
-
         /// <summary>
         /// Gets the ID.
         /// </summary>
@@ -68,7 +66,5 @@ namespace Apollo.Core.Host
 
             m_Action();
         }
-
-        #endregion
     }
 }

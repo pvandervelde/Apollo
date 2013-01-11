@@ -132,8 +132,6 @@ namespace Apollo.Core.Host.UserInterfaces
             }
         }
 
-        #region Implementation of IHaveCommands
-
         /// <summary>
         /// Determines whether a command with the specified Id is stored.
         /// </summary>
@@ -147,10 +145,6 @@ namespace Apollo.Core.Host.UserInterfaces
         {
             return m_Commands.Contains(id);
         }
-
-        #endregion
-
-        #region Implementation of IInvokeCommands
 
         /// <summary>
         /// Invokes the command with the specified ID.
@@ -191,10 +185,6 @@ namespace Apollo.Core.Host.UserInterfaces
             m_Commands.Invoke(id, context);
         }
 
-        #endregion
-
-        #region Implementation of IUserInterfaceService
-
         /// <summary>
         /// Registers the notification.
         /// </summary>
@@ -220,10 +210,6 @@ namespace Apollo.Core.Host.UserInterfaces
 
             m_Notifications.Add(name, callback);
         }
-
-        #endregion
-
-        #region Overrides
 
         /// <summary>
         /// Returns a set of types indicating which services the current service
@@ -344,7 +330,5 @@ namespace Apollo.Core.Host.UserInterfaces
                 throw;
             }
         }
-
-        #endregion
     }
 }

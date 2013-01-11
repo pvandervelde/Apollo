@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">$(MSBuildProjectDirectory)\..</SolutionDir>
+    <ProjectGuid>{BE673894-4B95-4F22-8E9A-9F1D7C20CF84}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Apollo.UI.Console</RootNamespace>
+    <AssemblyName>Apollo.UI.Console</AssemblyName>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
+  <ItemGroup>
+    <Reference Include="Autofac, Version=2.4.3.700, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Autofac\lib\NET40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Shared, Version=1.5.181.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Options">
+      <HintPath>..\..\packages\Mono.Options\lib\Mono.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=1.0.0.505, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="NManto">
+      <HintPath>..\..\packages\nManto\lib\net40\NManto.dll</HintPath>
+    </Reference>
+    <Reference Include="NSarrac.Framework, Version=0.2.0.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NSarrac\lib\net40\NSarrac.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\QuickGraph\lib\net4\QuickGraph.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Reactive, Version=1.0.2838.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Rx-Main\lib\Net4\System.Reactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildInformationAttribute.cs">
+      <Link>AssemblyBuildInformationAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildTimeAttribute.cs">
+      <Link>AssemblyBuildTimeAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\AppDomainBuilder.cs">
+      <Link>Utilities\AppDomainBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\AppDomainBuilder.DirectoryBasedResolver.cs">
+      <Link>Utilities\AppDomainBuilder.DirectoryBasedResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\AppDomainBuilder.FileBasedResolver.cs">
+      <Link>Utilities\AppDomainBuilder.FileBasedResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\AppDomainResolutionPaths.cs">
+      <Link>Utilities\AppDomainResolutionPaths.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\AssemblyNameElements.cs">
+      <Link>Utilities\AssemblyNameElements.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionFilter.cs">
+      <Link>Utilities\ExceptionFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionHandler.cs">
+      <Link>Utilities\ExceptionHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\IExceptionHandler.cs">
+      <Link>Utilities\IExceptionHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\IExceptionProcessor.cs">
+      <Link>Utilities\IExceptionProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\LogBasedExceptionProcessor.cs">
+      <Link>Utilities\LogBasedExceptionProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ReportingExceptionProcessor.cs">
+      <Link>Utilities\ReportingExceptionProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ReportingUtilities.cs">
+      <Link>Utilities\ReportingUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\TopLevelExceptionGuard.cs">
+      <Link>Utilities\TopLevelExceptionGuard.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\FusionHelper.cs">
+      <Link>Utilities\FusionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\IAppDomainAssemblyResolver.cs">
+      <Link>Utilities\IAppDomainAssemblyResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\Logging\LogSeverityProxyToLogLevelMap.cs">
+      <Link>Utilities\LogSeverityProxyToLogLevelMap.cs</Link>
+    </Compile>
+    <Compile Include="FakeProgressTracker.cs" />
+    <Compile Include="KernelBootstrapper.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\SrcOnlyExceptionHandlingUtilities.cs" />
+    <Compile Include="Utilities\SrcOnlyResources.cs" />
+    <Compile Include="Utilities\StepBasedProgressTracker.cs" />
+    <Compile Include="Utilities\UtilitiesModule.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
+      <Link>Properties\App.snk</Link>
+    </None>
+    <EmbeddedResource Include="$(COMPANY_PUBLIC_KEY_PATH)">
+      <Link>Properties\NSarracReportPublicKey.xml</Link>
+    </EmbeddedResource>
+    <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
+      <Link>Properties\AssemblyInfo.Base.cs</Link>
+    </Compile>
+    <Compile Include="..\AssemblyInfo.BuildInformation.cs">
+      <Link>Properties\AssemblyInfo.BuildInformation.cs</Link>
+    </Compile>
+    <Compile Include="..\AssemblyInfo.InternalsVisibleTo.cs">
+      <Link>Properties\AssemblyInfo.InternalsVisibleTo.cs</Link>
+    </Compile>
+    <Compile Include="..\AssemblyInfo.VersionNumber.cs">
+      <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\Applications\CommandLineProgram.cs">
+      <Link>utilities\CommandLineProgram.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\EventType.cs">
+      <Link>utilities\EventType.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\EventTypeToEventCategoryMap.cs">
+      <Link>utilities\EventTypeToEventCategoryMap.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionTypeToEventIdMap.cs">
+      <Link>utilities\ExceptionTypeToEventIdMap.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\GuardResult.cs">
+      <Link>utilities\GuardResult.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\Logging\AdditionalLogMessageProperties.cs">
+      <Link>utilities\AdditionalLogMessageProperties.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\Logging\DebugLogTemplate.cs">
+      <Link>utilities\DebugLogTemplate.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\Logging\ILogger.cs">
+      <Link>utilities\ILogger.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\Logging\ILogMessage.cs">
+      <Link>utilities\ILogMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\Logging\ILogTemplate.cs">
+      <Link>utilities\ILogTemplate.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\Logging\LevelToLog.cs">
+      <Link>utilities\LevelToLog.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\Logging\Logger.cs">
+      <Link>utilities\Logger.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\Logging\LoggerBuilder.cs">
+      <Link>utilities\LoggerBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\Logging\LogMessage.cs">
+      <Link>utilities\LogMessage.cs</Link>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <None Include="app.config" />
+    <AppDesigner Include="Properties\" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
+      <Project>{5125e82c-2e8a-4ce4-8fa8-39ab82c9b856}</Project>
+      <Name>Apollo.Core.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\core.host\Apollo.Core.Host.csproj">
+      <Project>{befcb7fa-8cdf-44d5-bc36-b4c6a03d9ddd}</Project>
+      <Name>Apollo.Core.Host</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
+      <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>
+      <Name>SolutionLevel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\utilities\Apollo.Utilities.csproj">
+      <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
+      <Name>Apollo.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\licenses.xml">
+      <Link>Properties\licenses.xml</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.UI.Common;
+using Apollo.UI.Wpf;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 using Moq;

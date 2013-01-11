@@ -123,34 +123,33 @@
     <Compile Include="Projects\IProxyCompositionLayer.cs" />
     <Compile Include="Projects\ProjectHistoryStorage.cs" />
     <Compile Include="Projects\UnknownPartGroupException.cs" />
+    <Compile Include="Scripting\CancelScriptToken.cs" />
+    <Compile Include="Scripting\CannotInterruptRunningScriptException.cs" />
+    <Compile Include="Scripting\IExecuteScripts.cs" />
+    <Compile Include="Scripting\IHostScripts.cs" />
+    <Compile Include="Scripting\InvalidScriptLanguageException.cs" />
+    <Compile Include="Scripting\ISendScriptOutput.cs" />
+    <Compile Include="Scripting\ISyntaxVerifier.cs" />
+    <Compile Include="Scripting\Projects\DatasetFacadeForScripts.cs" />
+    <Compile Include="Scripting\Projects\ProjectFacadeForScripts.cs" />
+    <Compile Include="Scripting\Projects\ProjectHubForScripts.cs" />
+    <Compile Include="Scripting\RemoteScriptRunner.cs" />
+    <Compile Include="Scripting\ScriptDomainLauncher.cs" />
+    <Compile Include="Scripting\ScriptErrorInformation.cs" />
+    <Compile Include="Scripting\ScriptExecutionFailureException.cs" />
+    <Compile Include="Scripting\ScriptHost.cs" />
+    <Compile Include="Scripting\ScriptingConstants.cs" />
+    <Compile Include="Scripting\ScriptingModule.cs" />
+    <Compile Include="Scripting\ScriptLanguage.cs" />
+    <Compile Include="Scripting\ScriptOutputEventArgs.cs" />
+    <Compile Include="Scripting\ScriptOutputPipe.cs" />
+    <Compile Include="Scripting\ScriptRunInformation.cs" />
+    <Compile Include="Scripting\SourceErrorListener.cs" />
+    <Compile Include="Scripting\SyntaxVerificationSeverity.cs" />
+    <Compile Include="Scripting\SyntaxVerifier.cs" />
     <Compile Include="SrcOnlyResources.cs" />
     <Compile Include="UserInterfaces\Projects\ProjectHub.cs" />
     <Compile Include="UserInterfaces\Projects\SceneFacade.cs" />
-    <Compile Include="UserInterfaces\Scripting\CancelScriptToken.cs" />
-    <Compile Include="UserInterfaces\Scripting\CannotInterruptRunningScriptException.cs" />
-    <Compile Include="UserInterfaces\Scripting\DatasetFacadeForScripts.cs" />
-    <Compile Include="UserInterfaces\Scripting\IDatasetScriptFacade.cs" />
-    <Compile Include="UserInterfaces\Scripting\IExecuteScripts.cs" />
-    <Compile Include="UserInterfaces\Scripting\IHostScripts.cs" />
-    <Compile Include="UserInterfaces\Scripting\ILinkScriptsToProjects.cs" />
-    <Compile Include="UserInterfaces\Scripting\InvalidScriptLanguageException.cs" />
-    <Compile Include="UserInterfaces\Scripting\IProjectScriptFacade.cs" />
-    <Compile Include="UserInterfaces\Scripting\ISendScriptOutput.cs" />
-    <Compile Include="UserInterfaces\Scripting\ISyntaxVerifier.cs" />
-    <Compile Include="UserInterfaces\Scripting\ProjectFacadeForScripts.cs" />
-    <Compile Include="UserInterfaces\Scripting\ProjectHubForScripts.cs" />
-    <Compile Include="UserInterfaces\Scripting\RemoteScriptRunner.cs" />
-    <Compile Include="UserInterfaces\Scripting\ScriptDomainLauncher.cs" />
-    <Compile Include="UserInterfaces\Scripting\ScriptErrorInformation.cs" />
-    <Compile Include="UserInterfaces\Scripting\ScriptExecutionFailureException.cs" />
-    <Compile Include="UserInterfaces\Scripting\ScriptHost.cs" />
-    <Compile Include="UserInterfaces\Scripting\ScriptLanguage.cs" />
-    <Compile Include="UserInterfaces\Scripting\ScriptOutputEventArgs.cs" />
-    <Compile Include="UserInterfaces\Scripting\ScriptOutputPipe.cs" />
-    <Compile Include="UserInterfaces\Scripting\ScriptRunInformation.cs" />
-    <Compile Include="UserInterfaces\Scripting\SourceErrorListener.cs" />
-    <Compile Include="UserInterfaces\Scripting\SyntaxVerificationSeverity.cs" />
-    <Compile Include="UserInterfaces\Scripting\SyntaxVerifier.cs" />
     <Compile Include="UtilitiesModule.cs" />
     <Compile Include="ValueChangedEventArgs.cs" />
     <Compile Include="Projects\DatasetLoadEventArgs.cs" />
@@ -237,6 +236,10 @@
     <ProjectReference Include="..\core.extensions\Apollo.Core.Extensions.csproj">
       <Project>{ee14fafe-8e78-11e1-b5d3-6df7bbe59b18}</Project>
       <Name>Apollo.Core.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\core.scripting\Apollo.Core.Scripting.csproj">
+      <Project>{626db086-d3e7-47a6-92b5-2afc58e8e18e}</Project>
+      <Name>Apollo.Core.Scripting</Name>
     </ProjectReference>
     <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
       <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>

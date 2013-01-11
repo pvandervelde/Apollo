@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+    <?include includes.wxi ?>
+    <?include $(var.SolutionDir)Dependencies.wxi ?>
+
+    <Fragment>
+        <!-- 
+            Define all the files that will be installed in the program files folder.
+            The user may decide to install in a different location which will be
+            reflected in a change to the value of the INSTALLLOCATION directory.
+        -->
+        <DirectoryRef Id="INSTALLLOCATION">
+            <Component Id="C.Apollo.UI.Explorer.Exe"
+                       Guid="{2846885A-D649-47DD-9820-983B4158741A}">
+                <File Id="File.Apollo.UI.Explorer.Exe"
+                      Name="Apollo.UI.Explorer.exe"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Apollo.UI.Explorer.exe"
+                      KeyPath="yes">
+                    <Shortcut Id="ShortCut.StartMenu.Apollo.UI.Explorer"
+                              Directory="Dir.Menu.Apollo"
+                              Name="$(var.Apollo_ProductName) explorer"
+                              Icon="Icon.Apollo.ico"
+                              IconIndex="0"
+                              WorkingDirectory="INSTALLLOCATION"
+                              Advertise="yes" />
+                </File>
+            </Component>
+
+            <!-- Apollo.UI.Explorer.exe.config -->
+            <Component Id="C.Apollo.UI.Explorer.Exe.Config"
+                       Guid="{5809AC5B-6BC4-484A-A00D-766DA7D48446}">
+                <File Id="File.Apollo.UI.Explorer.Exe.Config"
+                      Name="Apollo.UI.Explorer.exe.config"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Apollo.UI.Explorer.exe.config"
+                      KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+
+        <!--
+            Define the exe in a seperate feature because the shortcut links are defined
+            as advertised shortcuts. This means that after the product is installed
+            it is possible for a different user to log on and see the installer run.
+            At this point the installer is creating all the correct links for the
+            shortcuts. This is done by re-running the feature that holds the shortcuts.
+            In order to make sure that we don't rerun all of the features (and thus
+            maybe lose registry settings etc.) we pack the exe in separate feature.
+        -->
+        <Feature Id="F.Apollo.UI.Explorer.Exe"
+                 Title="Project explorer"
+                 Description="The Project explorer executable"
+                 Absent="allow"
+                 Level="10">
+            <ComponentRef Id="C.Apollo.UI.Explorer.Exe" />
+            <ComponentRef Id="C.Apollo.UI.Explorer.Exe.Config" />
+        </Feature>
+
+        <!-- The feature for the main program. -->
+        <Feature Id="F.Apollo.UI.Explorer"
+                 Title="Project explorer support"
+                 Description="The support binaries for the Project explorer User Interface."
+                 Absent="allow"
+                 Level="10">
+            <FeatureRef Id="F.Apollo.UI.Explorer.Exe" />
+            <ComponentGroupRef Id="CGroup.Apollo.Ui.Wpf" />
+        </Feature>
+    </Fragment>
+</Wix>
