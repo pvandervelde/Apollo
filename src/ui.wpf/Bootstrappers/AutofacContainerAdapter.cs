@@ -104,8 +104,6 @@ namespace Apollo.UI.Wpf.Bootstrappers
             set;
         }
 
-        #region IContainerAdapter
-
         /// <summary>
         /// Registers an instance of type T in the container as a Singleton.
         /// </summary>
@@ -295,10 +293,6 @@ namespace Apollo.UI.Wpf.Bootstrappers
             return result;
         }
 
-        #endregion
-
-        #region RegisterKnownConcreteClasses
-
         /// <summary>
         /// Explictily register concrete classes resolved by Prism components.
         /// </summary>
@@ -346,7 +340,5 @@ namespace Apollo.UI.Wpf.Bootstrappers
 
             builder.Update(Container);
         }
-
-        #endregion
     }
 }

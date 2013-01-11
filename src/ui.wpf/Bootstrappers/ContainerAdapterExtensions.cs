@@ -106,8 +106,6 @@ namespace Apollo.UI.Wpf.Bootstrappers
             return adapter.RegisterTypeIfMissing<TFrom, TTo>(ContainerRegistrationScope.Singleton);
         }
 
-        #region IContainerAdapter Implementation Helper Methods to keep them DRY. Cheating by putting here.
-
         /// <summary>
         /// Log attempt to re-register type. Internal - for <see cref="IContainerAdapter"/> implementors.
         /// </summary>
@@ -137,7 +135,5 @@ namespace Apollo.UI.Wpf.Bootstrappers
                 Category.Debug, 
                 Priority.Low);
         }
-
-        #endregion
     }
 }

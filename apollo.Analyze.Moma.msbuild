@@ -38,7 +38,6 @@
             <MomaFiles Include="$(DirBuildBin)\Apollo.Core.Extensions.dll" />
             <MomaFiles Include="$(DirBuildBin)\Apollo.Core.Dataset.exe"/>
             <MomaFiles Include="$(DirBuildBin)\Apollo.Core.Host.dll"/>
-            <MomaFiles Include="$(DirBuildBin)\Apollo.Core.LoaderApplication.exe" />
             <MomaFiles Include="$(DirBuildBin)\Apollo.UI.Console.exe" />
             <MomaFiles Include="$(DirBuildBin)\Apollo.Utilities.dll" />
             <MomaFiles Include="$(DirBuildBin)\Autofac.dll" />

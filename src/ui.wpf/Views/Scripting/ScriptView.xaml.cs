@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Apollo.Core.Host.UserInterfaces.Scripting;
+using Apollo.Core.Host.Scripting;
 using Apollo.UI.Wpf.Commands;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;

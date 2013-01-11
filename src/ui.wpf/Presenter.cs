@@ -99,8 +99,6 @@ namespace Apollo.UI.Wpf
         {
         }
 
-        #region IPresenter Members
-
         /// <summary>
         /// Gets the type of the view.
         /// </summary>
@@ -166,7 +164,5 @@ namespace Apollo.UI.Wpf
                 return Parameter;
             }
         }
-
-        #endregion
     }
 }

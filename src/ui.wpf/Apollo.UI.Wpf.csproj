@@ -181,10 +181,18 @@
     <Compile Include="Feedback\ICollectFeedbackReports.cs" />
     <Compile Include="Feedback\ISendFeedbackReports.cs" />
     <Compile Include="IContextAware.cs" />
+    <Compile Include="IPresenter.cs" />
+    <Compile Include="IRegionView.cs" />
+    <Compile Include="IStandardView.cs" />
+    <Compile Include="IView.cs" />
+    <Compile Include="Model.cs" />
     <Compile Include="Models\MostRecentlyUsed.cs" />
     <Compile Include="Models\MostRecentlyUsedCollection.cs" />
     <Compile Include="Models\MostRecentlyUsedCollectionConverter.cs" />
     <Compile Include="Models\MostRecentlyUsedConverter.cs" />
+    <Compile Include="Observable.cs" />
+    <Compile Include="Parameter.cs" />
+    <Compile Include="Presenter.cs" />
     <Compile Include="Profiling\ITimingReport.cs" />
     <Compile Include="Profiling\TimingIntervalHelper.cs" />
     <Compile Include="Profiling\TimingReport.cs" />
@@ -200,14 +208,6 @@
     <Compile Include="Utilities\ObservableCollectionExtensions.cs" />
     <Compile Include="Utilities\ScrollableTabPanel.cs" />
     <Compile Include="Views\Datasets\DatasetCreatorToOpacityConverter.cs" />
-    <Compile Include="IPresenter.cs" />
-    <Compile Include="IRegionView.cs" />
-    <Compile Include="IStandardView.cs" />
-    <Compile Include="IView.cs" />
-    <Compile Include="Model.cs" />
-    <Compile Include="Observable.cs" />
-    <Compile Include="Parameter.cs" />
-    <Compile Include="Presenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -320,10 +320,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Views\Settings\MostRecentlyUsedModel.cs" />
-    <Compile Include="WindowsVersionNumbers.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config">
       <SubType>Designer</SubType>

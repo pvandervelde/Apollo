@@ -33,16 +33,16 @@ namespace Apollo.UI.Explorer
     internal sealed class KernelBootstrapper : Bootstrapper
     {
         /// <summary>
-        /// The function that allows storing a DI container.
+        /// The function that will start the User Interface.
         /// </summary>
-        private readonly Action<IModule> m_ContainerStorage;
+        private readonly Action<IModule> m_OnStartUserInterface;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelBootstrapper"/> class.
         /// </summary>
         /// <param name="progress">The object used to track the progress of the bootstrapping process.</param>
         /// <param name="shutdownEvent">The event that signals to the application that it is safe to shut down.</param>
-        /// <param name="containerStorage">The function used to store the DI container which holds the kernel UI references.</param>
+        /// <param name="onStartUserInterface">The function used to store the DI container which holds the kernel UI references.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="progress"/> is <see langword="null"/>.
         /// </exception>
@@ -50,22 +50,20 @@ namespace Apollo.UI.Explorer
         ///     Thrown if <paramref name="shutdownEvent"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="containerStorage"/> is <see langword="null"/>.
+        /// Thrown when <paramref name="onStartUserInterface"/> is <see langword="null"/>.
         /// </exception>
         public KernelBootstrapper(
             ITrackProgress progress,
             AutoResetEvent shutdownEvent,
-            Action<IModule> containerStorage)
+            Action<IModule> onStartUserInterface)
             : base(progress, shutdownEvent)
         {
             {
-                Enforce.Argument(() => containerStorage);
+                Enforce.Argument(() => onStartUserInterface);
             }
 
-            m_ContainerStorage = containerStorage;
+            m_OnStartUserInterface = onStartUserInterface;
         }
-
-        #region Overrides of Bootstrapper
 
         /// <summary>
         /// Returns a collection containing additional IOC modules that are
@@ -87,14 +85,15 @@ namespace Apollo.UI.Explorer
         }
 
         /// <summary>
-        /// Stores the dependency injection container.
+        /// Stores the IOC module that contains the references that will be used by 
+        /// the User Interface and then starts all the user interface elements.
         /// </summary>
-        /// <param name="container">The DI container.</param>
-        protected override void StoreContainer(IModule container)
+        /// <param name="container">
+        ///     The IOC module that contains the references for the User Interface.
+        /// </param>
+        protected override void StartUserInterface(IModule container)
         {
-            m_ContainerStorage(container);
+            m_OnStartUserInterface(container);
         }
-
-        #endregion
     }
 }

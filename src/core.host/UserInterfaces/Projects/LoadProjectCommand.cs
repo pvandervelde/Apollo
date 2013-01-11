@@ -21,14 +21,10 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
     /// </summary>
     internal sealed class LoadProjectCommand : ICommand
     {
-        #region Static members
-
         /// <summary>
         /// Defines the Id for the <c>LoadProjectCommand</c>.
         /// </summary>
         public static readonly CommandId CommandId = new CommandId(@"LoadProject");
-
-        #endregion
 
         /// <summary>
         /// The function that is used to load the project.
@@ -58,8 +54,6 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
             m_Scheduler = scheduler ?? TaskScheduler.Default;
         }
 
-        #region Implementation of ICommand
-
         /// <summary>
         /// Gets the ID.
         /// </summary>
@@ -87,7 +81,5 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
                 TaskCreationOptions.LongRunning,
                 m_Scheduler);
         }
-
-        #endregion
     }
 }

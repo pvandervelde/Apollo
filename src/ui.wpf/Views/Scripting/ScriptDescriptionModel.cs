@@ -6,7 +6,7 @@
 
 using System;
 using System.Collections.Generic;
-using Apollo.Core.Host.UserInterfaces.Scripting;
+using Apollo.Core.Host.Scripting;
 using Apollo.UI.Wpf.Properties;
 
 namespace Apollo.UI.Wpf.Views.Scripting

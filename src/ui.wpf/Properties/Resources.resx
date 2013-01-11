@@ -508,17 +508,8 @@
   <data name="ScriptPresenter_SelectScriptFile" xml:space="preserve">
     <value>Select a script file</value>
   </data>
-  <data name="ScriptFileExtensionFilter_Language_IronPython" xml:space="preserve">
-    <value>Python Files | *.py</value>
-  </data>
-  <data name="ScriptFileExtensionFilter_Language_IronRuby" xml:space="preserve">
-    <value>Ruby Files | *.rb</value>
-  </data>
-  <data name="ScriptFileExtension_Language_IronPython" xml:space="preserve">
-    <value>py</value>
-  </data>
-  <data name="ScriptFileExtension_Language_IronRuby" xml:space="preserve">
-    <value>rb</value>
+  <data name="ScriptFileExtensionFileFilter" xml:space="preserve">
+    <value>{0} Files | *.{1}</value>
   </data>
   <data name="ScriptView_CurrentScriptLanguage" xml:space="preserve">
     <value>Script language:</value>

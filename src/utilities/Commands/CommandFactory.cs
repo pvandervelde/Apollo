@@ -21,8 +21,6 @@ namespace Apollo.Utilities.Commands
         /// </summary>
         private readonly Dictionary<CommandId, Func<ICommand>> m_Commands = new Dictionary<CommandId, Func<ICommand>>();
 
-        #region Implementation of ICommandContainer
-
         /// <summary>
         /// Adds a new command activator to the collection.
         /// </summary>
@@ -76,10 +74,6 @@ namespace Apollo.Utilities.Commands
             m_Commands.Remove(id);
         }
 
-        #endregion
-
-        #region Implementation of IInvokeCommands
-
         /// <summary>
         /// Invokes the command with the specified ID.
         /// </summary>
@@ -125,10 +119,6 @@ namespace Apollo.Utilities.Commands
             command.Invoke(context);
         }
 
-        #endregion
-
-        #region Implementation of IHaveCommands
-
         /// <summary>
         /// Determines whether a command with the specified ID is stored.
         /// </summary>
@@ -142,7 +132,5 @@ namespace Apollo.Utilities.Commands
         {
             return id != null && m_Commands.ContainsKey(id);
         }
-
-        #endregion
     }
 }

@@ -51,7 +51,7 @@ namespace Apollo.UI.Explorer
         /// <summary>
         /// Initializes a new instance of the <see cref="UserInterfaceBootstrapper"/> class.
         /// </summary>
-        /// <param name="container">The container that contains the UI controls.</param>
+        /// <param name="container">The container provides the shell components.</param>
         /// <param name="resetEvent">The reset event used to indicate to the application that it is safe to shut down.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="container"/> is <see langword="null" />.
@@ -70,8 +70,6 @@ namespace Apollo.UI.Explorer
             m_ShellIocContainer = container;
             m_ResetEvent = resetEvent;
         }
-
-        #region Overrides of CompositeBootstrapper
 
         /// <summary>
         /// Gets the default <see cref="ILoggerFacade"/> for the application.
@@ -114,7 +112,5 @@ namespace Apollo.UI.Explorer
             
             builder.Update(m_ShellIocContainer);
         }
-
-        #endregion
     }
 }

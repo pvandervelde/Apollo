@@ -16,8 +16,6 @@ namespace Apollo.Core.Host
     /// </content>
     internal sealed partial class Kernel
     {
-        #region Internal class - ConnectionMap
-
         /// <summary>
         /// Stores a link between a requested type and the KernelService which fullfills this request.
         /// </summary>
@@ -107,7 +105,5 @@ namespace Apollo.Core.Host
                 return string.Format(CultureInfo.InvariantCulture, "Requested type: {0}; Applied type: {1}", Requested, Applied);
             }
         }
-
-        #endregion
     }
 }

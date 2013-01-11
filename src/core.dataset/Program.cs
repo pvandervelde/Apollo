@@ -44,8 +44,6 @@ namespace Apollo.Core.Dataset
                 Debug.Assert(args != null, "The arguments array should not be null.");
             }
 
-            System.Threading.Thread.Sleep(3000);
-
             Func<int> applicationLogic =
                 () =>
                 {

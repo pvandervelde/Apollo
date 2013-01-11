@@ -6,9 +6,9 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Host.Scripting;
 using Apollo.Core.Host.UserInterfaces.Application;
 using Apollo.Core.Host.UserInterfaces.Projects;
-using Apollo.Core.Host.UserInterfaces.Scripting;
 using Apollo.Utilities;
 using Autofac;
 using Lokad;
@@ -49,6 +49,8 @@ namespace Apollo.Core.Host.UserInterfaces
         {
             base.Load(builder);
 
+            builder.RegisterModule(new ScriptingModule());
+
             builder.Register(c => new NotificationNameConstants())
                 .As<INotificationNameConstants>();
 
@@ -63,18 +65,6 @@ namespace Apollo.Core.Host.UserInterfaces
             builder.Register(c => new ProjectHub(c.Resolve<IUserInterfaceService>()))
                 .As<ILinkToProjects>()
                 .SingleInstance();
-
-            builder.Register(c => new ScriptHost(
-                    c.Resolve<ILinkToProjects>(),
-                    c.Resolve<Func<string, AppDomainPaths, AppDomain>>()))
-                .As<IHostScripts>()
-                .SingleInstance();
-
-            builder.Register(c => new ScriptOutputPipe())
-                .As<ISendScriptOutput>();
-
-            // IInteractWithUsers
-            // IGiveAdvice
         }
     }
 }

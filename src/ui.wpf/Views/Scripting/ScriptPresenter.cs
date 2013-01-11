@@ -6,9 +6,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Windows;
-using Apollo.Core.Host.UserInterfaces.Scripting;
+using Apollo.Core.Host.Scripting;
 using Apollo.UI.Wpf.Commands;
 using Apollo.UI.Wpf.Properties;
 using Autofac;
@@ -29,8 +30,8 @@ namespace Apollo.UI.Wpf.Views.Scripting
         private static readonly IDictionary<string, ScriptLanguage> s_FileExtensionToLanguageMap
             = new SortedList<string, ScriptLanguage> 
                 {
-                    { Resources.ScriptFileExtension_Language_IronPython, ScriptLanguage.IronPython },
-                    { Resources.ScriptFileExtension_Language_IronRuby, ScriptLanguage.IronRuby },
+                    { ScriptingConstants.PythonFileExtension, ScriptLanguage.IronPython },
+                    { ScriptingConstants.RubyFileExtension, ScriptLanguage.IronRuby },
                 };
 
         private static ScriptLanguage LanguageFromFileExtension(string extension)
@@ -40,8 +41,17 @@ namespace Apollo.UI.Wpf.Views.Scripting
 
         private static string ScriptFileFilter()
         {
-            return Resources.ScriptFileExtensionFilter_Language_IronPython + "|"
-                + Resources.ScriptFileExtensionFilter_Language_IronRuby;
+            return string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.ScriptFileExtensionFileFilter,
+                    Resources.ScriptDescription_Language_IronPython,
+                    ScriptingConstants.PythonFileExtension)
+                + "|"
+                + string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.ScriptFileExtensionFileFilter,
+                    Resources.ScriptDescription_Language_IronRuby,
+                    ScriptingConstants.RubyFileExtension);
         }
 
         /// <summary>

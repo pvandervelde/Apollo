@@ -14,7 +14,8 @@
     <Compile Include="..\shared\Apollo.Dataset.wxs">
       <Link>Apollo.Dataset.wxs</Link>
     </Compile>
-    <Compile Include="Apollo.UI.Common.wxs" />
+    <Compile Include="Apollo.UI.Wpf.wxs" />
+    <Compile Include="Apollo.UI.Console.wxs" />
     <Compile Include="Apollo.UI.Explorer.wxs" />
     <Compile Include="Apollo.Core.wxs" />
     <Compile Include="Product.wxs" />

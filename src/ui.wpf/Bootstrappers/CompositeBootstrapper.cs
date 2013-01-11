@@ -89,8 +89,6 @@ namespace Apollo.UI.Wpf.Bootstrappers
             LogRunActivity("Bootstrapper sequence completed");
         }
 
-        #region Logging
-
         /// <summary>
         /// Gets the default <see cref="ILoggerFacade"/> for the application.
         /// </summary>
@@ -108,10 +106,6 @@ namespace Apollo.UI.Wpf.Bootstrappers
         /// Override with do-nothing if you don't want this chatter.
         /// </remarks>
         protected abstract void LogRunActivity(string message);
-
-        #endregion
-
-        #region Container
 
         /// <summary>
         /// Gets the default <see cref="IContainerAdapter"/> for the application.
@@ -207,10 +201,6 @@ namespace Apollo.UI.Wpf.Bootstrappers
             Container.RegisterInstance(instance);
         }
 
-        #endregion
-
-        #region Region Adapters
-
         /// <summary>
         /// Configures the region adapters.
         /// </summary>
@@ -258,8 +248,6 @@ namespace Apollo.UI.Wpf.Bootstrappers
             return mapper.Factory;
         }
 
-        #endregion
-
         /// <summary>
         /// Registers the <see cref="Type"/> of the Exceptions
         /// that are not considered root exceptions by the <see cref="ExceptionExtensions"/>.
@@ -269,16 +257,10 @@ namespace Apollo.UI.Wpf.Bootstrappers
             ExceptionExtensions.RegisterFrameworkExceptionType(typeof(ActivationException));
         }
 
-        #region Shell
-
         /// <summary>
         /// Creates the shell and configures it.
         /// </summary>
         protected abstract void CreateAndConfigureShell();
-
-        #endregion
-
-        #region Modules
 
         /// <summary>
         /// Registers the default module catalog.
@@ -305,7 +287,5 @@ namespace Apollo.UI.Wpf.Bootstrappers
             var manager = Container.Resolve<IModuleManager>();
             manager.Run();
         }
-
-        #endregion
     }
 }

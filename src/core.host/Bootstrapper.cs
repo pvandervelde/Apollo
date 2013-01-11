@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Threading;
 using Apollo.Core.Host.Plugins;
 using Apollo.Core.Host.Projects;
+using Apollo.Core.Host.Scripting;
 using Apollo.Core.Host.UserInterfaces;
 using Apollo.Utilities;
 using Apollo.Utilities.Commands;
@@ -243,7 +244,7 @@ namespace Apollo.Core.Host
                 container.Resolve<ICommandContainer>(),
                 container.Resolve<INotificationNameConstants>(),
                 container.Resolve<SystemDiagnostics>(),
-                StoreContainer);
+                StartUserInterface);
 
             return userInterface;
         }
@@ -260,11 +261,11 @@ namespace Apollo.Core.Host
 
         /// <summary>
         /// Stores the IOC module that contains the references that will be used by 
-        /// the User Interface.
+        /// the User Interface and then starts all the user interface elements.
         /// </summary>
         /// <param name="container">
         ///     The IOC module that contains the references for the User Interface.
         /// </param>
-        protected abstract void StoreContainer(IModule container);
+        protected abstract void StartUserInterface(IModule container);
     }
 }

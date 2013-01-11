@@ -32,8 +32,6 @@ namespace Apollo.Core.Host
             }
         }
 
-        #region Overrides of Id<NotificationName,string>
-
         /// <summary>
         /// Performs the actual act of creating a copy of the current ID number.
         /// </summary>
@@ -77,7 +75,5 @@ namespace Apollo.Core.Host
         {
             return string.Format(CultureInfo.InvariantCulture, "Notification with name {0}", InternalValue);
         }
-
-        #endregion
     }
 }

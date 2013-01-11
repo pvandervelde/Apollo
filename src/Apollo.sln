@@ -44,6 +44,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolutionLevel", "solutionle
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.UI.Console", "ui.console\Apollo.UI.Console.csproj", "{BE673894-4B95-4F22-8E9A-9F1D7C20CF84}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Scripting", "core.scripting\Apollo.Core.Scripting.csproj", "{626DB086-D3E7-47A6-92B5-2AFC58E8E18E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -145,6 +147,12 @@ Global
 		{BE673894-4B95-4F22-8E9A-9F1D7C20CF84}.Deploy|Any CPU.Build.0 = Deploy|Any CPU
 		{BE673894-4B95-4F22-8E9A-9F1D7C20CF84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE673894-4B95-4F22-8E9A-9F1D7C20CF84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{626DB086-D3E7-47A6-92B5-2AFC58E8E18E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{626DB086-D3E7-47A6-92B5-2AFC58E8E18E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{626DB086-D3E7-47A6-92B5-2AFC58E8E18E}.Deploy|Any CPU.ActiveCfg = Deploy|Any CPU
+		{626DB086-D3E7-47A6-92B5-2AFC58E8E18E}.Deploy|Any CPU.Build.0 = Deploy|Any CPU
+		{626DB086-D3E7-47A6-92B5-2AFC58E8E18E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{626DB086-D3E7-47A6-92B5-2AFC58E8E18E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

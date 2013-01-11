@@ -52,8 +52,6 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
             m_Scheduler = scheduler ?? TaskScheduler.Default;
         }
 
-        #region Implementation of ICommand
-
         /// <summary>
         /// Gets the ID.
         /// </summary>
@@ -81,7 +79,5 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
                 TaskCreationOptions.None,
                 m_Scheduler);
         }
-
-        #endregion
     }
 }

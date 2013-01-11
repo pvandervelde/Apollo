@@ -20,7 +20,7 @@
                       KeyPath="yes">
                     <Shortcut Id="ShortCut.StartMenu.Apollo.UI.Explorer"
                               Directory="Dir.Menu.Apollo"
-                              Name="$(var.Apollo_ProductName)"
+                              Name="$(var.Apollo_ProductName) explorer"
                               Icon="Icon.Apollo.ico"
                               IconIndex="0"
                               WorkingDirectory="INSTALLLOCATION"

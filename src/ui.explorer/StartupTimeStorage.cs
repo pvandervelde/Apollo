@@ -37,8 +37,6 @@ namespace Apollo.UI.Explorer
             m_MarkerTimes.Add(typeof(ApplicationStartupFinishedProgressMark), new TimeSpan(0, 0, 0, 0, 3));
         }
 
-        #region Implementation of IStoreMarkerTimes
-
         /// <summary>
         /// Gets the total time necessary for the given operation.
         /// </summary>
@@ -87,7 +85,5 @@ namespace Apollo.UI.Explorer
 
             return secondTime - firstTime;
         }
-
-        #endregion
     }
 }
