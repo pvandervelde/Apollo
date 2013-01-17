@@ -45,12 +45,13 @@
             <MomaFiles Include="$(DirBuildBin)\IronPython.dll" />
             <MomaFiles Include="$(DirBuildBin)\Lokad.Shared.dll" />
             <MomaFiles Include="$(DirBuildBin)\Microsoft.Scripting.dll" />
-            <MomaFiles Include="$(DirBuildBin)\NManto.dll" />
             <MomaFiles Include="$(DirBuildBin)\Mono.Options.dll" />
             <MomaFiles Include="$(DirBuildBin)\NLog.dll" />
             <MomaFiles Include="$(DirBuildBin)\NSarrac.Framework.dll" />
             <MomaFiles Include="$(DirBuildBin)\QuickGraph.dll" />
             <MomaFiles Include="$(DirBuildBin)\System.Reactive.dll" />
+            <MomaFiles Include="$(DirBuildBin)\Utilities.dll" />
+            <MomaFiles Include="$(DirBuildBin)\Utilities.Diagnostics.dll" />
         </ItemGroup>
         
         <Exec Command="$(ExeMoma) --nogui --out &quot;$(MomaOutputFile)&quot; @(MomaFiles->'%22%(FullPath)%22', ' ')"

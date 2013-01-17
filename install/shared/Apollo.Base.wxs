@@ -81,13 +81,23 @@
                     KeyPath="yes" />
             </Component>
 
-            <!-- NManto.dll -->
-            <Component Id="C.NManto.dll"
+            <!-- Utilities.dll -->
+            <Component Id="C.Utilities.dll"
                        Guid="{852E1980-B41A-48BF-B36C-29D43AEDA26E}">
-                <File Id="File.NManto.dll"
-                      Name="NManto.dll"
+                <File Id="File.Utilities.dll"
+                      Name="Utilities.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\NManto.dll"
+                      Source="$(var.Apollo_BinFolder)\Utilities.dll"
+                      KeyPath="yes" />
+            </Component>
+            
+            <!-- Utilities.Diagnostics.dll -->
+            <Component Id="C.Utilities.Diagnostics.dll"
+                       Guid="{09724582-A966-4275-991B-2961B8A9678E}">
+                <File Id="File.Utilities.Diagnostics.dll"
+                      Name="Utilities.Diagnostics.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Utilities.Diagnostics.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -141,7 +151,8 @@
             <ComponentRef Id="C.Castle.Core.dll" />
             <ComponentRef Id="C.Lokad.Shared.dll" />
             <ComponentRef Id="C.NLog.dll" />
-            <ComponentRef Id="C.NManto.dll" />
+            <ComponentRef Id="C.Utilities.dll" />
+            <ComponentRef Id="C.Utilities.Diagnostics.dll" />
             <ComponentRef Id="C.NSarrac.Framework.dll" />
             <ComponentRef Id="C.QuickGraph.dll" />
             <ComponentRef Id="C.System.Reactive.dll" />
