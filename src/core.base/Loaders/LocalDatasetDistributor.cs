@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using Apollo.Core.Base.Communication;
 using Apollo.Utilities;
 using Lokad;
-using NManto;
+using Utilities.Diagnostics.Profiling;
 
 namespace Apollo.Core.Base.Loaders
 {

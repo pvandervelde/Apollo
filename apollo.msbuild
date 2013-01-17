@@ -16,7 +16,7 @@
         <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
     </PropertyGroup>
 
-    <Target Name="Run" DependsOnTargets="_PrepareWorkspace;_BuildBinaries;_ExecuteUnitTests;_BuildApiDocumentation;_CodeAnalysisCcm;_CodeAnalysisSourceMonitor;_CodeAnalysisMoma;_PackageMsi">
+    <Target Name="Run" DependsOnTargets="_PrepareWorkspace;_BuildBinaries;_ExecuteUnitTests;_BuildApiDocumentation;_CodeAnalysisCcm;_CodeAnalysisSourceMonitor;_CodeAnalysisFxCop;_CodeAnalysisMoma;_RetrieveReleaseNotes;_PackageMsi">
         <!-- Do nothing here -->
     </Target>
     

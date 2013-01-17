@@ -13,9 +13,9 @@ using Apollo.UI.Wpf.Profiling;
 using Apollo.Utilities;
 using Apollo.Utilities.Configuration;
 using Autofac;
-using NManto;
-using NManto.Reporting;
 using NSarrac.Framework;
+using Utilities.Diagnostics.Profiling;
+using Utilities.Diagnostics.Profiling.Reporting;
 
 namespace Apollo.UI.Wpf
 {
@@ -59,7 +59,7 @@ namespace Apollo.UI.Wpf
                             // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
                             // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
                             var ctx = c.Resolve<IComponentContext>();
-                            Func<Report, string> reportBuilder =
+                            Func<TimingReport, string> reportBuilder =
                                 report =>
                                 {
                                     var stream = new MemoryStream();
@@ -85,7 +85,7 @@ namespace Apollo.UI.Wpf
                                 description =>
                                     new TimingIntervalHelper(
                                         ctx.Resolve<SystemDiagnostics>(),
-                                        ctx.Resolve<IGenerateReports>(),
+                                        ctx.Resolve<IGenerateTimingReports>(),
                                         ctx.Resolve<TimingReportCollection>(),
                                         reportBuilder,
                                         description);

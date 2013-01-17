@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using NManto;
+using Utilities.Diagnostics.Profiling;
 
 namespace Apollo.Utilities
 {

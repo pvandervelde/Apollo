@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Properties;
 using Apollo.Utilities;
-using NManto;
+using Utilities.Diagnostics.Profiling;
 
 namespace Apollo.Core.Base.Communication
 {

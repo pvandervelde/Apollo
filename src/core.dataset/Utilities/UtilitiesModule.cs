@@ -17,8 +17,8 @@ using Apollo.Utilities.History;
 using Apollo.Utilities.Logging;
 using Autofac;
 using NLog;
-using NManto;
-using NManto.Reporting;
+using Utilities.Diagnostics.Profiling;
+using Utilities.Diagnostics.Profiling.Reporting;
 
 namespace Apollo.Utilities
 {

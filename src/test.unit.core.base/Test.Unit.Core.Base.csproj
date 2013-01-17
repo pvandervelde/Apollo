@@ -40,9 +40,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="NManto">
-      <HintPath>..\..\packages\nManto\lib\net40\NManto.dll</HintPath>
-    </Reference>
     <Reference Include="ParallelExtensionsExtras">
       <HintPath>..\..\packages\ParallelExtensionsExtras\lib\ParallelExtensionsExtras.dll</HintPath>
     </Reference>
@@ -54,6 +51,12 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="Utilities">
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilities.Diagnostics">
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.Diagnostics.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">

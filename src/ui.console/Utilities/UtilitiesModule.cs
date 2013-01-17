@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
@@ -17,11 +16,10 @@ using Apollo.Utilities.ExceptionHandling;
 using Apollo.Utilities.History;
 using Apollo.Utilities.Logging;
 using Autofac;
-using Autofac.Core;
 using NLog;
-using NManto;
-using NManto.Reporting;
 using NSarrac.Framework;
+using Utilities.Diagnostics.Profiling;
+using Utilities.Diagnostics.Profiling.Reporting;
 
 namespace Apollo.UI.Console.Utilities
 {
@@ -173,7 +171,7 @@ namespace Apollo.UI.Console.Utilities
                             reporter.Transform(storage.FromStartTillEnd());
                         })
                     .As<IStoreIntervals>()
-                    .As<IGenerateReports>()
+                    .As<IGenerateTimingReports>()
                     .SingleInstance();
 
                 builder.Register(c => new Profiler(

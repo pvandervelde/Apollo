@@ -24,9 +24,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="NManto">
-      <HintPath>..\..\packages\nManto\lib\net40\NManto.dll</HintPath>
-    </Reference>
     <Reference Include="NSarrac.Framework, Version=0.2.0.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NSarrac\lib\net40\NSarrac.Framework.dll</HintPath>
@@ -45,14 +42,14 @@
     </Reference>
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="Utilities">
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilities.Diagnostics">
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.Diagnostics.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\packages\Tools\AssemblyBuildInformationAttribute.cs">
-      <Link>AssemblyBuildInformationAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Tools\AssemblyBuildTimeAttribute.cs">
-      <Link>AssemblyBuildTimeAttribute.cs</Link>
-    </Compile>
     <Compile Include="..\utilities.srconly\AppDomainBuilder.cs">
       <Link>Utilities\AppDomainBuilder.cs</Link>
     </Compile>

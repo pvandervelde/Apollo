@@ -9,12 +9,6 @@
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
-    <Compile Include="..\..\packages\Tools\AssemblyBuildInformationAttribute.cs">
-      <Link>AssemblyBuildInformationAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Tools\AssemblyBuildTimeAttribute.cs">
-      <Link>AssemblyBuildTimeAttribute.cs</Link>
-    </Compile>
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
@@ -159,15 +153,18 @@
     <Reference Include="Lokad.Shared">
       <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
     </Reference>
-    <Reference Include="NManto">
-      <HintPath>..\..\packages\nManto\lib\net40\NManto.dll</HintPath>
-    </Reference>
     <Reference Include="QuickGraph, Version=3.6.61114.1, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\QuickGraph\lib\net4\QuickGraph.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
+    <Reference Include="Utilities">
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilities.Diagnostics">
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.Diagnostics.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">

@@ -51,9 +51,6 @@
       <HintPath>..\..\packages\IronPython\lib\Net40\Microsoft.Scripting.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NManto">
-      <HintPath>..\..\packages\nManto\lib\net40\NManto.dll</HintPath>
-    </Reference>
     <Reference Include="NSarrac.Framework, Version=0.1.20.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NSarrac\lib\NSarrac.Framework.dll</HintPath>
@@ -88,6 +85,12 @@
     <Reference Include="System.Data.DataSetExtensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="Utilities">
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilities.Diagnostics">
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.Diagnostics.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -108,12 +111,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\packages\Tools\AssemblyBuildInformationAttribute.cs">
-      <Link>AssemblyBuildInformationAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Tools\AssemblyBuildTimeAttribute.cs">
-      <Link>AssemblyBuildTimeAttribute.cs</Link>
-    </Compile>
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
@@ -193,9 +190,9 @@
     <Compile Include="Observable.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="Presenter.cs" />
-    <Compile Include="Profiling\ITimingReport.cs" />
+    <Compile Include="Profiling\IProfilingTimeReport.cs" />
     <Compile Include="Profiling\TimingIntervalHelper.cs" />
-    <Compile Include="Profiling\TimingReport.cs" />
+    <Compile Include="Profiling\ProfilingTimeReport.cs" />
     <Compile Include="Profiling\TimingReportCollection.cs" />
     <Compile Include="Utilities\DragDropHelpers.cs" />
     <Compile Include="Utilities\ItemsControlDragSourceAdvisor.cs" />

@@ -34,9 +34,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="NManto">
-      <HintPath>..\..\packages\nManto\lib\net40\NManto.dll</HintPath>
-    </Reference>
     <Reference Include="NSarrac.Framework">
       <HintPath>..\..\packages\NSarrac\lib\net40\NSarrac.Framework.dll</HintPath>
     </Reference>
@@ -54,6 +51,12 @@
     </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Utilities">
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilities.Diagnostics">
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.Diagnostics.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
@@ -73,12 +76,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\packages\Tools\AssemblyBuildInformationAttribute.cs">
-      <Link>AssemblyBuildInformationAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Tools\AssemblyBuildTimeAttribute.cs">
-      <Link>AssemblyBuildTimeAttribute.cs</Link>
-    </Compile>
     <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionFilter.cs">
       <Link>Utilities\ExceptionFilter.cs</Link>
     </Compile>

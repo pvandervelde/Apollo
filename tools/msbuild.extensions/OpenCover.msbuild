@@ -23,6 +23,7 @@
                         {
                             builder.Append(string.Format("-register:user "));
                             builder.Append(string.Format("-showunvisited "));
+                            builder.Append(string.Format("-returntargetcode:3000 "));
                             builder.Append(string.Format("-target:\"{0}\" ", System.IO.Path.Combine(UnitTestDir, UnitTestExe)));
                             builder.Append(string.Format("-targetdir:\"{0}\" ", BinDir));
                             builder.Append(string.Format("-targetargs:\"{0}\" ", UnitTestArguments));
