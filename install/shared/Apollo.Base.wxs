@@ -100,6 +100,16 @@
                       Source="$(var.Apollo_BinFolder)\Utilities.Diagnostics.dll"
                       KeyPath="yes" />
             </Component>
+            
+            <!-- Utilities.Communication.dll -->
+            <Component Id="C.Utilities.Communication.dll"
+                       Guid="{50726AD8-D225-4B21-950E-13990B5FE583}">
+                <File Id="File.Utilities.Communication.dll"
+                      Name="Utilities.Communication.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Utilities.Communication.dll"
+                      KeyPath="yes" />
+            </Component>
 
             <!-- NSarrac.dll -->
             <Component Id="C.NSarrac.Framework.dll"
@@ -153,6 +163,7 @@
             <ComponentRef Id="C.NLog.dll" />
             <ComponentRef Id="C.Utilities.dll" />
             <ComponentRef Id="C.Utilities.Diagnostics.dll" />
+            <ComponentRef Id="C.Utilities.Communication.dll" />
             <ComponentRef Id="C.NSarrac.Framework.dll" />
             <ComponentRef Id="C.QuickGraph.dll" />
             <ComponentRef Id="C.System.Reactive.dll" />

@@ -52,6 +52,7 @@
             <MomaFiles Include="$(DirBuildBin)\System.Reactive.dll" />
             <MomaFiles Include="$(DirBuildBin)\Utilities.dll" />
             <MomaFiles Include="$(DirBuildBin)\Utilities.Diagnostics.dll" />
+            <MomaFiles Include="$(DirBuildBin)\Utilities.Communication.dll" />
         </ItemGroup>
         
         <Exec Command="$(ExeMoma) --nogui --out &quot;$(MomaOutputFile)&quot; @(MomaFiles->'%22%(FullPath)%22', ' ')"
