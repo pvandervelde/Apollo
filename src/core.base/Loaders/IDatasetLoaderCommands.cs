@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Threading.Tasks;
-using Apollo.Core.Base.Communication;
+using Utilities.Communication;
 
 namespace Apollo.Core.Base.Loaders
 {

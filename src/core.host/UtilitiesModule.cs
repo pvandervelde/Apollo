@@ -8,6 +8,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Utilities;
 using Autofac;
+using Utilities;
+using Utilities.FileSystem;
+using Utilities.Progress;
 
 namespace Apollo.Core.Host
 {

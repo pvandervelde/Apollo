@@ -10,10 +10,11 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Loaders;
-using Apollo.Utilities;
 using Lokad;
+using Utilities.Communication;
+using Utilities.Diagnostics;
+using Utilities.Diagnostics.Logging;
 
 namespace Apollo.Core.Base
 {
@@ -177,7 +178,7 @@ namespace Apollo.Core.Base
                             if (t.Exception != null)
                             {
                                 m_Diagnostics.Log(
-                                    LogSeverityProxy.Error,
+                                    LevelToLog.Error,
                                     string.Format(
                                         CultureInfo.InvariantCulture,
                                         "The begin edit dataset task threw an exception. Exception details: {0}",
@@ -203,7 +204,7 @@ namespace Apollo.Core.Base
                             if (t.Exception != null)
                             {
                                 m_Diagnostics.Log(
-                                    LogSeverityProxy.Error,
+                                    LevelToLog.Error,
                                     string.Format(
                                         CultureInfo.InvariantCulture,
                                         "The begin edit dataset task threw an exception. Exception details: {0}",
@@ -317,7 +318,7 @@ namespace Apollo.Core.Base
                     if (t.Exception != null)
                     {
                         m_Diagnostics.Log(
-                            LogSeverityProxy.Error,
+                            LevelToLog.Error,
                             string.Format(
                                 CultureInfo.InvariantCulture,
                                 "The close dataset task threw an exception. Exception details: {0}",

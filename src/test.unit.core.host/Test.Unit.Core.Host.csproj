@@ -61,6 +61,10 @@
     <Reference Include="Utilities">
       <HintPath>..\..\packages\Utilities\lib\net40\Utilities.dll</HintPath>
     </Reference>
+    <Reference Include="Utilities.Communication, Version=0.2.1.0, Culture=neutral, PublicKeyToken=ee5b68ec5ad4ef93, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.Communication.dll</HintPath>
+    </Reference>
     <Reference Include="Utilities.Diagnostics">
       <HintPath>..\..\packages\Utilities\lib\net40\Utilities.Diagnostics.dll</HintPath>
     </Reference>

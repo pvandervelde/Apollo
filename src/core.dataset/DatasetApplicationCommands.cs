@@ -6,15 +6,14 @@
 
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Communication;
-using Apollo.Utilities;
 using Lokad;
+using Utilities.Communication;
+using Utilities.Diagnostics;
 using Utilities.Diagnostics.Profiling;
 
 namespace Apollo.Core.Dataset

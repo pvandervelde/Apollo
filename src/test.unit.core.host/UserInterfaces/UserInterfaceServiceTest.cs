@@ -12,13 +12,13 @@ using Apollo.Core.Base.Loaders;
 using Apollo.Core.Host.Plugins;
 using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces.Projects;
-using Apollo.Utilities;
 using Apollo.Utilities.Commands;
 using Apollo.Utilities.History;
 using Autofac.Core;
 using MbUnit.Framework;
 using Moq;
 using QuickGraph;
+using Utilities.Diagnostics;
 
 namespace Apollo.Core.Host.UserInterfaces
 {

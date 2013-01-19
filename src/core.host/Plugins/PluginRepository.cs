@@ -25,7 +25,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// The object used to lock on.
         /// </summary>
-        private readonly ILockObject m_Lock = new LockObject();
+        private readonly object m_Lock = new object();
 
         /// <summary>
         /// The collection that keeps track of all the known types and their definitions.

@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.UI.Wpf.Properties;
-using Apollo.Utilities;
+using Utilities.Progress;
 using ICommand = System.Windows.Input.ICommand;
 
 namespace Apollo.UI.Wpf.Views.Datasets

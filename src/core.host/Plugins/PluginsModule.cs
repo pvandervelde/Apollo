@@ -7,8 +7,10 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Utilities;
-using Apollo.Utilities.Configuration;
 using Autofac;
+using Utilities.Configuration;
+using Utilities.Diagnostics;
+using Utilities.FileSystem;
 
 namespace Apollo.Core.Host.Plugins
 {

@@ -15,6 +15,7 @@ using Apollo.Core.Base.Loaders;
 using Apollo.Core.Host.Projects;
 using Apollo.Utilities;
 using Lokad;
+using Utilities.Progress;
 
 namespace Apollo.Core.Host.UserInterfaces.Projects
 {

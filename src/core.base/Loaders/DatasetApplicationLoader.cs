@@ -12,8 +12,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Apollo.Core.Base.Communication;
-using Apollo.Utilities;
+using Utilities;
+using Utilities.Communication;
+using Utilities.Diagnostics;
+using Utilities.Diagnostics.Logging;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -86,7 +88,7 @@ namespace Apollo.Core.Base.Loaders
 
             var deploymentDir = DeployLocation();
             m_Diagnostics.Log(
-                LogSeverityProxy.Debug,
+                LevelToLog.Debug,
                 string.Format(CultureInfo.InvariantCulture, "Deploying to: {0}", deploymentDir));
 
             DeployApplication(deploymentDir);
@@ -96,7 +98,7 @@ namespace Apollo.Core.Base.Loaders
                 CultureInfo.InvariantCulture,
                 @"--host={0} --channeltype=""{1}"" --channeluri={2}",
                 ownerConnection.Id,
-                ownerConnection.ChannelType.AssemblyQualifiedName,
+                ownerConnection.ChannelType,
                 ownerConnection.Address);
 
             var startInfo = new ProcessStartInfo
@@ -209,7 +211,7 @@ namespace Apollo.Core.Base.Loaders
                 var deployedFile = Path.Combine(deployDirectory, file);
 
                 m_Diagnostics.Log(
-                    LogSeverityProxy.Debug,
+                    LevelToLog.Debug,
                     string.Format(CultureInfo.InvariantCulture, "Deploying {1} to: {0}", file, deployedFile));
                 File.Copy(localFile, deployedFile);
             }
@@ -227,7 +229,7 @@ namespace Apollo.Core.Base.Loaders
                 if (File.Exists(localFile))
                 {
                     m_Diagnostics.Log(
-                        LogSeverityProxy.Debug,
+                        LevelToLog.Debug,
                         string.Format(CultureInfo.InvariantCulture, "Deploying {1} to: {0}", file, deployedFile));
                     File.Copy(localFile, deployedFile);
                 }

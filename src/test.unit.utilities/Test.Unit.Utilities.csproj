@@ -44,15 +44,15 @@
       <HintPath>..\..\packages\ParallelExtensionsExtras\lib\ParallelExtensionsExtras.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="Utilities, Version=0.2.0.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
       <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>
       <Name>SolutionLevel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\utilities.srconly\Apollo.Utilities.SrcOnly.csproj">
-      <Project>{a4e93835-9467-48e1-bdff-a107cf3784c2}</Project>
-      <Name>Apollo.Utilities.SrcOnly</Name>
     </ProjectReference>
     <ProjectReference Include="..\utilities\Apollo.Utilities.csproj">
       <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
@@ -61,14 +61,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationConstantsTest.cs" />
-    <Compile Include="AssemblyExtensionsTest.cs" />
     <Compile Include="Commands\CommandFactoryTest.cs" />
     <Compile Include="Commands\CommandIdTest.cs" />
     <Compile Include="Commands\DuplicateCommandExceptionTest.cs" />
     <Compile Include="Commands\UnknownCommandExceptionTest.cs" />
-    <Compile Include="CurrentProgressMarkNotSetExceptionTest.cs" />
     <Compile Include="FileConstantsTest.cs" />
-    <Compile Include="FusionHelperTest.cs" />
     <Compile Include="History\CannotDeleteObjectBeforeCreationExceptionTest.cs" />
     <Compile Include="History\CannotSetDefaultAfterStartOfTimeExceptionTest.cs" />
     <Compile Include="History\CannotSetDefaultBeforeStartOfTimeExceptionTest.cs" />
@@ -95,10 +92,6 @@
     <Compile Include="History\UnknownTimeMarkerExceptionTest.cs" />
     <Compile Include="History\ValueAtTimeTest.cs" />
     <Compile Include="History\ValueHistoryTest.cs" />
-    <Compile Include="IdTest.cs" />
-    <Compile Include="ReflectionExtensionsTest.cs" />
-    <Compile Include="TimeBasedProgressTrackerTest.cs" />
-    <Compile Include="TypeEqualityComparerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">

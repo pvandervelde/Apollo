@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using NSarrac.Framework;
 
-namespace Apollo.Utilities.ExceptionHandling
+namespace Utilities.ExceptionHandling
 {
     /// <summary>
     /// Defines utility methods for the exception handlers.
@@ -18,7 +18,7 @@ namespace Apollo.Utilities.ExceptionHandling
     /// this class should NOT be copied to the host project. Define a NEW class called
     /// <c>Apollo.Utilities.ExceptionHandling.SrcOnlyExceptionHandlingUtillities</c> that mimicks the current class.
     /// </design>
-    internal static class SrcOnlyExceptionHandlingUtillities
+    internal static class SrcOnlyExceptionHandlingUtilities
     {
         public static RSAParameters ReportingPublicKey()
         {

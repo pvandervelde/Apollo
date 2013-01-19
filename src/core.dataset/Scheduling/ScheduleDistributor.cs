@@ -212,7 +212,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <summary>
         /// The object used to lock on.
         /// </summary>
-        private readonly ILockObject m_Lock = new LockObject();
+        private readonly object m_Lock = new object();
 
         /// <summary>
         /// The collection of executors that are currently running.

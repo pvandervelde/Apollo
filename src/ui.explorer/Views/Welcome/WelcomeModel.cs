@@ -12,7 +12,6 @@ using Apollo.UI.Explorer.Properties;
 using Apollo.UI.Wpf;
 using Apollo.UI.Wpf.Models;
 using Apollo.UI.Wpf.Views.Settings;
-using Apollo.Utilities.Configuration;
 
 namespace Apollo.UI.Explorer.Views.Welcome
 {

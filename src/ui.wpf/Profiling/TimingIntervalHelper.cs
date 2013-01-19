@@ -6,7 +6,7 @@
 
 using System;
 using System.Diagnostics;
-using Apollo.Utilities;
+using Utilities.Diagnostics;
 using Utilities.Diagnostics.Profiling;
 
 namespace Apollo.UI.Wpf.Profiling

@@ -7,7 +7,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Apollo.Utilities;
+using Utilities.Progress;
 
 namespace Apollo.Core.Base.Loaders
 {

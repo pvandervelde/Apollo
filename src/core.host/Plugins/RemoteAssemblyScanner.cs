@@ -22,6 +22,8 @@ using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
+using Utilities;
+using Utilities.Diagnostics.Logging;
 
 namespace Apollo.Core.Host.Plugins
 {
@@ -269,7 +271,7 @@ namespace Apollo.Core.Host.Plugins
                 // The file does not exist. Only possible if somebody removes the file
                 // between the check and the loading.
                 m_Logger.Log(
-                    LogSeverityProxy.Error,
+                    LevelToLog.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Resources.Plugins_LogMessage_Scanner_AssemblyLoadFailed_WithNameAndException,
@@ -280,7 +282,7 @@ namespace Apollo.Core.Host.Plugins
             {
                 // Could not load the assembly.
                 m_Logger.Log(
-                    LogSeverityProxy.Error,
+                    LevelToLog.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Resources.Plugins_LogMessage_Scanner_AssemblyLoadFailed_WithNameAndException,
@@ -291,7 +293,7 @@ namespace Apollo.Core.Host.Plugins
             {
                 // incorrectly formatted assembly.
                 m_Logger.Log(
-                    LogSeverityProxy.Error,
+                    LevelToLog.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Resources.Plugins_LogMessage_Scanner_AssemblyLoadFailed_WithNameAndException,
@@ -336,14 +338,14 @@ namespace Apollo.Core.Host.Plugins
                     }
                     catch (Exception e)
                     {
-                        m_Logger.Log(LogSeverityProxy.Warning, e.ToString());
+                        m_Logger.Log(LevelToLog.Warn, e.ToString());
                     }
                 }
             }
             catch (Exception e)
             {
                 m_Logger.Log(
-                    LogSeverityProxy.Error,
+                    LevelToLog.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Resources.Plugins_LogMessage_Scanner_TypeScanFailed_WithAssemblyAndException,
@@ -382,7 +384,7 @@ namespace Apollo.Core.Host.Plugins
                     {
                         exports.Add(exportDefinition);
                         m_Logger.Log(
-                            LogSeverityProxy.Info,
+                            LevelToLog.Info,
                             string.Format(
                                 CultureInfo.InvariantCulture,
                                 "Discovered export: {0}",
@@ -391,7 +393,7 @@ namespace Apollo.Core.Host.Plugins
                     else 
                     {
                         m_Logger.Log(
-                            LogSeverityProxy.Warning,
+                            LevelToLog.Warn,
                             string.Format(
                                 CultureInfo.InvariantCulture,
                                 "Unable to process export: {0} on a {1}",
@@ -414,7 +416,7 @@ namespace Apollo.Core.Host.Plugins
                     {
                         imports.Add(importDefinition);
                         m_Logger.Log(
-                            LogSeverityProxy.Info,
+                            LevelToLog.Info,
                             string.Format(
                                 CultureInfo.InvariantCulture,
                                 "Discovered import: {0}",
@@ -423,7 +425,7 @@ namespace Apollo.Core.Host.Plugins
                     else
                     {
                         m_Logger.Log(
-                            LogSeverityProxy.Warning,
+                            LevelToLog.Warn,
                             string.Format(
                                 CultureInfo.InvariantCulture,
                                 "Unable to process import: {0}",
@@ -463,7 +465,7 @@ namespace Apollo.Core.Host.Plugins
                         actions.Add(actionDefinition);
                             
                         m_Logger.Log(
-                            LogSeverityProxy.Info,
+                            LevelToLog.Info,
                             string.Format(
                                 CultureInfo.InvariantCulture,
                                 "Discovered action: {0}",
@@ -485,7 +487,7 @@ namespace Apollo.Core.Host.Plugins
                         conditions.Add(conditionDefinition);
 
                         m_Logger.Log(
-                            LogSeverityProxy.Info,
+                            LevelToLog.Info,
                             string.Format(
                                 CultureInfo.InvariantCulture,
                                 "Discovered condition: {0}",
@@ -508,7 +510,7 @@ namespace Apollo.Core.Host.Plugins
                         conditions.Add(conditionDefinition);
 
                         m_Logger.Log(
-                            LogSeverityProxy.Info,
+                            LevelToLog.Info,
                             string.Format(
                                 CultureInfo.InvariantCulture,
                                 "Discovered condition: {0}",

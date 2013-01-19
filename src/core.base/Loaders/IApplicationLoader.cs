@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.Core.Base.Communication;
+using Utilities.Communication;
 
 namespace Apollo.Core.Base.Loaders
 {

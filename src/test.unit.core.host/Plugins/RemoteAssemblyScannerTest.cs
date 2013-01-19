@@ -18,6 +18,7 @@ using Gallio.Framework;
 using MbUnit.Framework;
 using Moq;
 using Test.Mocks;
+using Utilities;
 
 namespace Apollo.Core.Host.Plugins
 {

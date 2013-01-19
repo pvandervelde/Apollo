@@ -11,7 +11,6 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Dataset.Plugins;
@@ -22,6 +21,9 @@ using Apollo.Core.Extensions.Scheduling;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
 using Autofac;
+using Utilities.Communication;
+using Utilities.Diagnostics;
+using Utilities.FileSystem;
 
 namespace Apollo.Core.Dataset
 {
@@ -208,7 +210,7 @@ namespace Apollo.Core.Dataset
                 // - The dataset application wouldn't know what to do with it anyway
                 // - We don't want anybody talking to the application except for the
                 //   application that started it.
-                builder.RegisterModule(new BaseModule(false));
+                builder.RegisterModule(new CommunicationModule(false));
                 RegisterCommands(
                     builder,
                     () => CloseApplication(result),

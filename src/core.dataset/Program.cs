@@ -10,10 +10,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 using System.Windows.Forms;
-using Apollo.Core.Base.Communication;
-using Apollo.Utilities.Applications;
 using Autofac;
 using Mono.Options;
+using Utilities;
+using Utilities.Communication;
 
 namespace Apollo.Core.Dataset
 {

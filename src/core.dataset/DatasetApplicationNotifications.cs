@@ -7,7 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base;
-using Apollo.Utilities;
+using Utilities.Progress;
 
 namespace Apollo.Core.Dataset
 {

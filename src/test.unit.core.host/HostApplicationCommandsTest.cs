@@ -8,11 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using Apollo.Core.Base.Communication;
-using Apollo.Utilities;
-using Apollo.Utilities.Configuration;
 using MbUnit.Framework;
 using Moq;
+using Utilities;
+using Utilities.Communication;
+using Utilities.Configuration;
+using Utilities.FileSystem;
 
 namespace Apollo.Core.Host
 {

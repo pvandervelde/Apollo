@@ -40,7 +40,7 @@ namespace Apollo.Core.Host.Projects
         /// <summary>
         /// The object used to lock on.
         /// </summary>
-        private readonly ILockObject m_Lock = new LockObject();
+        private readonly object m_Lock = new object();
 
         /// <summary>
         /// The function which returns a <c>DistributionPlan</c> for a given

@@ -12,6 +12,7 @@ using Apollo.Core.Base;
 using Apollo.Core.Host;
 using Autofac.Core;
 using Lokad;
+using Utilities.Communication;
 
 namespace Apollo.UI.Console
 {
@@ -72,9 +73,8 @@ namespace Apollo.UI.Console
             return new List<IModule> 
                 { 
                     new Utilities.UtilitiesModule(),
-                    new BaseModule(true),
+                    new CommunicationModule(true),
                     new BaseModuleForLoaders(),
-                    new BaseModuleForHosts(),
                 };
         }
 

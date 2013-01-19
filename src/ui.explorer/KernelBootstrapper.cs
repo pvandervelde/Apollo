@@ -10,9 +10,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Apollo.Core.Base;
 using Apollo.Core.Host;
-using Apollo.Utilities;
 using Autofac.Core;
 using Lokad;
+using Utilities.Communication;
+using Utilities.Progress;
 
 namespace Apollo.UI.Explorer
 {
@@ -78,9 +79,8 @@ namespace Apollo.UI.Explorer
             return new List<IModule> 
                 { 
                     new Utilities.UtilitiesModule(),
-                    new BaseModule(true),
+                    new CommunicationModule(true),
                     new BaseModuleForLoaders(),
-                    new BaseModuleForHosts(),
                 };
         }
 

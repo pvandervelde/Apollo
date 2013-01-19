@@ -7,7 +7,7 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
-using Apollo.Utilities;
+using Utilities;
 
 namespace Apollo.Core.Dataset.Plugins
 {

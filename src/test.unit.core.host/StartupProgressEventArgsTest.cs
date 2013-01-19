@@ -4,11 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
+using Utilities.Progress;
 
 namespace Apollo.Core.Host
 {

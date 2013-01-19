@@ -4,28 +4,25 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
-
-namespace Apollo.Core.Base.Communication
+namespace Apollo.UI.Wpf.Profiling
 {
     /// <summary>
-    /// Defines the interface for objects that carry information, in serialized form, about 
-    /// a specific <see cref="ICommandSet"/>.
+    /// Defines the interface for objects that store information about a profiling report.
     /// </summary>
-    internal interface ISerializedType : IEquatable<ISerializedType>
+    public interface IProfilingTimeReport
     {
         /// <summary>
-        /// Gets the assembly qualified name of the command set type.
+        /// Gets the description for the timing report.
         /// </summary>
-        string AssemblyQualifiedTypeName
+        string Description
         {
             get;
         }
 
         /// <summary>
-        /// Gets the full name of the type.
+        /// Gets the timing results in textual format.
         /// </summary>
-        string FullName
+        string TimingResults
         {
             get;
         }

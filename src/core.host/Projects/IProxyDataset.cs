@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
-using Apollo.Utilities;
+using Utilities.Progress;
 
 namespace Apollo.Core.Host.Projects
 {

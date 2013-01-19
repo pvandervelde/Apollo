@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Apollo.Core.Base.Communication;
+using Utilities.Communication;
 
 namespace Apollo.Core.Base.Plugins
 {

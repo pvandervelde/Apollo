@@ -347,9 +347,9 @@ namespace Apollo.UI.Wpf.Utilities
             e.Handled = true;
         }
 
-        private static bool UpdateEffects(object uiObject, DragEventArgs e)
+        private static bool UpdateEffects(object uobject, DragEventArgs e)
         {
-            IDropTargetAdvisor advisor = GetDropTargetAdvisor(uiObject as DependencyObject);
+            IDropTargetAdvisor advisor = GetDropTargetAdvisor(uobject as DependencyObject);
             if (advisor.IsValidDataObject(e.Data) == false)
             {
                 return false;

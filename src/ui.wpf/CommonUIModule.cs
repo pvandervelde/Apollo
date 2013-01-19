@@ -11,9 +11,11 @@ using System.Text;
 using Apollo.UI.Wpf.Feedback;
 using Apollo.UI.Wpf.Profiling;
 using Apollo.Utilities;
-using Apollo.Utilities.Configuration;
 using Autofac;
 using NSarrac.Framework;
+using Utilities;
+using Utilities.Configuration;
+using Utilities.Diagnostics;
 using Utilities.Diagnostics.Profiling;
 using Utilities.Diagnostics.Profiling.Reporting;
 

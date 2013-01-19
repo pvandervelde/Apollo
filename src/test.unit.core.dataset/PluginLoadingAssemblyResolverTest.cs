@@ -12,10 +12,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Communication;
 using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
+using Utilities.Communication;
+using Utilities.FileSystem;
+using Utilities.Progress;
 
 namespace Apollo.Core.Dataset
 {

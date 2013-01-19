@@ -54,6 +54,10 @@
     <Reference Include="Utilities">
       <HintPath>..\..\packages\Utilities\lib\net40\Utilities.dll</HintPath>
     </Reference>
+    <Reference Include="Utilities.Communication, Version=0.2.1.0, Culture=neutral, PublicKeyToken=ee5b68ec5ad4ef93, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.Communication.dll</HintPath>
+    </Reference>
     <Reference Include="Utilities.Diagnostics">
       <HintPath>..\..\packages\Utilities\lib\net40\Utilities.Diagnostics.dll</HintPath>
     </Reference>
@@ -77,76 +81,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Communication\ChannelClosedEventArgsTest.cs" />
-    <Compile Include="Communication\ChannelConnectionInformationTest.cs" />
-    <Compile Include="Communication\CommandAlreadyRegisteredExceptionTest.cs" />
-    <Compile Include="Communication\CommandNotSupportedExceptionTest.cs" />
-    <Compile Include="Communication\CommandProxyBuilderTest.cs" />
-    <Compile Include="Communication\CommandProxyBuilderTest.Interfaces.cs" />
-    <Compile Include="Communication\ConnectionInformationEventArgsTest.cs" />
-    <Compile Include="Communication\EndpointEventArgsTest.cs" />
-    <Compile Include="Communication\EndpointIdExtensionsTest.cs" />
-    <Compile Include="Communication\EndpointIdTest.cs" />
-    <Compile Include="Communication\EndpointNotContactableExceptionTest.cs" />
-    <Compile Include="Communication\FailedToSendMessageExceptionTest.cs" />
-    <Compile Include="Communication\FileRegistrationNotFoundExceptionTest.cs" />
-    <Compile Include="Communication\LocalCommandCollectionTest.cs" />
-    <Compile Include="Communication\LocalNotificationCollectionTest.cs" />
-    <Compile Include="Communication\ManualCommandRegistrationReporterTest.cs" />
-    <Compile Include="Communication\ManualDiscoverySourceTest.cs" />
-    <Compile Include="Communication\MaximumNumberOfChannelRestartsExceededExceptionTest.cs" />
-    <Compile Include="Communication\MessageEventArgsTest.cs" />
-    <Compile Include="Communication\MessageHandlerTest.cs" />
-    <Compile Include="Communication\MessageIdTest.cs" />
-    <Compile Include="Communication\Messages\CommandInformationRequestMessageTest.cs" />
-    <Compile Include="Communication\Messages\CommandInvokedMessageTest.cs" />
-    <Compile Include="Communication\Messages\CommandInvokedResponseMessageTest.cs" />
-    <Compile Include="Communication\Messages\DataDownloadRequestMessageTest.cs" />
-    <Compile Include="Communication\Messages\EndpointConnectMessageTest.cs" />
-    <Compile Include="Communication\Messages\EndpointDisconnectMessageTest.cs" />
-    <Compile Include="Communication\Messages\EndpointProxyTypesResponseMessageTest.cs" />
-    <Compile Include="Communication\Messages\FailureMessageTest.cs" />
-    <Compile Include="Communication\Messages\MessageKindFilterTest.cs" />
-    <Compile Include="Communication\Messages\NewNotificationRegisteredMessageTest.cs" />
-    <Compile Include="Communication\Messages\NotificationInformationRequestMessageTest.cs" />
-    <Compile Include="Communication\Messages\NotificationRaisedMessageTest.cs" />
-    <Compile Include="Communication\Messages\Processors\CommandInformationRequestProcessActionTest.cs" />
-    <Compile Include="Communication\Messages\Processors\CommandInvokedProcessActionTest.cs" />
-    <Compile Include="Communication\Messages\Processors\DataDownloadProcessActionTest.cs" />
-    <Compile Include="Communication\Messages\Processors\EndpointConnectProcessActionTest.cs" />
-    <Compile Include="Communication\Messages\Processors\NewCommandRegisteredProcessActionTest.cs" />
-    <Compile Include="Communication\Messages\Processors\NewNotificationRegisteredProcessActionTest.cs" />
-    <Compile Include="Communication\Messages\Processors\NotificationInformationRequestProcessActionTest.cs" />
-    <Compile Include="Communication\Messages\Processors\NotificationRaisedProcessActionTest.cs" />
-    <Compile Include="Communication\Messages\Processors\RegisterForNotificationProcessActionTest.cs" />
-    <Compile Include="Communication\Messages\Processors\UnknownMessageTypeProcessActionTest.cs" />
-    <Compile Include="Communication\Messages\Processors\UnregisterFromNotificationProcessActionTest.cs" />
-    <Compile Include="Communication\Messages\RegisterForNotificationMessageTest.cs" />
-    <Compile Include="Communication\Messages\SuccessMessageTest.cs" />
-    <Compile Include="Communication\Messages\UnknownMessageTypeMessageTest.cs" />
-    <Compile Include="Communication\Messages\UnregisterFromNotificationMessageTest.cs" />
-    <Compile Include="Communication\MissingBindingTypeExceptionTest.cs" />
-    <Compile Include="Communication\MissingEndpointIdExceptionTest.cs" />
-    <Compile Include="Communication\NamedPipeChannelTypeTest.cs" />
-    <Compile Include="Communication\NotificationNotSupportedExceptionTest.cs" />
-    <Compile Include="Communication\NotificationProxyBuilderTest.cs" />
-    <Compile Include="Communication\NotificationProxyBuilderTest.Interfaces.cs" />
-    <Compile Include="Communication\ReceivingEndpointTest.cs" />
-    <Compile Include="Communication\RemoteCommandHubTest.cs" />
-    <Compile Include="Communication\RemoteNotificationHubTest.cs" />
-    <Compile Include="Communication\RemoteOperationFailedExceptionTest.cs" />
-    <Compile Include="Communication\SelfResurrectingSendingEndpointTest.cs" />
-    <Compile Include="Communication\SendingEndpointTest.cs" />
-    <Compile Include="Communication\SerializedEventTest.cs" />
-    <Compile Include="Communication\SerializedMethodInvocationTest.cs" />
-    <Compile Include="Communication\SerializedTypeTest.cs" />
-    <Compile Include="Communication\TypeIsNotAValidCommandSetExceptionTest.cs" />
-    <Compile Include="Communication\TypeIsNotAValidNotificationSetExceptionTest.cs" />
-    <Compile Include="Communication\UnableToLoadProxyTypeException.cs" />
-    <Compile Include="Communication\UnknownEndpointIdFormatExceptionTest.cs" />
-    <Compile Include="Communication\UploadNotDeregisteredExceptionTest.cs" />
-    <Compile Include="Communication\UploadTokenTest.cs" />
-    <Compile Include="Communication\WaitingUploadsTest.cs" />
     <Compile Include="DatasetCannotBecomeParentExceptionTest.cs" />
     <Compile Include="DatasetIdTest.cs" />
     <Compile Include="DatasetOnlineInformationTest.cs" />

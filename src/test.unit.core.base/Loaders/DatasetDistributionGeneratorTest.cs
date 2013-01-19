@@ -4,16 +4,16 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Schedulers;
-using Apollo.Core.Base.Communication;
 using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
+using Utilities.Communication;
+using Utilities.Diagnostics;
 
 namespace Apollo.Core.Base.Loaders
 {

@@ -7,7 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Apollo.Core.Base.Communication;
+using Utilities.Communication;
 
 namespace Apollo.Core.Base.Loaders
 {

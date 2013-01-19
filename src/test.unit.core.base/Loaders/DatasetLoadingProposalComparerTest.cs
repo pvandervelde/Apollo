@@ -6,8 +6,8 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Base.Communication;
 using MbUnit.Framework;
+using Utilities.Communication;
 
 namespace Apollo.Core.Base.Loaders
 {
