@@ -6,22 +6,23 @@
 
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
 using Apollo.Utilities;
-using Apollo.Utilities.Configuration;
-using Apollo.Utilities.ExceptionHandling;
 using Apollo.Utilities.History;
-using Apollo.Utilities.Logging;
 using Autofac;
-using Autofac.Core;
 using NLog;
-using NManto;
-using NManto.Reporting;
 using NSarrac.Framework;
+using Utilities;
+using Utilities.Configuration;
+using Utilities.Diagnostics;
+using Utilities.Diagnostics.Logging;
+using Utilities.Diagnostics.Profiling;
+using Utilities.Diagnostics.Profiling.Reporting;
+using Utilities.ExceptionHandling;
+using Utilities.Progress;
 
 namespace Apollo.UI.Console.Utilities
 {
@@ -102,12 +103,9 @@ namespace Apollo.UI.Console.Utilities
                 c => 
                 {
                     var loggers = c.Resolve<IEnumerable<ILogger>>();
-                    Action<LogSeverityProxy, string> action = (p, s) =>
+                    Action<LevelToLog, string> action = (p, s) =>
                     {
-                        var msg = new LogMessage(
-                            LogSeverityProxyToLogLevelMap.FromLogSeverityProxy(p),
-                            s);
-
+                        var msg = new LogMessage(p, s);
                         foreach (var logger in loggers)
                         {
                             try
@@ -173,7 +171,7 @@ namespace Apollo.UI.Console.Utilities
                             reporter.Transform(storage.FromStartTillEnd());
                         })
                     .As<IStoreIntervals>()
-                    .As<IGenerateReports>()
+                    .As<IGenerateTimingReports>()
                     .SingleInstance();
 
                 builder.Register(c => new Profiler(
@@ -250,7 +248,7 @@ namespace Apollo.UI.Console.Utilities
                     .As<ITrackSteppingProgress>()
                     .As<ITrackProgress>();
 
-                RSAParameters rsaParameters = SrcOnlyExceptionHandlingUtillities.ReportingPublicKey();
+                RSAParameters rsaParameters = SrcOnlyExceptionHandlingUtilities.ReportingPublicKey();
                 builder.RegisterModule(new FeedbackReportingModule(() => rsaParameters));
 
                 RegisterLoggers(builder);

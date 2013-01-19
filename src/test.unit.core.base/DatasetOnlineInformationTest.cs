@@ -11,11 +11,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Schedulers;
-using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Loaders;
-using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
+using Utilities.Communication;
+using Utilities.Diagnostics;
 
 namespace Apollo.Core.Base
 {
@@ -24,6 +24,43 @@ namespace Apollo.Core.Base
             Justification = "Unit tests do not need documentation.")]
     public sealed class DatasetOnlineInformationTest
     {
+        public interface IMockCommandSetWithTaskReturn : ICommandSet
+        {
+            Task MyMethod(int input);
+        }
+
+        public interface IMockCommandSetWithTypedTaskReturn : ICommandSet
+        {
+            Task<int> MyMethod(int input);
+        }
+
+        [InternalCommand]
+        public interface IMockCommandSetForInternalUse : ICommandSet
+        {
+            Task MyInternalMethod();
+        }
+
+        public interface IMockNotificationSetWithEventHandler : INotificationSet
+        {
+            event EventHandler OnMyEvent;
+        }
+
+        [Serializable]
+        public class MySerializableEventArgs : EventArgs
+        {
+        }
+
+        public interface IMockNotificationSetWithTypedEventHandler : INotificationSet
+        {
+            event EventHandler<MySerializableEventArgs> OnMyEvent;
+        }
+
+        [InternalNotification]
+        public interface IMockNotificationSetForInternalUse : INotificationSet
+        {
+            event EventHandler<MySerializableEventArgs> OnMyEvent;
+        }
+
         [Test]
         public void Create()
         {
@@ -66,16 +103,16 @@ namespace Apollo.Core.Base
             var commandList = new Dictionary<Type, ICommandSet> 
                 {
                     { 
-                        typeof(CommandProxyBuilderTest.IMockCommandSetWithTaskReturn),
-                        new Mock<CommandProxyBuilderTest.IMockCommandSetWithTaskReturn>().Object
+                        typeof(IMockCommandSetWithTaskReturn),
+                        new Mock<IMockCommandSetWithTaskReturn>().Object
                     },
                     {
-                        typeof(CommandProxyBuilderTest.IMockCommandSetWithTypedTaskReturn),
-                        new Mock<CommandProxyBuilderTest.IMockCommandSetWithTaskReturn>().Object
+                        typeof(IMockCommandSetWithTypedTaskReturn),
+                        new Mock<IMockCommandSetWithTaskReturn>().Object
                     },
                     {
-                        typeof(CommandProxyBuilderTest.IMockCommandSetForInternalUse),
-                        new Mock<CommandProxyBuilderTest.IMockCommandSetWithTaskReturn>().Object
+                        typeof(IMockCommandSetForInternalUse),
+                        new Mock<IMockCommandSetWithTaskReturn>().Object
                     },
                 };
 
@@ -120,14 +157,14 @@ namespace Apollo.Core.Base
             var commandList = new SortedList<Type, ICommandSet> 
                 {
                     { 
-                        typeof(CommandProxyBuilderTest.IMockCommandSetWithTaskReturn),
-                        new Mock<CommandProxyBuilderTest.IMockCommandSetWithTaskReturn>().Object
+                        typeof(IMockCommandSetWithTaskReturn),
+                        new Mock<IMockCommandSetWithTaskReturn>().Object
                     },
                 };
             var commandHub = new Mock<ISendCommandsToRemoteEndpoints>();
             {
-                commandHub.Setup(h => h.CommandsFor<CommandProxyBuilderTest.IMockCommandSetWithTaskReturn>(It.IsAny<EndpointId>()))
-                    .Returns((CommandProxyBuilderTest.IMockCommandSetWithTaskReturn)commandList.Values[0]);
+                commandHub.Setup(h => h.CommandsFor<IMockCommandSetWithTaskReturn>(It.IsAny<EndpointId>()))
+                    .Returns((IMockCommandSetWithTaskReturn)commandList.Values[0]);
             }
 
             var notifications = new Mock<IDatasetApplicationNotifications>();
@@ -147,7 +184,7 @@ namespace Apollo.Core.Base
                 commandHub.Object,
                 notificationHub.Object,
                 systemDiagnostics);
-            var commands = info.Command<CommandProxyBuilderTest.IMockCommandSetWithTaskReturn>();
+            var commands = info.Command<IMockCommandSetWithTaskReturn>();
             Assert.AreSame(commandList.Values[0], commands);
         }
 
@@ -163,16 +200,16 @@ namespace Apollo.Core.Base
             var notificationList = new Dictionary<Type, INotificationSet> 
                 {
                     { 
-                        typeof(NotificationProxyBuilderTest.IMockNotificationSetWithEventHandler),
-                        new Mock<NotificationProxyBuilderTest.IMockNotificationSetWithEventHandler>().Object
+                        typeof(IMockNotificationSetWithEventHandler),
+                        new Mock<IMockNotificationSetWithEventHandler>().Object
                     },
                     {
-                        typeof(NotificationProxyBuilderTest.IMockNotificationSetWithTypedEventHandler),
-                        new Mock<NotificationProxyBuilderTest.IMockNotificationSetWithTypedEventHandler>().Object
+                        typeof(IMockNotificationSetWithTypedEventHandler),
+                        new Mock<IMockNotificationSetWithTypedEventHandler>().Object
                     },
                     {
-                        typeof(NotificationProxyBuilderTest.IMockNotificationSetForInternalUse),
-                        new Mock<NotificationProxyBuilderTest.IMockNotificationSetForInternalUse>().Object
+                        typeof(IMockNotificationSetForInternalUse),
+                        new Mock<IMockNotificationSetForInternalUse>().Object
                     },
                 };
 
@@ -212,8 +249,8 @@ namespace Apollo.Core.Base
             var notificationList = new SortedList<Type, INotificationSet> 
                 {
                     { 
-                        typeof(NotificationProxyBuilderTest.IMockNotificationSetWithTypedEventHandler),
-                        new Mock<NotificationProxyBuilderTest.IMockNotificationSetWithTypedEventHandler>().Object
+                        typeof(IMockNotificationSetWithTypedEventHandler),
+                        new Mock<IMockNotificationSetWithTypedEventHandler>().Object
                     },
                 };
 
@@ -221,8 +258,8 @@ namespace Apollo.Core.Base
             var notificationHub = new Mock<INotifyOfRemoteEndpointEvents>();
             {
                 notificationHub.Setup(
-                        h => h.NotificationsFor<NotificationProxyBuilderTest.IMockNotificationSetWithTypedEventHandler>(It.IsAny<EndpointId>()))
-                    .Returns((NotificationProxyBuilderTest.IMockNotificationSetWithTypedEventHandler)notificationList.Values[0]);
+                        h => h.NotificationsFor<IMockNotificationSetWithTypedEventHandler>(It.IsAny<EndpointId>()))
+                    .Returns((IMockNotificationSetWithTypedEventHandler)notificationList.Values[0]);
                 notificationHub.Setup(n => n.NotificationsFor<IDatasetApplicationNotifications>(It.IsAny<EndpointId>()))
                     .Callback<EndpointId>(e => Assert.AreSame(endpoint, e))
                     .Returns(datasetNotifications.Object);
@@ -235,7 +272,7 @@ namespace Apollo.Core.Base
                 commandHub.Object,
                 notificationHub.Object,
                 systemDiagnostics);
-            var notifications = info.Notification<NotificationProxyBuilderTest.IMockNotificationSetWithTypedEventHandler>();
+            var notifications = info.Notification<IMockNotificationSetWithTypedEventHandler>();
             Assert.AreSame(notificationList.Values[0], notifications);
         }
 

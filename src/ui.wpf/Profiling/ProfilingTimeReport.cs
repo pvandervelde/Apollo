@@ -9,14 +9,14 @@ namespace Apollo.UI.Wpf.Profiling
     /// <summary>
     /// Stores the timing results for a given timing interval.
     /// </summary>
-    public sealed class TimingReport : ITimingReport
+    public sealed class ProfilingTimeReport : IProfilingTimeReport
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TimingReport"/> class.
+        /// Initializes a new instance of the <see cref="ProfilingTimeReport"/> class.
         /// </summary>
         /// <param name="description">The description of the timing measurement.</param>
         /// <param name="results">The timing results.</param>
-        public TimingReport(string description, string results)
+        public ProfilingTimeReport(string description, string results)
         {
             {
                 Lokad.Enforce.Argument(() => description);

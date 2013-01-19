@@ -10,6 +10,7 @@ using Apollo.Core.Base;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Utilities;
 using Autofac;
+using Utilities.Diagnostics.Logging;
 
 namespace Apollo.Core.Host.Plugins
 {
@@ -56,7 +57,7 @@ namespace Apollo.Core.Host.Plugins
             }
             catch (Exception e)
             {
-                logger.Log(LogSeverityProxy.Error, e.ToString());
+                logger.Log(LevelToLog.Error, e.ToString());
                 throw;
             }
         }

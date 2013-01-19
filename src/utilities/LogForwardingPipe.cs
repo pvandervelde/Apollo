@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Utilities.Diagnostics;
+using Utilities.Diagnostics.Logging;
 
 namespace Apollo.Utilities
 {
@@ -39,7 +41,7 @@ namespace Apollo.Utilities
         /// </summary>
         /// <param name="severity">The importance of the log message.</param>
         /// <param name="message">The message.</param>
-        public void Log(LogSeverityProxy severity, string message)
+        public void Log(LevelToLog severity, string message)
         {
             m_Diagnostics.Log(severity, message);
         }

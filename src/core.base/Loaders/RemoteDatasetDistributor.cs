@@ -11,10 +11,11 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Apollo.Core.Base.Communication;
-using Apollo.Utilities;
-using Apollo.Utilities.Configuration;
-using NManto;
+using Utilities.Communication;
+using Utilities.Configuration;
+using Utilities.Diagnostics;
+using Utilities.Diagnostics.Profiling;
+using Utilities.Progress;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -144,7 +145,7 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// The object used to take out locks on.
         /// </summary>
-        private readonly ILockObject m_Lock = new LockObject();
+        private readonly object m_Lock = new object();
 
         /// <summary>
         /// The object that provides the commands to load datasets onto other machines.
@@ -374,9 +375,8 @@ namespace Apollo.Core.Base.Loaders
 
                     // We shouldn't have to load the TCP channel at this point because that channel would have
                     // been loaded when the loaders broadcast their message indicating that they exist.
-                    var info = (from connection in m_CommunicationLayer.LocalConnectionPoints()
-                                where connection.ChannelType.Equals(typeof(TcpChannelType))
-                                select connection).First();
+                    var info = m_CommunicationLayer.LocalConnectionPoints()
+                        .First(c => c.ChannelType == ChannelType.TcpIp);
 
                     var endpointTask = loaderCommands.Load(info, planToImplement.DistributionFor.Id);
                     endpointTask.Wait();

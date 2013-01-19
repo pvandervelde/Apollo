@@ -9,13 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Dataset", "core
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Utilities", "utilities\Apollo.Utilities.csproj", "{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Utilities.SrcOnly", "utilities.srconly\Apollo.Utilities.SrcOnly.csproj", "{A4E93835-9467-48E1-BDFF-A107CF3784C2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.UI.Explorer", "ui.explorer\Apollo.UI.Explorer.csproj", "{60F9649B-6C4B-43D4-AE8C-D68F04E2C3DF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.UI.Wpf", "ui.wpf\Apollo.UI.Wpf.csproj", "{ACD26D23-36BA-4035-84CA-6E462A03B033}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Manual.Console", "Test.Manual.Console\Test.Manual.Console.csproj", "{F04CC16B-8422-403E-919B-1189D0C637CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Core.Dataset", "test.unit.core.dataset\Test.Unit.Core.Dataset.csproj", "{7CCDFF95-66CF-4347-AF7A-7197805757F4}"
 EndProject
@@ -77,11 +73,6 @@ Global
 		{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}.Deploy|Any CPU.Build.0 = Deploy|Any CPU
 		{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A4E93835-9467-48E1-BDFF-A107CF3784C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A4E93835-9467-48E1-BDFF-A107CF3784C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A4E93835-9467-48E1-BDFF-A107CF3784C2}.Deploy|Any CPU.ActiveCfg = Deploy|Any CPU
-		{A4E93835-9467-48E1-BDFF-A107CF3784C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A4E93835-9467-48E1-BDFF-A107CF3784C2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{60F9649B-6C4B-43D4-AE8C-D68F04E2C3DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{60F9649B-6C4B-43D4-AE8C-D68F04E2C3DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60F9649B-6C4B-43D4-AE8C-D68F04E2C3DF}.Deploy|Any CPU.ActiveCfg = Deploy|Any CPU
@@ -94,11 +85,6 @@ Global
 		{ACD26D23-36BA-4035-84CA-6E462A03B033}.Deploy|Any CPU.Build.0 = Deploy|Any CPU
 		{ACD26D23-36BA-4035-84CA-6E462A03B033}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACD26D23-36BA-4035-84CA-6E462A03B033}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F04CC16B-8422-403E-919B-1189D0C637CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F04CC16B-8422-403E-919B-1189D0C637CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F04CC16B-8422-403E-919B-1189D0C637CD}.Deploy|Any CPU.ActiveCfg = Deploy|Any CPU
-		{F04CC16B-8422-403E-919B-1189D0C637CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F04CC16B-8422-403E-919B-1189D0C637CD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7CCDFF95-66CF-4347-AF7A-7197805757F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7CCDFF95-66CF-4347-AF7A-7197805757F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CCDFF95-66CF-4347-AF7A-7197805757F4}.Deploy|Any CPU.ActiveCfg = Deploy|Any CPU

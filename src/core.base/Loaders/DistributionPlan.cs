@@ -8,8 +8,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
-using Apollo.Utilities;
 using Lokad;
+using Utilities.Progress;
 
 namespace Apollo.Core.Base.Loaders
 {

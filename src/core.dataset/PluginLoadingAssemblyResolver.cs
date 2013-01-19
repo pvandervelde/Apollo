@@ -11,8 +11,8 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Communication;
-using Apollo.Utilities;
+using Utilities.Communication;
+using Utilities.FileSystem;
 
 namespace Apollo.Core.Dataset
 {

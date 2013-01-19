@@ -12,13 +12,13 @@ using System.Reflection;
 using System.Threading;
 using Apollo.Core.Host.Plugins;
 using Apollo.Core.Host.Projects;
-using Apollo.Core.Host.Scripting;
 using Apollo.Core.Host.UserInterfaces;
-using Apollo.Utilities;
 using Apollo.Utilities.Commands;
 using Autofac;
 using Autofac.Core;
 using Lokad;
+using Utilities.Diagnostics;
+using Utilities.Progress;
 
 namespace Apollo.Core.Host
 {

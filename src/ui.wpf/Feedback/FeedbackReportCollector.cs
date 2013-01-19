@@ -9,8 +9,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using Apollo.Utilities;
 using Lokad;
+using Utilities;
 
 namespace Apollo.UI.Wpf.Feedback
 {

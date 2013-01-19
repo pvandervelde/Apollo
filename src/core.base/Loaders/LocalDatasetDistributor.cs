@@ -11,10 +11,11 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Apollo.Core.Base.Communication;
-using Apollo.Utilities;
 using Lokad;
-using NManto;
+using Utilities.Communication;
+using Utilities.Diagnostics;
+using Utilities.Diagnostics.Profiling;
+using Utilities.Progress;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -179,14 +180,13 @@ namespace Apollo.Core.Base.Loaders
             Func<DatasetOnlineInformation> result =
                 () =>
                 {
-                    if (!m_CommunicationLayer.HasChannelFor(typeof(NamedPipeChannelType)))
-                    { 
-                        m_CommunicationLayer.OpenChannel(typeof(NamedPipeChannelType)); 
+                    if (!m_CommunicationLayer.HasChannelFor(ChannelType.NamedPipe))
+                    {
+                        m_CommunicationLayer.OpenChannel(ChannelType.NamedPipe); 
                     }
 
-                    var info = (from connection in m_CommunicationLayer.LocalConnectionPoints()
-                        where connection.ChannelType.Equals(typeof(NamedPipeChannelType))
-                        select connection).First();
+                    var info = m_CommunicationLayer.LocalConnectionPoints()
+                        .First(c => c.ChannelType == ChannelType.NamedPipe);
 
                     var endpoint = m_Loader.LoadDataset(info);
                     var resetEvent = new AutoResetEvent(false);

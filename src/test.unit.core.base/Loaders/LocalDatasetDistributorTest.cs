@@ -10,10 +10,12 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Schedulers;
-using Apollo.Core.Base.Communication;
 using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
+using Utilities.Communication;
+using Utilities.Diagnostics;
+using Utilities.Progress;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -93,11 +95,11 @@ namespace Apollo.Core.Base.Loaders
 
             var connectionInfo = new ChannelConnectionInformation(
                 EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                typeof(NamedPipeChannelType),
+                ChannelType.NamedPipe,
                 new Uri("net.pipe://localhost/pipe"));
             var communicationLayer = new Mock<ICommunicationLayer>();
             {
-                communicationLayer.Setup(s => s.HasChannelFor(It.IsAny<Type>()))
+                communicationLayer.Setup(s => s.HasChannelFor(It.IsAny<ChannelType>()))
                     .Returns(true);
                 communicationLayer.Setup(s => s.LocalConnectionPoints())
                     .Returns(new[] { connectionInfo });
@@ -106,14 +108,14 @@ namespace Apollo.Core.Base.Loaders
             var loader = new Mock<IApplicationLoader>();
             var commandHub = new Mock<ISendCommandsToRemoteEndpoints>();
             var notificationHub = new Mock<INotifyOfRemoteEndpointEvents>();
-            var uploads = new WaitingUploads();
+            var uploads = new Mock<IStoreUploads>();
 
             var distributor = new LocalDatasetDistributor(
                 localDistributor.Object,
                 loader.Object,
                 commandHub.Object,
                 notificationHub.Object,
-                uploads,
+                uploads.Object,
                 (d, e, n) =>
                 {
                     return new DatasetOnlineInformation(
@@ -201,24 +203,24 @@ namespace Apollo.Core.Base.Loaders
 
             var connectionInfo = new ChannelConnectionInformation(
                 EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                typeof(NamedPipeChannelType),
+                ChannelType.NamedPipe,
                 new Uri("net.pipe://localhost/pipe"));
             var communicationLayer = new Mock<ICommunicationLayer>();
             {
-                communicationLayer.Setup(s => s.HasChannelFor(It.IsAny<Type>()))
+                communicationLayer.Setup(s => s.HasChannelFor(It.IsAny<ChannelType>()))
                     .Returns(true);
                 communicationLayer.Setup(s => s.LocalConnectionPoints())
                     .Returns(new[] { connectionInfo });
             }
 
-            var uploads = new WaitingUploads();
+            var uploads = new Mock<IStoreUploads>();
 
             var distributor = new LocalDatasetDistributor(
                 localDistributor.Object,
                 loader.Object,
                 commandHub.Object,
                 notificationHub.Object,
-                uploads,
+                uploads.Object,
                 (d, e, n) =>
                 {
                     return new DatasetOnlineInformation(

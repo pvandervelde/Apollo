@@ -38,6 +38,14 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="Utilities, Version=0.2.1.0, Culture=neutral, PublicKeyToken=ee5b68ec5ad4ef93, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilities.Communication, Version=0.2.1.0, Culture=neutral, PublicKeyToken=ee5b68ec5ad4ef93, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.Communication.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
@@ -106,9 +114,7 @@
     <Compile Include="Scheduling\ScheduleStorageTest.cs" />
     <Compile Include="Scheduling\UnknownScheduleActionExceptionTest.cs" />
     <Compile Include="Scheduling\UnknownScheduleConditionExceptionTest.cs" />
-    <Compile Include="Utilities\DebugLogTemplateTest.cs" />
     <Compile Include="Utilities\HistoryMarkerStorageTest.cs" />
-    <Compile Include="Utilities\LogMessageTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">

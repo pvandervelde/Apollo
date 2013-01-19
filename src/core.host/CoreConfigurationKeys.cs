@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.Utilities.Configuration;
+using Utilities.Configuration;
 
 namespace Apollo.Core.Host
 {

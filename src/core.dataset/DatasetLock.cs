@@ -7,8 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Apollo.Core.Base;
-using Apollo.Utilities;
 
 namespace Apollo.Core.Dataset
 {
@@ -20,8 +18,7 @@ namespace Apollo.Core.Dataset
         /// <summary>
         /// The object used to lock on.
         /// </summary>
-        private readonly ILockObject m_Lock
-            = new LockObject();
+        private readonly object m_Lock = new object();
 
         /// <summary>
         /// The collection of current read locks.

@@ -11,7 +11,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Loaders;
 using Apollo.Core.Host.Plugins;
 using Apollo.Utilities;
@@ -19,6 +18,8 @@ using Apollo.Utilities.History;
 using MbUnit.Framework;
 using Moq;
 using QuickGraph;
+using Utilities.Communication;
+using Utilities.Diagnostics;
 
 namespace Apollo.Core.Host.Projects
 {

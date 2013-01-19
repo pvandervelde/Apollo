@@ -12,10 +12,11 @@ using System.Globalization;
 using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.Properties;
 using Apollo.Core.Host.UserInterfaces.Projects;
-using Apollo.Utilities;
 using Apollo.Utilities.Commands;
 using Autofac.Core;
 using Lokad;
+using Utilities.Diagnostics;
+using Utilities.Diagnostics.Logging;
 
 namespace Apollo.Core.Host.UserInterfaces
 {
@@ -272,7 +273,7 @@ namespace Apollo.Core.Host.UserInterfaces
             catch (Exception e)
             {
                 m_Diagnostics.Log(
-                    LogSeverityProxy.Error,
+                    LevelToLog.Error,
                     string.Format(
                         CultureInfo.InvariantCulture, 
                         Resources.UserInterrface_LogMessage_StartupCompleteNotificationFailed, 
@@ -324,7 +325,7 @@ namespace Apollo.Core.Host.UserInterfaces
             catch (Exception e)
             {
                 m_Diagnostics.Log(
-                    LogSeverityProxy.Error,
+                    LevelToLog.Error,
                     string.Format(CultureInfo.InvariantCulture, Resources.UserInterrface_LogMessage_DisconnectPreActionFailed, e));
 
                 throw;

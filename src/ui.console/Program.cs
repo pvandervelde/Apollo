@@ -18,10 +18,13 @@ using Apollo.Core.Host.Scripting;
 using Apollo.Core.Host.UserInterfaces.Application;
 using Apollo.UI.Console.Properties;
 using Apollo.Utilities;
-using Apollo.Utilities.Applications;
 using Autofac;
 using Mono.Options;
 using NSarrac.Framework;
+using Utilities;
+using Utilities.Diagnostics;
+using Utilities.Diagnostics.Logging;
+using EmbeddedResourceExtracter = Utilities.EmbeddedResourceExtracter;
 
 namespace Apollo.UI.Console
 {
@@ -138,7 +141,7 @@ namespace Apollo.UI.Console
                 catch (OptionException e)
                 {
                     s_Diagnostics.Log(
-                        LogSeverityProxy.Fatal,
+                        LevelToLog.Fatal,
                         string.Format(
                             CultureInfo.InvariantCulture,
                             Resources.Log_Error_InvalidInputParameters_WithException,
@@ -157,7 +160,7 @@ namespace Apollo.UI.Console
                 if (!File.Exists(s_ScriptFile))
                 {
                     s_Diagnostics.Log(
-                        LogSeverityProxy.Fatal,
+                        LevelToLog.Fatal,
                         string.Format(
                             CultureInfo.InvariantCulture,
                             Resources.Log_Error_ScripFileDoesNotExist,
@@ -196,7 +199,7 @@ namespace Apollo.UI.Console
                 catch (AggregateException e)
                 {
                     s_Diagnostics.Log(
-                        LogSeverityProxy.Fatal,
+                        LevelToLog.Fatal,
                         string.Format(
                             CultureInfo.InvariantCulture,
                             Resources.Log_Error_ProcessingError_WithException,
@@ -331,7 +334,7 @@ namespace Apollo.UI.Console
         private static void LogStartup()
         {
             s_Diagnostics.Log(
-                LogSeverityProxy.Info,
+                LevelToLog.Info,
                 string.Format(
                     CultureInfo.CurrentCulture,
                     Resources.Log_Information_ApplicationAndVersion,
@@ -359,7 +362,7 @@ namespace Apollo.UI.Console
         private static void WriteInputParametersToLog(string scriptFile)
         {
             s_Diagnostics.Log(
-                LogSeverityProxy.Trace,
+                LevelToLog.Trace,
                 string.Format(
                     CultureInfo.InvariantCulture,
                     Resources.Log_Information_InputParameterScriptFile,

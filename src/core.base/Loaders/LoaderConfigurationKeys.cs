@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Utilities.Configuration;
+using Utilities.Configuration;
 
 namespace Apollo.Core.Base.Loaders
 {

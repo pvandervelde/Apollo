@@ -20,9 +20,6 @@
       <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="NManto">
-      <HintPath>..\..\packages\nManto\lib\net40\NManto.dll</HintPath>
-    </Reference>
     <Reference Include="QuickGraph, Version=3.6.61114.1, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\QuickGraph\lib\net4\QuickGraph.dll</HintPath>
@@ -41,14 +38,17 @@
     <Reference Include="System.ServiceModel.Discovery" />
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="Utilities">
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilities.Communication">
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.Communication.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilities.Diagnostics">
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.Diagnostics.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\packages\Tools\AssemblyBuildInformationAttribute.cs">
-      <Link>AssemblyBuildInformationAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Tools\AssemblyBuildTimeAttribute.cs">
-      <Link>AssemblyBuildTimeAttribute.cs</Link>
-    </Compile>
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
@@ -61,150 +61,13 @@
     <Compile Include="..\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
-    <Compile Include="BaseModule.cs" />
-    <Compile Include="BaseModuleForDatasets.cs" />
-    <Compile Include="BaseModuleForHosts.cs" />
     <Compile Include="BaseModuleForLoaders.cs" />
     <Compile Include="BaseModuleForScheduling.cs" />
-    <Compile Include="Communication\ChannelClosedEventArgs.cs" />
-    <Compile Include="Communication\ChannelConnectionInformation.cs" />
-    <Compile Include="Communication\ChannelOpenedEventArgs.cs" />
-    <Compile Include="Communication\CommandAlreadyRegisteredException.cs" />
-    <Compile Include="Communication\CommandInformationPerEndpoint.cs" />
-    <Compile Include="Communication\CommandInvocationFailedException.cs" />
-    <Compile Include="Communication\CommandNotSupportedException.cs" />
-    <Compile Include="Communication\CommandProxyBuilder.cs" />
-    <Compile Include="Communication\CommandSetAvailabilityEventArgs.cs" />
-    <Compile Include="Communication\CommandSetInterceptorSelector.cs" />
-    <Compile Include="Communication\CommandSetMethodWithoutResultInterceptor.cs" />
-    <Compile Include="Communication\CommandSetMethodWithResultInterceptor.cs" />
-    <Compile Include="Communication\CommandSetProxy.cs" />
-    <Compile Include="Communication\CommunicationChannel.cs" />
-    <Compile Include="Communication\CommunicationConfigurationKeys.cs" />
-    <Compile Include="Communication\CommunicationConstants.cs" />
-    <Compile Include="Communication\CommunicationLayer.cs" />
-    <Compile Include="Communication\CommunicationLayerStarter.cs" />
-    <Compile Include="Communication\ConnectionInformationEventArgs.cs" />
-    <Compile Include="Communication\EndpointEventArgs.cs" />
-    <Compile Include="Communication\EndpointId.cs" />
-    <Compile Include="Communication\EndpointIdExtensions.cs" />
-    <Compile Include="Communication\FileRegistrationNotFoundException.cs" />
-    <Compile Include="Communication\IAcceptExternalProxyInformation.cs" />
-    <Compile Include="Communication\ICommandCollection.cs" />
-    <Compile Include="Communication\ICommunicationConstants.cs" />
-    <Compile Include="Communication\INotificationSendersCollection.cs" />
-    <Compile Include="Communication\INotificationSet.cs" />
-    <Compile Include="Communication\INotifyOfRemoteEndpointEvents.cs" />
-    <Compile Include="Communication\InternalCommandAttribute.cs" />
-    <Compile Include="Communication\InvalidChannelTypeException.cs" />
-    <Compile Include="Communication\IReportNewProxies.cs" />
-    <Compile Include="Communication\ISendCommandsToRemoteEndpoints.cs" />
-    <Compile Include="Communication\ISendNotifications.cs" />
-    <Compile Include="Communication\ISerializedEventRegistration.cs" />
-    <Compile Include="Communication\IStoreUploads.cs" />
-    <Compile Include="Communication\LocalCommandCollection.cs" />
-    <Compile Include="Communication\LocalNotificationCollection.cs" />
-    <Compile Include="Communication\ManualProxyRegistrationReporter.cs" />
-    <Compile Include="Communication\MaximumNumberOfChannelRestartsExceededException.cs" />
-    <Compile Include="Communication\Messages\CommandInformationRequestMessage.cs" />
-    <Compile Include="Communication\Messages\CommandInvokedResponseMessage.cs" />
-    <Compile Include="Communication\Messages\DataDownloadRequestMessage.cs" />
-    <Compile Include="Communication\EndpointNotContactableException.cs" />
-    <Compile Include="Communication\FailedToSendMessageException.cs" />
-    <Compile Include="Communication\IAcceptExternalEndpointInformation.cs" />
-    <Compile Include="Communication\IChannelProxy.cs" />
-    <Compile Include="Communication\IChannelType.cs" />
-    <Compile Include="Communication\ICommandSet.cs" />
-    <Compile Include="Communication\ICommunicationChannel.cs" />
-    <Compile Include="Communication\ICommunicationLayer.cs" />
-    <Compile Include="Communication\ICommunicationMessage.cs" />
-    <Compile Include="Communication\IDirectIncomingMessages.cs" />
-    <Compile Include="Communication\IDiscoverOtherServices.cs" />
-    <Compile Include="Communication\IMessageProcessAction.cs" />
-    <Compile Include="Communication\IProcessIncomingMessages.cs" />
-    <Compile Include="Communication\IMessageFilter.cs" />
-    <Compile Include="Communication\IMessagePipe.cs" />
-    <Compile Include="Communication\IReceivingEndpoint.cs" />
-    <Compile Include="Communication\IReceivingWcfEndpointProxy.cs" />
-    <Compile Include="Communication\ISendingEndpoint.cs" />
-    <Compile Include="Communication\ISerializedMethodInvocation.cs" />
-    <Compile Include="Communication\MessageHandler.cs" />
-    <Compile Include="Communication\Messages\CommandInvokedMessage.cs" />
-    <Compile Include="Communication\Messages\EndpointConnectMessage.cs" />
-    <Compile Include="Communication\ISerializedType.cs" />
-    <Compile Include="Communication\Messages\EndpointProxyTypesResponseMessage.cs" />
-    <Compile Include="Communication\Messages\FailureMessage.cs" />
-    <Compile Include="Communication\Messages\MessageKindFilter.cs" />
-    <Compile Include="Communication\Messages\NewCommandRegisteredMessage.cs" />
-    <Compile Include="Communication\Messages\NewNotificationRegisteredMessage.cs" />
-    <Compile Include="Communication\Messages\NotificationInformationRequestMessage.cs" />
-    <Compile Include="Communication\Messages\NotificationRaisedMessage.cs" />
-    <Compile Include="Communication\Messages\Processors\CommandInformationRequestProcessAction.cs" />
-    <Compile Include="Communication\Messages\Processors\CommandInvokedProcessAction.cs" />
-    <Compile Include="Communication\Messages\Processors\DataDownloadProcessAction.cs" />
-    <Compile Include="Communication\Messages\Processors\EndpointConnectProcessAction.cs" />
-    <Compile Include="Communication\LastChanceMessageHandlerAttribute.cs" />
-    <Compile Include="Communication\Messages\Processors\NewCommandRegisteredProcessAction.cs" />
-    <Compile Include="Communication\Messages\Processors\NewNotificationRegisteredProcessAction.cs" />
-    <Compile Include="Communication\Messages\Processors\NotificationInformationRequestProcessAction.cs" />
-    <Compile Include="Communication\Messages\Processors\NotificationRaisedProcessAction.cs" />
-    <Compile Include="Communication\Messages\Processors\RegisterForNotificationProcessAction.cs" />
-    <Compile Include="Communication\Messages\Processors\UnregisterFromNotificationProcessAction.cs" />
-    <Compile Include="Communication\Messages\RegisterForNotificationMessage.cs" />
-    <Compile Include="Communication\Messages\Processors\UnknownMessageTypeProcessAction.cs" />
-    <Compile Include="Communication\Messages\SuccessMessage.cs" />
-    <Compile Include="Communication\Messages\UnregisterFromNotificationMessage.cs" />
-    <Compile Include="Communication\Messages\UnknownMessageTypeMessage.cs" />
-    <Compile Include="Communication\MissingBindingTypeException.cs" />
-    <Compile Include="Communication\MissingEndpointIdException.cs" />
-    <Compile Include="Communication\NamedPipeChannelType.cs" />
-    <Compile Include="Communication\NamedPipeStreamTransferInformation.cs" />
-    <Compile Include="Communication\ChannelRelativePerformanceAttribute.cs" />
-    <Compile Include="Communication\NotificationEventAddMethodInterceptor.cs" />
-    <Compile Include="Communication\NotificationEventRemoveMethodInterceptor.cs" />
-    <Compile Include="Communication\NotificationInformationEventArgs.cs" />
-    <Compile Include="Communication\NotificationInformationPerEndpoint.cs" />
-    <Compile Include="Communication\NotificationNotSupportedException.cs" />
-    <Compile Include="Communication\NotificationProxyBuilder.cs" />
-    <Compile Include="Communication\NotificationSetAvailabilityEventArgs.cs" />
-    <Compile Include="Communication\NotificationSetInterceptorSelector.cs" />
-    <Compile Include="Communication\NotificationSetProxy.cs" />
-    <Compile Include="Communication\ProxyExtensions.cs" />
-    <Compile Include="Communication\ProxyInformationEventArgs.cs" />
-    <Compile Include="Communication\ProxySelfReferenceInterceptor.cs" />
-    <Compile Include="Communication\RemoteCommandHub.cs" />
-    <Compile Include="Communication\RemoteEndpointProxyHub.cs" />
-    <Compile Include="Communication\RemoteNotificationHub.cs" />
-    <Compile Include="Communication\SerializedEvent.cs" />
-    <Compile Include="Communication\SerializedMethodInvocation.cs" />
-    <Compile Include="Communication\SerializedType.cs" />
-    <Compile Include="Communication\StreamTransferInformation.cs" />
-    <Compile Include="Communication\MessageEventArgs.cs" />
-    <Compile Include="Communication\MessageId.cs" />
-    <Compile Include="Communication\Messages\CommunicationMessage.cs" />
-    <Compile Include="Communication\Messages\EndpointDisconnectMessage.cs" />
-    <Compile Include="Communication\NetDataContractOperationBehavior.cs" />
-    <Compile Include="Communication\ReceivingEndpoint.cs" />
-    <Compile Include="Communication\SelfResurrectingSendingEndpoint.cs" />
-    <Compile Include="Communication\SendingEndpoint.cs" />
-    <Compile Include="Communication\StreamTransferProgressMark.cs" />
-    <Compile Include="Communication\TcpBasedDiscoverySource.cs" />
-    <Compile Include="Communication\TcpChannelType.cs" />
-    <Compile Include="Communication\TcpStreamTransferInformation.cs" />
-    <Compile Include="Communication\TypeIsNotAValidCommandSetException.cs" />
-    <Compile Include="Communication\TypeIsNotAValidNotificationSetException.cs" />
-    <Compile Include="Communication\UnableToLoadProxyTypeException.cs" />
-    <Compile Include="Communication\UnknownEndpointIdFormatException.cs" />
-    <Compile Include="Communication\UploadNotDeregisteredException.cs" />
-    <Compile Include="Communication\UploadToken.cs" />
-    <Compile Include="Communication\WaitingUploads.cs" />
-    <Compile Include="Communication\UseNetDataContractSerializerAttribute.cs" />
     <Compile Include="IHostApplicationCommands.cs" />
     <Compile Include="Loaders\DatasetTrackingJob.cs" />
     <Compile Include="IDatasetApplicationCommands.cs" />
     <Compile Include="IDatasetApplicationNotifications.cs" />
     <Compile Include="IDatasetOfflineInformation.cs" />
-    <Compile Include="Communication\InternalNotificationAttribute.cs" />
     <Compile Include="Loaders\DatasetApplicationLoader.cs" />
     <Compile Include="Loaders\DatasetDistributionGenerator.cs" />
     <Compile Include="Loaders\DatasetLoadingProposal.cs" />
@@ -225,7 +88,6 @@
     <Compile Include="Loaders\LoadingLocations.cs" />
     <Compile Include="Loaders\LocalDatasetDistributor.cs" />
     <Compile Include="Loaders\NetworkIdentifier.cs" />
-    <Compile Include="Communication\ManualDiscoverySource.cs" />
     <Compile Include="Loaders\RemoteDatasetDistributor.cs" />
     <Compile Include="Loaders\SelectedProposal.cs" />
     <Compile Include="Loaders\UnableToCreateJobException.cs" />

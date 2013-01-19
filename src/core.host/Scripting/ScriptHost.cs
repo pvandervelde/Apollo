@@ -13,6 +13,7 @@ using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Core.Scripting.Projects;
 using Apollo.Utilities;
 using Lokad;
+using Utilities;
 
 namespace Apollo.Core.Host.Scripting
 {

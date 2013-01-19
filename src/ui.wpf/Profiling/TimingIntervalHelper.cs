@@ -6,8 +6,8 @@
 
 using System;
 using System.Diagnostics;
-using Apollo.Utilities;
-using NManto;
+using Utilities.Diagnostics;
+using Utilities.Diagnostics.Profiling;
 
 namespace Apollo.UI.Wpf.Profiling
 {
@@ -19,7 +19,7 @@ namespace Apollo.UI.Wpf.Profiling
         /// <summary>
         /// The object that stores all the timing intervals.
         /// </summary>
-        private readonly IGenerateReports m_Storage;
+        private readonly IGenerateTimingReports m_Storage;
 
         /// <summary>
         /// The collection that stores the timing reports.
@@ -29,7 +29,7 @@ namespace Apollo.UI.Wpf.Profiling
         /// <summary>
         /// The function that transforms the report to a string.
         /// </summary>
-        private readonly Func<Report, string> m_Transformer;
+        private readonly Func<TimingReport, string> m_Transformer;
 
         /// <summary>
         /// The current interval.
@@ -46,9 +46,9 @@ namespace Apollo.UI.Wpf.Profiling
         /// <param name="description">The description for the current interval.</param>
         public TimingIntervalHelper(
             SystemDiagnostics diagnostics,
-            IGenerateReports timingStorage,
+            IGenerateTimingReports timingStorage,
             TimingReportCollection collection, 
-            Func<Report, string> reportTransformer,
+            Func<TimingReport, string> reportTransformer,
             string description)
         {
             {
@@ -74,7 +74,7 @@ namespace Apollo.UI.Wpf.Profiling
             m_Interval.Dispose();
 
             var report = m_Storage.ForInterval(m_Interval);
-            m_Collection.Add(new TimingReport(m_Interval.Description, m_Transformer(report)));
+            m_Collection.Add(new ProfilingTimeReport(m_Interval.Description, m_Transformer(report)));
         }
     }
 }

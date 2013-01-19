@@ -12,13 +12,15 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using Apollo.Utilities.Configuration;
 using Apollo.Utilities.History;
-using Apollo.Utilities.Logging;
 using Autofac;
 using NLog;
-using NManto;
-using NManto.Reporting;
+using Utilities;
+using Utilities.Configuration;
+using Utilities.Diagnostics;
+using Utilities.Diagnostics.Logging;
+using Utilities.Diagnostics.Profiling;
+using Utilities.Diagnostics.Profiling.Reporting;
 
 namespace Apollo.Utilities
 {
@@ -50,12 +52,9 @@ namespace Apollo.Utilities
                 c =>
                 {
                     var loggers = c.Resolve<IEnumerable<ILogger>>();
-                    Action<LogSeverityProxy, string> action = (p, s) =>
+                    Action<LevelToLog, string> action = (p, s) =>
                     {
-                        var msg = new LogMessage(
-                            LogSeverityProxyToLogLevelMap.FromLogSeverityProxy(p),
-                            s);
-
+                        var msg = new LogMessage(p, s);
                         foreach (var logger in loggers)
                         {
                             try

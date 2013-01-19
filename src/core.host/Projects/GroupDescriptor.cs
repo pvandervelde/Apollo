@@ -19,7 +19,7 @@ namespace Apollo.Core.Host.Projects
         /// <summary>
         /// The object used to lock on.
         /// </summary>
-        private readonly ILockObject m_Lock = new LockObject();
+        private readonly object m_Lock = new object();
         
         /// <summary>
         /// The object that stores the data about the group.

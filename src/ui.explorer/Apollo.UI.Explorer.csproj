@@ -34,9 +34,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="NManto">
-      <HintPath>..\..\packages\nManto\lib\net40\NManto.dll</HintPath>
-    </Reference>
     <Reference Include="NSarrac.Framework">
       <HintPath>..\..\packages\NSarrac\lib\net40\NSarrac.Framework.dll</HintPath>
     </Reference>
@@ -54,6 +51,16 @@
     </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Utilities">
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilities.Communication, Version=0.2.1.0, Culture=neutral, PublicKeyToken=ee5b68ec5ad4ef93, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.Communication.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilities.Diagnostics">
+      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.Diagnostics.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
@@ -73,14 +80,65 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\packages\Tools\AssemblyBuildInformationAttribute.cs">
-      <Link>AssemblyBuildInformationAttribute.cs</Link>
+    <Compile Include="..\..\packages\Utilities.Source\AppDomainBuilder.cs">
+      <Link>Utilities\AppDomainBuilder.cs</Link>
     </Compile>
-    <Compile Include="..\..\packages\Tools\AssemblyBuildTimeAttribute.cs">
-      <Link>AssemblyBuildTimeAttribute.cs</Link>
+    <Compile Include="..\..\packages\Utilities.Source\AppDomainBuilder.DirectoryBasedResolver.cs">
+      <Link>Utilities\AppDomainBuilder.DirectoryBasedResolver.cs</Link>
     </Compile>
-    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionFilter.cs">
+    <Compile Include="..\..\packages\Utilities.Source\AppDomainBuilder.FileBasedResolver.cs">
+      <Link>Utilities\AppDomainBuilder.FileBasedResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Utilities.Source\AppDomainResolutionPaths.cs">
+      <Link>Utilities\AppDomainResolutionPaths.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Utilities.Source\AssemblyNameElements.cs">
+      <Link>Utilities\AssemblyNameElements.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Utilities.Source\CommandLineProgram.cs">
+      <Link>Utilities\CommandLineProgram.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Utilities.Source\EventType.cs">
+      <Link>Utilities\EventType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Utilities.Source\EventTypeToEventCategoryMap.cs">
+      <Link>Utilities\EventTypeToEventCategoryMap.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Utilities.Source\ExceptionFilter.cs">
       <Link>Utilities\ExceptionFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Utilities.Source\ExceptionHandler.cs">
+      <Link>Utilities\ExceptionHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Utilities.Source\ExceptionTypeToEventIdMap.cs">
+      <Link>Utilities\ExceptionTypeToEventIdMap.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Utilities.Source\FusionHelper.cs">
+      <Link>Utilities\FusionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Utilities.Source\GuardResult.cs">
+      <Link>Utilities\GuardResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Utilities.Source\IAppDomainAssemblyResolver.cs">
+      <Link>Utilities\IAppDomainAssemblyResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Utilities.Source\IExceptionHandler.cs">
+      <Link>Utilities\IExceptionHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Utilities.Source\IExceptionProcessor.cs">
+      <Link>Utilities\IExceptionProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Utilities.Source\LogBasedExceptionProcessor.cs">
+      <Link>Utilities\LogBasedExceptionProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Utilities.Source\ReportingExceptionProcessor.cs">
+      <Link>Utilities\ReportingExceptionProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Utilities.Source\ReportingUtilities.cs">
+      <Link>Utilities\ReportingUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Utilities.Source\TopLevelExceptionGuard.cs">
+      <Link>Utilities\TopLevelExceptionGuard.cs</Link>
     </Compile>
     <Compile Include="Commands\ShowWelcomeViewTabCommand.cs" />
     <Compile Include="Converters\ModelCollectionToTabItemsConverter.cs" />
@@ -126,90 +184,6 @@
     <Compile Include="..\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
-    <Compile Include="..\utilities.srconly\AppDomainBuilder.cs">
-      <Link>Utilities\AppDomainBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\AppDomainBuilder.DirectoryBasedResolver.cs">
-      <Link>Utilities\AppDomainBuilder.DirectoryBasedResolver.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\AppDomainBuilder.FileBasedResolver.cs">
-      <Link>Utilities\AppDomainBuilder.FileBasedResolver.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\AppDomainResolutionPaths.cs">
-      <Link>Utilities\AppDomainResolutionPaths.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\AssemblyNameElements.cs">
-      <Link>Utilities\AssemblyNameElements.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\ExceptionHandling\EventType.cs">
-      <Link>Utilities\EventType.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\ExceptionHandling\EventTypeToEventCategoryMap.cs">
-      <Link>Utilities\EventTypeToEventCategoryMap.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionHandler.cs">
-      <Link>Utilities\ExceptionHandler.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionTypeToEventIdMap.cs">
-      <Link>Utilities\ExceptionTypeToEventIdMap.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\ExceptionHandling\GuardResult.cs">
-      <Link>Utilities\GuardResult.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\ExceptionHandling\IExceptionHandler.cs">
-      <Link>Utilities\IExceptionHandler.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\ExceptionHandling\IExceptionProcessor.cs">
-      <Link>Utilities\IExceptionProcessor.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\ExceptionHandling\LogBasedExceptionProcessor.cs">
-      <Link>Utilities\LogBasedExceptionProcessor.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\ExceptionHandling\ReportingExceptionProcessor.cs">
-      <Link>Utilities\ReportingExceptionProcessor.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\ExceptionHandling\ReportingUtilities.cs">
-      <Link>Utilities\ReportingUtilities.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\ExceptionHandling\TopLevelExceptionGuard.cs">
-      <Link>Utilities\TopLevelExceptionGuard.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\FusionHelper.cs">
-      <Link>Utilities\FusionHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\IAppDomainAssemblyResolver.cs">
-      <Link>Utilities\IAppDomainAssemblyResolver.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\Logging\AdditionalLogMessageProperties.cs">
-      <Link>Utilities\AdditionalLogMessageProperties.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\Logging\DebugLogTemplate.cs">
-      <Link>Utilities\DebugLogTemplate.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\Logging\ILogger.cs">
-      <Link>Utilities\ILogger.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\Logging\ILogMessage.cs">
-      <Link>Utilities\ILogMessage.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\Logging\ILogTemplate.cs">
-      <Link>Utilities\ILogTemplate.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\Logging\LevelToLog.cs">
-      <Link>Utilities\LevelToLog.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\Logging\Logger.cs">
-      <Link>Utilities\Logger.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\Logging\LoggerBuilder.cs">
-      <Link>Utilities\LoggerBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\Logging\LogMessage.cs">
-      <Link>Utilities\LogMessage.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\Logging\LogSeverityProxyToLogLevelMap.cs">
-      <Link>Utilities\LogSeverityProxyToLogLevelMap.cs</Link>
-    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -223,7 +197,6 @@
     <Compile Include="Commands\ShowAboutWindowCommand.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="Utilities\SrcOnlyExceptionHandlingUtilities.cs" />
-    <Compile Include="Utilities\SrcOnlyResources.cs" />
     <Compile Include="Utilities\UtilitiesModule.cs" />
     <Compile Include="Views\About\AboutModel.cs" />
     <Compile Include="Views\About\AboutParameter.cs" />

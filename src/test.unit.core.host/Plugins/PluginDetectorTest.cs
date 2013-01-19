@@ -8,9 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
+using Utilities.Diagnostics;
+using Utilities.FileSystem;
 
 namespace Apollo.Core.Host.Plugins
 {

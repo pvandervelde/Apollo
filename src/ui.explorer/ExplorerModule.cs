@@ -27,13 +27,12 @@ using Apollo.UI.Wpf.Views.Profiling;
 using Apollo.UI.Wpf.Views.Progress;
 using Apollo.UI.Wpf.Views.Projects;
 using Apollo.UI.Wpf.Views.Scripting;
-using Apollo.Utilities;
-using Apollo.Utilities.Configuration;
-using Apollo.Utilities.ExceptionHandling;
 using Autofac;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Modularity;
 using NSarrac.Framework;
+using Utilities.Configuration;
+using Utilities.ExceptionHandling;
 
 namespace Apollo.UI.Explorer
 {
@@ -167,7 +166,7 @@ namespace Apollo.UI.Explorer
                 builder.Register(c => new DispatcherContextWrapper(Application.Current.Dispatcher))
                     .As<IContextAware>();
 
-                var key = SrcOnlyExceptionHandlingUtillities.ReportingPublicKey();
+                var key = SrcOnlyExceptionHandlingUtilities.ReportingPublicKey();
                 builder.RegisterModule(new FeedbackReportingModule(() => key));
             }
 

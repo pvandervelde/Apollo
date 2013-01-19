@@ -33,33 +33,46 @@
     <DirPackages>$(DirWorkspace)\packages</DirPackages>
     <DirBuild>$(DirWorkspace)\build</DirBuild>
     <DirBuildTemp>$(DirBuild)\temp</DirBuildTemp>
+    
     <!-- File templates -->
     <FileTemplateAssemblyVersion>$(DirTemplates)\AssemblyInfo.VersionNumber.cs.in</FileTemplateAssemblyVersion>
     <FileTemplateAssemblyBuildInfo>$(DirTemplates)\AssemblyInfo.BuildInformation.cs.in</FileTemplateAssemblyBuildInfo>
     <FileTemplateInternalsVisibleTo>$(DirTemplates)\AssemblyInfo.InternalsVisibleTo.cs.in</FileTemplateInternalsVisibleTo>
+    
     <!-- Generated files -->
     <FileGeneratedAssemblyVersion>$(SolutionDir)\AssemblyInfo.VersionNumber.cs</FileGeneratedAssemblyVersion>
     <FileGeneratedAssemblyBuildInfo>$(SolutionDir)\AssemblyInfo.BuildInformation.cs</FileGeneratedAssemblyBuildInfo>
     <FileGeneratedInternalsVisibleTo>$(SolutionDir)\AssemblyInfo.InternalsVisibleTo.cs</FileGeneratedInternalsVisibleTo>
     <FileGeneratedLicenses>$(SolutionDir)\licenses.xml</FileGeneratedLicenses>
+    
     <!-- Version number -->
     <VersionMajor>0</VersionMajor>
     <VersionMinor>0</VersionMinor>
     <VersionBuild>0</VersionBuild>
     <VersionRevision>0</VersionRevision>
+    
     <!-- Jenkins, the build system adds the BUILD_NUMBER environment variable so we can get that here -->
     <BuildNumber>$(BUILD_NUMBER)</BuildNumber>
     <BuildNumber Condition=" '$(BuildNumber)' == '' ">0</BuildNumber>
+    
     <!-- Todays dates -->
     <Now>$([System.DateTime]::Now.ToString("o"))</Now>
     <Year>$([System.DateTime]::Now.ToString("yyyy"))</Year>
     <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
   </PropertyGroup>
-  <Import Project="$(MsBuildExtensionsPath)\TemplateFile.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\TemplateFile.msbuild')" />
-  <Import Project="$(MsBuildExtensionsPath)\BzrRevno.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\BzrRevno.msbuild')" />
-  <Import Project="$(MsBuildExtensionsPath)\PublicKeySignatureFromAssembly.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\PublicKeySignatureFromAssembly.msbuild')" />
-  <Import Project="$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild')" />
-  <Import Project="$(DirWorkspace)\version.xml" Condition="Exists('$(DirWorkspace)\version.xml')" />
+  
+  <Import Project="$(MsBuildExtensionsPath)\TemplateFile.msbuild" 
+          Condition="Exists('$(MsBuildExtensionsPath)\TemplateFile.msbuild')" />
+  <Import Project="$(MsBuildExtensionsPath)\BzrRevno.msbuild" 
+          Condition="Exists('$(MsBuildExtensionsPath)\BzrRevno.msbuild')" />
+  <Import Project="$(MsBuildExtensionsPath)\PublicKeySignatureFromAssembly.msbuild" 
+          Condition="Exists('$(MsBuildExtensionsPath)\PublicKeySignatureFromAssembly.msbuild')" />
+  <Import Project="$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild" 
+          Condition="Exists('$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild')" />
+  
+  <Import Project="$(DirWorkspace)\version.xml" 
+          Condition="Exists('$(DirWorkspace)\version.xml')" />
+  
   <Target Name="_PrepareBuildEnvironment">
     <MakeDir Directories="$(DirBuild);" Condition="!Exists('$(DirBuild)')" />
     <MakeDir Directories="$(DirBuildTemp)" Condition="!Exists('$(DirBuildTemp)')" />
@@ -153,8 +166,7 @@
     </ItemGroup>
     <ItemGroup>
       <InternalsVisibleToTokens Include="Attributes">
-        <ReplacementValue Condition=" '$(Configuration)' != 'Deploy' ">@(InternalsVisibleTo, '
-')</ReplacementValue>
+        <ReplacementValue Condition=" '$(Configuration)' != 'Deploy' ">@(InternalsVisibleTo, '')</ReplacementValue>
       </InternalsVisibleToTokens>
     </ItemGroup>
     <TemplateFile Template="$(FileTemplateInternalsVisibleTo)" OutputFileName="$(FileGeneratedInternalsVisibleTo)" Tokens="@(InternalsVisibleToTokens)" />

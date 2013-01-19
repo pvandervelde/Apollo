@@ -6,7 +6,7 @@
 
 using System;
 using Apollo.Core.Host.Properties;
-using Apollo.Utilities;
+using Utilities.Diagnostics.Logging;
 
 namespace Apollo.Core.Host
 {
@@ -45,7 +45,7 @@ namespace Apollo.Core.Host
 
         /// <summary>
         /// Gets the string resource for an <see cref="Exception"/> that is thrown if a user tries to set
-        /// the log level to <see cref="LogSeverityProxy.None"/>.
+        /// the log level to <see cref="LevelToLog.None"/>.
         /// </summary>
         public static string ExceptionMessagesCannotLogMessageWithLogLevelSetToNone
         {

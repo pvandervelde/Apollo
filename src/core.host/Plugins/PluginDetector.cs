@@ -10,7 +10,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using Apollo.Core.Host.Properties;
-using Apollo.Utilities;
+using Utilities.Diagnostics;
+using Utilities.Diagnostics.Logging;
+using Utilities.FileSystem;
 
 namespace Apollo.Core.Host.Plugins
 {
@@ -95,7 +97,7 @@ namespace Apollo.Core.Host.Plugins
             }
 
             m_Diagnostics.Log(
-                LogSeverityProxy.Info,
+                LevelToLog.Info,
                 string.Format(
                     CultureInfo.InvariantCulture,
                     Resources.Plugins_LogMessage_Detector_FileScanStarted_WithDirectory,
@@ -111,7 +113,7 @@ namespace Apollo.Core.Host.Plugins
                 // Something went wrong with the file IO. That probably means we don't have a complete list
                 // so we just exit to prevent any issues from occuring.
                 m_Diagnostics.Log(
-                    LogSeverityProxy.Error,
+                    LevelToLog.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Resources.Plugins_LogMessage_Detector_FileScanFailed_WithDirectoryAndException,
@@ -125,7 +127,7 @@ namespace Apollo.Core.Host.Plugins
                 // Something went wrong with the file IO. That probably means we don't have a complete list
                 // so we just exit to prevent any issues from occuring.
                 m_Diagnostics.Log(
-                    LogSeverityProxy.Error,
+                    LevelToLog.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Resources.Plugins_LogMessage_Detector_FileScanFailed_WithDirectoryAndException,
@@ -151,7 +153,7 @@ namespace Apollo.Core.Host.Plugins
             StorePlugins(changedKnownFiles.Concat(newFiles));
 
             m_Diagnostics.Log(
-                LogSeverityProxy.Info,
+                LevelToLog.Info,
                 string.Format(
                     CultureInfo.InvariantCulture,
                     Resources.Plugins_LogMessage_Detector_FileScanCompleted,

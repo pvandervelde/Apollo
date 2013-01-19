@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.Scripting;
 using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
-using NManto;
+using Utilities.Diagnostics.Profiling;
 
 namespace Apollo.UI.Wpf.Commands
 {

@@ -11,10 +11,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using Apollo.Core.Host.Properties;
-using Apollo.Utilities;
 using Lokad;
 using QuickGraph;
 using QuickGraph.Algorithms;
+using Utilities.Progress;
 
 namespace Apollo.Core.Host
 {

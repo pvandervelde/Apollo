@@ -19,6 +19,7 @@
         <!-- We don't expect this to change but if we do change it then we can at least override it -->
         <ProjectName Condition=" '$(ProjectName)' == ''">Apollo</ProjectName>
         <FixedIn Condition=" '$(FixedIn)' == '' "></FixedIn>
+        <SwitchStatusTo>Testing</SwitchStatusTo>
         <IssueFile Condition=" '$(IssueFile)' == ''">$(DirBuildTemp)\fixedissues.xml</IssueFile>
     </PropertyGroup>
     
@@ -38,7 +39,7 @@
     <Target Name="Run" DependsOnTargets="_DisplayInfo" Condition="Exists('$(DirNFermi)')" >
         <MakeDir Directories="$(DirBuildTemp)" Condition="!Exists('$(DirBuildTemp)')" />
     
-        <Exec Command="$(ExeNFermi) --ApplicationName=&quot;$(ApplicationName)&quot; --ApplicationVersion=$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision) --ProjectName=&quot;$(ProjectName)&quot; --FixedInTag=&quot;$(FixedIn)&quot; --IssuesToRelease=$(IssueFile) --Output=&quot;$(DirBuildTemp)&quot;"
+        <Exec Command="$(ExeNFermi) --ApplicationName=&quot;$(ApplicationName)&quot; --ApplicationVersion=$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision) --ProjectName=&quot;$(ProjectName)&quot; --FixedInTag=&quot;$(FixedIn)&quot; --IssuesToRelease=$(IssueFile) --Output=&quot;$(DirBuildTemp)&quot; --SwitchToState=$(SwitchStatusTo)"
               WorkingDirectory="$(DirBuildTemp)" />
     </Target>
  </Project>

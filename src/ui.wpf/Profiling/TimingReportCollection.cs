@@ -13,15 +13,15 @@ namespace Apollo.UI.Wpf.Profiling
     /// <summary>
     /// Stores a collection of timing reports.
     /// </summary>
-    public sealed class TimingReportCollection : IEnumerable<ITimingReport>, INotifyCollectionChanged
+    public sealed class TimingReportCollection : IEnumerable<IProfilingTimeReport>, INotifyCollectionChanged
     {
-        private readonly List<ITimingReport> m_Reports = new List<ITimingReport>();
+        private readonly List<IProfilingTimeReport> m_Reports = new List<IProfilingTimeReport>();
 
         /// <summary>
         /// Adds a new report to the storage.
         /// </summary>
         /// <param name="reportToAdd">The report that should be added.</param>
-        public void Add(ITimingReport reportToAdd)
+        public void Add(IProfilingTimeReport reportToAdd)
         {
             {
                 Lokad.Enforce.Argument(() => reportToAdd);
@@ -35,7 +35,7 @@ namespace Apollo.UI.Wpf.Profiling
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
         /// <returns>A <see cref="System.Collections.Generic.IEnumerator{T}" /> that can be used to iterate through the collection.</returns>
-        public IEnumerator<ITimingReport> GetEnumerator()
+        public IEnumerator<IProfilingTimeReport> GetEnumerator()
         {
             foreach (var report in m_Reports)
             {
@@ -59,7 +59,7 @@ namespace Apollo.UI.Wpf.Profiling
             Justification = "Event is inherited from the INotifyCollectionChanged interface.")]
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        private void RaiseCollectionChanged(NotifyCollectionChangedAction action, ITimingReport report)
+        private void RaiseCollectionChanged(NotifyCollectionChangedAction action, IProfilingTimeReport report)
         {
             var local = CollectionChanged;
             if (local != null)

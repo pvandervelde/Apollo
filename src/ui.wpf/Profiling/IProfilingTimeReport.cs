@@ -9,7 +9,7 @@ namespace Apollo.UI.Wpf.Profiling
     /// <summary>
     /// Defines the interface for objects that store information about a profiling report.
     /// </summary>
-    public interface ITimingReport
+    public interface IProfilingTimeReport
     {
         /// <summary>
         /// Gets the description for the timing report.

@@ -7,10 +7,11 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Loaders;
 using Apollo.Utilities;
 using Autofac;
+using Utilities;
+using Utilities.Diagnostics;
 
 namespace Apollo.Core.Base
 {

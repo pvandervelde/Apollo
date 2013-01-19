@@ -11,11 +11,13 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Schedulers;
-using Apollo.Core.Base.Communication;
 using Apollo.Utilities;
-using Apollo.Utilities.Configuration;
 using MbUnit.Framework;
 using Moq;
+using Utilities.Communication;
+using Utilities.Configuration;
+using Utilities.Diagnostics;
+using Utilities.Progress;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -126,11 +128,11 @@ namespace Apollo.Core.Base.Loaders
 
             var connectionInfo = new ChannelConnectionInformation(
                 EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                typeof(TcpChannelType),
+                ChannelType.TcpIp,
                 new Uri("tcp://localhost/tcp"));
             var communicationLayer = new Mock<ICommunicationLayer>();
             {
-                communicationLayer.Setup(s => s.HasChannelFor(It.IsAny<Type>()))
+                communicationLayer.Setup(s => s.HasChannelFor(It.IsAny<ChannelType>()))
                     .Returns(true);
                 communicationLayer.Setup(s => s.LocalConnectionPoints())
                     .Returns(new[] { connectionInfo });
@@ -140,7 +142,7 @@ namespace Apollo.Core.Base.Loaders
                 commandHub.Object,
                 notificationHub.Object,
                 config.Object,
-                new WaitingUploads(),
+                new Mock<IStoreUploads>().Object,
                 (d, e, n) =>
                 {
                     return new DatasetOnlineInformation(
@@ -265,11 +267,11 @@ namespace Apollo.Core.Base.Loaders
 
             var connectionInfo = new ChannelConnectionInformation(
                 EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                typeof(TcpChannelType),
+                ChannelType.TcpIp,
                 new Uri("tcp://localhost/tcp"));
             var communicationLayer = new Mock<ICommunicationLayer>();
             {
-                communicationLayer.Setup(s => s.HasChannelFor(It.IsAny<Type>()))
+                communicationLayer.Setup(s => s.HasChannelFor(It.IsAny<ChannelType>()))
                     .Returns(true);
                 communicationLayer.Setup(s => s.LocalConnectionPoints())
                     .Returns(new[] { connectionInfo });
@@ -279,7 +281,7 @@ namespace Apollo.Core.Base.Loaders
                 commandHub.Object,
                 notificationHub.Object,
                 config.Object,
-                new WaitingUploads(),
+                new Mock<IStoreUploads>().Object,
                 (d, e, n) =>
                 {
                     return new DatasetOnlineInformation(

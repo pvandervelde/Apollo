@@ -9,8 +9,8 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Shell;
 using Apollo.UI.Wpf.Commands;
-using Apollo.Utilities;
 using Lokad;
+using Utilities.Progress;
 
 namespace Apollo.UI.Explorer.Views.Shell
 {

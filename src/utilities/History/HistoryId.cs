@@ -7,6 +7,7 @@
 using System;
 using System.Globalization;
 using System.Threading;
+using Utilities;
 
 namespace Apollo.Utilities.History
 {

@@ -9,8 +9,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Apollo.Utilities;
-using NManto;
+using Utilities.Diagnostics;
+using Utilities.Diagnostics.Profiling;
 
 namespace Apollo.UI.Wpf.Views.Feedback
 {

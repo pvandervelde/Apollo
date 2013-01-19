@@ -6,8 +6,8 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Utilities;
 using Lokad;
+using Utilities.Progress;
 
 namespace Apollo.Core.Host
 {

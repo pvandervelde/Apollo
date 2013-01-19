@@ -7,9 +7,9 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
-using Apollo.Utilities;
 using Lokad;
 using Lokad.Rules;
+using Utilities;
 
 namespace Apollo.Core.Host
 {
