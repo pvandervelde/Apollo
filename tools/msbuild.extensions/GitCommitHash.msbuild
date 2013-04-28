@@ -1,6 +1,6 @@
 <Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003' 
          ToolsVersion="4.0">
-    <UsingTask TaskName="BzrRevisionNumber" 
+    <UsingTask TaskName="GitCommitHash" 
                TaskFactory="CodeTaskFactory" 
                AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
         <ParameterGroup>
@@ -14,8 +14,8 @@
                     {
                         var info = new System.Diagnostics.ProcessStartInfo
                                 {
-                                    FileName = "bzr",
-                                    Arguments = "revno",
+                                    FileName = "git",
+                                    Arguments = "rev-parse --short HEAD",
                                     WorkingDirectory = LocalPath,
                                     UseShellExecute = false,
                                     RedirectStandardOutput = true,

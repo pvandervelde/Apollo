@@ -63,8 +63,8 @@
   
   <Import Project="$(MsBuildExtensionsPath)\TemplateFile.msbuild" 
           Condition="Exists('$(MsBuildExtensionsPath)\TemplateFile.msbuild')" />
-  <Import Project="$(MsBuildExtensionsPath)\BzrRevno.msbuild" 
-          Condition="Exists('$(MsBuildExtensionsPath)\BzrRevno.msbuild')" />
+  <Import Project="$(MsBuildExtensionsPath)\GitCommitHash.msbuild" 
+          Condition="Exists('$(MsBuildExtensionsPath)\GitCommitHash.msbuild')" />
   <Import Project="$(MsBuildExtensionsPath)\PublicKeySignatureFromAssembly.msbuild" 
           Condition="Exists('$(MsBuildExtensionsPath)\PublicKeySignatureFromAssembly.msbuild')" />
   <Import Project="$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild" 
@@ -121,9 +121,9 @@
     <TemplateFile Template="$(FileTemplateAssemblyVersion)" OutputFileName="$(FileGeneratedAssemblyVersion)" Tokens="@(VersionTokens)" />
   </Target>
   <Target Name="GenerateAssemblyInfoBuildInfo" DependsOnTargets="RestorePackages">
-    <BzrRevisionNumber LocalPath="$(DirWorkspace)">
+    <GitCommitHash LocalPath="$(DirWorkspace)">
       <Output TaskParameter="RevNo" PropertyName="VcsRevision" />
-    </BzrRevisionNumber>
+    </GitCommitHash>
     <ItemGroup>
       <BuildInfoTokens Include="CopyrightYear">
         <ReplacementValue>$(Year)</ReplacementValue>
