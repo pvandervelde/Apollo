@@ -6,6 +6,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Apollo.UI.Console</RootNamespace>
     <AssemblyName>Apollo.UI.Console</AssemblyName>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
@@ -179,6 +180,7 @@
       <Link>Properties\licenses.xml</Link>
     </EmbeddedResource>
   </ItemGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

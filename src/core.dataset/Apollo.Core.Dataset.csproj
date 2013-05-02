@@ -6,6 +6,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>Apollo.Core.Dataset</RootNamespace>
     <AssemblyName>Apollo.Core.Dataset</AssemblyName>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <PropertyGroup>
@@ -226,6 +227,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

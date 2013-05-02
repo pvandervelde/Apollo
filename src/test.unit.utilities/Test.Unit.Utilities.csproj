@@ -7,6 +7,7 @@
     <RootNamespace>Apollo.Utilities</RootNamespace>
     <AssemblyName>Test.Unit.Utilities</AssemblyName>
     <ShouldDoDocumentation>false</ShouldDoDocumentation>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <PropertyGroup>
@@ -56,7 +57,7 @@
     </ProjectReference>
     <ProjectReference Include="..\utilities\Apollo.Utilities.csproj">
       <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
-      <Name>Apollo.Utils</Name>
+      <Name>Apollo.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +102,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
