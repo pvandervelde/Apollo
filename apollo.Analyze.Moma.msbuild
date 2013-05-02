@@ -15,7 +15,13 @@
         <DirBuildBin>$(DirBuild)\bin\$(PlatformTranslated)\$(Configuration)</DirBuildBin>
         <DirBuildLogs>$(DirBuild)\logs</DirBuildLogs>
         <DirBuildTemp>$(DirBuild)\temp</DirBuildTemp>
+        
+        <!-- Tools -->
+        <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
     </PropertyGroup>
+    
+    <Import Project="$(MsBuildExtensionsPath)\FindToolFromPackages.msbuild" 
+            Condition="Exists('$(MsBuildExtensionsPath)\FindToolFromPackages.msbuild')" />
     
     <!-- Display info -->
     <Target Name="_DisplayInfo">
@@ -23,8 +29,7 @@
     </Target>
     
     <PropertyGroup>
-        <DirMoma>$(DirPackages)\Moma</DirMoma>
-        <ExeMoma>$(DirMoma)\MoMA.exe</ExeMoma>
+        <FileMomaExe>MoMA.exe</FileMomaExe>
         <DirMomaOutput>$(DirBuildLogs)\moma</DirMomaOutput>
         <MomaOutputFile>$(DirMomaOutput)\moma.html</MomaOutputFile>
     </PropertyGroup>
@@ -32,6 +37,10 @@
         <MakeDir Directories="$(DirBuildTemp)" Condition="!Exists('$(DirBuildTemp)')" />
         <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
         <MakeDir Directories="$(DirMomaOutput)" Condition="!Exists('$(DirMomaOutput)')" />
+        
+        <FindToolFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileMomaExe)">
+          <Output TaskParameter="Path" PropertyName="PathMomaExe" />
+        </FindToolFromPackages>
         
         <ItemGroup>
             <MomaFiles Include="$(DirBuildBin)\Apollo.Core.Base.dll" />
@@ -55,7 +64,7 @@
             <MomaFiles Include="$(DirBuildBin)\Utilities.Communication.dll" />
         </ItemGroup>
         
-        <Exec Command="$(ExeMoma) --nogui --out &quot;$(MomaOutputFile)&quot; @(MomaFiles->'%22%(FullPath)%22', ' ')"
+        <Exec Command="$(PathMomaExe) --nogui --out &quot;$(MomaOutputFile)&quot; @(MomaFiles->'%22%(FullPath)%22', ' ')"
               WorkingDirectory="$(DirBuildTemp)" />
     </Target>
  </Project>

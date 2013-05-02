@@ -46,6 +46,7 @@
                             builder.Append(string.Format("/out:\"{0}\" ", FxCopOutputFile));
                             builder.Append(string.Format("/ignoregeneratedcode "));
                             builder.Append(string.Format("/dictionary:\"{0}\" ", FxCopCustomDictionary));
+                            builder.Append(string.Format("/searchgac "));
                             builder.Append(string.Format("/forceoutput "));
                         }
 

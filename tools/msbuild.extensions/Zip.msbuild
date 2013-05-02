@@ -17,39 +17,28 @@
         var buffer = new byte[BufferSize];
         var fileMode = OverwriteExistingFile ? FileMode.Create : FileMode.CreateNew;
 
-        if (InputFileNames.Length == 0)
-        {
-            Log.LogError("No input files provided");
-        }
-        
         using (var outputFileStream = new FileStream(OutputFileName, fileMode))
         {
-            using (var archive = new ZipArchive(outputFileStream, ZipArchiveMode.Create))
+          using (var archive = new ZipArchive(outputFileStream, ZipArchiveMode.Create))
+          {
+            foreach (var inputFileName in InputFileNames.Select(f => f.ItemSpec))
             {
-                foreach (var inputFileName in InputFileNames.Select(f => f.ItemSpec))
+              var archiveEntry = archive.CreateEntry(Path.GetFileName(inputFileName));
+
+              using (var fs = new FileStream(inputFileName, FileMode.Open))
+              {
+                using (var zipStream = archiveEntry.Open())
                 {
-                    Log.LogMessage("Writing file '{0}'", inputFileName);
-                    var archiveEntry = archive.CreateEntry(Path.GetFileName(inputFileName));
-
-                    using (var fs = new FileStream(inputFileName, FileMode.Open))
-                    {
-                        using (var zipStream = archiveEntry.Open())
-                        {
-                            int bytesRead = -1;
-                            while ((bytesRead = fs.Read(buffer, 0, BufferSize)) > 0)
-                            {
-                                zipStream.Write(buffer, 0, bytesRead);
-                            }
-                        }
-                    }
+                  int bytesRead = -1;
+                  while ((bytesRead = fs.Read(buffer, 0, BufferSize)) > 0)
+                  {
+                    zipStream.Write(buffer, 0, bytesRead);
+                  }
                 }
+              }
             }
-        }
-
-        // Log.HasLoggedErrors is true if the task logged any errors -- even if they were logged 
-        // from a task's constructor or property setter. As long as this task is written to always log an error
-        // when it fails, we can reliably return HasLoggedErrors.
-        return !Log.HasLoggedErrors;        
+          }
+        }        
       ]]>
       </Code>
     </Task>

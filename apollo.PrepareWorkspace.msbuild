@@ -25,10 +25,6 @@
         
         <!-- Tools -->
         <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
-        
-        <!-- Jenkins, the build system, adds the BZR_REVISION environment variable so we can get that here -->
-        <BZR_REVISION Condition="'$(BZR_REVISION)' == '' ">-1</BZR_REVISION>
-        <ScmRevision>$(BZR_REVISION)</ScmRevision>
     </PropertyGroup>
     
     <Import Project="$(MsBuildExtensionsPath)\NugetRestore.msbuild"
@@ -65,25 +61,12 @@
         <RemoveDir Directories="$(DirPackages)" Condition="$(ShouldCleanPackages)" />
     </Target>
     
-    <!-- Write version number file for build pipeline consistency checking -->
-    <PropertyGroup>
-        <ConsistencyFile>$(DirBuildLogs)\pipeline.$(ScmRevision).txt</ConsistencyFile>
-    </PropertyGroup>
-    <Target Name="_CreateConsistencyFile" DependsOnTargets="_Clean">
-        <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
-        
-        <WriteLinesToFile
-            File="$(ConsistencyFile)"
-            Lines="$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision) - $(ScmRevision)"
-            Overwrite="true"
-            Encoding="Unicode"/>
-    </Target>
-    
     <!-- Run Nuget for the global build -->
     <PropertyGroup>
+        <FileNuGetExe>$(DirSrc)\.nuget\NuGet.exe</FileNuGetExe>
         <PackagesConfig>$([System.IO.Path]::Combine($(DirWorkspace), "packages.config"))</PackagesConfig>
     </PropertyGroup>
     <Target Name="_RestorePackages" DependsOnTargets="_DisplayInfo;_Clean">
-        <NugetRestore NugetPath="nuget" PackageFile="$(PackagesConfig)" PackageDirectory="$(DirPackages)" />
+        <NugetRestore NugetPath="$(FileNuGetExe)" PackageFile="$(PackagesConfig)" PackageDirectory="$(DirPackages)" />
     </Target>
  </Project>

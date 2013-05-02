@@ -21,6 +21,8 @@
         <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
     </PropertyGroup>
     
+    <Import Project="$(MsBuildExtensionsPath)\FindToolDirectoryFromPackages.msbuild" 
+            Condition="Exists('$(MsBuildExtensionsPath)\FindToolDirectoryFromPackages.msbuild')" />
     <Import Project="$(MsBuildExtensionsPath)\FxCop.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\FxCop.msbuild')"/>
     
@@ -30,12 +32,15 @@
     </Target>
     
     <PropertyGroup>
-        <FxCopDir>$(DirPackages)\FxCop</FxCopDir>
-        <FxCopCustomDictionary>$(FxCopDir)\CustomDictionary.xml</FxCopCustomDictionary>
+        <FileFxCopCmdExe>FxCopCmd.exe</FileFxCopCmdExe>
         <FxCopOutputFile>$(DirBuildLogs)\fxcop.xml</FxCopOutputFile>
     </PropertyGroup>
     <Target Name="Run" DependsOnTargets="_DisplayInfo;" Condition=" '$(Configuration)' != 'Deploy'">
         <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
+        
+        <FindToolDirectoryFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileFxCopCmdExe)">
+          <Output TaskParameter="Path" PropertyName="PathFxCopDir" />
+        </FindToolDirectoryFromPackages>
         
         <ItemGroup>
             <FxCopRuleAssemblies Include="$(DirFxCop)\Rules\*.dll" />
@@ -57,9 +62,9 @@
             <FxCopRules Include="-Microsoft.Rules.Managed.CA1030" />
         </ItemGroup>
             
-        <FxCop FxCopDir="$(FxCopDir)"
+        <FxCop FxCopDir="$(PathFxCopDir)"
                FxCopOutputFile="$(FxCopOutputFile)"
-               FxCopCustomDictionary="${FxCopCustomDictionary}"
+               FxCopCustomDictionary="$(PathFxCopDir)\CustomDictionary.xml"
                FxCopTargetAssemblies="@(FxCopTargetAssemblies)"
                FxCopRuleAssemblies="@(FxCopruleAssemblies)"
                FxCopRules="@(FxCopRules)" />

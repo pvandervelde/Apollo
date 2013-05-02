@@ -17,6 +17,8 @@
         <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
     </PropertyGroup>
     
+    <Import Project="$(MsBuildExtensionsPath)\FindToolFromPackages.msbuild" 
+            Condition="Exists('$(MsBuildExtensionsPath)\FindToolFromPackages.msbuild')" />
     <Import Project="$(MsBuildExtensionsPath)\SourceMonitor.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\SourceMonitor.msbuild')"/>
     <Import Project="$(MsBuildExtensionsPath)\SourceMonitorOutputToCsv.msbuild"
@@ -30,7 +32,7 @@
     </Target>
     
     <PropertyGroup>
-        <ExePathSourceMonitor>$(DirPackages)\Sourcemonitor\SourceMonitor.exe</ExePathSourceMonitor>
+        <FileSourceMonitorExe>SourceMonitor.exe</FileSourceMonitorExe>
         <FileTemplateSourceMonitor>$(DirTemplates)\sourcemonitor.xml.in</FileTemplateSourceMonitor>
         <FileGeneratedSourceMonitor>$(DirBuildTemp)\sourcemonitor.xml</FileGeneratedSourceMonitor>
         <FileSourceMonitorOutput>$(DirBuildLogs)\apollo.sourcemonitor.xml</FileSourceMonitorOutput>
@@ -39,6 +41,10 @@
     <Target Name="Run" DependsOnTargets="_DisplayInfo">
         <MakeDir Directories="$(DirBuildTemp)" Condition="!Exists('$(DirBuildTemp)')" />
         <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
+    
+        <FindToolFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileSourceMonitorExe)">
+          <Output TaskParameter="Path" PropertyName="PathSourceMonitorExe" />
+        </FindToolFromPackages>
     
         <ItemGroup>
             <SourceMonitorTokens Include="ProjectFileName">
@@ -56,7 +62,7 @@
         </ItemGroup>
         <TemplateFile Template="$(FileTemplateSourceMonitor)" OutputFileName="$(FileGeneratedSourceMonitor)" Tokens="@(SourceMonitorTokens)" />
     
-        <SourceMonitor SourceMonitorExe="$(ExePathSourceMonitor)"
+        <SourceMonitor SourceMonitorExe="$(PathSourceMonitorExe)"
                        ConfigFile="$(FileGeneratedSourceMonitor)" />
                        
         <SourceMonitorOutputToCsv ProjectName="apollo"

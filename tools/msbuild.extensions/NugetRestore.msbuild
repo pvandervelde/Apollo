@@ -43,7 +43,6 @@
 							{
 								builder.Append(string.Format("install \"{0}\" ", package.Id));
 								builder.Append(string.Format("-Version {0} ", package.Version));
-								builder.Append(string.Format("-ExcludeVersion "));
 								builder.Append(string.Format("-OutputDirectory \"{0}\" ", PackageDirectory));
 							}
 

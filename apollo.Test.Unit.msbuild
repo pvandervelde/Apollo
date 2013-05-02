@@ -29,12 +29,10 @@
         
         <!-- Tools -->
         <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
-        
-        <!-- Jenkins, the build system adds the BZR_REVISION environment variable so we can get that here -->
-        <BZR_REVISION Condition="'$(BZR_REVISION)' == '' ">-1</BZR_REVISION>
-        <ScmRevision>$(BZR_REVISION)</ScmRevision>
     </PropertyGroup>
     
+    <Import Project="$(MsBuildExtensionsPath)\FindToolDirectoryFromPackages.msbuild" 
+            Condition="Exists('$(MsBuildExtensionsPath)\FindToolDirectoryFromPackages.msbuild')" />
     <Import Project="$(MsBuildExtensionsPath)\OpenCover.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\OpenCover.msbuild')"/>
     <Import Project="$(MsBuildExtensionsPath)\ReportGenerator.msbuild"
@@ -52,28 +50,29 @@
     </Target>
     
     <PropertyGroup>
-        <MbUnitExe>Gallio.Echo.x86.exe</MbUnitExe>
-        <MbUnitDir>$(DirPackages)\Gallio.Complete</MbUnitDir>
+        <FileMbUnitExe>Gallio.Echo.x86.exe</FileMbUnitExe>
     </PropertyGroup>
     <Target Name="_ExecuteUnitTestsWithoutCoverage" Condition="!$(ShouldHaveCoverage) AND '$(Configuration)' != 'Deploy'" DependsOnTargets="_DisplayInfo">
         <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
+        
+        <FindToolDirectoryFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileMbUnitExe)">
+          <Output TaskParameter="Path" PropertyName="PathMbUnitDir" />
+        </FindToolDirectoryFromPackages>
         
         <ItemGroup>
             <MbUnitTestAssemblies Include="$(DirBuildBin)\**\test.unit.*.dll" />
         </ItemGroup>
         
-        <MbUnit MbUnitExe="$(MbUnitExe)"
-                MbUnitDir="$(MbUnitDir)"
+        <MbUnit MbUnitExe="$(FileMbUnitExe)"
+                MbUnitDir="$(PathMbUnitDir)"
                 OutputDir="$(DirBuildLogs)"
                 TargetAssemblies="@(MbUnitTestAssemblies)"/>
     </Target>
     
     <PropertyGroup>
         <FileOpenCoverReport>$(DirBuildLogs)\opencover.xml</FileOpenCoverReport>
-        <OpenCoverExe>opencover.console.exe</OpenCoverExe>
-        <OpenCoverDir>$(DirPackages)\opencover</OpenCoverDir>
-        <ReportGeneratorExe>ReportGenerator.exe</ReportGeneratorExe>
-        <ReportGeneratorDir>$(DirPackages)\reportgenerator</ReportGeneratorDir>
+        <FileOpenCoverExe>opencover.console.exe</FileOpenCoverExe>
+        <FileReportGeneratorExe>ReportGenerator.exe</FileReportGeneratorExe>
         <ReportGeneratorOutputDir>$(DirBuildLogs)\coverage</ReportGeneratorOutputDir>
         <ReportGeneratorXmlSummaryFile>$(ReportGeneratorOutputDir)\Summary.xml</ReportGeneratorXmlSummaryFile>
         <CoverageCsvFile>$(DirBuildLogs)\coverage.csv</CoverageCsvFile>
@@ -83,6 +82,18 @@
         <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
         <MakeDir Directories="$(ReportGeneratorOutputDir)" Condition="!Exists('$(ReportGeneratorOutputDir)')" />
         
+        <FindToolDirectoryFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileMbUnitExe)">
+          <Output TaskParameter="Path" PropertyName="PathMbUnitDir" />
+        </FindToolDirectoryFromPackages>
+        
+        <FindToolDirectoryFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileOpenCoverExe)">
+          <Output TaskParameter="Path" PropertyName="PathOpenCoverDir" />
+        </FindToolDirectoryFromPackages>
+        
+        <FindToolDirectoryFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileReportGeneratorExe)">
+          <Output TaskParameter="Path" PropertyName="PathReportGeneratorDir" />
+        </FindToolDirectoryFromPackages>
+        
         <ItemGroup>
             <MbUnitTestAssemblies Include="$(DirBuildBin)\**\test.unit.*.dll" />
         </ItemGroup>
@@ -91,18 +102,18 @@
             <OpenCoverIgnoreAttributes Include="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
         </ItemGroup>
                                   
-        <OpenCover OpenCoverExe="$(OpenCoverExe)"
-                   OpenCoverDir="$(OpenCoverDir)"
+        <OpenCover OpenCoverExe="$(FileOpenCoverExe)"
+                   OpenCoverDir="$(PathOpenCoverDir)"
                    OpenCoverOutput="$(FileOpenCoverReport)"
                    OpenCoverFilters="+[Apollo]* +[Apollo.*]* -[*Test.Unit*]* -[Gallio]* -[Gallio.*]*"
                    OpenCoverExcludeAttributes="@(OpenCoverIgnoreAttributes)"
-                   UnitTestDir="$(MbUnitDir)"
-                   UnitTestExe="$(MbUnitExe)"
-                   UnitTestArguments="/hd:&quot;$(MbUnitDir)&quot; /sc /v:Verbose /rt:Xhtml-Condensed /rt:Xml-inline /rt:Text-Condensed /rt:Html-Condensed /rd:&quot;$(DirBuildLogs)&quot; /r:Local @(MbUnitTestAssemblies->'%22%(FullPath)%22', ' ')"
+                   UnitTestDir="$(PathMbUnitDir)"
+                   UnitTestExe="$(FileMbUnitExe)"
+                   UnitTestArguments="/hd:&quot;$(PathMbUnitDir)&quot; /sc /v:Verbose /rt:Xhtml-Condensed /rt:Xml-inline /rt:Text-Condensed /rt:Html-Condensed /rd:&quot;$(DirBuildLogs)&quot; /r:Local @(MbUnitTestAssemblies->'%22%(FullPath)%22', ' ')"
                    BinDir="$(DirBuildBin)" />
         
-        <ReportGenerator ReportGeneratorExe="$(ReportGeneratorExe)"
-                         ReportGeneratorDir="$(ReportGeneratorDir)"
+        <ReportGenerator ReportGeneratorExe="$(FileReportGeneratorExe)"
+                         ReportGeneratorDir="$(PathReportGeneratorDir)"
                          OpenCoverOutputFile="$(FileOpenCoverReport)"
                          OutputDir="$(ReportGeneratorOutputDir)" />
                          

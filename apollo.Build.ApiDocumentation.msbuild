@@ -31,12 +31,10 @@
         
         <!-- Tools -->
         <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
-        
-        <!-- Jenkins, the build system adds the BZR_REVISION environment variable so we can get that here -->
-        <BZR_REVISION Condition="'$(BZR_REVISION)' == '' ">-1</BZR_REVISION>
-        <ScmRevision>$(BZR_REVISION)</ScmRevision>
     </PropertyGroup>
     
+    <Import Project="$(MsBuildExtensionsPath)\FindToolDirectoryFromPackages.msbuild" 
+            Condition="Exists('$(MsBuildExtensionsPath)\FindToolDirectoryFromPackages.msbuild')" />
     <Import Project="$(MsBuildExtensionsPath)\SetEnvironmentVariable.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\SetEnvironmentVariable.msbuild')"/>
     <Import Project="$(MsBuildExtensionsPath)\TemplateFile.msbuild"
@@ -51,23 +49,30 @@
     </Target>
     
     <PropertyGroup>
-        <DirSandcastle>$(DirPackages)\Sandcastle</DirSandcastle>
-        <DirSandcastleHelpFileBuilder>$(DirPackages)\SandcastleHelpFileBuilder</DirSandcastleHelpFileBuilder>
-        <DirSandcastleReferenceData>$(DirSandcastle)\Data</DirSandcastleReferenceData>
+        <FileSandcastleExe>fxReflection.proj</FileSandcastleExe>
+        <FileSandcastleHelpFileBuilderExe>SandcastleBuilderGUI.exe</FileSandcastleHelpFileBuilderExe>
         <FileTemplateSandcastle>$(DirTemplates)\sandcastle.shfbproj.in</FileTemplateSandcastle>
         <FileGeneratedSandcastle>$(DirBuildTemp)\apollo.shfbproj</FileGeneratedSandcastle>
-        <FileSandcastleReferenceSln>$(DirSandcastle)\fxReflection.proj</FileSandcastleReferenceSln>
-        <ReferenceDataMsBuildCommandLine>"$(MSBuildToolsPath)/msbuild.exe" "$(FileSandcastleReferenceSln)"</ReferenceDataMsBuildCommandLine>
-        <ShfbMsBuildCommandLine>"$(MSBuildToolsPath)/msbuild.exe" "$(FileGeneratedSandcastle)" /p:SHFBROOT=$(DirSandcastleHelpFileBuilder)</ShfbMsBuildCommandLine>
     </PropertyGroup>
     <Target Name="Run" DependsOnTargets="_DisplayInfo">
         <MakeDir Directories="$(DirBuildTemp)" Condition="!Exists('$(DirBuildTemp)')" />
         <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
         <MakeDir Directories="$(DirBuildDoc)" Condition="!Exists('$(DirBuildDoc)')" />
         
+        <FindToolDirectoryFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileSandcastleExe)">
+          <Output TaskParameter="Path" PropertyName="DirSandcastle" />
+        </FindToolDirectoryFromPackages>
+        
+        <FindToolDirectoryFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileSandcastleHelpFileBuilderExe)">
+          <Output TaskParameter="Path" PropertyName="DirSandcastleHelpFileBuilder" />
+        </FindToolDirectoryFromPackages>
+        
         <ItemGroup>
-            <SandcastleTokens Include="DirTools">
-                <ReplacementValue>$(DirPackages)</ReplacementValue>
+            <SandcastleTokens Include="DirShfbRoot">
+                <ReplacementValue>$(DirSandcastleHelpFileBuilder)</ReplacementValue>
+            </SandcastleTokens>
+            <SandcastleTokens Include="DirSandcastle">
+                <ReplacementValue>$(DirSandcastle)</ReplacementValue>
             </SandcastleTokens>
             <SandcastleTokens Include="DirDoc">
                 <ReplacementValue>$(DirBuildDoc)</ReplacementValue>
@@ -94,9 +99,9 @@
             Exec task because we need a child process so that the change in environment 
             variables is picked up (MsBuild doesn't listen for changes in environment variables)
         -->
-        <Exec Command="$(ReferenceDataMsBuildCommandLine)" Condition="!Exists('$(DirSandcastleReferenceData)')" />
+        <Exec Command="&quot;$(MSBuildToolsPath)/msbuild.exe&quot; &quot;$(DirSandcastle)\fxReflection.proj&quot;" Condition="!Exists('$(DirSandcastle)\Data')" />
         
         <!-- Run sandcastle via msbuild -->
-        <Exec Command="$(ShfbMsBuildCommandLine)" />
+        <Exec Command="&quot;$(MSBuildToolsPath)/msbuild.exe&quot; &quot;$(FileGeneratedSandcastle)&quot; /p:SHFBROOT=$(DirSandcastleHelpFileBuilder)" />
     </Target>
  </Project>

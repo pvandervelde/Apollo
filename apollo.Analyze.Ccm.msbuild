@@ -17,6 +17,8 @@
         <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
     </PropertyGroup>
     
+    <Import Project="$(MsBuildExtensionsPath)\FindToolFromPackages.msbuild" 
+            Condition="Exists('$(MsBuildExtensionsPath)\FindToolFromPackages.msbuild')" />
     <Import Project="$(MsBuildExtensionsPath)\Ccm.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\Ccm.msbuild')"/>
     <Import Project="$(MsBuildExtensionsPath)\TemplateFile.msbuild"
@@ -28,13 +30,17 @@
     </Target>
     
     <PropertyGroup>
-        <ExePathCcm>$(DirPackages)\Ccm\Ccm.exe</ExePathCcm>
+        <FileCcmExe>Ccm.exe</FileCcmExe>
         <FileTemplateCcm>$(DirTemplates)\ccm.xml.in</FileTemplateCcm>
         <FileGeneratedCcm>$(DirBuildTemp)\ccm.xml</FileGeneratedCcm>
     </PropertyGroup>
     <Target Name="Run" DependsOnTargets="_DisplayInfo;">
         <MakeDir Directories="$(DirBuildTemp)" Condition="!Exists('$(DirBuildTemp)')" />
         <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
+        
+        <FindToolFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileCcmExe)">
+          <Output TaskParameter="Path" PropertyName="PathCcmExe" />
+        </FindToolFromPackages>
         
         <ItemGroup>
             <CcmTokens Include="DirSrc">
@@ -43,7 +49,7 @@
         </ItemGroup>
         <TemplateFile Template="$(FileTemplateCcm)" OutputFileName="$(FileGeneratedCcm)" Tokens="@(CcmTokens)" />
     
-        <Ccm CcmExe="$(ExePathCcm)"
+        <Ccm CcmExe="$(PathCcmExe)"
              ConfigFile="$(FileGeneratedCcm)"
              OutputFile="$(DirBuildLogs)\apollo.ccm.xml" />
     </Target>
