@@ -16,7 +16,7 @@ using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Core.Scripting.Projects;
 using Lokad;
-using Utilities.Progress;
+using Nuclei.Progress;
 
 namespace Apollo.Core.Host.Scripting.Projects
 {
@@ -309,7 +309,7 @@ namespace Apollo.Core.Host.Scripting.Projects
         /// <param name="token">The token that is used to cancel the loading.</param>
         /// <remarks>
         /// Note that the <paramref name="preferredLocation"/> is
-        /// only a suggestion. The loader may deside to ignore the suggestion if there is a distribution
+        /// only a suggestion. The loader may decide to ignore the suggestion if there is a distribution
         /// plan that is better suited to the contents of the dataset.
         /// </remarks>
         public void LoadOntoMachine(
@@ -321,7 +321,7 @@ namespace Apollo.Core.Host.Scripting.Projects
         }
 
         /// <summary>
-        /// An event raised when there is progress in the loading of the datset.
+        /// An event raised when there is progress in the loading of the dataset.
         /// </summary>
         public event EventHandler<ProgressEventArgs> OnLoadingProgress;
 
@@ -394,7 +394,7 @@ namespace Apollo.Core.Host.Scripting.Projects
         /// Adds a new child.
         /// </summary>
         /// <returns>
-        /// The newly created datset.
+        /// The newly created dataset.
         /// </returns>
         public IDatasetScriptFacade AddChild()
         {
@@ -406,7 +406,7 @@ namespace Apollo.Core.Host.Scripting.Projects
         /// </summary>
         /// <param name="filePath">The path to the file that stores the dataset that should be copied.</param>
         /// <returns>
-        /// The newly created datset.
+        /// The newly created dataset.
         /// </returns>
         public IDatasetScriptFacade AddChild(string filePath)
         {

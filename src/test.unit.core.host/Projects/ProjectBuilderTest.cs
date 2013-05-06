@@ -16,9 +16,9 @@ using Apollo.Utilities;
 using Apollo.Utilities.History;
 using MbUnit.Framework;
 using Moq;
+using Nuclei.Communication;
+using Nuclei.Diagnostics;
 using QuickGraph;
-using Utilities.Communication;
-using Utilities.Diagnostics;
 
 namespace Apollo.Core.Host.Projects
 {

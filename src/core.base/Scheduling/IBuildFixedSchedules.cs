@@ -12,7 +12,7 @@ using Apollo.Utilities.History;
 namespace Apollo.Core.Base.Scheduling
 {
     /// <summary>
-    /// Defines the interface for objects that build schedules that are independant of the
+    /// Defines the interface for objects that build schedules that are independent of the
     /// variables which are determined by that schedule.
     /// </summary>
     public interface IBuildFixedSchedules : IBuildSchedules

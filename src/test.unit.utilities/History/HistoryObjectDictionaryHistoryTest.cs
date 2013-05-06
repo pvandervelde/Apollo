@@ -93,11 +93,11 @@ namespace Apollo.Utilities.History
             }
 
             /// <summary>
-            /// Determines whether the specified <see cref=""/> is equal to this instance.
+            /// Determines whether the specified <see cref="MockHistoryObject"/> is equal to this instance.
             /// </summary>
-            /// <param name="other">The <see cref=""/> to compare with this instance.</param>
+            /// <param name="other">The <see cref="MockHistoryObject"/> to compare with this instance.</param>
             /// <returns>
-            ///     <see langword="true"/> if the specified <see cref=""/> is equal to this instance;
+            ///     <see langword="true"/> if the specified <see cref="MockHistoryObject"/> is equal to this instance;
             ///     otherwise, <see langword="false"/>.
             /// </returns>
             [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",

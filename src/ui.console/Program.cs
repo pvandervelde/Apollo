@@ -16,15 +16,13 @@ using System.Threading;
 using System.Xml.Linq;
 using Apollo.Core.Host.Scripting;
 using Apollo.Core.Host.UserInterfaces.Application;
+using Apollo.UI.Console.Nuclei;
 using Apollo.UI.Console.Properties;
-using Apollo.Utilities;
 using Autofac;
 using Mono.Options;
-using NSarrac.Framework;
-using Utilities;
-using Utilities.Diagnostics;
-using Utilities.Diagnostics.Logging;
-using EmbeddedResourceExtracter = Utilities.EmbeddedResourceExtracter;
+using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Logging;
+using EmbeddedResourceExtracter = Nuclei.EmbeddedResourceExtracter;
 
 namespace Apollo.UI.Console
 {
@@ -107,11 +105,7 @@ namespace Apollo.UI.Console
                 Debug.Assert(args != null, "The arguments array should not be null.");
             }
 
-            Func<int> applicationLogic =
-                () =>
-                {
-                    return RunApplication(args);
-                };
+            Func<int> applicationLogic = () => RunApplication(args);
 
             var eventLogSource = Assembly.GetExecutingAssembly().GetName().Name;
             return CommandLineProgram.EntryPoint(
@@ -142,6 +136,7 @@ namespace Apollo.UI.Console
                 {
                     s_Diagnostics.Log(
                         LevelToLog.Fatal,
+                        ConsoleConstants.LogPrefix,
                         string.Format(
                             CultureInfo.InvariantCulture,
                             Resources.Log_Error_InvalidInputParameters_WithException,
@@ -161,6 +156,7 @@ namespace Apollo.UI.Console
                 {
                     s_Diagnostics.Log(
                         LevelToLog.Fatal,
+                        ConsoleConstants.LogPrefix,
                         string.Format(
                             CultureInfo.InvariantCulture,
                             Resources.Log_Error_ScripFileDoesNotExist,
@@ -200,6 +196,7 @@ namespace Apollo.UI.Console
                 {
                     s_Diagnostics.Log(
                         LevelToLog.Fatal,
+                        ConsoleConstants.LogPrefix,
                         string.Format(
                             CultureInfo.InvariantCulture,
                             Resources.Log_Error_ProcessingError_WithException,
@@ -316,7 +313,7 @@ namespace Apollo.UI.Console
                     var builder = new ContainerBuilder();
                     {
                         builder.RegisterModule(module);
-                        builder.RegisterModule(new Utilities.UtilitiesModule());
+                        builder.RegisterModule(new UtilitiesModule());
                     }
 
                     s_UiContainer = builder.Build();
@@ -335,6 +332,7 @@ namespace Apollo.UI.Console
         {
             s_Diagnostics.Log(
                 LevelToLog.Info,
+                ConsoleConstants.LogPrefix,
                 string.Format(
                     CultureInfo.CurrentCulture,
                     Resources.Log_Information_ApplicationAndVersion,
@@ -363,6 +361,7 @@ namespace Apollo.UI.Console
         {
             s_Diagnostics.Log(
                 LevelToLog.Trace,
+                ConsoleConstants.LogPrefix,
                 string.Format(
                     CultureInfo.InvariantCulture,
                     Resources.Log_Information_InputParameterScriptFile,

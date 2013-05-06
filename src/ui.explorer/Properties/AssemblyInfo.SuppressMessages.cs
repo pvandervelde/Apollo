@@ -4,7 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 // Global suppress messages
@@ -13,11 +12,13 @@ using System.Diagnostics.CodeAnalysis;
     "Microsoft.Performance", 
     "CA1800:DoNotCastUnnecessarily", 
     Scope = "member", 
-    Target = "Apollo.UI.Explorer.Views.Menu.MenuView.#System.Windows.Markup.IComponentConnector.Connect(System.Int32,System.Object)")]
+    Target = "Apollo.UI.Explorer.Views.Menu.MenuView.#System.Windows.Markup.IComponentConnector.Connect(System.Int32,System.Object)",
+    Justification = "XAML generated code")]
 
 // Internal classes that seem to be unused but really are used
 [module: SuppressMessage(
     "Microsoft.Performance", 
     "CA1811:AvoidUncalledPrivateCode", 
     Scope = "member", 
-    Target = "Apollo.UI.Explorer.Commands.ShowAboutWindowCommand.#.ctor(Microsoft.Practices.Composite.Events.IEventAggregator)")]
+    Target = "Apollo.UI.Explorer.Commands.ShowAboutWindowCommand.#.ctor(Microsoft.Practices.Composite.Events.IEventAggregator)",
+    Justification = "Class is used through reflection or WPF.")]

@@ -17,8 +17,8 @@ using Apollo.Utilities.Commands;
 using Autofac;
 using Autofac.Core;
 using Lokad;
-using Utilities.Diagnostics;
-using Utilities.Progress;
+using Nuclei.Diagnostics;
+using Nuclei.Progress;
 
 namespace Apollo.Core.Host
 {

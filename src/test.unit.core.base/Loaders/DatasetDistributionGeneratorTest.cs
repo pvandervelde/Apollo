@@ -12,8 +12,8 @@ using System.Threading.Tasks.Schedulers;
 using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
-using Utilities.Communication;
-using Utilities.Diagnostics;
+using Nuclei.Communication;
+using Nuclei.Diagnostics;
 
 namespace Apollo.Core.Base.Loaders
 {

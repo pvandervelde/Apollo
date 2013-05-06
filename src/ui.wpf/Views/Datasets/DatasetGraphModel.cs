@@ -17,7 +17,7 @@ using Lokad;
 namespace Apollo.UI.Wpf.Views.Datasets
 {
     /// <summary>
-    /// Defines the viewmodel for the graph of datasets.
+    /// Defines the view model for the graph of datasets.
     /// </summary>
     [CLSCompliant(false)]
     public sealed class DatasetGraphModel : Model

@@ -265,7 +265,7 @@ namespace Apollo.Utilities.History
         }
 
         /// <summary>
-        /// Removes all edges that match the given predictate.
+        /// Removes all edges that match the given predicate.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
         /// <returns>The number of edges that were removed.</returns>
@@ -442,7 +442,7 @@ namespace Apollo.Utilities.History
         }
 
         /// <summary>
-        /// Removes all vertices that match the given predictate.
+        /// Removes all vertices that match the given predicate.
         /// </summary>
         /// <param name="pred">The predicate.</param>
         /// <returns>The number of vertices that were removed.</returns>

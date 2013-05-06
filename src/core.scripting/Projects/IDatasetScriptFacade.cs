@@ -162,7 +162,7 @@ namespace Apollo.Core.Scripting.Projects
         /// Adds a new child.
         /// </summary>
         /// <returns>
-        /// The newly created datset.
+        /// The newly created dataset.
         /// </returns>
         IDatasetScriptFacade AddChild();
 
@@ -171,7 +171,7 @@ namespace Apollo.Core.Scripting.Projects
         /// </summary>
         /// <param name="filePath">The path to the file that stores the dataset that should be copied.</param>
         /// <returns>
-        /// The newly created datset.
+        /// The newly created dataset.
         /// </returns>
         IDatasetScriptFacade AddChild(string filePath);
     }

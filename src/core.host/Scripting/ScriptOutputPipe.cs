@@ -65,7 +65,7 @@ namespace Apollo.Core.Host.Scripting
         }
 
         /// <summary>
-        /// Writes a subarray of characters to the text stream.
+        /// Writes a sub-array of characters to the text stream.
         /// </summary>
         /// <param name="buffer">The character array to write data from.</param>
         /// <param name="index">Starting index in the buffer.</param>

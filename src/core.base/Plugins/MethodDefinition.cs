@@ -293,7 +293,7 @@ namespace Apollo.Core.Base.Plugins
         {
             return string.Format(
                 CultureInfo.InvariantCulture,
-                "{0} {1}.{2}({2})",
+                "{0} {1}.{2}({3})",
                 ReturnType,
                 DeclaringType,
                 MethodName,

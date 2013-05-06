@@ -6,8 +6,8 @@
 
 using System;
 using Apollo.Utilities;
-using Utilities.Communication;
-using Utilities.Progress;
+using Nuclei.Communication;
+using Nuclei.Progress;
 
 namespace Apollo.Core.Base
 {

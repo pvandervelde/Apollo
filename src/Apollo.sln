@@ -28,6 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\templates\AssemblyInfo.BuildInformation.cs.in = ..\templates\AssemblyInfo.BuildInformation.cs.in
 		..\templates\AssemblyInfo.InternalsVisibleTo.cs.in = ..\templates\AssemblyInfo.InternalsVisibleTo.cs.in
 		..\templates\AssemblyInfo.VersionNumber.cs.in = ..\templates\AssemblyInfo.VersionNumber.cs.in
+		..\nuget.config = ..\nuget.config
 		..\packages.config = ..\packages.config
 		..\version.xml = ..\version.xml
 	EndProjectSection
@@ -41,6 +42,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.UI.Console", "ui.console\Apollo.UI.Console.csproj", "{BE673894-4B95-4F22-8E9A-9F1D7C20CF84}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Scripting", "core.scripting\Apollo.Core.Scripting.csproj", "{626DB086-D3E7-47A6-92B5-2AFC58E8E18E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{583E31A6-EEBE-4266-90C4-EC5D6078BCDA}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

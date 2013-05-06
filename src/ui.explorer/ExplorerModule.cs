@@ -12,6 +12,8 @@ using System.Windows;
 using Apollo.Core.Host;
 using Apollo.Core.Host.UserInterfaces.Application;
 using Apollo.Core.Host.UserInterfaces.Projects;
+using Apollo.UI.Explorer.Nuclei;
+using Apollo.UI.Explorer.Nuclei.ExceptionHandling;
 using Apollo.UI.Explorer.Properties;
 using Apollo.UI.Explorer.Views.Menu;
 using Apollo.UI.Explorer.Views.Shell;
@@ -31,8 +33,7 @@ using Autofac;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Modularity;
 using NSarrac.Framework;
-using Utilities.Configuration;
-using Utilities.ExceptionHandling;
+using Nuclei.Configuration;
 
 namespace Apollo.UI.Explorer
 {
@@ -48,11 +49,6 @@ namespace Apollo.UI.Explorer
     [ExcludeFromCodeCoverage]
     internal sealed class ExplorerModule : IModule
     {
-        /// <summary>
-        /// The default name for the error log.
-        /// </summary>
-        private const string DefaultErrorFileName = "explorer.error.log";
-
         /// <summary>
         /// The IOC container that holds the references.
         /// </summary>
@@ -120,8 +116,8 @@ namespace Apollo.UI.Explorer
             var builder = new ContainerBuilder();
             {
                 // Register the utilities elements. These are 'shared' with the core
-                builder.RegisterModule(new Utilities.UtilitiesModule());
-                builder.RegisterModule(new CommonUIModule());
+                builder.RegisterModule(new UtilitiesModule());
+                builder.RegisterModule(new CommonUiModule());
 
                 // Get all the registrations from Apollo.UI.Wpf
                 var commonUiAssembly = typeof(Observable).Assembly;

@@ -6,7 +6,7 @@
 
 using System;
 using Apollo.Core.Host.Properties;
-using Utilities.Diagnostics.Logging;
+using Nuclei.Diagnostics.Logging;
 
 namespace Apollo.Core.Host
 {

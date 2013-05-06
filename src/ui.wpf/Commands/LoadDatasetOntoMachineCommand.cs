@@ -12,7 +12,7 @@ using Apollo.Core.Base.Loaders;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
-using Utilities.Diagnostics.Profiling;
+using Nuclei.Diagnostics.Profiling;
 
 namespace Apollo.UI.Wpf.Commands
 {

@@ -9,7 +9,7 @@ using System;
 namespace Apollo.UI.Wpf.Views.Datasets
 {
     /// <summary>
-    /// A paramete for the dataset graph view.
+    /// A parameter for the dataset graph view.
     /// </summary>
     public sealed class DatasetGraphParameter : Parameter
     {

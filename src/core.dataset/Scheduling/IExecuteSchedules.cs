@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using Apollo.Core.Extensions.Scheduling;
-using Utilities.Progress;
+using Nuclei.Progress;
 
 namespace Apollo.Core.Dataset.Scheduling
 {

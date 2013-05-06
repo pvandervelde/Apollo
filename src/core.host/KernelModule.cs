@@ -5,12 +5,12 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
+using System.IO.Abstractions;
 using Apollo.Core.Base;
 using Apollo.Utilities.Commands;
 using Autofac;
-using Utilities.Communication;
-using Utilities.Configuration;
-using Utilities.FileSystem;
+using Nuclei.Communication;
+using Nuclei.Configuration;
 
 namespace Apollo.Core.Host
 {
@@ -27,7 +27,7 @@ namespace Apollo.Core.Host
         /// <param name="builder">The builder through which components can be registered.</param>
         /// <remarks>
         /// Note that the ContainerBuilder parameter is not the same one
-        /// that the module is being registered by (i.e. it can have its own defaults.)
+        /// that the module is being registered by (i.e. it can have its own defaults).
         /// </remarks>
         protected override void Load(ContainerBuilder builder)
         {
@@ -40,7 +40,7 @@ namespace Apollo.Core.Host
                 .As<ICommandContainer>();
 
             builder.Register(c => new HostApplicationCommands(
-                    c.Resolve<IVirtualizeFileSystems>(),
+                    c.Resolve<IFileSystem>(),
                     c.Resolve<IStoreUploads>(),
                     c.Resolve<IConfiguration>()))
                 .OnActivated(

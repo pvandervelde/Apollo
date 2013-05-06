@@ -10,7 +10,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using Lokad;
-using Utilities;
+using Nuclei;
 
 namespace Apollo.UI.Wpf.Feedback
 {

@@ -15,13 +15,13 @@ namespace Apollo.UI.Wpf.Utilities
     /// A preview adorner that displays a view of the dragged data during the drag operation.
     /// </summary>
     /// <remarks>
-    /// Original source here: http://blogs.msdn.com/b/llobo/archive/2006/12/08/drag-drop-library.aspx
+    /// Original source here: http://blogs.msdn.com/b/llobo/archive/2006/12/08/drag-drop-library.aspx.
     /// </remarks>
     public sealed class DropPreviewAdorner : Adorner
     {
-        private ContentPresenter m_Presenter;
-        private double m_Left = 0;
-        private double m_Top = 0;
+        private readonly ContentPresenter m_Presenter;
+        private double m_Left;
+        private double m_Top;
 
         /// <summary>
         /// Gets or sets the left position of the adorner.
@@ -60,19 +60,19 @@ namespace Apollo.UI.Wpf.Utilities
         /// <summary>
         /// Initializes a new instance of the <see cref="DropPreviewAdorner"/> class.
         /// </summary>
-        /// <param name="feedbackUI">The UI element used as feedback element.</param>
+        /// <param name="feedbackUi">The UI element used as feedback element.</param>
         /// <param name="adornedElement">The element to bind the adorner to.</param>
-        public DropPreviewAdorner(UIElement feedbackUI, UIElement adornedElement)
+        public DropPreviewAdorner(UIElement feedbackUi, UIElement adornedElement)
             : base(adornedElement)
         {
             m_Presenter = new ContentPresenter();
-            m_Presenter.Content = feedbackUI;
+            m_Presenter.Content = feedbackUi;
             m_Presenter.IsHitTestVisible = false;
         }
 
         private void UpdatePosition()
         {
-            AdornerLayer layer = this.Parent as AdornerLayer;
+            var layer = Parent as AdornerLayer;
             if (layer != null)
             {
                 layer.Update(AdornedElement);

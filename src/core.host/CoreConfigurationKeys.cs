@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Utilities.Configuration;
+using Nuclei.Configuration;
 
 namespace Apollo.Core.Host
 {
@@ -17,6 +17,7 @@ namespace Apollo.Core.Host
         /// The <see cref="ConfigurationKey"/> that is used to retrieve the location or locations of
         /// the plugin files on the disk or network.
         /// </summary>
-        public static readonly ConfigurationKey PluginLocation = new ConfigurationKey();
+        public static readonly ConfigurationKey PluginLocation
+            = new ConfigurationKey("PluginLocation", typeof(string));
     }
 }

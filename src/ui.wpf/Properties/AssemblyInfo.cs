@@ -45,19 +45,22 @@ using System.Windows;
     "CA1704:IdentifiersShouldBeSpelledCorrectly", 
     Scope = "namespace", 
     Target = "Apollo.UI.Wpf.Eventing", 
-    MessageId = "Eventing")]
+    MessageId = "Eventing",
+    Justification = "Eventing is what we do here?")]
 [module: SuppressMessage(
     "Microsoft.Naming", 
     "CA1702:CompoundWordsShouldBeCasedCorrectly", 
     Scope = "type", 
     Target = "Apollo.UI.Wpf.Views.Datasets.DatasetViewGraph", 
-    MessageId = "ViewGraph")]
+    MessageId = "ViewGraph",
+    Justification = "The object is a view and a graph")]
 [module: SuppressMessage(
     "Microsoft.Naming", 
     "CA1702:CompoundWordsShouldBeCasedCorrectly", 
     Scope = "member", 
     Target = "Apollo.UI.Wpf.Bootstrapper.CompositeBootstrapper.#m_UseDefaultConfiguration", 
-    MessageId = "mUse")]
+    MessageId = "mUse",
+    Justification = "One day FxCop will understand that there is a underscore there.")]
 [module: SuppressMessage(
     "Microsoft.Performance", 
     "CA1800:DoNotCastUnnecessarily", 
@@ -75,10 +78,12 @@ using System.Windows;
     "CA1703:ResourceStringsShouldBeSpelledCorrectly", 
     Scope = "resource", 
     Target = "Apollo.UI.Wpf.Properties.Resources.resources", 
-    MessageId = "rb")]
+    MessageId = "rb",
+    Justification = "Ruby file extension.")]
 [module: SuppressMessage(
     "Microsoft.Naming", 
     "CA1703:ResourceStringsShouldBeSpelledCorrectly", 
     Scope = "resource", 
     Target = "Apollo.UI.Wpf.Properties.Resources.resources", 
-    MessageId = "py")]
+    MessageId = "py",
+    Justification = "Python file extension.")]

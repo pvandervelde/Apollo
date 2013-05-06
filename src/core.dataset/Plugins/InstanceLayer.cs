@@ -265,13 +265,13 @@ namespace Apollo.Core.Dataset.Plugins
         private readonly HistoryId m_HistoryId;
 
         /// <summary>
-        /// The collection contraining the part definitions for the parts that do not participate in history tracking.
+        /// The collection containing the part definitions for the parts that do not participate in history tracking.
         /// </summary>
         [FieldIndexForHistoryTracking(PartDefinitionsIndex)]
         private readonly IDictionaryTimelineStorage<PartRegistrationId, GroupPartDefinition> m_PartDefinitions;
 
         /// <summary>
-        /// The collection contraining the part definitions for the parts that do not participate in history tracking.
+        /// The collection containing the part definitions for the parts that do not participate in history tracking.
         /// </summary>
         [FieldIndexForHistoryTracking(PartsIndex)]
         private readonly IDictionaryTimelineStorage<PartInstanceId, PartRegistrationId> m_InstanceToDefinitionMap;

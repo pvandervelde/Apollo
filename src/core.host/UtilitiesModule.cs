@@ -6,11 +6,11 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO.Abstractions;
 using Apollo.Utilities;
 using Autofac;
-using Utilities;
-using Utilities.FileSystem;
-using Utilities.Progress;
+using Nuclei;
+using Nuclei.Progress;
 
 namespace Apollo.Core.Host
 {
@@ -19,7 +19,7 @@ namespace Apollo.Core.Host
     /// of the core.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    internal sealed partial class UtilitiesModule : Module
+    internal sealed class UtilitiesModule : Module
     {
         /// <summary>
         /// Override to add registrations to the container.
@@ -27,7 +27,7 @@ namespace Apollo.Core.Host
         /// <param name="builder">The builder through which components can be registered.</param>
         /// <remarks>
         /// Note that the ContainerBuilder parameter is not the same one
-        /// that the module is being registered by (i.e. it can have its own defaults.)
+        /// that the module is being registered by (i.e. it can have its own defaults).
         /// </remarks>
         protected override void Load(ContainerBuilder builder)
         {
@@ -47,8 +47,8 @@ namespace Apollo.Core.Host
                     .As<IProgressTimer>()
                     .InstancePerDependency();
 
-                builder.Register(c => new VirtualFileSystem())
-                    .As<IVirtualizeFileSystems>();
+                builder.Register(c => new FileSystem())
+                    .As<IFileSystem>();
             }
         }
     }

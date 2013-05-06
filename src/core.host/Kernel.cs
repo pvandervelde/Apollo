@@ -12,9 +12,9 @@ using System.Globalization;
 using System.Linq;
 using Apollo.Core.Host.Properties;
 using Lokad;
+using Nuclei.Progress;
 using QuickGraph;
 using QuickGraph.Algorithms;
-using Utilities.Progress;
 
 namespace Apollo.Core.Host
 {

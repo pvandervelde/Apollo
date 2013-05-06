@@ -6,7 +6,7 @@
 
 using Apollo.Utilities;
 using Autofac;
-using Utilities.Progress;
+using Nuclei.Progress;
 
 namespace Apollo.UI.Wpf.Views.Progress
 {

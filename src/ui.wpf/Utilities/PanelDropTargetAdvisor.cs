@@ -4,14 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Markup;
-using System.Windows.Media.Animation;
-using System.Xml;
 
 namespace Apollo.UI.Wpf.Utilities
 {
@@ -19,28 +13,19 @@ namespace Apollo.UI.Wpf.Utilities
     /// A drag target advisor for a panel.
     /// </summary>
     /// <remarks>
-    /// Original source here: http://blogs.msdn.com/b/llobo/archive/2006/12/08/drag-drop-library.aspx
+    /// Original source here: http://blogs.msdn.com/b/llobo/archive/2006/12/08/drag-drop-library.aspx.
     /// </remarks>
     public sealed class PanelDropTargetAdvisor : IDropTargetAdvisor
     {
-        private static DataFormat s_SupportedFormat = DragDropHelpers.DataFormat;
-
-        private UIElement m_TargetUI;
+        private static readonly DataFormat s_SupportedFormat = DragDropHelpers.DataFormat;
 
         /// <summary>
         /// Gets or sets the UI element that is the target of the drag operation.
         /// </summary>
         public UIElement TargetUI
         {
-            get
-            {
-                return m_TargetUI;
-            }
-            
-            set
-            {
-                m_TargetUI = value;
-            }
+            get;
+            set;
         }
 
         /// <summary>

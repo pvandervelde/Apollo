@@ -10,9 +10,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Apollo.Core.Base;
 using Apollo.Core.Host;
+using Apollo.UI.Console.Nuclei;
 using Autofac.Core;
 using Lokad;
-using Utilities.Communication;
+using Nuclei.Communication;
 
 namespace Apollo.UI.Console
 {
@@ -23,7 +24,7 @@ namespace Apollo.UI.Console
     /// <para>
     /// Note that this bootstrapper only takes care of the bootstrapping
     /// of the core, not the UI. By design the core and the UI are 
-    /// running with different IOC containers / bootstrappers. This means
+    /// running with different IOC containers / bootstrapper methods. This means
     /// that we can force a code separation because the UI controls cannot
     /// get linked to any of the internal core elements. The only way for
     /// the core and the UI to interact is via the UserInterfaceService.
@@ -72,8 +73,13 @@ namespace Apollo.UI.Console
         {
             return new List<IModule> 
                 { 
-                    new Utilities.UtilitiesModule(),
-                    new CommunicationModule(true),
+                    new UtilitiesModule(),
+                    new CommunicationModule(
+                        new List<CommunicationSubject>
+                            {
+                                CommunicationSubjects.Dataset,
+                            }, 
+                        true),
                     new BaseModuleForLoaders(),
                 };
         }

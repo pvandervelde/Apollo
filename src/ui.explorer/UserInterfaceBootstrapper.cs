@@ -22,7 +22,7 @@ namespace Apollo.UI.Explorer
     /// <para>
     /// Note that this bootstrapper only takes care of the bootstrapping
     /// of the UI, not the core. By design the core and the UI are 
-    /// running with different IOC containers / bootstrappers. This means
+    /// running with different IOC containers / bootstrapper objects. This means
     /// that we can force a code separation because the UI controls cannot
     /// get linked to any of the internal core elements. The only way for
     /// the core and the UI to interact is via the UserInterfaceService.

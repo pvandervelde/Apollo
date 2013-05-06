@@ -27,7 +27,7 @@ namespace Apollo.Utilities.History
         RollForward,
 
         /// <summary>
-        /// The dependency can block both roll-back and roll-foward.
+        /// The dependency can block both roll-back and roll-forward.
         /// </summary>
         RollBackAndRollForward,
     }

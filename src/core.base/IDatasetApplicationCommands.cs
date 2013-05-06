@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Threading.Tasks;
-using Utilities.Communication;
+using Nuclei.Communication;
 
 namespace Apollo.Core.Base
 {
@@ -40,7 +40,7 @@ namespace Apollo.Core.Base
         Task<bool> HasChanged();
 
         /// <summary>
-        /// Requests that the current dataset is saved and the saved copy is transfered
+        /// Requests that the current dataset is saved and the saved copy is transferred
         /// back to the host machine.
         /// </summary>
         /// <returns>A task which will complete once the transfer is complete.</returns>

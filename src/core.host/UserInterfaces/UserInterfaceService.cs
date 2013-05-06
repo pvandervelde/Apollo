@@ -15,8 +15,8 @@ using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Utilities.Commands;
 using Autofac.Core;
 using Lokad;
-using Utilities.Diagnostics;
-using Utilities.Diagnostics.Logging;
+using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Logging;
 
 namespace Apollo.Core.Host.UserInterfaces
 {
@@ -274,6 +274,7 @@ namespace Apollo.Core.Host.UserInterfaces
             {
                 m_Diagnostics.Log(
                     LevelToLog.Error,
+                    HostConstants.LogPrefix,
                     string.Format(
                         CultureInfo.InvariantCulture, 
                         Resources.UserInterrface_LogMessage_StartupCompleteNotificationFailed, 
@@ -326,6 +327,7 @@ namespace Apollo.Core.Host.UserInterfaces
             {
                 m_Diagnostics.Log(
                     LevelToLog.Error,
+                    HostConstants.LogPrefix,
                     string.Format(CultureInfo.InvariantCulture, Resources.UserInterrface_LogMessage_DisconnectPreActionFailed, e));
 
                 throw;

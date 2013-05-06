@@ -11,7 +11,7 @@ using Lokad;
 namespace Apollo.UI.Wpf.Views.Projects
 {
     /// <summary>
-    /// Defines the viewmodel for the project description.
+    /// Defines the view model for the project description.
     /// </summary>
     public sealed class ProjectDescriptionModel : Model
     {

@@ -15,7 +15,7 @@ namespace Apollo.Core.Host.Projects
     internal interface IDatasetOwner
     {
         /// <summary>
-        /// Creates a new datset as child of the given parent dataset.
+        /// Creates a new dataset as child of the given parent dataset.
         /// </summary>
         /// <param name="parent">The parent.</param>
         /// <param name="newChild">The information required to create the new child.</param>
@@ -41,7 +41,7 @@ namespace Apollo.Core.Host.Projects
         /// Returns the collection of children for a given dataset.
         /// </summary>
         /// <param name="parent">The ID number of the parent dataset.</param>
-        /// <returns>The collection of child datsets.</returns>
+        /// <returns>The collection of child datasets.</returns>
         IEnumerable<DatasetProxy> Children(DatasetId parent);
     }
 }

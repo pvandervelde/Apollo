@@ -51,7 +51,7 @@ namespace Apollo.Utilities.History
         /// Initializes a new instance of the <see cref="ChangeSet"/> class.
         /// </summary>
         /// <param name="owner">The timeline that owns this change set.</param>
-        /// <param name="name">The name of the changeset.</param>
+        /// <param name="name">The name of the change set.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="owner"/> is <see langword="null" />.
         /// </exception>

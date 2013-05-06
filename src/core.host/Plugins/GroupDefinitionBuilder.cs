@@ -67,7 +67,7 @@ namespace Apollo.Core.Host.Plugins
             = new Dictionary<ScheduleActionRegistrationId, ScheduleElementId>();
 
         /// <summary>
-        /// The collection of conditions that are registred for all the schedules in the part group.
+        /// The collection of conditions that are registered for all the schedules in the part group.
         /// </summary>
         private Dictionary<ScheduleConditionRegistrationId, ScheduleElementId> m_Conditions
             = new Dictionary<ScheduleConditionRegistrationId, ScheduleElementId>();

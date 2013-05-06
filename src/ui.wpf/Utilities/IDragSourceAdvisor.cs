@@ -14,7 +14,7 @@ namespace Apollo.UI.Wpf.Utilities
     /// a drag operation from the drag source side.
     /// </summary>
     /// <remarks>
-    /// Original source here: http://blogs.msdn.com/b/llobo/archive/2006/12/08/drag-drop-library.aspx
+    /// Original source here: http://blogs.msdn.com/b/llobo/archive/2006/12/08/drag-drop-library.aspx.
     /// </remarks>
     public interface IDragSourceAdvisor
     {

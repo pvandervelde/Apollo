@@ -12,9 +12,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base;
 using Lokad;
-using Utilities.Communication;
-using Utilities.Diagnostics;
-using Utilities.Diagnostics.Profiling;
+using Nuclei.Communication;
+using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Profiling;
 
 namespace Apollo.Core.Dataset
 {
@@ -31,9 +31,9 @@ namespace Apollo.Core.Dataset
         private readonly ConcurrentStack<DatasetLockKey> m_EditKeys = new ConcurrentStack<DatasetLockKey>();
 
         /// <summary>
-        /// The object that handles the communication with the remote endpoints.
+        /// The function that handles downloading data from the remote endpoint.
         /// </summary>
-        private readonly ICommunicationLayer m_Layer;
+        private readonly DownloadDataFromRemoteEndpoints m_DataDownload;
 
         /// <summary>
         /// The object that tracks dataset locks.
@@ -63,14 +63,14 @@ namespace Apollo.Core.Dataset
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetApplicationCommands"/> class.
         /// </summary>
-        /// <param name="layer">The object that handles the communication with remote endpoints.</param>
-        /// <param name="datasetLock">The object that handles the locking of the dataset for editing or running.</param>
+        /// <param name="dataDownload">The object that handles the communication with remote endpoints.</param>
+        /// <param name="datasetLock">The function that handles downloading data from the remote endpoint.</param>
         /// <param name="closeAction">The action that closes the application.</param>
         /// <param name="loadAction">The action that is used to load the dataset from a given file path.</param>
         /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <param name="scheduler">The scheduler that is used to run the tasks.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="layer"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="dataDownload"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="datasetLock"/> is <see langword="null" />.
@@ -85,7 +85,7 @@ namespace Apollo.Core.Dataset
         /// Thrown is <paramref name="systemDiagnostics"/> is <see langword="null"/>
         /// </exception>
         public DatasetApplicationCommands(
-            ICommunicationLayer layer, 
+            DownloadDataFromRemoteEndpoints dataDownload, 
             ITrackDatasetLocks datasetLock,
             Action closeAction,
             Action<FileInfo> loadAction,
@@ -93,13 +93,13 @@ namespace Apollo.Core.Dataset
             TaskScheduler scheduler = null)
         {
             {
-                Enforce.Argument(() => layer);
+                Enforce.Argument(() => dataDownload);
                 Enforce.Argument(() => closeAction);
                 Enforce.Argument(() => loadAction);
                 Enforce.Argument(() => systemDiagnostics);
             }
 
-            m_Layer = layer;
+            m_DataDownload = dataDownload;
             m_DatasetLock = datasetLock;
             m_CloseAction = closeAction;
             m_LoadAction = loadAction;
@@ -128,12 +128,11 @@ namespace Apollo.Core.Dataset
                 {
                     var filePath = Path.GetTempFileName();
 
-                    var source = new CancellationTokenSource();
-                    var task = m_Layer.DownloadData(ownerId, token, filePath, null, source.Token, m_Scheduler);
+                    var task = m_DataDownload(ownerId, token, filePath);
                     task.ContinueWith(
                         t =>
                         {
-                            using (var interval = m_Diagnostics.Profiler.Measure("Loading dataset from file."))
+                            using (m_Diagnostics.Profiler.Measure("Loading dataset from file."))
                             {
                                 m_LoadAction(new FileInfo(filePath));
                             }
@@ -189,7 +188,7 @@ namespace Apollo.Core.Dataset
         }
 
         /// <summary>
-        /// Requests that the current dataset is saved and the saved copy is transfered
+        /// Requests that the current dataset is saved and the saved copy is transferred
         /// back to the host machine.
         /// </summary>
         /// <returns>A task which will complete once the transfer is complete.</returns>

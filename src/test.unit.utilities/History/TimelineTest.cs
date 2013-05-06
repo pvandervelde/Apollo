@@ -121,11 +121,11 @@ namespace Apollo.Utilities.History
             }
 
             /// <summary>
-            /// Determines whether the specified <see cref=""/> is equal to this instance.
+            /// Determines whether the specified <see cref="MockHistoryObject"/> is equal to this instance.
             /// </summary>
-            /// <param name="other">The <see cref=""/> to compare with this instance.</param>
+            /// <param name="other">The <see cref="MockHistoryObject"/> to compare with this instance.</param>
             /// <returns>
-            ///     <see langword="true"/> if the specified <see cref=""/> is equal to this instance;
+            ///     <see langword="true"/> if the specified <see cref="MockHistoryObject"/> is equal to this instance;
             ///     otherwise, <see langword="false"/>.
             /// </returns>
             [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
@@ -234,9 +234,9 @@ namespace Apollo.Utilities.History
         public void AddToTimelineWithoutMark()
         {
             var timeline = new Timeline(BuildStorageOfType);
-            var firstMark = timeline.Mark();
+            timeline.Mark();
 
-            var obj = timeline.AddToTimeline<MockHistoryObject>(BuildObject);
+            var obj = timeline.AddToTimeline(BuildObject);
             Assert.IsNotNull(obj);
             Assert.IsTrue(timeline.HasObjectEverExisted(obj.HistoryId));
             Assert.IsTrue(timeline.DoesObjectExistCurrently(obj.HistoryId));
@@ -246,10 +246,10 @@ namespace Apollo.Utilities.History
         public void AddToTimelineWithMark()
         {
             var timeline = new Timeline(BuildStorageOfType);
-            var firstMark = timeline.Mark();
+            timeline.Mark();
 
-            var obj = timeline.AddToTimeline<MockHistoryObject>(BuildObject);
-            var secondMark = timeline.Mark();
+            var obj = timeline.AddToTimeline(BuildObject);
+            timeline.Mark();
             
             Assert.IsTrue(timeline.HasObjectEverExisted(obj.HistoryId));
             Assert.IsTrue(timeline.DoesObjectExistCurrently(obj.HistoryId));
@@ -259,13 +259,13 @@ namespace Apollo.Utilities.History
         public void RemoveFromTimelineWithMark()
         {
             var timeline = new Timeline(BuildStorageOfType);
-            var firstMark = timeline.Mark();
+            timeline.Mark();
 
-            var obj = timeline.AddToTimeline<MockHistoryObject>(BuildObject);
-            var secondMark = timeline.Mark();
+            var obj = timeline.AddToTimeline(BuildObject);
+            timeline.Mark();
 
             timeline.RemoveFromTimeline(obj.HistoryId);
-            var thirdMark = timeline.Mark();
+            timeline.Mark();
 
             Assert.IsTrue(timeline.HasObjectEverExisted(obj.HistoryId));
             Assert.IsFalse(timeline.DoesObjectExistCurrently(obj.HistoryId));
@@ -275,10 +275,10 @@ namespace Apollo.Utilities.History
         public void RemoveFromTimelineBeforeMark()
         {
             var timeline = new Timeline(BuildStorageOfType);
-            var firstMark = timeline.Mark();
+            timeline.Mark();
 
-            var obj = timeline.AddToTimeline<MockHistoryObject>(BuildObject);
-            var secondMark = timeline.Mark();
+            var obj = timeline.AddToTimeline(BuildObject);
+            timeline.Mark();
 
             timeline.RemoveFromTimeline(obj.HistoryId);
             
@@ -290,10 +290,10 @@ namespace Apollo.Utilities.History
         public void RemoveFromTimelineWhileDeletedBeforeMark()
         {
             var timeline = new Timeline(BuildStorageOfType);
-            var firstMark = timeline.Mark();
+            timeline.Mark();
 
-            var obj = timeline.AddToTimeline<MockHistoryObject>(BuildObject);
-            var secondMark = timeline.Mark();
+            var obj = timeline.AddToTimeline(BuildObject);
+            timeline.Mark();
 
             timeline.RemoveFromTimeline(obj.HistoryId);
             Assert.DoesNotThrow(() => timeline.RemoveFromTimeline(obj.HistoryId));
@@ -303,13 +303,13 @@ namespace Apollo.Utilities.History
         public void RemoveFromTimelineWhileDeletedAfterMark()
         {
             var timeline = new Timeline(BuildStorageOfType);
-            var firstMark = timeline.Mark();
+            timeline.Mark();
 
-            var obj = timeline.AddToTimeline<MockHistoryObject>(BuildObject);
-            var secondMark = timeline.Mark();
+            var obj = timeline.AddToTimeline(BuildObject);
+            timeline.Mark();
 
             timeline.RemoveFromTimeline(obj.HistoryId);
-            var thirdMark = timeline.Mark();
+            timeline.Mark();
 
             Assert.DoesNotThrow(() => timeline.RemoveFromTimeline(obj.HistoryId));
         }
@@ -318,7 +318,7 @@ namespace Apollo.Utilities.History
         public void RemoveFromTimelineWithUnknownId()
         {
             var timeline = new Timeline(BuildStorageOfType);
-            var firstMark = timeline.Mark();
+            timeline.Mark();
 
             Assert.DoesNotThrow(() => timeline.RemoveFromTimeline(new HistoryId()));
         }
@@ -327,7 +327,7 @@ namespace Apollo.Utilities.History
         public void DeleteFromTimelineAtSameTimeAsCreation()
         { 
             var timeline = new Timeline(BuildStorageOfType);
-            var firstMark = timeline.Mark();
+            timeline.Mark();
 
             var obj = timeline.AddToTimeline<MockHistoryObject>(BuildObject);
             timeline.RemoveFromTimeline(obj.HistoryId);
@@ -340,10 +340,10 @@ namespace Apollo.Utilities.History
         public void RollBackToPreviousStep()
         {
             var timeline = new Timeline(BuildStorageOfType);
-            var firstMark = timeline.Mark();
+            timeline.Mark();
 
-            var obj = timeline.AddToTimeline<MockHistoryObject>(BuildObject);
-            var creationTime = timeline.Mark();
+            var obj = timeline.AddToTimeline(BuildObject);
+            timeline.Mark();
 
             var objectChangeMarkers = new List<TimeMarker>();
             int maximumValue = 10;
@@ -373,8 +373,8 @@ namespace Apollo.Utilities.History
             var timeline = new Timeline(BuildStorageOfType);
             var firstMark = timeline.Mark();
 
-            var obj = timeline.AddToTimeline<MockHistoryObject>(BuildObject);
-            var creationTime = timeline.Mark();
+            var obj = timeline.AddToTimeline(BuildObject);
+            timeline.Mark();
 
             var objectChangeMarkers = new List<TimeMarker>();
             int maximumValue = 10;
@@ -401,10 +401,10 @@ namespace Apollo.Utilities.History
         public void RollBackToBeforeBeginning()
         { 
             var timeline = new Timeline(BuildStorageOfType);
-            var firstMark = timeline.Mark();
+            timeline.Mark();
 
-            var obj = timeline.AddToTimeline<MockHistoryObject>(BuildObject);
-            var creationTime = timeline.Mark();
+            var obj = timeline.AddToTimeline(BuildObject);
+            timeline.Mark();
 
             var objectChangeMarkers = new List<TimeMarker>();
             int maximumValue = 10;
@@ -431,10 +431,10 @@ namespace Apollo.Utilities.History
         public void RollBackFromDeath()
         {
             var timeline = new Timeline(BuildStorageOfType);
-            var firstMark = timeline.Mark();
+            timeline.Mark();
 
-            var obj = timeline.AddToTimeline<MockHistoryObject>(BuildObject);
-            var creationTime = timeline.Mark();
+            var obj = timeline.AddToTimeline(BuildObject);
+            timeline.Mark();
 
             int maximumValue = 10;
             obj.SomeValue = maximumValue;
@@ -446,7 +446,7 @@ namespace Apollo.Utilities.History
             var changeMarker = timeline.Mark();
 
             timeline.RemoveFromTimeline(obj.HistoryId);
-            var deletionMarker = timeline.Mark();
+            timeline.Mark();
 
             Assert.IsTrue(timeline.HasObjectEverExisted(obj.HistoryId));
             Assert.IsFalse(timeline.DoesObjectExistCurrently(obj.HistoryId));
@@ -465,9 +465,9 @@ namespace Apollo.Utilities.History
         public void RollForwardToNextValue()
         {
             var timeline = new Timeline(BuildStorageOfType);
-            var firstMark = timeline.Mark();
+            timeline.Mark();
 
-            var obj = timeline.AddToTimeline<MockHistoryObject>(BuildObject);
+            var obj = timeline.AddToTimeline(BuildObject);
             var creationTime = timeline.Mark();
 
             var objectChangeMarkers = new List<TimeMarker>();
@@ -496,9 +496,9 @@ namespace Apollo.Utilities.History
         public void RollForwardToTheEnd()
         {
             var timeline = new Timeline(BuildStorageOfType);
-            var firstMark = timeline.Mark();
+            timeline.Mark();
 
-            var obj = timeline.AddToTimeline<MockHistoryObject>(BuildObject);
+            var obj = timeline.AddToTimeline(BuildObject);
             var creationTime = timeline.Mark();
 
             var objectChangeMarkers = new List<TimeMarker>();
@@ -526,7 +526,7 @@ namespace Apollo.Utilities.History
             var timeline = new Timeline(BuildStorageOfType);
             var firstMark = timeline.Mark();
 
-            var obj = timeline.AddToTimeline<MockHistoryObject>(BuildObject);
+            var obj = timeline.AddToTimeline(BuildObject);
             var secondMark = timeline.Mark();
 
             timeline.RemoveFromTimeline(obj.HistoryId);
@@ -549,10 +549,10 @@ namespace Apollo.Utilities.History
         public void RollForwardWithLocalChange()
         {
             var timeline = new Timeline(BuildStorageOfType);
-            var firstMark = timeline.Mark();
+            timeline.Mark();
 
-            var obj = timeline.AddToTimeline<MockHistoryObject>(BuildObject);
-            var secondMark = timeline.Mark();
+            var obj = timeline.AddToTimeline(BuildObject);
+            timeline.Mark();
 
             obj.SomeValue = 1;
             obj.LotsOfValues.Add(2);
@@ -565,11 +565,11 @@ namespace Apollo.Utilities.History
             timeline.RollBackTo(firstChange);
             obj.SomeValue = 3;
             obj.LotsOfValues.Add(8);
-            var otherObj = timeline.AddToTimeline<MockHistoryObject>(BuildObject);
+            var otherObj = timeline.AddToTimeline(BuildObject);
 
             timeline.RollForwardTo(secondChange);
             Assert.AreEqual(2, obj.SomeValue);
-            Assert.AreElementsEqual(new int[] { 2, 4 }, obj.LotsOfValues);
+            Assert.AreElementsEqual(new[] { 2, 4 }, obj.LotsOfValues);
             Assert.IsFalse(timeline.DoesObjectExistCurrently(otherObj.HistoryId));
             Assert.IsFalse(timeline.HasObjectEverExisted(otherObj.HistoryId));
         }
@@ -589,8 +589,8 @@ namespace Apollo.Utilities.History
             var timeline = new Timeline(BuildStorageOfType);
             var firstMark = timeline.Mark();
 
-            var obj = timeline.AddToTimeline<MockHistoryObject>(BuildObject);
-            var secondMark = timeline.Mark();
+            var obj = timeline.AddToTimeline(BuildObject);
+            timeline.Mark();
 
             timeline.RemoveFromTimeline(obj.HistoryId);
             var thirdMark = timeline.Mark();
@@ -599,8 +599,8 @@ namespace Apollo.Utilities.History
             Assert.IsTrue(timeline.HasObjectEverExisted(obj.HistoryId));
             Assert.IsFalse(timeline.DoesObjectExistCurrently(obj.HistoryId));
 
-            var otherObj = timeline.AddToTimeline<MockHistoryObject>(BuildObject);
-            var fourthMark = timeline.Mark();
+            timeline.AddToTimeline(BuildObject);
+            timeline.Mark();
 
             Assert.IsFalse(timeline.HasObjectEverExisted(obj.HistoryId));
             Assert.IsFalse(timeline.DoesObjectExistCurrently(obj.HistoryId));

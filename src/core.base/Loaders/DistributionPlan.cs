@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Lokad;
-using Utilities.Progress;
+using Nuclei.Progress;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -30,7 +30,7 @@ namespace Apollo.Core.Base.Loaders
         ///     The function that provides the ability to load the dataset onto the selected machine
         ///     if the current distribution plan should be accepted.
         /// </param>
-        /// <param name="dataset">The ID of the datset that should be loaded.</param>
+        /// <param name="dataset">The ID of the dataset that should be loaded.</param>
         /// <param name="machine">
         ///     The machine onto which the dataset will be loaded if the current plan is accepted.
         /// </param>

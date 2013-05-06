@@ -17,7 +17,7 @@ using Apollo.Core.Base.Loaders;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
-using Utilities.Progress;
+using Nuclei.Progress;
 
 namespace Apollo.Core.Host.Projects
 {
@@ -214,10 +214,10 @@ namespace Apollo.Core.Host.Projects
         /// <param name="constructorArgs">The object that holds all the constructor arguments that do not belong to the timeline.</param>
         /// <param name="proxyBuilder">The function that is used to create the proxy for the data inside the dataset.</param>
         /// <param name="historyId">The ID for use in the history system.</param>
-        /// <param name="name">The datastructure that stores the history information for the name of the dataset.</param>
-        /// <param name="summary">The datastructure that stores the history information for the summary of the dataset.</param>
+        /// <param name="name">The data structure that stores the history information for the name of the dataset.</param>
+        /// <param name="summary">The data structure that stores the history information for the summary of the dataset.</param>
         /// <param name="loadedLocation">
-        /// The datastructure that stores the history information indicating if the dataset is loaded at any point.
+        /// The data structure that stores the history information indicating if the dataset is loaded at any point.
         /// </param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="constructorArgs"/> is <see langword="null" />.
@@ -588,7 +588,7 @@ namespace Apollo.Core.Host.Projects
         /// <param name="token">The token that is used to cancel the loading.</param>
         /// <remarks>
         /// Note that the <paramref name="preferredLocation"/> is
-        /// only a suggestion. The loader may deside to ignore the suggestion if there is a distribution
+        /// only a suggestion. The loader may decide to ignore the suggestion if there is a distribution
         /// plan that is better suited to the contents of the dataset.
         /// </remarks>
         /// <exception cref="ArgumentException">
@@ -916,7 +916,7 @@ namespace Apollo.Core.Host.Projects
         }
 
         /// <summary>
-        /// An event raised when there is progress in the loading of the datset.
+        /// An event raised when there is progress in the loading of the dataset.
         /// </summary>
         public event EventHandler<ProgressEventArgs> OnProgressOfCurrentAction;
 

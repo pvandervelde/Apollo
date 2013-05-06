@@ -84,8 +84,7 @@ namespace Apollo.Core.Host.Scripting
             var projects = new Mock<ILinkScriptsToProjects>();
             var writer = new ScriptOutputPipe();
 
-            var output = string.Empty;
-            writer.OnScriptOutput += (s, e) => output = e.Text;
+            writer.OnScriptOutput += (s, e) => { };
 
             var engine = Python.CreateEngine();
             var runner = new RemoteScriptRunner(projects.Object, writer, engine);
@@ -101,8 +100,7 @@ namespace Apollo.Core.Host.Scripting
             var projects = new Mock<ILinkScriptsToProjects>();
             var writer = new ScriptOutputPipe();
 
-            var output = string.Empty;
-            writer.OnScriptOutput += (s, e) => output = e.Text;
+            writer.OnScriptOutput += (s, e) => { };
 
             var engine = Python.CreateEngine();
             var runner = new RemoteScriptRunner(projects.Object, writer, engine);
@@ -123,8 +121,7 @@ namespace Apollo.Core.Host.Scripting
             var projects = new Mock<ILinkScriptsToProjects>();
             var writer = new ScriptOutputPipe();
 
-            var output = string.Empty;
-            writer.OnScriptOutput += (s, e) => output = e.Text;
+            writer.OnScriptOutput += (s, e) => { };
 
             var engine = Python.CreateEngine();
             var runner = new RemoteScriptRunner(projects.Object, writer, engine);

@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Utilities.Progress;
+using Nuclei.Progress;
 
 namespace Apollo.Core.Base
 {

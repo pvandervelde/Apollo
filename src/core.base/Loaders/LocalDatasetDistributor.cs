@@ -12,10 +12,10 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Lokad;
-using Utilities.Communication;
-using Utilities.Diagnostics;
-using Utilities.Diagnostics.Profiling;
-using Utilities.Progress;
+using Nuclei.Communication;
+using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Profiling;
+using Nuclei.Progress;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -151,15 +151,15 @@ namespace Apollo.Core.Base.Loaders
         /// </returns>
         public IEnumerable<DistributionPlan> ProposeDistributionFor(DatasetRequest request, CancellationToken token)
         {
-            using (var interval = m_Diagnostics.Profiler.Measure("Generating local proposal"))
+            using (m_Diagnostics.Profiler.Measure("Generating local proposal"))
             {
                 var proposal = m_LocalDistributor.ProposeForLocalMachine(request.ExpectedLoadPerMachine);
                 var plan = new DistributionPlan(
-                    (p, t, r) => ImplementPlan(p, t, r),
+                    ImplementPlan,
                     request.DatasetToLoad,
                     new NetworkIdentifier(proposal.Endpoint.OriginatesOnMachine()),
                     proposal);
-                return new DistributionPlan[] { plan };
+                return new[] { plan };
             }
         }
 
@@ -180,15 +180,8 @@ namespace Apollo.Core.Base.Loaders
             Func<DatasetOnlineInformation> result =
                 () =>
                 {
-                    if (!m_CommunicationLayer.HasChannelFor(ChannelType.NamedPipe))
-                    {
-                        m_CommunicationLayer.OpenChannel(ChannelType.NamedPipe); 
-                    }
-
-                    var info = m_CommunicationLayer.LocalConnectionPoints()
-                        .First(c => c.ChannelType == ChannelType.NamedPipe);
-
-                    var endpoint = m_Loader.LoadDataset(info);
+                    var info = m_CommunicationLayer.LocalConnectionFor(ChannelType.NamedPipe);
+                    var endpoint = m_Loader.LoadDataset(info.Item1, ChannelType.NamedPipe, info.Item2);
                     var resetEvent = new AutoResetEvent(false);
                     var commandAvailabilityNotifier = 
                         Observable.FromEventPattern<CommandSetAvailabilityEventArgs>(

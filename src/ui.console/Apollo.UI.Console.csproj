@@ -10,121 +10,141 @@
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
-    <Reference Include="Autofac, Version=2.4.3.700, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Autofac\lib\NET40\Autofac.dll</HintPath>
+    <Reference Include="Args, Version=1.0.3.31211, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Args.1.0.3\lib\Net40\Args.dll</HintPath>
     </Reference>
-    <Reference Include="Lokad.Shared, Version=1.5.181.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
+    <Reference Include="Autofac, Version=2.5.1.827, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Autofac.2.5.1.827\lib\NET40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Options">
-      <HintPath>..\..\packages\Mono.Options\lib\Mono.Options.dll</HintPath>
+    <Reference Include="Autofac.Configuration, Version=2.5.1.827, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Autofac.2.5.1.827\lib\NET40\Autofac.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="NLog, Version=1.0.0.505, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
+    <Reference Include="Castle.Core, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Castle.Core.2.5.2\lib\NET35\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="EasyHttp, Version=1.4.7.0, Culture=neutral, PublicKeyToken=ee5b68ec5ad4ef93, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EasyHttp.1.4.7.0\lib\net40\EasyHttp.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="JsonFx, Version=2.0.1106.2610, Culture=neutral, PublicKeyToken=315052dd637f8a52, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JsonFx.2.0.1106.2610\lib\net40\JsonFx.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.ActionPolicy, Version=1.5.181.0, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.ActionPolicy.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Logging, Version=1.5.181.0, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Quality, Version=1.5.181.0, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.Quality.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Shared, Version=1.5.181.0, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Stack, Version=1.5.181.0, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.Stack.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Testing, Version=1.5.181.0, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.Testing.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net, Version=2.9.4.1, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Lucene.Net.2.9.4.1\lib\net40\Lucene.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Options, Version=1.0.3.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mono.Options.1.0.3.3\lib\Mono.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NLog.2.0.0.2000\lib\net40\NLog.dll</HintPath>
     </Reference>
     <Reference Include="NSarrac.Framework, Version=0.2.0.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NSarrac\lib\net40\NSarrac.Framework.dll</HintPath>
+      <HintPath>..\..\packages\NSarrac.0.2.0.0\lib\net40\NSarrac.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="QuickGraph, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\QuickGraph\lib\net4\QuickGraph.dll</HintPath>
+    <Reference Include="Nuclei">
+      <HintPath>..\..\packages\Nuclei.Core.0.4.0.0\lib\net40\Nuclei.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclei.AutoUpdate">
+      <HintPath>..\..\packages\Nuclei.Core.0.4.0.0\lib\net40\Nuclei.AutoUpdate.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclei.Communication">
+      <HintPath>..\..\packages\Nuclei.Core.0.4.0.0\lib\net40\Nuclei.Communication.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclei.Diagnostics">
+      <HintPath>..\..\packages\Nuclei.Core.0.4.0.0\lib\net40\Nuclei.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph, Version=3.6.61114.1, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\QuickGraph.3.6.61114.1\lib\net4\QuickGraph.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph.Data, Version=3.6.61114.1, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\QuickGraph.3.6.61114.1\lib\net4\QuickGraph.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph.Graphviz, Version=3.6.61114.1, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\QuickGraph.3.6.61114.1\lib\net4\QuickGraph.Graphviz.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph.Serialization, Version=3.6.61114.1, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\QuickGraph.3.6.61114.1\lib\net4\QuickGraph.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap, Version=2.6.3.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\structuremap.2.6.3\lib\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
-    <Reference Include="System.Reactive, Version=1.0.2838.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Rx-Main\lib\Net4\System.Reactive.dll</HintPath>
+    <Reference Include="System.Reactive, Version=1.0.10621.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Rx-Main.1.0.10621\lib\Net4\System.Reactive.dll</HintPath>
     </Reference>
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Utilities">
-      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.dll</HintPath>
-    </Reference>
-    <Reference Include="Utilities.Communication, Version=0.2.1.0, Culture=neutral, PublicKeyToken=ee5b68ec5ad4ef93, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.Communication.dll</HintPath>
-    </Reference>
-    <Reference Include="Utilities.Diagnostics">
-      <HintPath>..\..\packages\Utilities\lib\net40\Utilities.Diagnostics.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\packages\Utilities.Source\AppDomainBuilder.cs">
-      <Link>Utilities\AppDomainBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Utilities.Source\AppDomainBuilder.DirectoryBasedResolver.cs">
-      <Link>Utilities\AppDomainBuilder.DirectoryBasedResolver.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Utilities.Source\AppDomainBuilder.FileBasedResolver.cs">
-      <Link>Utilities\AppDomainBuilder.FileBasedResolver.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Utilities.Source\AppDomainResolutionPaths.cs">
-      <Link>Utilities\AppDomainResolutionPaths.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Utilities.Source\AssemblyNameElements.cs">
-      <Link>Utilities\AssemblyNameElements.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Utilities.Source\CommandLineProgram.cs">
-      <Link>Utilities\CommandLineProgram.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Utilities.Source\EventType.cs">
-      <Link>Utilities\EventType.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Utilities.Source\EventTypeToEventCategoryMap.cs">
-      <Link>Utilities\EventTypeToEventCategoryMap.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Utilities.Source\ExceptionFilter.cs">
-      <Link>Utilities\ExceptionFilter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Utilities.Source\ExceptionHandler.cs">
-      <Link>Utilities\ExceptionHandler.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Utilities.Source\ExceptionTypeToEventIdMap.cs">
-      <Link>Utilities\ExceptionTypeToEventIdMap.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Utilities.Source\FusionHelper.cs">
-      <Link>Utilities\FusionHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Utilities.Source\GuardResult.cs">
-      <Link>Utilities\GuardResult.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Utilities.Source\IAppDomainAssemblyResolver.cs">
-      <Link>Utilities\IAppDomainAssemblyResolver.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Utilities.Source\IExceptionHandler.cs">
-      <Link>Utilities\IExceptionHandler.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Utilities.Source\IExceptionProcessor.cs">
-      <Link>Utilities\IExceptionProcessor.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Utilities.Source\LogBasedExceptionProcessor.cs">
-      <Link>Utilities\LogBasedExceptionProcessor.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Utilities.Source\ReportingExceptionProcessor.cs">
-      <Link>Utilities\ReportingExceptionProcessor.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Utilities.Source\ReportingUtilities.cs">
-      <Link>Utilities\ReportingUtilities.cs</Link>
-    </Compile>
-    <Compile Include="..\..\packages\Utilities.Source\TopLevelExceptionGuard.cs">
-      <Link>Utilities\TopLevelExceptionGuard.cs</Link>
-    </Compile>
+    <Compile Include="ConsoleConstants.cs" />
     <Compile Include="FakeProgressTracker.cs" />
     <Compile Include="KernelBootstrapper.cs" />
+    <Compile Include="Nuclei\AppDomainBuilder.cs" />
+    <Compile Include="Nuclei\AppDomainBuilder.DirectoryBasedResolver.cs" />
+    <Compile Include="Nuclei\AppDomainBuilder.FileBasedResolver.cs" />
+    <Compile Include="Nuclei\AppDomainResolutionPaths.cs" />
+    <Compile Include="Nuclei\AssemblyNameElements.cs" />
+    <Compile Include="Nuclei\CommandLineProgram.cs" />
+    <Compile Include="Nuclei\ExceptionHandling\EventType.cs" />
+    <Compile Include="Nuclei\ExceptionHandling\EventTypeToEventCategoryMap.cs" />
+    <Compile Include="Nuclei\ExceptionHandling\ExceptionFilter.cs" />
+    <Compile Include="Nuclei\ExceptionHandling\ExceptionHandler.cs" />
+    <Compile Include="Nuclei\ExceptionHandling\ExceptionTypeToEventIdMap.cs" />
+    <Compile Include="Nuclei\ExceptionHandling\GuardResult.cs" />
+    <Compile Include="Nuclei\ExceptionHandling\IExceptionHandler.cs" />
+    <Compile Include="Nuclei\ExceptionHandling\IExceptionProcessor.cs" />
+    <Compile Include="Nuclei\ExceptionHandling\LogBasedExceptionProcessor.cs" />
+    <Compile Include="Nuclei\ExceptionHandling\ReportingExceptionProcessor.cs" />
+    <Compile Include="Nuclei\ExceptionHandling\ReportingUtilities.cs" />
+    <Compile Include="Nuclei\ExceptionHandling\TopLevelExceptionGuard.cs" />
+    <Compile Include="Nuclei\FusionHelper.cs" />
+    <Compile Include="Nuclei\IAppDomainAssemblyResolver.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Utilities\SrcOnlyExceptionHandlingUtilities.cs" />
-    <Compile Include="Utilities\StepBasedProgressTracker.cs" />
-    <Compile Include="Utilities\UtilitiesModule.cs" />
+    <Compile Include="Nuclei\ExceptionHandling\SrcOnlyExceptionHandlingUtilities.cs" />
+    <Compile Include="Nuclei\StepBasedProgressTracker.cs" />
+    <Compile Include="Nuclei\NucleiModule.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -153,9 +173,7 @@
     </Compile>
     <None Include="app.config" />
     <AppDesigner Include="Properties\" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
@@ -179,6 +197,9 @@
     <EmbeddedResource Include="..\licenses.xml">
       <Link>Properties\licenses.xml</Link>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="README.txt" />
   </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

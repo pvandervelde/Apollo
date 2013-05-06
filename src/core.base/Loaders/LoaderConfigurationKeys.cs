@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Utilities.Configuration;
+using Nuclei.Configuration;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -21,6 +21,7 @@ namespace Apollo.Core.Base.Loaders
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
             Justification = "A configuration key is immutable.")]
-        public static readonly ConfigurationKey OffLimitsEndpoints = new ConfigurationKey();
+        public static readonly ConfigurationKey OffLimitsEndpoints
+            = new ConfigurationKey("OffLimitsEndpoints", typeof(string[]));
     }
 }

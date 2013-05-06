@@ -17,7 +17,7 @@ namespace Apollo.Core.Host
     internal sealed partial class Kernel
     {
         /// <summary>
-        /// Stores a link between a requested type and the KernelService which fullfills this request.
+        /// Stores a link between a requested type and the KernelService which fulfills this request.
         /// </summary>
         [ExcludeFromCodeCoverage]
         private sealed class ConnectionMap

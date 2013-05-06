@@ -6,7 +6,7 @@
 
 using System.Reflection;
 using System.Threading.Tasks;
-using Utilities.Communication;
+using Nuclei.Communication;
 
 namespace Apollo.Core.Base
 {

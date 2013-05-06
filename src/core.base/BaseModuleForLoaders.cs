@@ -10,8 +10,8 @@ using System.Linq;
 using Apollo.Core.Base.Loaders;
 using Apollo.Utilities;
 using Autofac;
-using Utilities;
-using Utilities.Diagnostics;
+using Nuclei;
+using Nuclei.Diagnostics;
 
 namespace Apollo.Core.Base
 {

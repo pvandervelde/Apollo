@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows.Shell;
 using Apollo.UI.Wpf.Commands;
 using Lokad;
-using Utilities.Progress;
+using Nuclei.Progress;
 
 namespace Apollo.UI.Explorer.Views.Shell
 {

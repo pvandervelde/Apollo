@@ -27,7 +27,7 @@ namespace Apollo.Core.Base.Loaders
         }
 
         /// <summary>
-        /// Gets or sets a value indicatingthe size of the dataset in bytes while
+        /// Gets or sets a value indicating the size of the dataset in bytes while
         /// loaded into memory.
         /// </summary>
         public long InMemorySizeInBytes

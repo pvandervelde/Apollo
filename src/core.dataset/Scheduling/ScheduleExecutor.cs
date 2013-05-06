@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Dataset.Properties;
 using Apollo.Core.Extensions.Scheduling;
-using Utilities.Progress;
+using Nuclei.Progress;
 
 namespace Apollo.Core.Dataset.Scheduling
 {

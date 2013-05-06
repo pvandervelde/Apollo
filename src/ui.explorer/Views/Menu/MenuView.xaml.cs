@@ -4,11 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
-using Apollo.Utilities;
-using Utilities.Diagnostics.Profiling;
 
 namespace Apollo.UI.Explorer.Views.Menu
 {

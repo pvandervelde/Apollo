@@ -13,9 +13,9 @@ using System.Threading.Tasks.Schedulers;
 using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
-using Utilities.Communication;
-using Utilities.Diagnostics;
-using Utilities.Progress;
+using Nuclei.Communication;
+using Nuclei.Diagnostics;
+using Nuclei.Progress;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -93,16 +93,14 @@ namespace Apollo.Core.Base.Loaders
                     .Returns(result);
             }
 
-            var connectionInfo = new ChannelConnectionInformation(
-                EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                ChannelType.NamedPipe,
-                new Uri("net.pipe://localhost/pipe"));
             var communicationLayer = new Mock<ICommunicationLayer>();
             {
-                communicationLayer.Setup(s => s.HasChannelFor(It.IsAny<ChannelType>()))
-                    .Returns(true);
-                communicationLayer.Setup(s => s.LocalConnectionPoints())
-                    .Returns(new[] { connectionInfo });
+                communicationLayer.Setup(s => s.LocalConnectionFor(It.Is<ChannelType>(c => c == ChannelType.NamedPipe)))
+                    .Returns(
+                        new Tuple<EndpointId, Uri, Uri>(
+                            EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
+                            new Uri("net.pipe://localhost/pipe"),
+                            new Uri("net.pipe://localhost/pipe/data")));
             }
 
             var loader = new Mock<IApplicationLoader>();
@@ -138,12 +136,9 @@ namespace Apollo.Core.Base.Loaders
                 };
             var plans = distributor.ProposeDistributionFor(request, new CancellationToken());
             Assert.AreElementsEqualIgnoringOrder(
-                new DistributionPlan[] { plan },
+                new[] { plan },
                 plans,
-                (x, y) =>
-                {
-                    return ReferenceEquals(x.Proposal, y.Proposal);
-                });
+                (x, y) => ReferenceEquals(x.Proposal, y.Proposal));
         }
 
         [Test]
@@ -165,7 +160,7 @@ namespace Apollo.Core.Base.Loaders
             var datasetEndpoint = new EndpointId("OtherMachine:5678");
             var loader = new Mock<IApplicationLoader>();
             {
-                loader.Setup(l => l.LoadDataset(It.IsAny<ChannelConnectionInformation>()))
+                loader.Setup(l => l.LoadDataset(It.IsAny<EndpointId>(), It.IsAny<ChannelType>(), It.IsAny<Uri>()))
                     .Returns(datasetEndpoint);
             }
 
@@ -201,16 +196,14 @@ namespace Apollo.Core.Base.Loaders
                     .Returns(notifications.Object);
             }
 
-            var connectionInfo = new ChannelConnectionInformation(
-                EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                ChannelType.NamedPipe,
-                new Uri("net.pipe://localhost/pipe"));
             var communicationLayer = new Mock<ICommunicationLayer>();
             {
-                communicationLayer.Setup(s => s.HasChannelFor(It.IsAny<ChannelType>()))
-                    .Returns(true);
-                communicationLayer.Setup(s => s.LocalConnectionPoints())
-                    .Returns(new[] { connectionInfo });
+                communicationLayer.Setup(s => s.LocalConnectionFor(It.Is<ChannelType>(c => c == ChannelType.NamedPipe)))
+                    .Returns(
+                        new Tuple<EndpointId, Uri, Uri>(
+                            EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
+                            new Uri("net.pipe://localhost/pipe"),
+                            new Uri("net.pipe://localhost/pipe/data")));
             }
 
             var uploads = new Mock<IStoreUploads>();

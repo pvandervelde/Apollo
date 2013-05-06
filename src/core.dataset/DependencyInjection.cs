@@ -8,22 +8,21 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.IO.Abstractions;
 using System.Threading;
 using System.Windows.Forms;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Base.Scheduling;
+using Apollo.Core.Dataset.Nuclei;
 using Apollo.Core.Dataset.Plugins;
 using Apollo.Core.Dataset.Scheduling;
 using Apollo.Core.Dataset.Scheduling.Processors;
-using Apollo.Core.Dataset.Utilities;
 using Apollo.Core.Extensions.Scheduling;
-using Apollo.Utilities;
 using Apollo.Utilities.History;
 using Autofac;
-using Utilities.Communication;
-using Utilities.Diagnostics;
-using Utilities.FileSystem;
+using Nuclei.Communication;
+using Nuclei.Diagnostics;
 
 namespace Apollo.Core.Dataset
 {
@@ -156,7 +155,7 @@ namespace Apollo.Core.Dataset
             Action<FileInfo> loadAction)
         {
             builder.Register(c => new DatasetApplicationCommands(
-                    c.Resolve<ICommunicationLayer>(),
+                    c.Resolve<DownloadDataFromRemoteEndpoints>(),
                     c.Resolve<ITrackDatasetLocks>(),
                     closeAction,
                     loadAction,
@@ -189,8 +188,8 @@ namespace Apollo.Core.Dataset
         {
             builder.Register((c, p) => new PluginLoadingAssemblyResolver(
                 c.Resolve<ISendCommandsToRemoteEndpoints>(),
-                c.Resolve<ICommunicationLayer>(),
-                c.Resolve<IVirtualizeFileSystems>(),
+                c.Resolve<DownloadDataFromRemoteEndpoints>(),
+                c.Resolve<IFileSystem>(),
                 p.TypedAs<EndpointId>()));
         }
 
@@ -204,13 +203,20 @@ namespace Apollo.Core.Dataset
             IContainer result = null;
             var builder = new ContainerBuilder();
             {
-                builder.RegisterModule(new UtilitiesModule());
+                builder.RegisterModule(new NucleiModule());
 
                 // Don't allow discovery on the dataset application because:
                 // - The dataset application wouldn't know what to do with it anyway
                 // - We don't want anybody talking to the application except for the
                 //   application that started it.
-                builder.RegisterModule(new CommunicationModule(false));
+                builder.RegisterModule(
+                    new CommunicationModule(
+                        new List<CommunicationSubject>
+                            {
+                                CommunicationSubjects.Dataset,
+                            },
+                        false));
+                
                 RegisterCommands(
                     builder,
                     () => CloseApplication(result),

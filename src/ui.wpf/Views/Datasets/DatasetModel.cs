@@ -9,18 +9,18 @@ using Apollo.Core.Base;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.UI.Wpf.Properties;
 using Lokad;
-using Utilities.Progress;
+using Nuclei.Progress;
 using ICommand = System.Windows.Input.ICommand;
 
 namespace Apollo.UI.Wpf.Views.Datasets
 {
     /// <summary>
-    /// Defines the viewmodel for a dataset.
+    /// Defines the view model for a dataset.
     /// </summary>
     public sealed class DatasetModel : Model
     {
         /// <summary>
-        /// The project that owns the datset.
+        /// The project that owns the dataset.
         /// </summary>
         private readonly ILinkToProjects m_Project;
 

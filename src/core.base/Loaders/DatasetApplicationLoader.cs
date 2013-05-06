@@ -12,10 +12,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Utilities;
-using Utilities.Communication;
-using Utilities.Diagnostics;
-using Utilities.Diagnostics.Logging;
+using Nuclei;
+using Nuclei.Communication;
+using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Logging;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -73,22 +73,27 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// Loads the dataset into an external application and returns when the dataset application has started.
         /// </summary>
-        /// <param name="ownerConnection">
-        ///     The channel connection information for the owner.
-        /// </param>
-        /// <returns>The ID of the new endpoint.</returns>
+        /// <param name="endpointId">The endpoint ID for the owner.</param>
+        /// <param name="channelType">The type of channel on which the dataset should be contacted.</param>
+        /// <param name="address">The channel address for the owner.</param>
+        /// <returns>The ID number of the newly created endpoint.</returns>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="ownerConnection"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="endpointId"/> is <see langword="null" />.
         /// </exception>
-        public EndpointId LoadDataset(ChannelConnectionInformation ownerConnection)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="address"/> is <see langword="null" />.
+        /// </exception>
+        public EndpointId LoadDataset(EndpointId endpointId, ChannelType channelType, Uri address)
         {
             {
-                Lokad.Enforce.Argument(() => ownerConnection);
+                Lokad.Enforce.Argument(() => endpointId);
+                Lokad.Enforce.Argument(() => address);
             }
 
             var deploymentDir = DeployLocation();
             m_Diagnostics.Log(
                 LevelToLog.Debug,
+                BaseConstants.LogPrefix,
                 string.Format(CultureInfo.InvariantCulture, "Deploying to: {0}", deploymentDir));
 
             DeployApplication(deploymentDir);
@@ -97,9 +102,9 @@ namespace Apollo.Core.Base.Loaders
             var arguments = string.Format(
                 CultureInfo.InvariantCulture,
                 @"--host={0} --channeltype=""{1}"" --channeluri={2}",
-                ownerConnection.Id,
-                ownerConnection.ChannelType,
-                ownerConnection.Address);
+                endpointId,
+                channelType,
+                address);
 
             var startInfo = new ProcessStartInfo
             {
@@ -212,6 +217,7 @@ namespace Apollo.Core.Base.Loaders
 
                 m_Diagnostics.Log(
                     LevelToLog.Debug,
+                    BaseConstants.LogPrefix,
                     string.Format(CultureInfo.InvariantCulture, "Deploying {1} to: {0}", file, deployedFile));
                 File.Copy(localFile, deployedFile);
             }
@@ -230,6 +236,7 @@ namespace Apollo.Core.Base.Loaders
                 {
                     m_Diagnostics.Log(
                         LevelToLog.Debug,
+                        BaseConstants.LogPrefix,
                         string.Format(CultureInfo.InvariantCulture, "Deploying {1} to: {0}", file, deployedFile));
                     File.Copy(localFile, deployedFile);
                 }

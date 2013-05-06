@@ -8,7 +8,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Markup;
 
 namespace Apollo.UI.Wpf.Utilities
 {
@@ -16,27 +15,19 @@ namespace Apollo.UI.Wpf.Utilities
     /// A drag source advisor for a panel.
     /// </summary>
     /// <remarks>
-    /// Original source here: http://blogs.msdn.com/b/llobo/archive/2006/12/08/drag-drop-library.aspx
+    /// Original source here: http://blogs.msdn.com/b/llobo/archive/2006/12/08/drag-drop-library.aspx.
     /// </remarks>
     public sealed class PanelDragSourceAdvisor : IDragSourceAdvisor
     {
-        private static DataFormat s_SupportedFormat = DragDropHelpers.DataFormat;
-        private UIElement m_SourceUI;
+        private static readonly DataFormat s_SupportedFormat = DragDropHelpers.DataFormat;
 
         /// <summary>
         /// Gets or sets the source element where the drag started.
         /// </summary>
         public UIElement SourceUI
         {
-            get
-            {
-                return m_SourceUI;
-            }
-            
-            set
-            {
-                m_SourceUI = value;
-            }
+            get;
+            set;
         }
 
         /// <summary>
@@ -58,7 +49,7 @@ namespace Apollo.UI.Wpf.Utilities
         /// <returns>The data object for the drag operation.</returns>
         public DataObject GetDataObject(UIElement draggedElement, Point offsetPoint)
         {
-            var obj = GetDataFromUIContainer(draggedElement);
+            var obj = GetDataFromUiContainer(draggedElement);
             var data = new DataObject();
             data.SetData(s_SupportedFormat.Name, obj);
             data.SetData(DragDropHelpers.OffsetPointDataFormatName, offsetPoint);
@@ -66,12 +57,12 @@ namespace Apollo.UI.Wpf.Utilities
             return data;
         }
 
-        private object GetDataFromUIContainer(UIElement draggedElement)
+        private object GetDataFromUiContainer(UIElement draggedElement)
         {
             var source = SourceUI as Panel;
             Debug.Assert(source != null, "This drag source advisor should only be used on Panel objects.");
 
-            FrameworkElement container = draggedElement as FrameworkElement;
+            var container = draggedElement as FrameworkElement;
             Debug.Assert(container != null, "We should have found the container element now.");
 
             return container.DataContext;
@@ -98,7 +89,7 @@ namespace Apollo.UI.Wpf.Utilities
             Justification = "Documentation can start with a language keyword")]
         public bool CanBeDragged(UIElement elementToDrag)
         {
-            var obj = GetDataFromUIContainer(elementToDrag);
+            var obj = GetDataFromUiContainer(elementToDrag);
             return DragDropManager.IsDragAllowed(SourceUI, obj);
         }
     }

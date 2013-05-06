@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Utilities.Diagnostics;
-using Utilities.Diagnostics.Logging;
+using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Logging;
 
 namespace Apollo.Utilities
 {
@@ -43,7 +43,10 @@ namespace Apollo.Utilities
         /// <param name="message">The message.</param>
         public void Log(LevelToLog severity, string message)
         {
-            m_Diagnostics.Log(severity, message);
+            m_Diagnostics.Log(
+                severity,
+                UtilitiesConstants.LogPrefix,
+                message);
         }
     }
 }

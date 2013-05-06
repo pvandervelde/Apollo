@@ -17,7 +17,7 @@ namespace Apollo.UI.Wpf.Utilities
     /// The class that provides the dependency properties used to handle drag and drop operations.
     /// </summary>
     /// <remarks>
-    /// Original source here: http://blogs.msdn.com/b/llobo/archive/2006/12/08/drag-drop-library.aspx
+    /// Original source here: http://blogs.msdn.com/b/llobo/archive/2006/12/08/drag-drop-library.aspx.
     /// </remarks>
     public static class DragDropManager
     {
@@ -57,7 +57,7 @@ namespace Apollo.UI.Wpf.Utilities
             "DragSourceAdvisor", 
             typeof(IDragSourceAdvisor), 
             typeof(DragDropManager),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(OnDragSourceAdvisorChanged)));
+            new FrameworkPropertyMetadata(OnDragSourceAdvisorChanged));
 
         /// <summary>
         /// The dependency property that specifies the method that determines if the current control allows dragging at this moment.
@@ -66,7 +66,7 @@ namespace Apollo.UI.Wpf.Utilities
             "IsDragAllowed", 
             typeof(Func<object, bool>), 
             typeof(DragDropManager),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(OnIsDragAllowedChanged)));
+            new FrameworkPropertyMetadata(OnIsDragAllowedChanged));
 
         /// <summary>
         /// The dependency property that specifies what control template should be used for the visualization of the item that is about to be dragged.
@@ -75,7 +75,7 @@ namespace Apollo.UI.Wpf.Utilities
             "DragVisualizationTemplate",
             typeof(Func<object, UIElement>),
             typeof(DragDropManager),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(OnDragVisualizationTemplateChanged)));
+            new FrameworkPropertyMetadata(OnDragVisualizationTemplateChanged));
 
         /// <summary>
         /// The dependency property that specifies what the drag target advisor is for the current control.
@@ -84,7 +84,7 @@ namespace Apollo.UI.Wpf.Utilities
             "DropTargetAdvisor", 
             typeof(IDropTargetAdvisor), 
             typeof(DragDropManager),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(OnDropTargetAdvisorChanged)));
+            new FrameworkPropertyMetadata(OnDropTargetAdvisorChanged));
 
         /// <summary>
         /// The dependency property that specifies which method should be used to handle the drop operation.
@@ -93,7 +93,7 @@ namespace Apollo.UI.Wpf.Utilities
             "DropHandler",
             typeof(Action<object>),
             typeof(DragDropManager),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(OnDropHandlerChanged)));
+            new FrameworkPropertyMetadata(OnDropHandlerChanged));
 
         /// <summary>
         /// Indicates that the DragSourceAdvisor attached property is set or is not set. This method should
@@ -185,9 +185,9 @@ namespace Apollo.UI.Wpf.Utilities
             UIElement sourceElement = sender as UIElement;
             if (args.NewValue != null && args.OldValue == null)
             {
-                sourceElement.PreviewMouseLeftButtonDown += new MouseButtonEventHandler(DragSourcePreviewMouseLeftButtonDown);
-                sourceElement.PreviewMouseMove += new MouseEventHandler(DragSourcePreviewMouseMove);
-                sourceElement.PreviewMouseUp += new MouseButtonEventHandler(DragSourcePreviewMouseUp);
+                sourceElement.PreviewMouseLeftButtonDown += DragSourcePreviewMouseLeftButtonDown;
+                sourceElement.PreviewMouseMove += DragSourcePreviewMouseMove;
+                sourceElement.PreviewMouseUp += DragSourcePreviewMouseUp;
 
                 // Set the Drag source UI
                 IDragSourceAdvisor advisor = args.NewValue as IDragSourceAdvisor;
@@ -238,12 +238,12 @@ namespace Apollo.UI.Wpf.Utilities
             s_IsMouseDown = false;
             Mouse.Capture(uiElement);
 
-            IDragSourceAdvisor advisor = GetDragSourceAdvisor(uiElement as DependencyObject);
+            IDragSourceAdvisor advisor = GetDragSourceAdvisor(uiElement);
             DataObject data = advisor.GetDataObject(s_DraggedElement, s_OffsetPoint);
             DragDropEffects supportedEffects = advisor.SupportedEffects;
 
             // Perform DragDrop
-            DragDropEffects effects = System.Windows.DragDrop.DoDragDrop(s_DraggedElement, data, supportedEffects);
+            DragDropEffects effects = DragDrop.DoDragDrop(s_DraggedElement, data, supportedEffects);
             advisor.FinishDrag(s_DraggedElement, effects);
 
             // Clean up
@@ -306,14 +306,14 @@ namespace Apollo.UI.Wpf.Utilities
             UIElement targetElement = sender as UIElement;
             if (args.NewValue != null && args.OldValue == null)
             {
-                targetElement.PreviewDragEnter += new DragEventHandler(DropTargetPreviewDragEnter);
-                targetElement.PreviewDragOver += new DragEventHandler(DropTargetPreviewDragOver);
-                targetElement.PreviewDragLeave += new DragEventHandler(DropTargetPreviewDragLeave);
-                targetElement.PreviewDrop += new DragEventHandler(DropTargetPreviewDrop);
+                targetElement.PreviewDragEnter += DropTargetPreviewDragEnter;
+                targetElement.PreviewDragOver += DropTargetPreviewDragOver;
+                targetElement.PreviewDragLeave += DropTargetPreviewDragLeave;
+                targetElement.PreviewDrop += DropTargetPreviewDrop;
                 targetElement.AllowDrop = true;
 
                 // Set the Drag source UI
-                IDropTargetAdvisor advisor = args.NewValue as IDropTargetAdvisor;
+                var advisor = args.NewValue as IDropTargetAdvisor;
                 advisor.TargetUI = targetElement;
             }
             else if (args.NewValue == null && args.OldValue != null)
@@ -340,9 +340,9 @@ namespace Apollo.UI.Wpf.Utilities
             }
 
             // Setup the preview Adorner
-            UIElement feedbackUI = GetDropTargetAdvisor(uiElement).GetVisualFeedback(e.Data);
+            var feedbackUi = GetDropTargetAdvisor(uiElement).GetVisualFeedback(e.Data);
             s_OffsetPoint = GetDropTargetAdvisor(uiElement).GetOffsetPoint(e.Data);
-            CreatePreviewAdorner(uiElement, feedbackUI);
+            CreatePreviewAdorner(uiElement, feedbackUi);
 
             e.Handled = true;
         }
@@ -434,7 +434,7 @@ namespace Apollo.UI.Wpf.Utilities
 
         private static void OnDropHandlerChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
-            UIElement targetElement = sender as UIElement;
+            var targetElement = sender as UIElement;
             if (args.NewValue != null && args.OldValue == null)
             {
                 if (!s_DropHandlers.ContainsKey(targetElement))
@@ -489,7 +489,7 @@ namespace Apollo.UI.Wpf.Utilities
             Justification = "Documentation can start with a language keyword")]
         public static bool IsDragAllowed(UIElement source, object model)
         {
-            bool result = false;
+            var result = false;
             if (s_IsDragAllowed.ContainsKey(source))
             {
                 result = s_IsDragAllowed[source](model);

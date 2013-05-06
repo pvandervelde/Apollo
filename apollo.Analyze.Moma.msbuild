@@ -15,6 +15,7 @@
         <DirBuildBin>$(DirBuild)\bin\$(PlatformTranslated)\$(Configuration)</DirBuildBin>
         <DirBuildLogs>$(DirBuild)\logs</DirBuildLogs>
         <DirBuildTemp>$(DirBuild)\temp</DirBuildTemp>
+        <DirTools>$(DirWorkspace)\tools</DirTools>
         
         <!-- Tools -->
         <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
@@ -59,9 +60,9 @@
             <MomaFiles Include="$(DirBuildBin)\NSarrac.Framework.dll" />
             <MomaFiles Include="$(DirBuildBin)\QuickGraph.dll" />
             <MomaFiles Include="$(DirBuildBin)\System.Reactive.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Utilities.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Utilities.Diagnostics.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Utilities.Communication.dll" />
+            <MomaFiles Include="$(DirBuildBin)\Nuclei.dll" />
+            <MomaFiles Include="$(DirBuildBin)\Nuclei.Diagnostics.dll" />
+            <MomaFiles Include="$(DirBuildBin)\Nuclei.Communication.dll" />
         </ItemGroup>
         
         <Exec Command="$(PathMomaExe) --nogui --out &quot;$(MomaOutputFile)&quot; @(MomaFiles->'%22%(FullPath)%22', ' ')"

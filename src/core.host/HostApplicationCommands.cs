@@ -7,15 +7,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Threading.Tasks;
 using Apollo.Core.Base;
-using Utilities;
-using Utilities.Communication;
-using Utilities.Configuration;
-using Utilities.FileSystem;
+using Nuclei;
+using Nuclei.Communication;
+using Nuclei.Configuration;
 
 namespace Apollo.Core.Host
 {
@@ -31,7 +31,7 @@ namespace Apollo.Core.Host
         /// This object is mostly used to that it is easier to test the current class. Note that we can't
         /// completely virtualize the file system because we're trying to load assemblies.
         /// </remarks>
-        private readonly IVirtualizeFileSystems m_FileSystem;
+        private readonly IFileSystem m_FileSystem;
 
         /// <summary>
         /// The object that stores references to all the files that are about to be uploaded or
@@ -62,7 +62,7 @@ namespace Apollo.Core.Host
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="configuration"/> is <see langword="null" />.
         /// </exception>
-        public HostApplicationCommands(IVirtualizeFileSystems fileSystem, IStoreUploads uploads, IConfiguration configuration)
+        public HostApplicationCommands(IFileSystem fileSystem, IStoreUploads uploads, IConfiguration configuration)
         {
             {
                 Lokad.Enforce.Argument(() => fileSystem);
@@ -109,7 +109,7 @@ namespace Apollo.Core.Host
             var files = new List<string>();
             foreach (var dir in directories)
             {
-                files.AddRange(m_FileSystem.GetFilesInDirectory(dir, "*.dll", true));
+                files.AddRange(m_FileSystem.Directory.GetFiles(dir, "*.dll", SearchOption.AllDirectories));
             }
 
             // Store all the assemblies we can find that match the name, culture and public key. If a public key is specified

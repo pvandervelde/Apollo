@@ -8,7 +8,7 @@ using System;
 using System.Globalization;
 using System.Runtime.Serialization;
 using Apollo.UI.Explorer.Properties;
-using Utilities.Progress;
+using Nuclei.Progress;
 
 namespace Apollo.UI.Explorer
 {

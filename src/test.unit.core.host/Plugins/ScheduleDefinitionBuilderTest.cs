@@ -182,11 +182,9 @@ namespace Apollo.Core.Host.Plugins
         {
             var owner = new Mock<IOwnScheduleDefinitions>();
 
-            int storedMaximum = 0;
             var scheduleBuilder = new Mock<IBuildFixedSchedules>();
             {
                 scheduleBuilder.Setup(s => s.AddInsertPoint(It.IsAny<int>()))
-                    .Callback<int>(i => storedMaximum = i)
                     .Returns<int>(i => new InsertVertex(0, i));
             }
 

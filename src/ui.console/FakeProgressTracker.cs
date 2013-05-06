@@ -6,7 +6,7 @@
 
 using System;
 using Apollo.Utilities;
-using Utilities.Progress;
+using Nuclei.Progress;
 
 namespace Apollo.UI.Console
 {

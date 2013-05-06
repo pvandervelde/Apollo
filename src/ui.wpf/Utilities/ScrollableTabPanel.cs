@@ -19,13 +19,13 @@ namespace Apollo.UI.Wpf.Utilities
     /// A scrollable TabPanel control.
     /// </summary>
     /// <remarks>
-    /// Taken from: http://www.blogs.intuidev.com/post/2010/02/15/WPF-TabControl-series-Part-4-Closeable-TabItems.aspx
+    /// Taken from: http://www.blogs.intuidev.com/post/2010/02/15/WPF-TabControl-series-Part-4-Closeable-TabItems.aspx.
     /// </remarks>
     public class ScrollableTabPanel : Panel, IScrollInfo, INotifyPropertyChanged
     {
         // The following GradientStopCollections are being used for assigning an OpacityMask
         // to child-controls that are only partially visible.
-        private static GradientStopCollection s_OpacityMaskStopsTransparentOnLeftAndRight = new GradientStopCollection
+        private static readonly GradientStopCollection s_OpacityMaskStopsTransparentOnLeftAndRight = new GradientStopCollection
             {
                 new GradientStop(Colors.Transparent, 0.0),
                 new GradientStop(Colors.Black, 0.2),
@@ -33,13 +33,13 @@ namespace Apollo.UI.Wpf.Utilities
                 new GradientStop(Colors.Transparent, 1.0)
             };
 
-        private static GradientStopCollection s_OpacityMaskStopsTransparentOnLeft = new GradientStopCollection
+        private static readonly GradientStopCollection s_OpacityMaskStopsTransparentOnLeft = new GradientStopCollection
             {
                 new GradientStop(Colors.Transparent, 0),
                 new GradientStop(Colors.Black, 0.5)
             };
 
-        private static GradientStopCollection s_OpacityMaskStopsTransparentOnRight = new GradientStopCollection
+        private static readonly GradientStopCollection s_OpacityMaskStopsTransparentOnRight = new GradientStopCollection
             {
                 new GradientStop(Colors.Black, 0.5),
                 new GradientStop(Colors.Transparent, 1)
@@ -89,6 +89,11 @@ namespace Apollo.UI.Wpf.Utilities
             child.OpacityMask = null;
         }
 
+        /// <summary>
+        /// This will apply the present scroll-position respectively -offset.
+        /// </summary>
+        private readonly TranslateTransform m_ScrollTransform = new TranslateTransform();
+
         // For a description of the members below, refer to the respective property's description.
         private ScrollViewer m_OwningScrollViewer;
         private bool m_CanScrollHorizontally = true;
@@ -97,17 +102,12 @@ namespace Apollo.UI.Wpf.Utilities
         private Vector m_Offset;
 
         /// <summary>
-        /// This will apply the present scroll-position resp. -offset.
-        /// </summary>
-        private TranslateTransform m_ScrollTransform = new TranslateTransform();
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ScrollableTabPanel"/> class.
         /// </summary>
         public ScrollableTabPanel()
         {
-            this.RenderTransform = m_ScrollTransform;
-            this.SizeChanged += new SizeChangedEventHandler(ScrollableTabPanelSizeChanged);
+            RenderTransform = m_ScrollTransform;
+            SizeChanged += ScrollableTabPanelSizeChanged;
         }
 
         /// <summary>
@@ -118,30 +118,30 @@ namespace Apollo.UI.Wpf.Utilities
         /// <param name="viewportSize">The size of the viewport.</param>
         private void UpdateMembers(Size extent, Size viewportSize)
         {
-            if (extent != this.Extent)
+            if (extent != Extent)
             {
                 // The Extent of the control has changed.
-                this.Extent = extent;
-                if (this.ScrollOwner != null)
+                Extent = extent;
+                if (ScrollOwner != null)
                 {
-                    this.ScrollOwner.InvalidateScrollInfo();
+                    ScrollOwner.InvalidateScrollInfo();
                 }
             }
 
-            if (viewportSize != this.Viewport)
+            if (viewportSize != Viewport)
             {
                 // The Viewport of the panel has changed.
-                this.Viewport = viewportSize;
-                if (this.ScrollOwner != null)
+                Viewport = viewportSize;
+                if (ScrollOwner != null)
                 {
-                    this.ScrollOwner.InvalidateScrollInfo();
+                    ScrollOwner.InvalidateScrollInfo();
                 }
             }
 
             // Prevent from getting off to the right
-            if (this.HorizontalOffset + this.Viewport.Width + this.RightOverflowMargin > this.ExtentWidth)
+            if (HorizontalOffset + Viewport.Width + RightOverflowMargin > ExtentWidth)
             {
-                SetHorizontalOffset(HorizontalOffset + this.Viewport.Width + this.RightOverflowMargin);
+                SetHorizontalOffset(HorizontalOffset + Viewport.Width + RightOverflowMargin);
             }
 
             // Notify UI-subscribers
@@ -157,15 +157,13 @@ namespace Apollo.UI.Wpf.Utilities
         /// <returns>The left edge position.</returns>
         private double GetLeftEdge(UIElement child)
         {
-            double width = 0;
             double widthTotal = 0;
 
             // Loop through all child controls, summing up their required width
-            foreach (UIElement uie in this.InternalChildren)
+            foreach (UIElement uie in InternalChildren)
             {
                 // The width of the current child control
-                width = uie.DesiredSize.Width;
-
+                var width = uie.DesiredSize.Width;
                 if (child != null && child == uie)
                 {
                     // The current child control is the one in question, so disregard its width
@@ -193,7 +191,7 @@ namespace Apollo.UI.Wpf.Utilities
         /// </returns>
         public bool IsPartlyVisible(UIElement child)
         {
-            Rect rctIntersect = GetIntersectionRectangle(child);
+            var rctIntersect = GetIntersectionRectangle(child);
             return !(rctIntersect == Rect.Empty);
         }
 
@@ -204,7 +202,7 @@ namespace Apollo.UI.Wpf.Utilities
         /// </summary>
         /// <param name="child">The child control to be tested.</param>
         /// <returns>
-        /// <para>A number between 0 (the control is completely invisible resp. outside of
+        /// <para>A number between 0 (the control is completely invisible respectively outside of
         /// the Viewport) and 1 (the control is completely visible).</para>
         /// <para>All values between 0 and 1 indicate the part that is visible
         /// (i.e. 0.4 would mean that 40% of the control is visible, the remaining
@@ -212,10 +210,10 @@ namespace Apollo.UI.Wpf.Utilities
         /// </returns>
         public double PartlyVisiblePortionOverflowToRight(UIElement child)
         {
-            Rect rctIntersect = GetIntersectionRectangle(child);
+            var rctIntersect = GetIntersectionRectangle(child);
             double dblVisiblePortion = 1;
             if (!(rctIntersect == Rect.Empty)
-                && this.CanScrollRight
+                && CanScrollRight
                 && rctIntersect.Width < child.DesiredSize.Width
                 && rctIntersect.X > 0)
             {
@@ -232,7 +230,7 @@ namespace Apollo.UI.Wpf.Utilities
         /// </summary>
         /// <param name="child">The child control to be tested.</param>
         /// <returns>
-        /// <para>A number between 0 (the control is completely invisible resp. outside of
+        /// <para>A number between 0 (the control is completely invisible respectively outside of
         /// the Viewport) and 1 (the control is completely visible).</para>
         /// <para>All values between 0 and 1 indicate the part that is visible
         /// (i.e. 0.4 would mean that 40% of the control is visible, the remaining
@@ -240,10 +238,10 @@ namespace Apollo.UI.Wpf.Utilities
         /// </returns>
         public double PartlyVisiblePortionOverflowToLeft(UIElement child)
         {
-            Rect rctIntersect = GetIntersectionRectangle(child);
+            var rctIntersect = GetIntersectionRectangle(child);
             double dblVisiblePortion = 1;
             if (!(rctIntersect == Rect.Empty)
-                && this.CanScrollLeft
+                && CanScrollLeft
                 && rctIntersect.Width < child.DesiredSize.Width
                 && rctIntersect.X == 0)
             {
@@ -259,7 +257,7 @@ namespace Apollo.UI.Wpf.Utilities
         /// <returns>The rectangle.</returns>
         private Rect GetScrollViewerRectangle()
         {
-            return new Rect(new Point(0, 0), this.ScrollOwner.RenderSize);
+            return new Rect(new Point(0, 0), ScrollOwner.RenderSize);
         }
 
         /// <summary>
@@ -270,22 +268,22 @@ namespace Apollo.UI.Wpf.Utilities
         private Rect GetChildRectangle(UIElement child)
         {
             // Retrieve the position of the requested child inside the ScrollViewer control
-            GeneralTransform childTransform = child.TransformToAncestor(this.ScrollOwner);
+            var childTransform = child.TransformToAncestor(ScrollOwner);
             return childTransform.TransformBounds(new Rect(new Point(0, 0), child.RenderSize));
         }
 
         /// <summary>
         /// Returns a Rectangle that contains the intersection between the ScrollViewer's
         /// and the passed child control's boundaries, that is, the portion of the child control
-        /// which is currently visibile within the ScrollViewer's Viewport.
+        /// which is currently visible within the ScrollViewer's Viewport.
         /// </summary>
         /// <param name="child">The child for which to retrieve Rectangle.</param>
         /// <returns>The child rectangle.</returns>
         private Rect GetIntersectionRectangle(UIElement child)
         {
             // Retrieve the ScrollViewer's rectangle
-            Rect scrollViewerRectangle = GetScrollViewerRectangle();
-            Rect childRect = GetChildRectangle(child);
+            var scrollViewerRectangle = GetScrollViewerRectangle();
+            var childRect = GetChildRectangle(child);
 
             // Return the area/rectangle in which the requested child and the ScrollViewer control's Viewport intersect.
             return Rect.Intersect(scrollViewerRectangle, childRect);
@@ -327,15 +325,14 @@ namespace Apollo.UI.Wpf.Utilities
             }
 
             // Retrieve the ScrollViewer's rectangle
-            Rect scrollViewerRectangle = GetScrollViewerRectangle();
+            var scrollViewerRectangle = GetScrollViewerRectangle();
             if (scrollViewerRectangle == Rect.Empty)
             {
                 return;
             }
 
             // Retrieve the child control's rectangle
-            Rect childRect = GetChildRectangle(child);
-
+            var childRect = GetChildRectangle(child);
             if (scrollViewerRectangle.Contains(childRect))
             {
                 // This child is completely visible, so dump the OpacityMask.
@@ -343,8 +340,8 @@ namespace Apollo.UI.Wpf.Utilities
             }
             else
             {
-                double partlyVisiblePortionOverflowToLeft = PartlyVisiblePortionOverflowToLeft(child);
-                double partlyVisiblePortionOverflowToRight = PartlyVisiblePortionOverflowToRight(child);
+                var partlyVisiblePortionOverflowToLeft = PartlyVisiblePortionOverflowToLeft(child);
+                var partlyVisiblePortionOverflowToRight = PartlyVisiblePortionOverflowToRight(child);
 
                 if (partlyVisiblePortionOverflowToLeft < 1 && partlyVisiblePortionOverflowToRight < 1)
                 {
@@ -388,7 +385,7 @@ namespace Apollo.UI.Wpf.Utilities
         protected override Size MeasureOverride(Size availableSize)
         {
             // The default size will not reflect any width (i.e., no children) and always the default height.
-            Size resultSize = new Size(0, availableSize.Height);
+            var resultSize = new Size(0, availableSize.Height);
 
             // Loop through all child controls ...
             foreach (UIElement uieChild in this.InternalChildren)
@@ -402,7 +399,7 @@ namespace Apollo.UI.Wpf.Utilities
 
             UpdateMembers(resultSize, availableSize);
 
-            double dblNewWidth = double.IsPositiveInfinity(availableSize.Width)
+            var dblNewWidth = double.IsPositiveInfinity(availableSize.Width)
                 ? resultSize.Width
                 : availableSize.Width;
 
@@ -411,21 +408,21 @@ namespace Apollo.UI.Wpf.Utilities
         }
 
         /// <summary>
-        /// This is the 2nd pass of the layout process, where child controls are
+        /// This is the second pass of the layout process, where child controls are
         /// being arranged within the panel.
         /// </summary>
         /// <param name="finalSize">The Viewport's rectangle, as obtained after the 1st pass (MeasureOverride).</param>
         /// <returns>The Viewport's final size.</returns>
         protected override Size ArrangeOverride(Size finalSize)
         {
-            if (this.InternalChildren == null || this.InternalChildren.Count < 1)
+            if (InternalChildren == null || InternalChildren.Count < 1)
             {
                 return finalSize;
             }
 
-            double dblWidth = 0;
-            double dblWidthTotal = 0;
-            foreach (UIElement uieChild in this.InternalChildren)
+            var dblWidth = 0.0;
+            var dblWidthTotal = 0.0;
+            foreach (UIElement uieChild in InternalChildren)
             {
                 dblWidth = uieChild.DesiredSize.Width;
                 uieChild.Arrange(new Rect(dblWidthTotal, 0, dblWidth, uieChild.DesiredSize.Height));
@@ -501,7 +498,7 @@ namespace Apollo.UI.Wpf.Utilities
         {
             get
             {
-                return this.Extent.Height;
+                return Extent.Height;
             }
         }
 
@@ -513,7 +510,7 @@ namespace Apollo.UI.Wpf.Utilities
         {
             get
             {
-                return this.Extent.Width;
+                return Extent.Width;
             }
         }
 
@@ -547,7 +544,7 @@ namespace Apollo.UI.Wpf.Utilities
         /// </summary>
         public void LineLeft()
         {
-            SetHorizontalOffset(this.HorizontalOffset - this.LineScrollPixelCount);
+            SetHorizontalOffset(HorizontalOffset - LineScrollPixelCount);
         }
 
         /// <summary>
@@ -555,7 +552,7 @@ namespace Apollo.UI.Wpf.Utilities
         /// </summary>
         public void LineRight()
         {
-            SetHorizontalOffset(this.HorizontalOffset + this.LineScrollPixelCount);
+            SetHorizontalOffset(HorizontalOffset + LineScrollPixelCount);
         }
 
         /// <summary>
@@ -581,14 +578,14 @@ namespace Apollo.UI.Wpf.Utilities
                 return Rect.Empty;
             }
 
-            double dblOffsetX = 0;
+            double offset = 0;
             UIElement uieControlToMakeVisible = null;
-            for (int i = 0; i < this.InternalChildren.Count; i++)
+            for (int i = 0; i < InternalChildren.Count; i++)
             {
-                if ((Visual)this.InternalChildren[i] == visual)
+                if (InternalChildren[i] == visual)
                 {
-                    uieControlToMakeVisible = this.InternalChildren[i];
-                    dblOffsetX = GetLeftEdge(this.InternalChildren[i]);
+                    uieControlToMakeVisible = InternalChildren[i];
+                    offset = GetLeftEdge(InternalChildren[i]);
                     break;
                 }
             }
@@ -596,27 +593,27 @@ namespace Apollo.UI.Wpf.Utilities
             // Set the offset only if the desired element is not already completely visible.
             if (uieControlToMakeVisible != null)
             {
-                if (uieControlToMakeVisible == this.InternalChildren[0])
+                if (uieControlToMakeVisible == InternalChildren[0])
                 {
                     // If the first child has been selected, go to the very beginning of the scrollable area
-                    dblOffsetX = 0;
+                    offset = 0;
                 }
-                else if (uieControlToMakeVisible == this.InternalChildren[this.InternalChildren.Count - 1])
+                else if (uieControlToMakeVisible == InternalChildren[InternalChildren.Count - 1])
                 {
                     // If the last child has been selected, go to the very end of the scrollable area
-                    dblOffsetX = this.ExtentWidth - this.Viewport.Width;
+                    offset = ExtentWidth - Viewport.Width;
                 }
                 else
                 {
-                    dblOffsetX = CalculateNewScrollOffset(
-                             this.HorizontalOffset,
-                             this.HorizontalOffset + this.Viewport.Width,
-                             dblOffsetX,
-                             dblOffsetX + uieControlToMakeVisible.DesiredSize.Width);
+                    offset = CalculateNewScrollOffset(
+                             HorizontalOffset,
+                             HorizontalOffset + Viewport.Width,
+                             offset,
+                             offset + uieControlToMakeVisible.DesiredSize.Width);
                 }
 
-                SetHorizontalOffset(dblOffsetX);
-                rectangle = new Rect(this.HorizontalOffset, 0, uieControlToMakeVisible.DesiredSize.Width, this.Viewport.Height);
+                SetHorizontalOffset(offset);
+                rectangle = new Rect(HorizontalOffset, 0, uieControlToMakeVisible.DesiredSize.Width, Viewport.Height);
             }
 
             return rectangle;
@@ -701,11 +698,11 @@ namespace Apollo.UI.Wpf.Utilities
                 m_OwningScrollViewer = value;
                 if (m_OwningScrollViewer != null)
                 {
-                    this.ScrollOwner.Loaded += new RoutedEventHandler(ScrollOwnerLoaded);
+                    ScrollOwner.Loaded += ScrollOwnerLoaded;
                 }
                 else
                 {
-                    this.ScrollOwner.Loaded -= new RoutedEventHandler(ScrollOwnerLoaded);
+                    ScrollOwner.Loaded -= ScrollOwnerLoaded;
                 }
             }
         }
@@ -720,11 +717,11 @@ namespace Apollo.UI.Wpf.Utilities
             RemoveOpacityMasks();
 
             // Assure that the horizontal offset always contains a valid value
-            this.HorizontalOffset = Math.Max(0, Math.Min(this.ExtentWidth - this.Viewport.Width, Math.Max(0, offset)));
+            HorizontalOffset = Math.Max(0, Math.Min(ExtentWidth - Viewport.Width, Math.Max(0, offset)));
 
-            if (this.ScrollOwner != null)
+            if (ScrollOwner != null)
             {
-                this.ScrollOwner.InvalidateScrollInfo();
+                ScrollOwner.InvalidateScrollInfo();
             }
 
             // If you don't want the animation, you would replace all the code further below (up to but not including)
@@ -735,8 +732,8 @@ namespace Apollo.UI.Wpf.Utilities
             DoubleAnimation daScrollAnimation =
                new DoubleAnimation(
                      m_ScrollTransform.X,
-                     (-this.HorizontalOffset),
-                     new Duration(this.AnimationTimeSpan),
+                     -HorizontalOffset,
+                     new Duration(AnimationTimeSpan),
                      FillBehavior.HoldEnd);
 
             // Note that, depending on distance between the original and the target scroll-position and
@@ -748,7 +745,7 @@ namespace Apollo.UI.Wpf.Utilities
             // The childrens' OpacityMask can only be set reliably after the scroll-animation
             // has finished its work, so attach to the animation's Completed event where the
             // masks will be re-created.
-            daScrollAnimation.Completed += new EventHandler(ScrollAnimationCompleted);
+            daScrollAnimation.Completed += ScrollAnimationCompleted;
 
             m_ScrollTransform.BeginAnimation(
                   TranslateTransform.XProperty,
@@ -785,7 +782,7 @@ namespace Apollo.UI.Wpf.Utilities
         {
             get
             {
-                return this.Viewport.Height;
+                return Viewport.Height;
             }
         }
 
@@ -796,12 +793,12 @@ namespace Apollo.UI.Wpf.Utilities
         {
             get
             {
-                return this.Viewport.Width;
+                return Viewport.Width;
             }
         }
 
         /// <summary>
-        /// Gets the overall resp. internal/inner size of the control/panel.
+        /// Gets the overall internal/inner size of the control/panel.
         /// </summary>
         public Size Extent
         {
@@ -817,7 +814,7 @@ namespace Apollo.UI.Wpf.Utilities
         }
 
         /// <summary>
-        /// Gets the outer resp. visible size of the control/panel.
+        /// Gets the outer visible size of the control/panel.
         /// </summary>
         public Size Viewport
         {
@@ -839,7 +836,7 @@ namespace Apollo.UI.Wpf.Utilities
         {
             get
             {
-                return this.HorizontalOffset == 0;
+                return HorizontalOffset == 0;
             }
         }
 
@@ -850,7 +847,7 @@ namespace Apollo.UI.Wpf.Utilities
         {
             get
             {
-                return (this.HorizontalOffset + this.Viewport.Width) == this.ExtentWidth;
+                return (HorizontalOffset + Viewport.Width) == ExtentWidth;
             }
         }
 
@@ -862,7 +859,7 @@ namespace Apollo.UI.Wpf.Utilities
         {
             get
             {
-                return this.ExtentWidth > this.Viewport.Width;
+                return ExtentWidth > Viewport.Width;
             }
         }
 
@@ -873,7 +870,7 @@ namespace Apollo.UI.Wpf.Utilities
         {
             get
             {
-                return this.CanScroll && !this.IsOnFarLeft;
+                return CanScroll && !IsOnFarLeft;
             }
         }
 
@@ -884,7 +881,7 @@ namespace Apollo.UI.Wpf.Utilities
         {
             get
             {
-                return this.CanScroll && !this.IsOnFarRight;
+                return CanScroll && !IsOnFarRight;
             }
         }
 
@@ -918,7 +915,7 @@ namespace Apollo.UI.Wpf.Utilities
         }
 
         /// <summary>
-        /// A dependency property that allows setting the duration (default: 100ms) for the panel's transition-animation that is
+        /// A dependency property that allows setting the duration (default: 100 milliseconds) for the panel's transition-animation that is
         /// started when an item is selected (scroll from the previously selected item to the
         /// presently selected one).
         /// </summary>
@@ -930,7 +927,7 @@ namespace Apollo.UI.Wpf.Utilities
                 new FrameworkPropertyMetadata(new TimeSpan(0, 0, 0, 0, 100), FrameworkPropertyMetadataOptions.AffectsRender));
 
         /// <summary>
-        /// Gets or sets the duration (default: 100ms) for the panel's transition-animation that is
+        /// Gets or sets the duration (default: 100 milliseconds) for the panel's transition-animation that is
         /// started when an item is selected (scroll from the previously selected item to the
         /// presently selected one).
         /// </summary>
@@ -958,7 +955,7 @@ namespace Apollo.UI.Wpf.Utilities
                 new FrameworkPropertyMetadata(15, FrameworkPropertyMetadataOptions.AffectsRender));
 
         /// <summary>
-        /// Gets or sets the number of pixels to scroll by when the LineLeft or LineRight methods are called (default: 15px).
+        /// Gets or sets the number of pixels to scroll by when the LineLeft or LineRight methods are called (default: 15 pixels).
         /// </summary>
         public int LineScrollPixelCount
         {
@@ -994,7 +991,7 @@ namespace Apollo.UI.Wpf.Utilities
 
         /// <summary>
         /// Fired when the ScrollViewer is initially loaded/displayed. 
-        /// Required in order to initially setup the childrens' OpacityMasks.
+        /// Required in order to initially setup the children's OpacityMasks.
         /// </summary>
         /// <param name="sender">The sending object.</param>
         /// <param name="e">The event arguments.</param>
@@ -1005,8 +1002,8 @@ namespace Apollo.UI.Wpf.Utilities
 
         /// <summary>
         /// Fired when the scroll-animation has finished its work, that is, at the
-        /// point in time when the ScrollViewerer has reached its final scroll-position
-        /// resp. offset, which is when the childrens' OpacityMasks can be updated.
+        /// point in time when the ScrollViewer has reached its final scroll-position
+        /// respective offset, which is when the children's OpacityMasks can be updated.
         /// </summary>
         /// <param name="sender">The sending object.</param>
         /// <param name="e">The event arguments.</param>
@@ -1015,7 +1012,7 @@ namespace Apollo.UI.Wpf.Utilities
             UpdateOpacityMasks();
 
             // This is required in order to update the TabItems' FocusVisual
-            foreach (UIElement uieChild in this.InternalChildren)
+            foreach (UIElement uieChild in InternalChildren)
             {
                 uieChild.InvalidateArrange();
             }

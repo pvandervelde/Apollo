@@ -57,6 +57,7 @@
     <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
   </PropertyGroup>
   <Import Project="$(MsBuildExtensionsPath)\TemplateFile.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\TemplateFile.msbuild')" />
+  <Import Project="$(MsBuildExtensionsPath)\FindToolFromPackages.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\FindToolFromPackages.msbuild')" />
   <Import Project="$(MsBuildExtensionsPath)\GitCommitHash.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\GitCommitHash.msbuild')" />
   <Import Project="$(MsBuildExtensionsPath)\PublicKeySignatureFromAssembly.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\PublicKeySignatureFromAssembly.msbuild')" />
   <Import Project="$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild')" />
@@ -132,13 +133,17 @@
     <TemplateFile Template="$(FileTemplateAssemblyBuildInfo)" OutputFileName="$(FileGeneratedAssemblyBuildInfo)" Tokens="@(BuildInfoTokens)" />
   </Target>
   <PropertyGroup>
+    <FileMoqDll>moq.dll</FileMoqDll>
     <SnExe Condition="">$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.0A\bin\sn.exe</SnExe>
   </PropertyGroup>
   <Target Name="GenerateAssemblyInternalsVisbibleTo" DependsOnTargets="_PrepareBuildEnvironment;RestorePackages">
+    <FindToolFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileMoqDll)">
+      <Output TaskParameter="Path" PropertyName="PathMoqDll" />
+    </FindToolFromPackages>
     <PublicKeySignatureFromKeyFile SnExe="$(SnExe)" DirTemp="$(DirBuildTemp)" Input="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Output TaskParameter="PublicKey" PropertyName="PublicKeyLocal" />
     </PublicKeySignatureFromKeyFile>
-    <PublicKeySignatureFromAssembly SnExe="$(SnExe)" Input="$(DirPackages)\Moq\lib\NET40\moq.dll">
+    <PublicKeySignatureFromAssembly SnExe="$(SnExe)" Input="$(PathMoqDll)">
       <Output TaskParameter="PublicKey" PropertyName="PublicKeyMoq" />
     </PublicKeySignatureFromAssembly>
     <ItemGroup>
@@ -160,17 +165,20 @@
     <TemplateFile Template="$(FileTemplateInternalsVisibleTo)" OutputFileName="$(FileGeneratedInternalsVisibleTo)" Tokens="@(InternalsVisibleToTokens)" />
   </Target>
   <PropertyGroup>
-    <ExePathNTreva>$(DirPackages)\nTreva\ntreva.exe</ExePathNTreva>
+    <FileNTrevaExe>ntreva.exe</FileNTrevaExe>
     <BuildDependsOn>
             GenerateLicenses;
             $(BuildDependsOn);
         </BuildDependsOn>
   </PropertyGroup>
   <Target Name="GenerateLicenses" Condition="!Exists('$(FileGeneratedLicenses)')" DependsOnTargets="RestorePackages">
+    <FindToolFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileNTrevaExe)">
+      <Output TaskParameter="Path" PropertyName="PathNTrevaExe" />
+    </FindToolFromPackages>
     <ItemGroup>
       <SolutionPackages Include="$(SolutionDir)\**\packages.config" />
     </ItemGroup>
-    <Exec Command="&quot;$(ExePathNTreva)&quot; -p &quot;$(DirPackages)&quot; -o &quot;$(FileGeneratedLicenses)&quot; @(SolutionPackages-> '-c &quot;%(RootDir)%(Directory)\&quot;', ' ')" />
+    <Exec Command="&quot;$(PathNTrevaExe)&quot; -p &quot;$(DirPackages)&quot; -o &quot;$(FileGeneratedLicenses)&quot; @(SolutionPackages-> '-c &quot;%(RootDir)%(Directory)\&quot;', ' ')" />
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>

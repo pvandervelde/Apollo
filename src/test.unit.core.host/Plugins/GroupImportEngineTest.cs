@@ -18,8 +18,8 @@ using Apollo.Utilities;
 using Gallio.Framework;
 using MbUnit.Framework;
 using Moq;
+using Nuclei;
 using Test.Mocks;
-using Utilities;
 
 namespace Apollo.Core.Host.Plugins
 {
@@ -28,7 +28,6 @@ namespace Apollo.Core.Host.Plugins
                 Justification = "Unit tests do not need documentation.")]
     public sealed class GroupImportEngineTest
     {
-        private static List<TypeDefinition> s_Types;
         private static List<PartDefinition> s_Parts;
         private static List<GroupDefinition> s_Groups;
 
@@ -193,7 +192,6 @@ namespace Apollo.Core.Host.Plugins
                 var localPath = Assembly.GetExecutingAssembly().LocalFilePath();
                 scanner.Scan(new List<string> { localPath });
 
-                s_Types = types;
                 s_Parts = parts;
                 s_Groups = groups;
             }

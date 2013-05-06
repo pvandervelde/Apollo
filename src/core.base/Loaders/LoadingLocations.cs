@@ -31,7 +31,7 @@ namespace Apollo.Core.Base.Loaders
         DistributedOnPeerToPeer = 2,
 
         /// <summary>
-        /// The datase should be loaded onto a remote machine which is 
+        /// The dataset should be loaded onto a remote machine which is 
         /// part of a cluster.
         /// </summary>
         /// <remarks>

@@ -69,7 +69,7 @@ namespace Apollo.UI.Wpf
         }
 
         /// <summary>
-        /// Occurs when  the regrion is shown.
+        /// Occurs when  the region is shown.
         /// </summary>
         public event EventHandler OnShown;
 

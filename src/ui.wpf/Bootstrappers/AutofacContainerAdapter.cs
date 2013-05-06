@@ -294,7 +294,7 @@ namespace Apollo.UI.Wpf.Bootstrappers
         }
 
         /// <summary>
-        /// Explictily register concrete classes resolved by Prism components.
+        /// Explicitly register concrete classes resolved by Prism components.
         /// </summary>
         /// <remarks>
         /// These concrete type registrations were not in the original bootstrapper

@@ -217,14 +217,12 @@ namespace Apollo.Core.Dataset.Scheduling
                 "a", 
                 "b");
 
-            ISchedule storedSchedule = null;
             var executor = new Mock<IExecuteSchedules>();
 
             int index = 0;
             Func<ISchedule, ScheduleId, ScheduleExecutionInfo, IExecuteSchedules> builder =
                 (s, id, e) =>
                 {
-                    storedSchedule = s;
                     index++;
                     return executor.Object;
                 };

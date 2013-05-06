@@ -7,7 +7,7 @@
 using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
 using Moq;
-using Utilities.Progress;
+using Nuclei.Progress;
 
 namespace Apollo.Core.Host
 {

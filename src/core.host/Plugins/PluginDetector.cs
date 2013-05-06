@@ -8,11 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using Apollo.Core.Host.Properties;
-using Utilities.Diagnostics;
-using Utilities.Diagnostics.Logging;
-using Utilities.FileSystem;
+using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Logging;
 
 namespace Apollo.Core.Host.Plugins
 {
@@ -35,7 +35,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// The abstraction layer for the file system.
         /// </summary>
-        private readonly IVirtualizeFileSystems m_FileSystem;
+        private readonly IFileSystem m_FileSystem;
 
         /// <summary>
         /// The objects that provides the diagnostics methods for the application.
@@ -64,7 +64,7 @@ namespace Apollo.Core.Host.Plugins
         public PluginDetector(
             IPluginRepository repository,
             Func<IPluginRepository, IAssemblyScanner> scannerBuilder,
-            IVirtualizeFileSystems fileSystem,
+            IFileSystem fileSystem,
             SystemDiagnostics systemDiagnostics)
         {
             {
@@ -98,6 +98,7 @@ namespace Apollo.Core.Host.Plugins
 
             m_Diagnostics.Log(
                 LevelToLog.Info,
+                HostConstants.LogPrefix,
                 string.Format(
                     CultureInfo.InvariantCulture,
                     Resources.Plugins_LogMessage_Detector_FileScanStarted_WithDirectory,
@@ -106,7 +107,7 @@ namespace Apollo.Core.Host.Plugins
             IEnumerable<string> files = Enumerable.Empty<string>();
             try
             {
-                files = m_FileSystem.GetFilesInDirectory(directory, "*.dll", true);
+                files = m_FileSystem.Directory.GetFiles(directory, "*.dll", SearchOption.AllDirectories);
             }
             catch (UnauthorizedAccessException e)
             {
@@ -114,6 +115,7 @@ namespace Apollo.Core.Host.Plugins
                 // so we just exit to prevent any issues from occuring.
                 m_Diagnostics.Log(
                     LevelToLog.Error,
+                    HostConstants.LogPrefix,
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Resources.Plugins_LogMessage_Detector_FileScanFailed_WithDirectoryAndException,
@@ -128,6 +130,7 @@ namespace Apollo.Core.Host.Plugins
                 // so we just exit to prevent any issues from occuring.
                 m_Diagnostics.Log(
                     LevelToLog.Error,
+                    HostConstants.LogPrefix,
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Resources.Plugins_LogMessage_Detector_FileScanFailed_WithDirectoryAndException,
@@ -141,19 +144,20 @@ namespace Apollo.Core.Host.Plugins
 
             var changedKnownFiles = knownFiles
                 .Where(p => files.Exists(f => string.Equals(p.Path, f, StringComparison.InvariantCultureIgnoreCase)))
-                .Where(p => m_FileSystem.FileLastWriteTimeUtc(p.Path) > p.LastWriteTimeUtc)
+                .Where(p => m_FileSystem.File.GetLastWriteTimeUtc(p.Path) > p.LastWriteTimeUtc)
                 .Select(p => p.Path);
 
             var changedFilePaths = new HashSet<string>(files);
             changedFilePaths.SymmetricExceptWith(knownFiles.Select(p => p.Path));
 
-            var newFiles = changedFilePaths.Where(file => m_FileSystem.DoesFileExist(file));
+            var newFiles = changedFilePaths.Where(file => m_FileSystem.File.Exists(file));
             
             RemoveDeletedPlugins(changedFilePaths);
             StorePlugins(changedKnownFiles.Concat(newFiles));
 
             m_Diagnostics.Log(
                 LevelToLog.Info,
+                HostConstants.LogPrefix,
                 string.Format(
                     CultureInfo.InvariantCulture,
                     Resources.Plugins_LogMessage_Detector_FileScanCompleted,
@@ -162,7 +166,7 @@ namespace Apollo.Core.Host.Plugins
 
         private void RemoveDeletedPlugins(IEnumerable<string> changedFilePaths)
         {
-            var deletedFiles = changedFilePaths.Where(file => !m_FileSystem.DoesFileExist(file));
+            var deletedFiles = changedFilePaths.Where(file => !m_FileSystem.File.Exists(file));
             m_Repository.RemovePlugins(deletedFiles);
         }
 

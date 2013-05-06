@@ -4,8 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
-using Utilities.Communication;
+using Nuclei.Communication;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -27,11 +28,11 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// Loads the dataset into an external application and returns when the dataset is completely loaded.
         /// </summary>
-        /// <param name="ownerConnection">
-        ///     The channel connection information for the owner.
-        /// </param>
+        /// <param name="endpointId">The endpoint ID for the owner.</param>
+        /// <param name="channelType">The type of channel on which the owner can be contacted.</param>
+        /// <param name="address">The address on which the owner can be contacted.</param>
         /// <param name="dataset">The ID of the dataset that should be loaded.</param>
         /// <returns>The connection information for the newly created application.</returns>
-        Task<EndpointId> Load(ChannelConnectionInformation ownerConnection, DatasetId dataset);
+        Task<EndpointId> Load(EndpointId endpointId, ChannelType channelType, Uri address, DatasetId dataset);
     }
 }

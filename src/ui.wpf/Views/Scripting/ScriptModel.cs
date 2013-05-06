@@ -13,7 +13,7 @@ using Apollo.UI.Wpf.Properties;
 namespace Apollo.UI.Wpf.Views.Scripting
 {
     /// <summary>
-    /// Defines the viewmodel for a script.
+    /// Defines the view model for a script.
     /// </summary>
     public sealed class ScriptModel : Model
     {

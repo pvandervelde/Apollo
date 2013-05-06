@@ -77,7 +77,7 @@ namespace Apollo.Core.Base.Plugins
         /// Creates a new instance of the <see cref="AssemblyDefinition"/> class based on the given <see cref="Assembly"/>.
         /// </summary>
         /// <param name="assembly">The assembly for which a serialized definition needs to be created.</param>
-        /// <returns>The serialized definition for the given assemly.</returns>
+        /// <returns>The serialized definition for the given assembly.</returns>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="assembly"/> is <see langword="null" />.
         /// </exception>

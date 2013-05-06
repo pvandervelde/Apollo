@@ -7,7 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
-using Utilities.Communication;
+using Nuclei.Communication;
 
 namespace Apollo.Core.Base.Loaders
 {

@@ -9,8 +9,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Utilities.Diagnostics;
-using Utilities.Diagnostics.Profiling;
+using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Profiling;
 
 namespace Apollo.UI.Wpf.Views.Feedback
 {
@@ -50,7 +50,7 @@ namespace Apollo.UI.Wpf.Views.Feedback
         /// Initializes a new instance of the <see cref="FeedbackIconView"/> class.
         /// </summary>
         /// <remarks>
-        /// Leaving this constructor seperate so that the Visual Studio XAML editor
+        /// Leaving this constructor separate so that the Visual Studio XAML editor
         /// can reach it. This may or may not be necessary. If it's not necessary then we
         /// should remove this constructor.
         /// </remarks>

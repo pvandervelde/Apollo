@@ -8,7 +8,7 @@ using System;
 using System.Globalization;
 using Apollo.Core.Extensions.Properties;
 using Apollo.Utilities;
-using Utilities;
+using Nuclei;
 
 namespace Apollo.Core.Extensions.Scheduling
 {

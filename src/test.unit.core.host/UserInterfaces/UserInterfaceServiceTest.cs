@@ -17,8 +17,8 @@ using Apollo.Utilities.History;
 using Autofac.Core;
 using MbUnit.Framework;
 using Moq;
+using Nuclei.Diagnostics;
 using QuickGraph;
-using Utilities.Diagnostics;
 
 namespace Apollo.Core.Host.UserInterfaces
 {

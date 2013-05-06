@@ -8,7 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Lokad;
-using Utilities;
+using Nuclei;
 
 namespace Apollo.Utilities
 {
@@ -101,6 +101,23 @@ namespace Apollo.Utilities
             var companyDirectory = Path.Combine(appDataDir, m_Constants.CompanyName);
 
             return companyDirectory;
+        }
+
+        /// <summary>
+        /// Returns the path for the directory where the global
+        /// settings for the product are written to.
+        /// </summary>
+        /// <returns>
+        /// The full path for the directory where the global settings
+        /// for the product are written to.
+        /// </returns>
+        public string ProductSettingsCommonPath()
+        {
+            var companyDirectory = CompanyCommonPath();
+            var productDirectory = Path.Combine(companyDirectory, m_Constants.ApplicationName);
+            var versionDirectory = Path.Combine(productDirectory, m_Constants.ApplicationCompatibilityVersion.ToString(2));
+
+            return versionDirectory;
         }
 
         /// <summary>

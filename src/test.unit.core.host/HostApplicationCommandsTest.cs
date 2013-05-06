@@ -7,13 +7,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO.Abstractions;
 using System.Reflection;
 using MbUnit.Framework;
 using Moq;
-using Utilities;
-using Utilities.Communication;
-using Utilities.Configuration;
-using Utilities.FileSystem;
+using Nuclei;
+using Nuclei.Communication;
+using Nuclei.Configuration;
+using Test.Mocks;
 
 namespace Apollo.Core.Host
 {
@@ -25,7 +26,7 @@ namespace Apollo.Core.Host
         [Test]
         public void PreparePluginContainerForTransferWithoutConfiguration()
         {
-            var fileSystem = new Mock<IVirtualizeFileSystems>();
+            var fileSystem = new Mock<IFileSystem>();
             var uploads = new Mock<IStoreUploads>();
             var configuration = new Mock<IConfiguration>();
 
@@ -38,7 +39,7 @@ namespace Apollo.Core.Host
         [Test]
         public void PreparePluginContainerForTransferWithUknownName()
         {
-            var fileSystem = new Mock<IVirtualizeFileSystems>();
+            var fileSystem = new Mock<IFileSystem>();
             var uploads = new Mock<IStoreUploads>();
             var configuration = new Mock<IConfiguration>();
             {
@@ -63,10 +64,11 @@ namespace Apollo.Core.Host
                     typeof(HostApplicationCommands).Assembly.LocalFilePath(),
                     Assembly.GetExecutingAssembly().LocalFilePath()
                 };
-            var fileSystem = new Mock<IVirtualizeFileSystems>();
+            var mockDirectory = new MockDirectory(files);
+            var fileSystem = new Mock<IFileSystem>();
             {
-                fileSystem.Setup(f => f.GetFilesInDirectory(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
-                    .Returns(() => files);
+                fileSystem.Setup(f => f.Directory)
+                    .Returns(() => mockDirectory);
             }
 
             var uploads = new Mock<IStoreUploads>();
@@ -99,32 +101,23 @@ namespace Apollo.Core.Host
         [Test]
         public void PreparePluginContainerForTransferWithMultipleDirectories()
         {
-            var index = -1;
-            var files = new List<List<string>>
+            var files = new List<string>
                 {
-                    new List<string> { typeof(string).Assembly.LocalFilePath() },
-                    new List<string> { typeof(HostApplicationCommands).Assembly.LocalFilePath() },
-                    new List<string> { Assembly.GetExecutingAssembly().LocalFilePath() }
+                    typeof(string).Assembly.LocalFilePath(),
+                    typeof(HostApplicationCommands).Assembly.LocalFilePath(),
+                    Assembly.GetExecutingAssembly().LocalFilePath()
                 };
-            var fileSystem = new Mock<IVirtualizeFileSystems>();
+            var mockDirectory = new MockDirectory(files);
+            var fileSystem = new Mock<IFileSystem>();
             {
-                fileSystem.Setup(f => f.GetFilesInDirectory(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
-                    .Returns<string, string, bool>(
-                        (path, filter, flag) => 
-                        {
-                            index++;
-                            return files[index];
-                        });
+                fileSystem.Setup(f => f.Directory)
+                    .Returns(() => mockDirectory);
             }
 
             var uploads = new Mock<IStoreUploads>();
             {
                 uploads.Setup(u => u.Register(It.IsAny<string>()))
-                    .Callback<string>(
-                        f =>
-                        {
-                            Assert.AreEqual(files[1][0], f);
-                        })
+                    .Callback<string>(f => Assert.AreEqual(files[1], f))
                     .Returns(new UploadToken())
                     .Verifiable();
             }

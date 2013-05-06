@@ -6,13 +6,11 @@
 
 using System;
 using System.Globalization;
-using System.IO;
+using System.IO.Abstractions;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base;
-using Utilities.Communication;
-using Utilities.FileSystem;
+using Nuclei.Communication;
 
 namespace Apollo.Core.Dataset
 {
@@ -30,7 +28,7 @@ namespace Apollo.Core.Dataset
         /// <summary>
         /// The object that handles the communication with the remote host.
         /// </summary>
-        private readonly ICommunicationLayer m_Layer;
+        private readonly DownloadDataFromRemoteEndpoints m_Layer;
 
         /// <summary>
         /// The object that virtualizes the file system.
@@ -39,12 +37,7 @@ namespace Apollo.Core.Dataset
         /// Note that this object is here so that during testing we don't have to directly deal 
         /// with the file system.
         /// </remarks>
-        private readonly IVirtualizeFileSystems m_FileSystem;
-
-        /// <summary>
-        /// The scheduler that will be used to schedule tasks.
-        /// </summary>
-        private readonly TaskScheduler m_Scheduler;
+        private readonly IFileSystem m_FileSystem;
 
         /// <summary>
         /// The ID of the host endpoint.
@@ -58,7 +51,6 @@ namespace Apollo.Core.Dataset
         /// <param name="layer">The object that handles the communication with the remote host.</param>
         /// <param name="fileSystem">The object that virtualizes the file system.</param>
         /// <param name="hostId">The ID of the host endpoint.</param>
-        /// <param name="scheduler">The object that provides the scheduling for the tasks.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="hostCommands"/> is <see langword="null" />.
         /// </exception>
@@ -70,10 +62,9 @@ namespace Apollo.Core.Dataset
         /// </exception>
         public PluginLoadingAssemblyResolver(
             ISendCommandsToRemoteEndpoints hostCommands,
-            ICommunicationLayer layer,
-            IVirtualizeFileSystems fileSystem,
-            EndpointId hostId,
-            TaskScheduler scheduler = null)
+            DownloadDataFromRemoteEndpoints layer,
+            IFileSystem fileSystem,
+            EndpointId hostId)
         {
             {
                 Lokad.Enforce.Argument(() => hostCommands);
@@ -86,7 +77,6 @@ namespace Apollo.Core.Dataset
             m_Layer = layer;
             m_FileSystem = fileSystem;
             m_HostId = hostId;
-            m_Scheduler = scheduler ?? TaskScheduler.Default;
         }
 
         /// <summary>
@@ -102,7 +92,7 @@ namespace Apollo.Core.Dataset
         public Assembly LocatePluginAssembly(object sender, ResolveEventArgs args)
         {
             var name = new AssemblyName(args.Name);
-            
+
             var commands = m_HostCommands.CommandsFor<IHostApplicationCommands>(m_HostId);
             var prepareTask = commands.PreparePluginContainerForTransfer(name);
             try
@@ -114,22 +104,14 @@ namespace Apollo.Core.Dataset
                 return null;
             }
 
-            var file = m_FileSystem.GetTempFileName();
+            var file = m_FileSystem.Path.GetTempFileName();
             try
             {
                 var finalAssemblyPath = string.Format(CultureInfo.InvariantCulture, "{0}.dll", name.Name);
 
-                var source = new CancellationTokenSource();
-                var streamTask = m_Layer.DownloadData(m_HostId, prepareTask.Result, file, null, source.Token, m_Scheduler);
+                var streamTask = m_Layer(m_HostId, prepareTask.Result, file);
                 var copyTask = streamTask.ContinueWith(
-                    t =>
-                    {
-                        var stream = t.Result;
-                        using (var fileStream = m_FileSystem.Open(finalAssemblyPath, FileMode.Create, FileAccess.Write))
-                        {
-                            fileStream.CopyFrom(stream);
-                        }
-                    },
+                    t => m_FileSystem.File.Move(t.Result.FullName, finalAssemblyPath),
                     TaskContinuationOptions.ExecuteSynchronously);
 
                 try
@@ -146,9 +128,9 @@ namespace Apollo.Core.Dataset
             }
             finally
             {
-                if (File.Exists(file))
+                if (m_FileSystem.File.Exists(file))
                 {
-                    File.Delete(file);
+                    m_FileSystem.File.Delete(file);
                 }
             }
         }

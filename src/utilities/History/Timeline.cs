@@ -111,7 +111,7 @@ namespace Apollo.Utilities.History
         /// with the current marker.
         /// </summary>
         /// <returns>
-        /// A colleciton containing all the marker that are in the past.
+        /// A collection containing all the marker that are in the past.
         /// </returns>
         public IEnumerable<TimeMarker> MarkersInThePast()
         {
@@ -494,7 +494,7 @@ namespace Apollo.Utilities.History
         /// Rolls the state forward to the given point in time an provides the <see cref="TimelineTraveller"/>
         /// to the history objects that want it.
         /// </summary>
-        /// <param name="mark">The point in time to roll-foward to.</param>
+        /// <param name="mark">The point in time to roll-forward to.</param>
         /// <param name="traveller">The object that stores state that needs to survive the roll-forward.</param>
         public void RollForwardTo(TimeMarker mark, TimelineTraveller traveller = null)
         {
@@ -590,7 +590,7 @@ namespace Apollo.Utilities.History
         /// Rolls the state forward to the named point in time an provides the <see cref="TimelineTraveller"/>
         /// to the history objects that want it.
         /// </summary>
-        /// <param name="mark">The named point in time to roll-foward to.</param>
+        /// <param name="mark">The named point in time to roll-forward to.</param>
         /// <param name="traveller">The object that stores state that needs to survive the roll-forward.</param>
         public void RollForwardTo(string mark, TimelineTraveller traveller = null)
         {

@@ -10,7 +10,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
-using Utilities.Diagnostics;
+using Nuclei.Diagnostics;
 
 namespace Apollo.Core.Host.Plugins
 {

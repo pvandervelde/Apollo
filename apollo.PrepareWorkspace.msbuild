@@ -16,6 +16,7 @@
         <DirBuildDeploy>$(DirBuild)\deploy</DirBuildDeploy>
         <DirBuildLogs>$(DirBuild)\logs</DirBuildLogs>
         <DirBuildTemp>$(DirBuild)\temp</DirBuildTemp>
+        <DirSrc>$(DirWorkspace)\src</DirSrc>
         
         <!-- Version number -->
         <VersionMajor>0</VersionMajor>
@@ -35,7 +36,7 @@
     <Import Project="$(DirWorkspace)\version.xml"
             Condition="Exists('$(DirWorkspace)\version.xml')"/>
 
-    <Target Name="Run" DependsOnTargets="_CreateConsistencyFile;_RestorePackages">
+    <Target Name="Run" DependsOnTargets="_RestorePackages">
         <!-- Do nothing here -->
     </Target>
     

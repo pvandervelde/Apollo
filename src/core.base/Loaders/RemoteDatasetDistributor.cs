@@ -11,11 +11,11 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Utilities.Communication;
-using Utilities.Configuration;
-using Utilities.Diagnostics;
-using Utilities.Diagnostics.Profiling;
-using Utilities.Progress;
+using Nuclei.Communication;
+using Nuclei.Configuration;
+using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Profiling;
+using Nuclei.Progress;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -375,10 +375,8 @@ namespace Apollo.Core.Base.Loaders
 
                     // We shouldn't have to load the TCP channel at this point because that channel would have
                     // been loaded when the loaders broadcast their message indicating that they exist.
-                    var info = m_CommunicationLayer.LocalConnectionPoints()
-                        .First(c => c.ChannelType == ChannelType.TcpIp);
-
-                    var endpointTask = loaderCommands.Load(info, planToImplement.DistributionFor.Id);
+                    var info = m_CommunicationLayer.LocalConnectionFor(ChannelType.TcpIP);
+                    var endpointTask = loaderCommands.Load(info.Item1, ChannelType.TcpIP, info.Item2, planToImplement.DistributionFor.Id);
                     endpointTask.Wait();
 
                     var endpoint = endpointTask.Result;

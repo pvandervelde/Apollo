@@ -12,9 +12,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Loaders;
 using Lokad;
-using Utilities.Communication;
-using Utilities.Diagnostics;
-using Utilities.Diagnostics.Logging;
+using Nuclei.Communication;
+using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Logging;
 
 namespace Apollo.Core.Base
 {
@@ -179,6 +179,7 @@ namespace Apollo.Core.Base
                             {
                                 m_Diagnostics.Log(
                                     LevelToLog.Error,
+                                    BaseConstants.LogPrefix,
                                     string.Format(
                                         CultureInfo.InvariantCulture,
                                         "The begin edit dataset task threw an exception. Exception details: {0}",
@@ -205,6 +206,7 @@ namespace Apollo.Core.Base
                             {
                                 m_Diagnostics.Log(
                                     LevelToLog.Error,
+                                    BaseConstants.LogPrefix,
                                     string.Format(
                                         CultureInfo.InvariantCulture,
                                         "The begin edit dataset task threw an exception. Exception details: {0}",
@@ -319,6 +321,7 @@ namespace Apollo.Core.Base
                     {
                         m_Diagnostics.Log(
                             LevelToLog.Error,
+                            BaseConstants.LogPrefix,
                             string.Format(
                                 CultureInfo.InvariantCulture,
                                 "The close dataset task threw an exception. Exception details: {0}",

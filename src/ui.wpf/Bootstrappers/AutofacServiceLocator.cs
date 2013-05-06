@@ -15,7 +15,7 @@ using Microsoft.Practices.ServiceLocation;
 namespace Apollo.UI.Wpf.Bootstrappers
 {
     /// <summary>
-    /// An AutoFac based <see cref="IServiceLocator"/>.
+    /// An Autofac based <see cref="IServiceLocator"/>.
     /// </summary>
     /// <source>
     /// Original source obtained from: http://www.paulstovell.com/wpf-model-view-presenter
@@ -59,8 +59,9 @@ namespace Apollo.UI.Wpf.Bootstrappers
         /// </summary>
         /// <param name="serviceType">Type of object requested.</param>
         /// <returns>The requested service instance.</returns>
-        /// <exception cref="T:Microsoft.Practices.ServiceLocation.ActivationException">if there is an error resolving
-        /// the service instance.</exception>
+        /// <exception cref="T:Microsoft.Practices.ServiceLocation.ActivationException">
+        /// If there is an error resolving the service instance.
+        /// </exception>
         public object GetInstance(Type serviceType)
         {
             return m_AutofacContainer.Resolve(serviceType);
@@ -72,8 +73,9 @@ namespace Apollo.UI.Wpf.Bootstrappers
         /// <param name="serviceType">Type of object requested.</param>
         /// <param name="key">Name the object was registered with.</param>
         /// <returns>The requested service instance.</returns>
-        /// <exception cref="T:Microsoft.Practices.ServiceLocation.ActivationException">if there is an error resolving
-        /// the service instance.</exception>
+        /// <exception cref="T:Microsoft.Practices.ServiceLocation.ActivationException">
+        /// If there is an error resolving the service instance.
+        /// </exception>
         public object GetInstance(Type serviceType, string key)
         {
             return m_AutofacContainer.ResolveNamed(key, serviceType);
@@ -87,8 +89,9 @@ namespace Apollo.UI.Wpf.Bootstrappers
         /// <returns>
         /// A sequence of instances of the requested <paramref name="serviceType"/>.
         /// </returns>
-        /// <exception cref="T:Microsoft.Practices.ServiceLocation.ActivationException">if there is are errors resolving
-        /// the service instance.</exception>
+        /// <exception cref="T:Microsoft.Practices.ServiceLocation.ActivationException">
+        /// If there is are errors resolving the service instance.
+        /// </exception>
         public IEnumerable<object> GetAllInstances(Type serviceType)
         {
             var enumerable = (IEnumerable)m_AutofacContainer.Resolve(typeof(IEnumerable<>).MakeGenericType(serviceType));

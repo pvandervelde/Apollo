@@ -117,7 +117,7 @@ namespace Apollo.Core.Host.Scripting
         /// Executes the given script.
         /// </summary>
         /// <param name="scriptCode">The script code.</param>
-        /// <param name="token">A cancellation token that can be used to interupt the script.</param>
+        /// <param name="token">A cancellation token that can be used to interrupt the script.</param>
         public void Execute(string scriptCode, CancelScriptToken token)
         {
             CreateScriptScope(ScriptCancellationToken, token);

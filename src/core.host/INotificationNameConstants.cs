@@ -28,7 +28,7 @@ namespace Apollo.Core.Host
         /// <remarks>
         /// In order to indicate that the system is clear to shutdown an 
         /// <see cref="INotificationArguments"/> object is passed that allows
-        /// the registring party to indicate if shutdown is allowed.
+        /// the registering party to indicate if shutdown is allowed.
         /// </remarks>
         /// <value>The shutdown capability check.</value>
         NotificationName CanSystemShutdown

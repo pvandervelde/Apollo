@@ -107,7 +107,7 @@ namespace Apollo.UI.Wpf.Bootstrappers
         }
 
         /// <summary>
-        /// Log attempt to re-register type. Internal - for <see cref="IContainerAdapter"/> implementors.
+        /// Log attempt to re-register type. Internal - for <see cref="IContainerAdapter"/> implementers.
         /// </summary>
         /// <typeparam name="T">The type of the service that must be reregistered.</typeparam>
         /// <param name="logger">The logger.</param>
@@ -119,7 +119,7 @@ namespace Apollo.UI.Wpf.Bootstrappers
         }
 
         /// <summary>
-        /// Log attempt to re-register type. Internal - for <see cref="IContainerAdapter"/> implementors.
+        /// Log attempt to re-register type. Internal - for <see cref="IContainerAdapter"/> implementers.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="type">The type that was reregistered.</param>

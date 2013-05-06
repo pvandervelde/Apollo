@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Utilities.Communication;
+using Nuclei.Communication;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -58,7 +58,7 @@ namespace Apollo.Core.Base.Loaders
         }
 
         /// <summary>
-        /// Gets or sets the estimated percentage of the available diskspace that the
+        /// Gets or sets the estimated percentage of the available disk space that the
         /// dataset will take up.
         /// </summary>
         /// <remarks>

@@ -14,10 +14,10 @@ using System.Threading.Tasks.Schedulers;
 using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
-using Utilities.Communication;
-using Utilities.Configuration;
-using Utilities.Diagnostics;
-using Utilities.Progress;
+using Nuclei.Communication;
+using Nuclei.Configuration;
+using Nuclei.Diagnostics;
+using Nuclei.Progress;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -126,16 +126,14 @@ namespace Apollo.Core.Base.Loaders
                     .Returns(offlimitsMachines);
             }
 
-            var connectionInfo = new ChannelConnectionInformation(
-                EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                ChannelType.TcpIp,
-                new Uri("tcp://localhost/tcp"));
             var communicationLayer = new Mock<ICommunicationLayer>();
             {
-                communicationLayer.Setup(s => s.HasChannelFor(It.IsAny<ChannelType>()))
-                    .Returns(true);
-                communicationLayer.Setup(s => s.LocalConnectionPoints())
-                    .Returns(new[] { connectionInfo });
+                communicationLayer.Setup(s => s.LocalConnectionFor(It.Is<ChannelType>(c => c == ChannelType.TcpIP)))
+                    .Returns(
+                        new Tuple<EndpointId, Uri, Uri>(
+                            EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
+                            new Uri("net.tcp://localhost/tcp"),
+                            new Uri("net.tcp://localhost/tcp/data")));
             }
 
             var distributor = new RemoteDatasetDistributor(
@@ -163,14 +161,14 @@ namespace Apollo.Core.Base.Loaders
                 h => h.OnEndpointSignedIn += null,
                 new CommandSetAvailabilityEventArgs(
                     forbiddenMachineId,
-                    new Type[] { typeof(IDatasetLoaderCommands) }));
+                    new[] { typeof(IDatasetLoaderCommands) }));
 
             var legalMachineId = new EndpointId("myMachine:8080");
             commandHub.Raise(
                 h => h.OnEndpointSignedIn += null,
                 new CommandSetAvailabilityEventArgs(
                     legalMachineId,
-                    new Type[] { typeof(IDatasetLoaderCommands) }));
+                    new[] { typeof(IDatasetLoaderCommands) }));
 
             var request = new DatasetRequest
             {
@@ -180,12 +178,9 @@ namespace Apollo.Core.Base.Loaders
             };
             var plans = distributor.ProposeDistributionFor(request, new CancellationToken());
             Assert.AreElementsEqualIgnoringOrder(
-                new DistributionPlan[] { plan },
+                new[] { plan },
                 plans,
-                (x, y) =>
-                {
-                    return ReferenceEquals(x.Proposal, y.Proposal);
-                });
+                (x, y) => ReferenceEquals(x.Proposal, y.Proposal));
 
             loaderCommands.Verify(l => l.ProposeFor(It.IsAny<ExpectedDatasetLoad>()), Times.Once());
         }
@@ -218,7 +213,7 @@ namespace Apollo.Core.Base.Loaders
             var datasetEndpoint = new EndpointId("OtherMachine:5678");
             var loaderCommands = new Mock<IDatasetLoaderCommands>();
             {
-                loaderCommands.Setup(l => l.Load(It.IsAny<ChannelConnectionInformation>(), It.IsAny<DatasetId>()))
+                loaderCommands.Setup(l => l.Load(It.IsAny<EndpointId>(), It.IsAny<ChannelType>(), It.IsAny<Uri>(), It.IsAny<DatasetId>()))
                     .Returns(
                         Task.Factory.StartNew(
                             () => datasetEndpoint,
@@ -265,16 +260,14 @@ namespace Apollo.Core.Base.Loaders
                     .Returns(false);
             }
 
-            var connectionInfo = new ChannelConnectionInformation(
-                EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                ChannelType.TcpIp,
-                new Uri("tcp://localhost/tcp"));
             var communicationLayer = new Mock<ICommunicationLayer>();
             {
-                communicationLayer.Setup(s => s.HasChannelFor(It.IsAny<ChannelType>()))
-                    .Returns(true);
-                communicationLayer.Setup(s => s.LocalConnectionPoints())
-                    .Returns(new[] { connectionInfo });
+                communicationLayer.Setup(s => s.LocalConnectionFor(It.Is<ChannelType>(c => c == ChannelType.TcpIP)))
+                    .Returns(
+                        new Tuple<EndpointId, Uri, Uri>(
+                            EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
+                            new Uri("net.tcp://localhost/tcp"),
+                            new Uri("net.tcp://localhost/tcp/data")));
             }
 
             var distributor = new RemoteDatasetDistributor(
@@ -301,7 +294,7 @@ namespace Apollo.Core.Base.Loaders
                 h => h.OnEndpointSignedIn += null,
                 new CommandSetAvailabilityEventArgs(
                     loaderEndpoint,
-                    new Type[] { typeof(IDatasetLoaderCommands) }));
+                    new[] { typeof(IDatasetLoaderCommands) }));
 
             Action<int, IProgressMark, TimeSpan> progress = (p, m, t) => { };
             var result = distributor.ImplementPlan(plan, new CancellationToken(), progress);

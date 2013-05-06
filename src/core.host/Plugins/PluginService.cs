@@ -6,7 +6,7 @@
 
 using System;
 using System.Collections.Generic;
-using Utilities.Configuration;
+using Nuclei.Configuration;
 
 namespace Apollo.Core.Host.Plugins
 {

@@ -82,32 +82,32 @@
             </Component>
 
             <!-- Utilities.dll -->
-            <Component Id="C.Utilities.dll"
+            <Component Id="C.Nuclei.dll"
                        Guid="{852E1980-B41A-48BF-B36C-29D43AEDA26E}">
-                <File Id="File.Utilities.dll"
-                      Name="Utilities.dll"
+                <File Id="File.Nuclei.dll"
+                      Name="Nuclei.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Utilities.dll"
+                      Source="$(var.Apollo_BinFolder)\Nuclei.dll"
                       KeyPath="yes" />
             </Component>
             
             <!-- Utilities.Diagnostics.dll -->
-            <Component Id="C.Utilities.Diagnostics.dll"
+            <Component Id="C.Nuclei.Diagnostics.dll"
                        Guid="{09724582-A966-4275-991B-2961B8A9678E}">
-                <File Id="File.Utilities.Diagnostics.dll"
-                      Name="Utilities.Diagnostics.dll"
+                <File Id="File.Nuclei.Diagnostics.dll"
+                      Name="Nuclei.Diagnostics.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Utilities.Diagnostics.dll"
+                      Source="$(var.Apollo_BinFolder)\Nuclei.Diagnostics.dll"
                       KeyPath="yes" />
             </Component>
             
             <!-- Utilities.Communication.dll -->
-            <Component Id="C.Utilities.Communication.dll"
+            <Component Id="C.Nuclei.Communication.dll"
                        Guid="{50726AD8-D225-4B21-950E-13990B5FE583}">
-                <File Id="File.Utilities.Communication.dll"
-                      Name="Utilities.Communication.dll"
+                <File Id="File.Nuclei.Communication.dll"
+                      Name="Nuclei.Communication.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Utilities.Communication.dll"
+                      Source="$(var.Apollo_BinFolder)\Nuclei.Communication.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -161,9 +161,9 @@
             <ComponentRef Id="C.Castle.Core.dll" />
             <ComponentRef Id="C.Lokad.Shared.dll" />
             <ComponentRef Id="C.NLog.dll" />
-            <ComponentRef Id="C.Utilities.dll" />
-            <ComponentRef Id="C.Utilities.Diagnostics.dll" />
-            <ComponentRef Id="C.Utilities.Communication.dll" />
+            <ComponentRef Id="C.Nuclei.dll" />
+            <ComponentRef Id="C.Nuclei.Diagnostics.dll" />
+            <ComponentRef Id="C.Nuclei.Communication.dll" />
             <ComponentRef Id="C.NSarrac.Framework.dll" />
             <ComponentRef Id="C.QuickGraph.dll" />
             <ComponentRef Id="C.System.Reactive.dll" />

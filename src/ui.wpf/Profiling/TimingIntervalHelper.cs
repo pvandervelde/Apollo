@@ -6,8 +6,8 @@
 
 using System;
 using System.Diagnostics;
-using Utilities.Diagnostics;
-using Utilities.Diagnostics.Profiling;
+using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Profiling;
 
 namespace Apollo.UI.Wpf.Profiling
 {

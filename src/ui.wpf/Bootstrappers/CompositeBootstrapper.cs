@@ -22,7 +22,7 @@ namespace Apollo.UI.Wpf.Bootstrappers
     /// This is a version of the UnityBootstrapper that is generic for any IOC container.
     /// </summary>
     /// <remarks>
-    /// This class must be overriden to provide application specific configuration.
+    /// This class must be overridden to provide application specific configuration.
     /// <para>
     /// This is a cut-down version of the UnityBootstrapper from Prism.
     /// The Unity dependencies have been removed
@@ -192,7 +192,7 @@ namespace Apollo.UI.Wpf.Bootstrappers
         /// Registers an instance of type T in the container as a singleton.
         /// </summary>
         /// <typeparam name="T">The type of the instance which is being registered.</typeparam>
-        /// <param name="instance">The instance being registred.</param>
+        /// <param name="instance">The instance being registered.</param>
         /// <remarks>
         /// This method is provided to make it easier to register within the container.
         /// </remarks>
@@ -232,7 +232,7 @@ namespace Apollo.UI.Wpf.Bootstrappers
         /// behaviors that will be added to a region.
         /// </summary>
         /// <returns>
-        /// The <see cref="IRegionBehaviorFactory"/> that holds the newly registred behaviors.
+        /// The <see cref="IRegionBehaviorFactory"/> that holds the newly registered behaviors.
         /// </returns>
         protected virtual IRegionBehaviorFactory ConfigureDefaultRegionBehaviors()
         {

@@ -10,7 +10,7 @@ using Apollo.Core.Base;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Utilities;
 using Autofac;
-using Utilities.Diagnostics.Logging;
+using Nuclei.Diagnostics.Logging;
 
 namespace Apollo.Core.Host.Plugins
 {

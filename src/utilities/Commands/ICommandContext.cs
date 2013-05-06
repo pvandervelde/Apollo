@@ -10,7 +10,7 @@ namespace Apollo.Utilities.Commands
 {
     /// <summary>
     /// Defines the interface for objects that defines a 'context' for
-    /// <see cref="ICommand"/> invokations.
+    /// <see cref="ICommand"/> invocations.
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1040:AvoidEmptyInterfaces",
         Justification = "For now we don't need any methods on this interface, but we may do later.")]

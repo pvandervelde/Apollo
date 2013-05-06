@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using Apollo.Core.Host;
 using Lokad;
-using Utilities.Progress;
+using Nuclei.Progress;
 
 namespace Apollo.UI.Explorer
 {

@@ -16,7 +16,7 @@ namespace Apollo.Utilities.History
         /// Receives a <see cref="TimelineTraveller"/> which holds information created by the
         /// current object in a future state.
         /// </summary>
-        /// <param name="traveller">The traveller.</param>
+        /// <param name="traveller">The traveler.</param>
         void ReceiveTraveller(TimelineTraveller traveller);
     }
 }

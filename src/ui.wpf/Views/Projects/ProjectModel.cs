@@ -12,7 +12,7 @@ using Apollo.UI.Wpf.Properties;
 namespace Apollo.UI.Wpf.Views.Projects
 {
     /// <summary>
-    /// Defines the viewmodel for the project.
+    /// Defines the view model for the project.
     /// </summary>
     public sealed class ProjectModel : Model
     {

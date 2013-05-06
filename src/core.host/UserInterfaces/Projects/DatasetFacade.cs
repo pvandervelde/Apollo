@@ -15,7 +15,7 @@ using Apollo.Core.Base.Loaders;
 using Apollo.Core.Host.Projects;
 using Apollo.Utilities;
 using Lokad;
-using Utilities.Progress;
+using Nuclei.Progress;
 
 namespace Apollo.Core.Host.UserInterfaces.Projects
 {
@@ -313,7 +313,7 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         /// <param name="token">The token that is used to cancel the loading.</param>
         /// <remarks>
         /// Note that the <paramref name="preferredLocation"/> is
-        /// only a suggestion. The loader may deside to ignore the suggestion if there is a distribution
+        /// only a suggestion. The loader may decide to ignore the suggestion if there is a distribution
         /// plan that is better suited to the contents of the dataset.
         /// </remarks>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
@@ -409,7 +409,7 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         /// Adds a new child.
         /// </summary>
         /// <returns>
-        /// The newly created datset.
+        /// The newly created dataset.
         /// </returns>
         public DatasetFacade AddChild()
         {
@@ -421,7 +421,7 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         /// </summary>
         /// <param name="persistenceInformation">The persistence information that describes the dataset that should be copied.</param>
         /// <returns>
-        /// The newly created datset.
+        /// The newly created dataset.
         /// </returns>
         public DatasetFacade AddChild(IPersistenceInformation persistenceInformation)
         {

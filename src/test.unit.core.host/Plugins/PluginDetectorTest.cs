@@ -7,11 +7,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO.Abstractions;
 using System.Linq;
 using MbUnit.Framework;
 using Moq;
-using Utilities.Diagnostics;
-using Utilities.FileSystem;
+using Nuclei.Diagnostics;
+using Test.Mocks;
 
 namespace Apollo.Core.Host.Plugins
 {
@@ -52,14 +53,14 @@ namespace Apollo.Core.Host.Plugins
                             @"c:\temp\foobar.dll",
                             @"c:\temp\foobar2.dll"
                         };
-            var fileSystem = new Mock<IVirtualizeFileSystems>();
+            var mockFile = new MockFile(files.ToDictionary(f => f, f => string.Empty));
+            var mockDirectory = new MockDirectory(files);
+            var fileSystem = new Mock<IFileSystem>();
             {
-                fileSystem.Setup(f => f.DoesFileExist(It.IsAny<string>()))
-                    .Returns(true);
-                fileSystem.Setup(f => f.FileLastWriteTimeUtc(It.IsAny<string>()))
-                    .Returns(DateTimeOffset.Now.AddHours(-1));
-                fileSystem.Setup(f => f.GetFilesInDirectory(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
-                    .Returns(files);
+                fileSystem.Setup(f => f.File)
+                    .Returns(mockFile);
+                fileSystem.Setup(f => f.Directory)
+                    .Returns(mockDirectory);
             }
 
             var scanner = new MockScanner();
@@ -96,14 +97,14 @@ namespace Apollo.Core.Host.Plugins
                     .Returns(pluginFiles);
             }
 
-            var fileSystem = new Mock<IVirtualizeFileSystems>();
+            var mockFile = new MockFile(files.ToDictionary(f => f, f => string.Empty));
+            var mockDirectory = new MockDirectory(files);
+            var fileSystem = new Mock<IFileSystem>();
             {
-                fileSystem.Setup(f => f.DoesFileExist(It.IsAny<string>()))
-                    .Returns(true);
-                fileSystem.Setup(f => f.FileLastWriteTimeUtc(It.IsAny<string>()))
-                    .Returns(DateTimeOffset.Now.AddHours(-1));
-                fileSystem.Setup(f => f.GetFilesInDirectory(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
-                    .Returns(files);
+                fileSystem.Setup(f => f.File)
+                    .Returns(mockFile);
+                fileSystem.Setup(f => f.Directory)
+                    .Returns(mockDirectory);
             }
 
             var scanner = new MockScanner();
@@ -140,14 +141,14 @@ namespace Apollo.Core.Host.Plugins
                     .Returns(pluginFiles);
             }
 
-            var fileSystem = new Mock<IVirtualizeFileSystems>();
+            var mockFile = new MockFile(files.ToDictionary(f => f, f => string.Empty));
+            var mockDirectory = new MockDirectory(files);
+            var fileSystem = new Mock<IFileSystem>();
             {
-                fileSystem.Setup(f => f.DoesFileExist(It.IsAny<string>()))
-                    .Returns(true);
-                fileSystem.Setup(f => f.FileLastWriteTimeUtc(It.IsAny<string>()))
-                    .Returns(DateTimeOffset.Now.AddHours(-1));
-                fileSystem.Setup(f => f.GetFilesInDirectory(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
-                    .Returns(files);
+                fileSystem.Setup(f => f.File)
+                    .Returns(mockFile);
+                fileSystem.Setup(f => f.Directory)
+                    .Returns(mockDirectory);
             }
 
             var scanner = new MockScanner();
@@ -178,14 +179,14 @@ namespace Apollo.Core.Host.Plugins
                     .Returns(pluginFiles);
             }
 
-            var fileSystem = new Mock<IVirtualizeFileSystems>();
+            var mockFile = new MockFile(new Dictionary<string, string>());
+            var mockDirectory = new MockDirectory(new List<string>());
+            var fileSystem = new Mock<IFileSystem>();
             {
-                fileSystem.Setup(f => f.DoesFileExist(It.IsAny<string>()))
-                    .Returns(false);
-                fileSystem.Setup(f => f.FileLastWriteTimeUtc(It.IsAny<string>()))
-                    .Returns(DateTimeOffset.Now.AddHours(-1));
-                fileSystem.Setup(f => f.GetFilesInDirectory(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
-                    .Returns(new List<string>());
+                fileSystem.Setup(f => f.File)
+                    .Returns(mockFile);
+                fileSystem.Setup(f => f.Directory)
+                    .Returns(mockDirectory);
             }
 
             var scanner = new MockScanner();

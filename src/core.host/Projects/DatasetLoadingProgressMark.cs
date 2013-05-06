@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Utilities.Progress;
+using Nuclei.Progress;
 
 namespace Apollo.Core.Host.Projects
 {

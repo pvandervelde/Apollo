@@ -10,10 +10,10 @@ using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Shell;
+using Apollo.UI.Explorer.Nuclei.ExceptionHandling;
 using Autofac;
 using Autofac.Core;
-using Utilities.ExceptionHandling;
-using Utilities.Progress;
+using Nuclei.Progress;
 
 namespace Apollo.UI.Explorer
 {

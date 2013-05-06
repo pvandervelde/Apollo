@@ -6,11 +6,11 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO.Abstractions;
 using Apollo.Utilities;
 using Autofac;
-using Utilities.Configuration;
-using Utilities.Diagnostics;
-using Utilities.FileSystem;
+using Nuclei.Configuration;
+using Nuclei.Diagnostics;
 
 namespace Apollo.Core.Host.Plugins
 {
@@ -27,7 +27,7 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="builder">The builder through which components can be registered.</param>
         /// <remarks>
         /// Note that the ContainerBuilder parameter is not the same one
-        /// that the module is being registered by (i.e. it can have its own defaults.)
+        /// that the module is being registered by (i.e. it can have its own defaults).
         /// </remarks>
         protected override void Load(ContainerBuilder builder)
         {
@@ -47,7 +47,7 @@ namespace Apollo.Core.Host.Plugins
             builder.Register(c => new PluginDetector(
                     c.Resolve<IPluginRepository>(),
                     c.Resolve<Func<IPluginRepository, IAssemblyScanner>>(),
-                    c.Resolve<IVirtualizeFileSystems>(),
+                    c.Resolve<IFileSystem>(),
                     c.Resolve<SystemDiagnostics>()))
                 .As<PluginDetector>();
 

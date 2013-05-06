@@ -22,8 +22,8 @@ using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
-using Utilities;
-using Utilities.Diagnostics.Logging;
+using Nuclei;
+using Nuclei.Diagnostics.Logging;
 
 namespace Apollo.Core.Host.Plugins
 {

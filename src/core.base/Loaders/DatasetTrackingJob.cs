@@ -20,10 +20,10 @@ namespace Apollo.Core.Base.Loaders
     internal class DatasetTrackingJob : IDisposable
     {
         private enum JobObjectInfoType
-        { 
+        {
             AssociateCompletionPortInformation = 7,
             BasicLimitInformation = 2,
-            BasicUIRestrictions = 4,
+            BasicUiRestrictions = 4,
             EndOfJobTimeInformation = 6,
             ExtendedLimitInformation = 9,
             SecurityLimitInformation = 5,
@@ -84,17 +84,17 @@ namespace Apollo.Core.Base.Loaders
         [SuppressMessage("Microsoft.Design", "CA1060:MovePInvokesToNativeMethodsClass",
             Justification = "That just seems overkill. These methods belong here.")]
         private static extern IntPtr CreateJobObject(
-            IntPtr jobAttributes, 
+            IntPtr jobAttributes,
             string name);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        [return:MarshalAs(UnmanagedType.Bool)]
+        [return: MarshalAs(UnmanagedType.Bool)]
         [SuppressMessage("Microsoft.Design", "CA1060:MovePInvokesToNativeMethodsClass",
             Justification = "That just seems overkill. These methods belong here.")]
         private static extern bool SetInformationJobObject(
-            IntPtr hJob, 
-            JobObjectInfoType infoType, 
-            IntPtr lpJobObjectInfo, 
+            IntPtr hJob,
+            JobObjectInfoType infoType,
+            IntPtr lpJobObjectInfo,
             uint cbJobObjectInfoLength);
 
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -102,7 +102,7 @@ namespace Apollo.Core.Base.Loaders
         [SuppressMessage("Microsoft.Design", "CA1060:MovePInvokesToNativeMethodsClass",
             Justification = "That just seems overkill. These methods belong here.")]
         private static extern bool AssignProcessToJobObject(IntPtr job, IntPtr process);
-        
+
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         [SuppressMessage("Microsoft.Design", "CA1060:MovePInvokesToNativeMethodsClass",
@@ -142,16 +142,16 @@ namespace Apollo.Core.Base.Loaders
             Marshal.StructureToPtr(extendedInfo, extendedInfoPtr, false);
 
             if (!SetInformationJobObject(
-                m_Handle, 
-                JobObjectInfoType.ExtendedLimitInformation, 
-                extendedInfoPtr, 
+                m_Handle,
+                JobObjectInfoType.ExtendedLimitInformation,
+                extendedInfoPtr,
                 (uint)length))
             {
                 var error = Marshal.GetLastWin32Error();
                 throw new UnableToSetJobException(
                     string.Format(
-                        CultureInfo.InvariantCulture,    
-                        "Unable to set information.  Error: {0}", 
+                        CultureInfo.InvariantCulture,
+                        "Unable to set information.  Error: {0}",
                         error));
             }
         }

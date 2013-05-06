@@ -1,8 +1,30 @@
 <StyleCopSettings Version="105">
+  <GlobalSettings>
+    <CollectionProperty Name="RecognizedWords">
+      <Value>aspx</Value>
+      <Value>autofac</Value>
+      <Value>bootstrapper</Value>
+      <Value>clrteam</Value>
+      <Value>composable</Value>
+      <Value>double</Value>
+      <Value>float</Value>
+      <Value>func</Value>
+      <Value>int</Value>
+      <Value>intuidev</Value>
+      <Value>llobo</Value>
+      <Value>msdn</Value>
+      <Value>performant</Value>
+      <Value>powershell</Value>
+      <Value>remoting</Value>
+      <Value>rmbyers</Value>
+      <Value>ulong</Value>
+      <Value>wpf</Value>
+      <Value>xaml</Value>
+    </CollectionProperty>
+  </GlobalSettings>
   <Parsers>
     <Parser ParserId="StyleCop.CSharp.CsParser">
       <ParserSettings>
-        <BooleanProperty Name="AnalyzeGeneratedFiles">False</BooleanProperty>
         <CollectionProperty Name="GeneratedFileFilters">
           <Value>\.g\.cs$</Value>
           <Value>\.generated\.cs$</Value>
@@ -66,6 +88,11 @@
           </RuleSettings>
         </Rule>
         <Rule Name="FieldNamesMustNotContainUnderscore">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">False</BooleanProperty>
+          </RuleSettings>
+        </Rule>
+        <Rule Name="StaticReadonlyFieldsMustBeginWithUpperCaseLetter">
           <RuleSettings>
             <BooleanProperty Name="Enabled">False</BooleanProperty>
           </RuleSettings>
@@ -137,6 +164,11 @@
           </RuleSettings>
         </Rule>
         <Rule Name="ParameterMustNotSpanMultipleLines">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">False</BooleanProperty>
+          </RuleSettings>
+        </Rule>
+        <Rule Name="PrefixCallsCorrectly">
           <RuleSettings>
             <BooleanProperty Name="Enabled">False</BooleanProperty>
           </RuleSettings>
@@ -242,8 +274,8 @@
         <StringProperty Name="SP2100_Limit">150:4</StringProperty>
         <StringProperty Name="SP2102_Limit">25</StringProperty>
         <StringProperty Name="SP2103_Limit">1000</StringProperty>
-        <StringProperty Name="AdvancedNaming_Abbreviations">A B C X ID 3D OK UI PC IP XP</StringProperty>
-        <StringProperty Name="AdvancedNaming_Words">StyleCop FxCop x86 x64</StringProperty>
+        <StringProperty Name="AdvancedNaming_Words">FxCop StyleCop UI x64 x86</StringProperty>
+        <StringProperty Name="AdvancedNaming_ClassNotInternal">$(AaBb):$(AaBb)A$(AaBb)</StringProperty>
       </AnalyzerSettings>
     </Analyzer>
   </Analyzers>
