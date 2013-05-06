@@ -160,7 +160,7 @@
     <value>Unable to parse the input parameters. Exception was: {0}</value>
   </data>
   <data name="Log_Error_ProcessingError_WithException" xml:space="preserve">
-    <value>An error occurred while excuting the script. Exception was: {0}</value>
+    <value>An error occurred while executing the script. Exception was: {0}</value>
   </data>
   <data name="Log_Error_ScripFileDoesNotExist" xml:space="preserve">
     <value>The provided script file does not exist. File should be at: {0}</value>

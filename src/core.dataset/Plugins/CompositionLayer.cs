@@ -7,12 +7,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Apollo.Core.Base.Plugins;
-using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Dataset.Properties;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Utilities.History;
@@ -23,7 +19,7 @@ namespace Apollo.Core.Dataset.Plugins
     /// Defines the graph of components groups that describes how the different
     /// groups are connected.
     /// </summary>
-    internal class CompositionLayer : IStoreGroupsAndConnections, IAmHistoryEnabled
+    internal sealed class CompositionLayer : IStoreGroupsAndConnections, IAmHistoryEnabled
     {
         /// <summary>
         /// The history index of the definitions field.
@@ -65,8 +61,10 @@ namespace Apollo.Core.Dataset.Plugins
         /// <returns>The newly created instance.</returns>
         internal static CompositionLayer CreateInstanceWithoutTimeline(IStoreInstances instanceStorage)
         {
-            var history = new ValueHistory<IStoreInstances>();
-            history.Current = instanceStorage;
+            var history = new ValueHistory<IStoreInstances>
+                {
+                    Current = instanceStorage
+                };
             return new CompositionLayer(
                 new HistoryId(),
                 new DictionaryHistory<GroupRegistrationId, GroupDefinition>(),
@@ -309,12 +307,12 @@ namespace Apollo.Core.Dataset.Plugins
         {
             foreach (var map in connections)
             {
-                var importingPart = importingParts.Where(p => p.Item2.RegisteredImports.Contains(map.Import)).FirstOrDefault();
+                var importingPart = importingParts.FirstOrDefault(p => p.Item2.RegisteredImports.Contains(map.Import));
                 Debug.Assert(importingPart != null, "Cannot connect parts that are not registered.");
 
                 foreach (var export in map.Exports)
                 {
-                    var exportingPart = exportingParts.Where(p => p.Item2.RegisteredExports.Contains(export)).FirstOrDefault();
+                    var exportingPart = exportingParts.FirstOrDefault(p => p.Item2.RegisteredExports.Contains(export));
                     m_PartConnections.AddEdge(
                         new PartImportExportEdge<PartCompositionId>(
                             importingPart.Item1,
@@ -463,7 +461,7 @@ namespace Apollo.Core.Dataset.Plugins
             m_GroupConnections.RemoveVertex(group);
 
             m_Groups.Remove(group);
-            if (!m_Groups.Where(p => p.Value.Equals(definitionId)).Any())
+            if (!m_Groups.Any(p => p.Value.Equals(definitionId)))
             {
                 m_Definitions.Remove(definitionId);
             }
@@ -481,7 +479,7 @@ namespace Apollo.Core.Dataset.Plugins
                 {
                     if (instance.Change == InstanceChange.Removed)
                     {
-                        var updatedInfo = m_Parts.Where(p => instance.Instance.Equals(p.Value.Instance)).FirstOrDefault();
+                        var updatedInfo = m_Parts.FirstOrDefault(p => instance.Instance.Equals(p.Value.Instance));
                         updatedInfo.Value.Instance = null;
                     }
                 }
@@ -494,7 +492,6 @@ namespace Apollo.Core.Dataset.Plugins
                 .OutEdges(partId)
                 .Select(edge => new Tuple<PartCompositionId, ImportRegistrationId>(edge.Target, edge.ImportRegistration));
 
-            var instancesToRelease = new List<PartInstanceId>();
             foreach (var pair in importingParts)
             {
                 DisconnectInstanceFromExport(pair.Item1, pair.Item2, partId);
@@ -524,7 +521,7 @@ namespace Apollo.Core.Dataset.Plugins
                     {
                         if (instance.Change == InstanceChange.Removed)
                         {
-                            var updatedInfo = m_Parts.Where(p => instance.Instance.Equals(p.Value.Instance)).FirstOrDefault();
+                            var updatedInfo = m_Parts.FirstOrDefault(p => instance.Instance.Equals(p.Value.Instance));
                             updatedInfo.Value.Instance = null;
                         }
                     }

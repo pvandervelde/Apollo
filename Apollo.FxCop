@@ -22,15 +22,14 @@
  </ProjectOptions>
  <Targets>
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Base.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.BatchService.exe" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Dataset.exe" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Extensions.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Host.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.LoaderApplication.exe" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.ProjectExplorer.exe" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.UI.Common.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Scripting.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.UI.Console.exe" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.UI.Explorer.exe" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.UI.Wpf.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Utilities.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Utilities.SrcOnly.dll" Analyze="True" AnalyzeAllChildren="True" />
  </Targets>
  <Rules>
   <RuleFiles>
@@ -128,31 +127,6 @@
      </Module>
     </Modules>
    </Target>
-   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Dataset.exe">
-    <Modules>
-     <Module Name="apollo.core.dataset.exe">
-      <Namespaces>
-       <Namespace Name="Apollo.Core.Dataset.Plugins">
-        <Types>
-         <Type Name="InstanceLayer">
-          <Members>
-           <Member Name="#m_HistoryObjects">
-            <Messages>
-             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2012-12-09 01:59:46Z">
-              <Issue>
-               <Item>'InstanceLayer.m_HistoryObjects'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-        </Types>
-       </Namespace>
-      </Namespaces>
-     </Module>
-    </Modules>
-   </Target>
    <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Extensions.dll">
     <Modules>
      <Module Name="apollo.core.extensions.dll">
@@ -180,20 +154,6 @@
       <Namespaces>
        <Namespace Name="Apollo.Core.Host.Projects">
         <Types>
-         <Type Name="DatasetProxy">
-          <Members>
-           <Member Name="#LoadOntoMachine(Apollo.Core.Base.Loaders.LoadingLocations,System.Func`2&lt;System.Collections.Generic.IEnumerable`1&lt;Apollo.Core.Base.Loaders.DistributionSuggestion&gt;,Apollo.Core.Base.Loaders.SelectedProposal&gt;,System.Threading.CancellationToken,System.Boolean)">
-            <Messages>
-             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2012-12-09 01:59:46Z">
-              <Issue>
-               <Item>'DatasetProxy.LoadOntoMachine(LoadingLocations, Func&lt;IEnumerable&lt;DistributionSuggestion&gt;, SelectedProposal&gt;, CancellationToken, bool)'</Item>
-               <Item>'Exception'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
          <Type Name="Project">
           <Members>
            <Member Name="#RestoreFromStore(Apollo.Utilities.IPersistenceInformation)">
@@ -219,16 +179,65 @@
      </Module>
     </Modules>
    </Target>
+   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.UI.Console.exe">
+    <Modules>
+     <Module Name="apollo.ui.console.exe">
+      <Namespaces>
+       <Namespace Name="Apollo.UI.Console">
+        <Types>
+         <Type Name="FakeProgressTracker">
+          <Members>
+           <Member Name="#RaiseOnMarkAdded(Nuclei.Progress.IProgressMark)">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2013-05-06 07:13:53Z">
+              <Issue>
+               <Item>'FakeProgressTracker.RaiseOnMarkAdded(IProgressMark)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#RaiseOnProgress(System.Int32,Nuclei.Progress.IProgressMark)">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2013-05-06 07:13:53Z">
+              <Issue>
+               <Item>'FakeProgressTracker.RaiseOnProgress(int, IProgressMark)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#RaiseOnStartProgress()">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2013-05-06 07:13:53Z">
+              <Issue>
+               <Item>'FakeProgressTracker.RaiseOnStartProgress()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#RaiseOnStopProgress()">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2013-05-06 07:13:53Z">
+              <Issue>
+               <Item>'FakeProgressTracker.RaiseOnStopProgress()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+      </Namespaces>
+     </Module>
+    </Modules>
+   </Target>
   </Targets>
   <Rules>
    <Rule TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040">
     <Resolution Name="Default">Define a custom attribute to replace {0}.</Resolution>
    </Rule>
-   <Rule TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823">
-    <Resolution Name="Default">It appears that field {0} is never used or is only ever assigned to. Use this field or remove it.</Resolution>
-   </Rule>
-   <Rule TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031">
-    <Resolution Name="Default">Modify {0} to catch a more specific exception than {1} or rethrow the exception.</Resolution>
+   <Rule TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811">
+    <Resolution Name="Default">{0} appears to have no upstream public or protected callers.</Resolution>
    </Rule>
    <Rule TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822">
     <Resolution Name="Default">The 'this' parameter (or 'Me' in Visual Basic) of {0} is never used. Mark the member as static (or Shared in Visual Basic) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Resolution>

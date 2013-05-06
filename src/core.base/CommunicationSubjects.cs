@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using Nuclei.Communication;
 
 namespace Apollo.Core.Base
@@ -16,6 +17,8 @@ namespace Apollo.Core.Base
         /// <summary>
         /// The communication subject for Apollo applications that deal with dataset information.
         /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
+            Justification = "ConfigurationKey is immutable")]
         public static readonly CommunicationSubject Dataset
             = new CommunicationSubject("Apollo.Subject: Dataset");
     }

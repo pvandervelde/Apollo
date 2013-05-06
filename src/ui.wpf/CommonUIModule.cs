@@ -24,7 +24,7 @@ namespace Apollo.UI.Wpf
     /// Handles the component registrations for the Apollo.UI.Wpf assembly.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public sealed class CommonUiModule : Module
+    public sealed class CommonUIModule : Module
     {
         /// <summary>
         /// Override to add registrations to the container.

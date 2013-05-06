@@ -242,7 +242,7 @@
     <Compile Include="Commands\UndoCommand.cs" />
     <Compile Include="Commands\UnloadDatasetFromMachineCommand.cs" />
     <Compile Include="CommonRegionNames.cs" />
-    <Compile Include="CommonUiModule.cs" />
+    <Compile Include="CommonUIModule.cs" />
     <Compile Include="Converters\CommandToToolTipTextConverter.cs" />
     <Compile Include="Converters\DistributionSuggestionToTextConverter.cs" />
     <Compile Include="Converters\FeedbackReportToTextConverter.cs" />

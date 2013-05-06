@@ -671,14 +671,8 @@ namespace Apollo.Core.Host.Projects
                     return;
                 }
 
-                Action<int, IProgressMark, TimeSpan> progressReporter =
-                    (p, m, t) =>
-                    {
-                        RaiseOnProgressOfCurrentAction(p, m, t);
-                    };
-
-                progressReporter(0, new DatasetLoadingProgressMark(), TimeSpan.FromTicks(1));
-                var task = selectedPlan.Plan.Accept(token, progressReporter);
+                RaiseOnProgressOfCurrentAction(0, new DatasetLoadingProgressMark(), TimeSpan.FromTicks(1));
+                var task = selectedPlan.Plan.Accept(token, RaiseOnProgressOfCurrentAction);
                 task.ContinueWith(
                     t =>
                     {
@@ -705,7 +699,9 @@ namespace Apollo.Core.Host.Projects
             }
             catch (Exception)
             {
+                // Only clean this up if the whole thing falls over
                 m_IsLoading = false;
+                throw;
             }
         }
 

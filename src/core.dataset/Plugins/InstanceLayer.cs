@@ -60,12 +60,7 @@ namespace Apollo.Core.Dataset.Plugins
             /// <returns><see langword="true" /> if the specified objects are equal; otherwise, <see langword="false"/>.</returns>
             public bool Equals(ParameterInfo x, ParameterInfo y)
             {
-                if (x == null)
-                {
-                    return false;
-                }
-
-                return x.ParameterType.IsAssignableFrom(y.ParameterType);
+                return x != null && x.ParameterType.IsAssignableFrom(y.ParameterType);
             }
 
             /// <summary>
@@ -199,14 +194,7 @@ namespace Apollo.Core.Dataset.Plugins
 
         private static object GetDefaultValue(Type type)
         {
-            if (type.IsValueType)
-            {
-                return Activator.CreateInstance(type);
-            }
-            else
-            {
-                return null;
-            }
+            return type.IsValueType ? Activator.CreateInstance(type) : null;
         }
 
         /// <summary>
@@ -215,14 +203,13 @@ namespace Apollo.Core.Dataset.Plugins
         /// <param name="owner">The object which needs to be retrieved from the delegate.</param>
         /// <returns>A delegate that will return the object.</returns>
         /// <typeparam name="T">The type of object that is returned by the function.</typeparam>
+        [Lokad.Quality.UsedImplicitly]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Code is called by reflection.")]
         private static Func<T> ToFunc<T>(object owner)
         {
             // @todo: ToFunc(object): There should really be an easier way for handling this
-            Func<T> func =
-                () =>
-                {
-                    return (T)owner;
-                };
+            Func<T> func = () => (T)owner;
 
             return func;
         }
@@ -234,6 +221,9 @@ namespace Apollo.Core.Dataset.Plugins
         /// <param name="property">The property to get.</param>
         /// <returns>A delegate that will return the property value.</returns>
         /// <typeparam name="T">The type of object that is returned by the function.</typeparam>
+        [Lokad.Quality.UsedImplicitly]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Code is called by reflection.")]
         private static Func<T> ToFunc<T>(object owner, PropertyInfo property)
         {
             // @todo: ToFunc(object, PropertyInfo): There should really be an easier way for handling this
@@ -250,6 +240,39 @@ namespace Apollo.Core.Dataset.Plugins
         private static MethodInfo MethodInfoForDelegate(Type delegateType)
         {
             return delegateType.GetMethod("Invoke");
+        }
+
+        private static MethodInfo GetMethodInfoFromDefinition(Type type, MethodDefinition methodDefinition)
+        {
+            return type.GetMethod(
+                methodDefinition.MethodName,
+                methodDefinition.Parameters.Select(p => LoadType(p.Identity)).ToArray());
+        }
+
+        private static PropertyInfo GetPropertyInfoFromDefinition(Type type, PropertyDefinition propertyDefinition)
+        {
+            return type.GetProperty(propertyDefinition.PropertyName);
+        }
+
+        private static bool IsMethodCompatibleWithDelegate(Type delegateType, MethodInfo exportedMethod)
+        {
+            var delegateMethod = MethodInfoForDelegate(delegateType);
+
+            bool isCompatible = delegateMethod.ReturnType.IsAssignableFrom(exportedMethod.ReturnType);
+            isCompatible = isCompatible && delegateMethod.GetParameters().SequenceEqual(
+                exportedMethod.GetParameters(),
+                new IsAssignableEqualityComparer());
+
+            return isCompatible;
+        }
+
+        private static void DestroyInstance(object instance)
+        {
+            var disposable = instance as IDisposable;
+            if (disposable != null)
+            {
+                disposable.Dispose();
+            }
         }
 
         /// <summary>
@@ -515,11 +538,11 @@ namespace Apollo.Core.Dataset.Plugins
                         .Where(t => definition.Import(t.Item1).IsPrerequisite)
                         .Select(t => t.Item1));
 
-            bool shouldRecreate = InstanceById(instance) == null 
+            var shouldRecreate = InstanceById(instance) == null 
                 || forceUpdate 
                 || differentImports.Any(p => definition.Import(p.Item1).IsPrerequisite);
-            bool shouldUpdate = forceUpdate || shouldRecreate || differentImports.Any();
-            bool shouldDelete = (shouldDeleteInstance || missingRequiredImports.Any()) && (InstanceById(instance) != null);
+            var shouldUpdate = forceUpdate || shouldRecreate || differentImports.Any();
+            var shouldDelete = (shouldDeleteInstance || missingRequiredImports.Any()) && (InstanceById(instance) != null);
 
             if (!shouldDelete && (shouldUpdate || shouldRecreate))
             {
@@ -594,9 +617,9 @@ namespace Apollo.Core.Dataset.Plugins
 
         private void StoreInstanceById(PartInstanceId instance, object instanceObj)
         {
-            if (instanceObj is IAmHistoryEnabled)
+            var historyObj = instanceObj as IAmHistoryEnabled;
+            if (historyObj != null)
             {
-                var historyObj = instanceObj as IAmHistoryEnabled;
                 if (!m_HistoryInstances.ContainsKey(instance))
                 {
                     m_HistoryInstances.Add(instance, historyObj);
@@ -719,12 +742,12 @@ namespace Apollo.Core.Dataset.Plugins
                 .ToArray();
         }
 
-        private object ExportsForImportedType(Type parameterType, List<Tuple<PartInstanceId, ExportRegistrationId>> exports)
+        private object ExportsForImportedType(Type parameterType, IEnumerable<Tuple<PartInstanceId, ExportRegistrationId>> exports)
         {
             if (parameterType.IsGenericType)
             {
                 var genericBaseType = parameterType.GetGenericTypeDefinition();
-                if (genericBaseType.Equals(typeof(IEnumerable<>)))
+                if (genericBaseType == typeof(IEnumerable<>))
                 {
                     var genericArguments = parameterType.GetGenericArguments();
                     Debug.Assert(genericArguments.Length == 1, "IEnumerable<T> should only have 1 generic parameter.");
@@ -754,7 +777,7 @@ namespace Apollo.Core.Dataset.Plugins
             {
                 var genericBaseType = parameterType.GetGenericTypeDefinition();
                 var genericParameters = parameterType.GetGenericArguments();
-                if (genericBaseType.Equals(typeof(Lazy<>)))
+                if (genericBaseType == typeof(Lazy<>))
                 {
                     var lazyType = typeof(Lazy<>).MakeGenericType(genericParameters[0]);
                     return Activator.CreateInstance(
@@ -762,22 +785,21 @@ namespace Apollo.Core.Dataset.Plugins
                         ParameterlessFunctionFromExport(typeof(Func<>).MakeGenericType(genericParameters[0]), exportingPart, exportDefinition));
                 }
 
-                if (genericBaseType.Equals(typeof(Lazy<,>)))
+                if (genericBaseType == typeof(Lazy<,>))
                 {
                     throw new NotImplementedException();
                 }
 
-                if (genericBaseType.Equals(typeof(Func<>)))
+                if (genericBaseType == typeof(Func<>))
                 {
                     return ParameterlessFunctionFromExport(parameterType, exportingPart, exportDefinition);
                 }
 
                 // The only other option(s) that we support is that the export could be a method
                 // which matches the import signature, meaning that the import needs to be a delegate
-                if (exportDefinition is MethodBasedExportDefinition &&
-                    typeof(Delegate).IsAssignableFrom(parameterType))
+                var methodExport = exportDefinition as MethodBasedExportDefinition;
+                if ((methodExport != null) && typeof(Delegate).IsAssignableFrom(parameterType))
                 {
-                    var methodExport = exportDefinition as MethodBasedExportDefinition;
                     var exportedMethod = GetMethodInfoFromDefinition(LoadType(methodExport.DeclaringType), methodExport.Method);
                     if (IsMethodCompatibleWithDelegate(parameterType, exportedMethod))
                     {
@@ -824,19 +846,7 @@ namespace Apollo.Core.Dataset.Plugins
 
             var typeExport = exportDefinition as TypeBasedExportDefinition;
             Debug.Assert(typeExport != null, "The export should really be a type export.");
-            return TypeExportToFuncImport(delegateType, obj, typeExport);
-        }
-
-        private bool IsMethodCompatibleWithDelegate(Type delegateType, MethodInfo exportedMethod)
-        {
-            var delegateMethod = MethodInfoForDelegate(delegateType);
-
-            bool isCompatible = delegateMethod.ReturnType.IsAssignableFrom(exportedMethod.ReturnType);
-            isCompatible = isCompatible && delegateMethod.GetParameters().SequenceEqual(
-                exportedMethod.GetParameters(),
-                new IsAssignableEqualityComparer());
-
-            return isCompatible;
+            return TypeExportToFuncImport(delegateType, obj);
         }
 
         private object CreateDelegateFromMethod(Type delegateType, PartInstanceId instance, MethodInfo method)
@@ -853,23 +863,23 @@ namespace Apollo.Core.Dataset.Plugins
                     "ToFunc",
                     BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic,
                     null,
-                    new Type[] { typeof(object), typeof(PropertyInfo) },
+                    new[] { typeof(object), typeof(PropertyInfo) },
                     null)
                 .MakeGenericMethod(MethodInfoForDelegate(delegateType).ReturnType);
-            return method.Invoke(null, new object[] { exportingObject, propertyInfo });
+            return method.Invoke(null, new[] { exportingObject, propertyInfo });
         }
 
-        private object TypeExportToFuncImport(Type delegateType, object exportingObject, TypeBasedExportDefinition typeExport)
+        private object TypeExportToFuncImport(Type delegateType, object exportingObject)
         {
             var method = GetType()
                 .GetMethod(
                     "ToFunc",
                     BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic,
                     null,
-                    new Type[] { typeof(object) },
+                    new[] { typeof(object) },
                     null)
                 .MakeGenericMethod(MethodInfoForDelegate(delegateType).ReturnType);
-            return method.Invoke(null, new object[] { exportingObject });
+            return method.Invoke(null, new[] { exportingObject });
         }
 
         private object ReturnValueFromExport(PartInstanceId exportingInstance, SerializableExportDefinition exportDefinition)
@@ -896,18 +906,6 @@ namespace Apollo.Core.Dataset.Plugins
             }
 
             return obj;
-        }
-
-        private MethodInfo GetMethodInfoFromDefinition(Type type, MethodDefinition methodDefinition)
-        {
-            return type.GetMethod(
-                methodDefinition.MethodName,
-                methodDefinition.Parameters.Select(p => LoadType(p.Identity)).ToArray());
-        }
-
-        private PropertyInfo GetPropertyInfoFromDefinition(Type type, PropertyDefinition propertyDefinition)
-        {
-            return type.GetProperty(propertyDefinition.PropertyName);
         }
 
         private void UpdatePropertyImports(
@@ -1039,15 +1037,6 @@ namespace Apollo.Core.Dataset.Plugins
             }
 
             return result;
-        }
-
-        private void DestroyInstance(object instance)
-        {
-            var disposable = instance as IDisposable;
-            if (disposable != null)
-            {
-                disposable.Dispose();
-            }
         }
 
         /// <summary>
