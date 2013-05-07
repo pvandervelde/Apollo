@@ -41,32 +41,9 @@
         <FindToolDirectoryFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileFxCopCmdExe)">
           <Output TaskParameter="Path" PropertyName="PathFxCopDir" />
         </FindToolDirectoryFromPackages>
-        
-        <ItemGroup>
-            <FxCopRuleAssemblies Include="$(DirFxCop)\Rules\*.dll" />
-        </ItemGroup>
-        <ItemGroup>
-            <FxCopTargetAssemblies Include="$(DirBuildBin)\Apollo*.dll;$(DirBuildBin)\Apollo*.exe"
-                                   Exclude="$(DirBuildBin)\*vshost*.*"/>
-        </ItemGroup>
-        <ItemGroup>
-            <!-- Exclude: 1000: Do not declare static members on generic types -->
-            <FxCopRules Include="-Microsoft.Rules.Managed.CA1000" />
-            <!-- Exclude: 1006: do not nest generic types in member signatures -->
-            <FxCopRules Include="-Microsoft.Rules.Managed.CA1006" />
-            <!-- Exclude: 1020: Avoid namespaces with few types -->
-            <FxCopRules Include="-Microsoft.Rules.Managed.CA1020" />
-            <!-- Exclude: 1026: Default parameters should not be used -->
-            <FxCopRules Include="-Microsoft.Rules.Managed.CA1026" />
-            <!-- Exclude: 1030: use events where appropriate -->
-            <FxCopRules Include="-Microsoft.Rules.Managed.CA1030" />
-        </ItemGroup>
             
         <FxCop FxCopDir="$(PathFxCopDir)"
                FxCopOutputFile="$(FxCopOutputFile)"
-               FxCopCustomDictionary="$(PathFxCopDir)\CustomDictionary.xml"
-               FxCopTargetAssemblies="@(FxCopTargetAssemblies)"
-               FxCopRuleAssemblies="@(FxCopruleAssemblies)"
-               FxCopRules="@(FxCopRules)" />
+               FxCopProjectFile="$(DirWorkspace)\apollo.fxcop" />
     </Target>
  </Project>

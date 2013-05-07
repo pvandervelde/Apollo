@@ -5,10 +5,7 @@
         Define:
         - FxCopDir [Property]: The directory that contains FxCopCmd.exe
         - FxCopOutputFile [Property]: The file that should contain the FxCop results
-        - FxCopCustomDictionary [Property]: The custom dictionary file
-        - FxCopTargetAssemblies [ItemGroup]: Collection of all files that should be analysed
-        - FxCopRuleAssemblies [ItemGroup]: Collection of all rule DLLs that should be used
-        - FxCopRules [ItemGroup]: Collection of all rules that should be included / excluded
+        - FxCopProjectFile [Property]: The FxCop project file
     -->
     <UsingTask TaskName="FxCop" 
                TaskFactory="CodeTaskFactory" 
@@ -16,10 +13,7 @@
         <ParameterGroup>
             <FxCopDir ParameterType="System.String" Required="true" />
             <FxCopOutputFile ParameterType="System.String" Required="true" />
-            <FxCopCustomDictionary ParameterType="System.String" Required="true" />
-            <FxCopTargetAssemblies ParameterType="System.String[]" Required="true" />
-            <FxCopRuleAssemblies ParameterType="System.String[]" Required="true" />
-            <FxCopRules ParameterType="System.String[]" Required="true" />
+            <FxCopProjectFile ParameterType="System.String" Required="true" />
         </ParameterGroup>
         <Task>
             <Code Type="Method" Language="cs">
@@ -28,24 +22,9 @@
                     {
                         var builder = new System.Text.StringBuilder();
                         {
-                            foreach (var targetAssembly in FxCopTargetAssemblies)
-                            {
-                                builder.Append(string.Format("/file:\"{0}\" ", targetAssembly));
-                            }
-
-                            foreach(var ruleAssembly in FxCopRuleAssemblies)
-                            {
-                                builder.Append(string.Format("/rule:\"{0}\" ", ruleAssembly));
-                            }
-
-                            foreach (var rule in FxCopRules)
-                            {
-                                builder.Append(string.Format("/ruleid:{0} ", rule));
-                            }
-
+                            builder.Append(string.Format("/project:\"{0}\" ", FxCopProjectFile));
                             builder.Append(string.Format("/out:\"{0}\" ", FxCopOutputFile));
                             builder.Append(string.Format("/ignoregeneratedcode "));
-                            builder.Append(string.Format("/dictionary:\"{0}\" ", FxCopCustomDictionary));
                             builder.Append(string.Format("/searchgac "));
                             builder.Append(string.Format("/forceoutput "));
                         }
@@ -58,6 +37,9 @@
                                     RedirectStandardOutput = true,
                                     RedirectStandardError = true,
                                 };
+                                
+                        Log.LogMessage(MessageImportance.Normal, info.Arguments);
+                        
                         var process = new System.Diagnostics.Process();
                         process.StartInfo = info;
                         process.OutputDataReceived += 

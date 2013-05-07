@@ -4,8 +4,8 @@
   <SharedProject>True</SharedProject>
   <Stylesheet Apply="False">$(FxCopDir)\Xml\FxCopReport.xsl</Stylesheet>
   <SaveMessages>
-   <Project Status="Active, Excluded, Good, Noise" NewOnly="False" />
-   <Report Status="Active, Good, Noise" NewOnly="False" />
+   <Project Status="Active, Excluded" NewOnly="False" />
+   <Report Status="Active" NewOnly="False" />
   </SaveMessages>
   <ProjectFile Compress="True" DefaultTargetCheck="True" DefaultRuleCheck="True" SaveByRuleGroup="" Deterministic="True" />
   <EnableMultithreadedLoad>True</EnableMultithreadedLoad>
@@ -16,20 +16,20 @@
   <Spelling Locale="en-US" />
   <OverrideRuleVisibilities>False</OverrideRuleVisibilities>
   <CustomDictionaries SearchFxCopDir="True" SearchUserProfile="True" SearchProjectDir="True" />
-  <SearchGlobalAssemblyCache>False</SearchGlobalAssemblyCache>
+  <SearchGlobalAssemblyCache>True</SearchGlobalAssemblyCache>
   <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
-  <IgnoreGeneratedCode>False</IgnoreGeneratedCode>
+  <IgnoreGeneratedCode>True</IgnoreGeneratedCode>
  </ProjectOptions>
  <Targets>
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Base.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Dataset.exe" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Extensions.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Host.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Scripting.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.UI.Console.exe" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.UI.Explorer.exe" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.UI.Wpf.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Utilities.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Base.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Dataset.exe" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Extensions.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Host.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Scripting.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.UI.Console.exe" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.UI.Explorer.exe" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.UI.Wpf.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Utilities.dll" Analyze="True" AnalyzeAllChildren="True" />
  </Targets>
  <Rules>
   <RuleFiles>
@@ -106,10 +106,27 @@
  </Rules>
  <FxCopReport Version="10.0">
   <Targets>
-   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Base.dll">
+   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Base.dll">
     <Modules>
      <Module Name="apollo.core.base.dll">
       <Namespaces>
+       <Namespace Name="Apollo.Core.Base.Plugins">
+        <Types>
+         <Type Name="GroupCompositionId">
+          <Members>
+           <Member Name="#s_InvalidId">
+            <Messages>
+             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2013-05-07 12:40:00Z">
+              <Issue>
+               <Item>'GroupCompositionId.s_InvalidId'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
        <Namespace Name="Apollo.Core.Base.Scheduling">
         <Types>
          <Type Name="IScheduleDependency">
@@ -127,7 +144,32 @@
      </Module>
     </Modules>
    </Target>
-   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Extensions.dll">
+   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Dataset.exe">
+    <Modules>
+     <Module Name="apollo.core.dataset.exe">
+      <Namespaces>
+       <Namespace Name="Apollo.Core.Dataset.Plugins">
+        <Types>
+         <Type Name="PartInstanceId">
+          <Members>
+           <Member Name="#s_InvalidId">
+            <Messages>
+             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2013-05-07 12:40:00Z">
+              <Issue>
+               <Item>'PartInstanceId.s_InvalidId'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+      </Namespaces>
+     </Module>
+    </Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Extensions.dll">
     <Modules>
      <Module Name="apollo.core.extensions.dll">
       <Namespaces>
@@ -148,7 +190,7 @@
      </Module>
     </Modules>
    </Target>
-   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Host.dll">
+   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Host.dll">
     <Modules>
      <Module Name="apollo.core.host.dll">
       <Namespaces>
@@ -179,7 +221,7 @@
      </Module>
     </Modules>
    </Target>
-   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.UI.Console.exe">
+   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.UI.Console.exe">
     <Modules>
      <Module Name="apollo.ui.console.exe">
       <Namespaces>
@@ -238,6 +280,9 @@
    </Rule>
    <Rule TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811">
     <Resolution Name="Default">{0} appears to have no upstream public or protected callers.</Resolution>
+   </Rule>
+   <Rule TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823">
+    <Resolution Name="Default">It appears that field {0} is never used or is only ever assigned to. Use this field or remove it.</Resolution>
    </Rule>
    <Rule TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822">
     <Resolution Name="Default">The 'this' parameter (or 'Me' in Visual Basic) of {0} is never used. Mark the member as static (or Shared in Visual Basic) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Resolution>
