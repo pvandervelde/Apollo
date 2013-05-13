@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Apollo</id>
+    <version>${Version}</version>
+    <authors>P. van der Velde</authors>
+    <owners>P. van der Velde</owners>
+    <licenseUrl>http://localhost</licenseUrl>
+    <projectUrl>http://localhost</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>
+      Packages the Apollo binaries for use on the symbol server.
+    </description>
+    <releaseNotes>
+      ${ReleaseNotes}
+    </releaseNotes>
+    <dependencies>
+      ${Dependencies}
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="${DirBin}\Apollo.Core.Base.dll" target="lib\net40" />
+    <file src="${DirBin}\Apollo.Core.Base.pdb" target="lib\net40" />
+    <file src="${DirBin}\Apollo.Core.Base.xml" target="lib\net40" />
+    <file src="${DirSrc}\core.base\**\*.cs" target="src\core.base" />
+    
+    <file src="${DirBin}\Apollo.Core.Dataset.exe" target="lib\net40" />
+    <file src="${DirBin}\Apollo.Core.Dataset.pdb" target="lib\net40" />
+    <file src="${DirBin}\Apollo.Core.Dataset.xml" target="lib\net40" />
+    <file src="${DirSrc}\core.dataset\**\*.cs" target="src\core.dataset" />
+    
+    <file src="${DirBin}\Apollo.Core.Extensions.dll" target="lib\net40" />
+    <file src="${DirBin}\Apollo.Core.Extensions.pdb" target="lib\net40" />
+    <file src="${DirBin}\Apollo.Core.Extensions.xml" target="lib\net40" />
+    <file src="${DirSrc}\core.extensions\**\*.cs" target="src\core.extensions" />
+    
+    <file src="${DirBin}\Apollo.Core.Host.dll" target="lib\net40" />
+    <file src="${DirBin}\Apollo.Core.Host.pdb" target="lib\net40" />
+    <file src="${DirBin}\Apollo.Core.Host.xml" target="lib\net40" />
+    <file src="${DirSrc}\core.host\**\*.cs" target="src\core.host" />
+    
+    <file src="${DirBin}\Apollo.Core.Scripting.dll" target="lib\net40" />
+    <file src="${DirBin}\Apollo.Core.Scripting.pdb" target="lib\net40" />
+    <file src="${DirBin}\Apollo.Core.Scripting.xml" target="lib\net40" />
+    <file src="${DirSrc}\core.scripting\**\*.cs" target="src\core.scripting" />
+    
+    <file src="${DirBin}\Apollo.UI.Console.exe" target="lib\net40" />
+    <file src="${DirBin}\Apollo.UI.Console.pdb" target="lib\net40" />
+    <file src="${DirBin}\Apollo.UI.Console.xml" target="lib\net40" />
+    <file src="${DirBin}\Apollo.UI.Console.exe.config" target="lib\net40" />
+    <file src="${DirSrc}\ui.console\**\*.cs" target="src\ui.console" />
+    
+    <file src="${DirBin}\Apollo.UI.Explorer.exe" target="lib\net40" />
+    <file src="${DirBin}\Apollo.UI.Explorer.pdb" target="lib\net40" />
+    <file src="${DirBin}\Apollo.UI.Explorer.xml" target="lib\net40" />
+    <file src="${DirBin}\Apollo.UI.Explorer.exe.config" target="lib\net40" />
+    <file src="${DirSrc}\ui.explorer\**\*.cs" target="src\ui.explorer" />
+    
+    <file src="${DirBin}\Apollo.UI.Wpf.dll" target="lib\net40" />
+    <file src="${DirBin}\Apollo.UI.Wpf.pdb" target="lib\net40" />
+    <file src="${DirBin}\Apollo.UI.Wpf.xml" target="lib\net40" />
+    <file src="${DirSrc}\ui.wpf\**\*.cs" target="src\ui.wpf" />
+    
+    <file src="${DirBin}\Apollo.Utilities.dll" target="lib\net40" />
+    <file src="${DirBin}\Apollo.Utilities.pdb" target="lib\net40" />
+    <file src="${DirBin}\Apollo.Utilities.xml" target="lib\net40" />
+    <file src="${DirSrc}\utilities\**\*.cs" target="src\utilities" />
+  </files>
+</package>

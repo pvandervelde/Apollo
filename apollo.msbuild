@@ -16,7 +16,7 @@
         <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
     </PropertyGroup>
 
-    <Target Name="Run" DependsOnTargets="_PrepareWorkspace;_BuildBinaries;_ExecuteUnitTests;_BuildApiDocumentation;_CodeAnalysisCcm;_CodeAnalysisSourceMonitor;_CodeAnalysisFxCop;_CodeAnalysisMoma;_RetrieveReleaseNotes;_PackageMsi">
+    <Target Name="Run" DependsOnTargets="_PrepareWorkspace;_BuildBinaries;_ExecuteUnitTests;_BuildApiDocumentation;_CodeAnalysisCcm;_CodeAnalysisSourceMonitor;_CodeAnalysisFxCop;_CodeAnalysisMoma;_RetrieveReleaseNotes;_PackageNuget;_PackageMsi">
         <!-- Do nothing here -->
     </Target>
     
@@ -94,6 +94,14 @@
     </PropertyGroup>
     <Target Name="_RetrieveReleaseNotes" >
         <MSBuild Projects="$(MsBuildPackageGetReleaseNotes)" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+    </Target>
+    
+    <!-- Build NuGet files -->
+    <PropertyGroup>
+        <MsBuildPackageNuGet>$(DirWorkspace)\apollo.Package.NuGet.msbuild</MsBuildPackageNuGet>
+    </PropertyGroup>
+    <Target Name="_PackageNuget" DependsOnTargets="_BuildBinaries;_RetrieveReleaseNotes">
+        <MSBuild Projects="$(MsBuildPackageNuGet)" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
     </Target>
     
     <!-- Build MSI installers -->

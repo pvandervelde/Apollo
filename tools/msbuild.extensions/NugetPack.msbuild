@@ -6,6 +6,7 @@
         <ParameterGroup>
             <NugetPath ParameterType="System.String" Required="true" />
             <File ParameterType="System.String" Required="true" />
+            <ShouldBuildSymbols ParameterType="System.Boolean" Required="true" />
             <OutputDirectory ParameterType="System.String" Required="true" />
         </ParameterGroup>
         <Task>
@@ -16,6 +17,11 @@
                         var builder = new System.Text.StringBuilder();
                         {
                             builder.Append(string.Format("pack \"{0}\" ", File));
+                            if (ShouldBuildSymbols)
+                            {
+                                builder.Append("-Symbols ");
+                            }
+                            
                             builder.Append(string.Format("-OutputDirectory \"{0}\" ", OutputDirectory));
                         }
                         
