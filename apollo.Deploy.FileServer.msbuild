@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0"
+         DefaultTargets="Run"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- Build configuration -->
+        <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+        <Platform Condition=" '$(Platform)' == ''">Any CPU</Platform>
+        <PlatformTranslated>$(Platform.Replace(" ",""))</PlatformTranslated>
+    
+        <!-- Directories -->
+        <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
+        <DirBuild>$(DirWorkspace)\build</DirBuild>
+        <DirBuildDeploy>$(DirBuild)\deploy</DirBuildDeploy>
+        <DirBuildDeployBin>$(DirBuildDeploy)\bin</DirBuildDeployBin>
+        
+        <!-- File server -->
+        <!-- These should only be defined on the build server! -->
+        <ShouldDeploy Condition=" '$(ShouldDeploy)' == ''">false</ShouldDeploy>
+        <PathFileServer Condition=" '$(PathFileServer)' == '' "></PathFileServer>
+        
+        <!-- Version number -->
+        <VersionMajor>0</VersionMajor>
+        <VersionMinor>0</VersionMinor>
+        <VersionBuild>0</VersionBuild>
+        <VersionRevision>0</VersionRevision>
+    </PropertyGroup>
+    
+    <Import Project="$(DirWorkspace)\version.xml"
+            Condition="Exists('$(DirWorkspace)\version.xml')"/>
+    
+    <Target Name="Run" DependsOnTargets="_DisplayInfo;_DeployToFileServer;" />
+    
+    <!-- Display info -->
+    <Target Name="_DisplayInfo">
+        <Message Text="Copying binaries to the remote file location..." Condition=" '$(PathFileServer)' != '' AND '$(ShouldDeploy)' == 'true'" />
+        <Message Text="Not copying binaries to the remote file location" Condition="'$(ShouldDeploy)' != 'true'" />
+        <Message Text="No remote file location defined!" Condition=" '$(PathFileServer)' == ''" />
+    </Target>
+    
+    <PropertyGroup>
+        <PathRemoteDeploy>$(PathFileServer)\$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</PathRemoteDeploy>
+        <PathRemoteDeployX86>$(PathRemoteDeploy)\x86</PathRemoteDeployX86>
+        <PathRemoteDeployX64>$(PathRemoteDeploy)\x64</PathRemoteDeployX64>
+    </PropertyGroup>
+    <Target Name="_DeployToFileServer" DependsOnTargets="_DisplayInfo;" Condition=" '$(PathFileServer)' != '' AND '$(ShouldDeploy)' == 'true'">
+        <ItemGroup>
+            <X86MsiFiles Include="$(DirBuildDeployBin)\x86\*.msi" />
+        </ItemGroup>
+        <MakeDir Directories="$(PathRemoteDeployX86)" 
+                 Condition="!Exists('$(PathRemoteDeployX86)')" />
+        <Copy SourceFiles="@(X86MsiFiles)" 
+              DestinationFolder="$(PathRemoteDeploy)" />
+
+        <ItemGroup>
+            <X64MsiFiles Include="$(DirBuildDeployBin)\x64\*.msi" />
+        </ItemGroup>
+        <MakeDir Directories="$(PathRemoteDeployX64)" 
+                 Condition="!Exists('$(PathRemoteDeployX64)')" />
+        <Copy SourceFiles="@(X64MsiFiles)" 
+              DestinationFolder="$(PathRemoteDeploy)" />
+    </Target>
+</Project>
