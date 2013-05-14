@@ -202,13 +202,13 @@
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
-    <Compile Include="..\AssemblyInfo.BuildInformation.cs">
+    <Compile Include="..\..\build\temp\AssemblyInfo.BuildInformation.cs">
       <Link>Properties\AssemblyInfo.BuildInformation.cs</Link>
     </Compile>
-    <Compile Include="..\AssemblyInfo.InternalsVisibleTo.cs">
+    <Compile Include="..\..\build\temp\AssemblyInfo.InternalsVisibleTo.cs">
       <Link>Properties\AssemblyInfo.InternalsVisibleTo.cs</Link>
     </Compile>
-    <Compile Include="..\AssemblyInfo.VersionNumber.cs">
+    <Compile Include="..\..\build\temp\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
     <Compile Include="Program.cs" />

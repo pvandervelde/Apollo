@@ -39,10 +39,10 @@
     <FileTemplateAssemblyBuildInfo>$(DirTemplates)\AssemblyInfo.BuildInformation.cs.in</FileTemplateAssemblyBuildInfo>
     <FileTemplateInternalsVisibleTo>$(DirTemplates)\AssemblyInfo.InternalsVisibleTo.cs.in</FileTemplateInternalsVisibleTo>
     <!-- Generated files -->
-    <FileGeneratedAssemblyVersion>$(SolutionDir)\AssemblyInfo.VersionNumber.cs</FileGeneratedAssemblyVersion>
-    <FileGeneratedAssemblyBuildInfo>$(SolutionDir)\AssemblyInfo.BuildInformation.cs</FileGeneratedAssemblyBuildInfo>
-    <FileGeneratedInternalsVisibleTo>$(SolutionDir)\AssemblyInfo.InternalsVisibleTo.cs</FileGeneratedInternalsVisibleTo>
-    <FileGeneratedLicenses>$(SolutionDir)\licenses.xml</FileGeneratedLicenses>
+    <FileGeneratedAssemblyVersion>$(DirBuildTemp)\AssemblyInfo.VersionNumber.cs</FileGeneratedAssemblyVersion>
+    <FileGeneratedAssemblyBuildInfo>$(DirBuildTemp)\AssemblyInfo.BuildInformation.cs</FileGeneratedAssemblyBuildInfo>
+    <FileGeneratedInternalsVisibleTo>$(DirBuildTemp)\AssemblyInfo.InternalsVisibleTo.cs</FileGeneratedInternalsVisibleTo>
+    <FileGeneratedLicenses>$(DirBuildTemp)\licenses.xml</FileGeneratedLicenses>
     <!-- Version number -->
     <VersionMajor>0</VersionMajor>
     <VersionMinor>0</VersionMinor>
