@@ -21,6 +21,7 @@
         <FixedInMockTag>This is no release</FixedInMockTag>
         <SwitchStatusTo>Released</SwitchStatusTo>
         <IssueFile>$(DirBuildTemp)\fixedissues.xml</IssueFile>
+        <Build>$(BUILD_NUMBER)</Build>
     </PropertyGroup>
     
     <Import Project="$(DirWorkspace)\version.xml"
@@ -36,7 +37,7 @@
         <ExeNFermi>$(DirNFermi)\nfermi.exe</ExeNFermi>
     </PropertyGroup>
     <Target Name="Run" DependsOnTargets="_DisplayInfo" Condition="Exists('$(DirNFermi)')" >
-        <Exec Command="$(ExeNFermi) --ApplicationName=&quot;$(ApplicationName)&quot; --ApplicationVersion=$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision) --ProjectName=&quot;$(ProjectName)&quot; --FixedInTag=&quot;$(FixedInMockTag)&quot; --IssuesToRelease=$(IssueFile) --Output=&quot;$(DirBuildTemp)&quot; --SwitchToState=$(SwitchStatusTo)"
+        <Exec Command="$(ExeNFermi) --ApplicationName=&quot;$(ApplicationName)&quot; --ApplicationVersion=$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision) --ProjectName=&quot;$(ProjectName)&quot; --FixedInTag=&quot;$(FixedInMockTag)&quot; --IssuesToRelease=$(IssueFile) --Output=&quot;$(DirBuildTemp)&quot; --Build=&quot;$(Build)&quot; --SwitchToState=$(SwitchStatusTo)"
               WorkingDirectory="$(DirBuildTemp)" />
     </Target>
  </Project>
