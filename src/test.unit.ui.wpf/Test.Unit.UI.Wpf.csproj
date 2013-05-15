@@ -4,8 +4,8 @@
     <SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">$(MSBuildProjectDirectory)\..</SolutionDir>
     <ProjectGuid>{C68BDDDD-3A37-453B-88B0-9A824683912C}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Apollo.UI</RootNamespace>
-    <AssemblyName>Test.Unit.UI</AssemblyName>
+    <RootNamespace>Apollo.UI.Wpf</RootNamespace>
+    <AssemblyName>Test.Unit.UI.Wpf</AssemblyName>
     <ShouldDoDocumentation>false</ShouldDoDocumentation>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>

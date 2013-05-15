@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Core.Base", "test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Core.Host", "test.unit.core.host\Test.Unit.Core.Host.csproj", "{BC56ED6A-6780-4162-9B68-4B2D8013ECDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.UI", "test.unit.ui\Test.Unit.UI.csproj", "{C68BDDDD-3A37-453B-88B0-9A824683912C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.UI.Wpf", "test.unit.ui.wpf\Test.Unit.UI.Wpf.csproj", "{C68BDDDD-3A37-453B-88B0-9A824683912C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Utilities", "test.unit.utilities\Test.Unit.Utilities.csproj", "{F5A27990-A97F-4497-9733-BA524D56BF0F}"
 EndProject
