@@ -6,7 +6,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Windows;
 using Apollo.Core.Host;
@@ -46,7 +45,6 @@ namespace Apollo.UI.Explorer
     /// e.g. ViewModels etc.. All core related elements need to be injected via 
     /// the <see cref="KernelBootstrapper"/>.
     /// </remarks>
-    [ExcludeFromCodeCoverage]
     internal sealed class ExplorerModule : IModule
     {
         /// <summary>

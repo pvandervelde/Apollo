@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -13,7 +12,6 @@ namespace Apollo.Core.Base.Loaders
     /// Describes the expected load a dataset will put on a given machine.
     /// </summary>
     [Serializable]
-    [ExcludeFromCodeCoverage]
     public sealed class ExpectedDatasetLoad
     {
         /// <summary>

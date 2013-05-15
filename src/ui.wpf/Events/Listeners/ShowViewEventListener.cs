@@ -5,10 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Windows;
-using Apollo.UI.Wpf.Events;
 using Autofac;
 using Microsoft.Practices.Prism.Regions;
 
@@ -17,7 +15,6 @@ namespace Apollo.UI.Wpf.Events.Listeners
     /// <summary>
     /// An <see cref="EventListener"/> which is responsible for showing views.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public class ShowViewEventListener : EventListener
     {
         /// <summary>

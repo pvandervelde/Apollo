@@ -16,7 +16,6 @@ namespace Apollo.UI.Explorer.Converters
     /// <summary>
     /// Gets the TabItems that are related to a collection of Model objects.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public sealed class ModelCollectionToTabItemsConverter : IValueConverter
     {
         /// <summary>

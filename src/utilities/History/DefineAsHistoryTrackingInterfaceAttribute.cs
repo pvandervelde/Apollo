@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Utilities.History
 {
@@ -14,7 +13,6 @@ namespace Apollo.Utilities.History
     /// types that implement history tracking of values.
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface, AllowMultiple = false, Inherited = true)]
-    [ExcludeFromCodeCoverage]
     public sealed class DefineAsHistoryTrackingInterfaceAttribute : Attribute
     {
     }

@@ -29,7 +29,6 @@ namespace Apollo.Core.Dataset
     /// <summary>
     /// Initializes the dependency injection system.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     internal static class DependencyInjection
     {
         private static void RegisterScheduleStorage(ContainerBuilder builder)

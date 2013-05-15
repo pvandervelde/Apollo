@@ -4,12 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.Scripting;
 using Apollo.Core.Host.UserInterfaces.Application;
 using Apollo.Core.Host.UserInterfaces.Projects;
-using Apollo.Utilities;
 using Autofac;
 using Lokad;
 
@@ -19,7 +16,6 @@ namespace Apollo.Core.Host.UserInterfaces
     /// Handles the component registrations for the User Interface part 
     /// of the core.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     internal sealed class UserInterfaceModule : Module
     {
         /// <summary>

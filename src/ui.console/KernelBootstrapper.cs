@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Apollo.Core.Base;
 using Apollo.Core.Host;
@@ -30,7 +29,6 @@ namespace Apollo.UI.Console
     /// the core and the UI to interact is via the UserInterfaceService.
     /// </para>
     /// </remarks>
-    [ExcludeFromCodeCoverage]
     internal sealed class KernelBootstrapper : Bootstrapper
     {
         /// <summary>

@@ -4,7 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.Practices.Prism.Regions;
 
 namespace Apollo.UI.Wpf.Bootstrappers
@@ -15,7 +14,6 @@ namespace Apollo.UI.Wpf.Bootstrappers
     /// <source>
     /// Original source obtained from: http://www.paulstovell.com/wpf-model-view-presenter
     /// </source>
-    [ExcludeFromCodeCoverage]
     internal sealed class RegionAdapterMapper
     {
         /// <summary>

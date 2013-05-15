@@ -12,7 +12,6 @@ namespace Apollo.Core.Base.Loaders
     /// <summary>
     /// Defines the <see cref="ConfigurationKey"/> objects for the dataset loaders.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public static class LoaderConfigurationKeys
     {
         /// <summary>

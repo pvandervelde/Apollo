@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Core.Host
 {
@@ -13,7 +12,6 @@ namespace Apollo.Core.Host
     /// Defines an attribute that is placed on <c>KernelService</c> classes to indicate
     /// that the specific service type is automatically loaded.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     internal sealed class AutoLoadAttribute : Attribute
     {

@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using Microsoft.Practices.Prism;
@@ -32,7 +31,6 @@ namespace Apollo.UI.Wpf.Bootstrappers
     /// <source>
     /// Original source obtained from: http://www.paulstovell.com/wpf-model-view-presenter
     /// </source>
-    [ExcludeFromCodeCoverage]
     public abstract class CompositeBootstrapper
     {
         /// <summary>

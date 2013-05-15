@@ -19,7 +19,6 @@ namespace Apollo.UI.Wpf
     /// <typeparam name="TParameter">The type of the parameter.</typeparam>
     [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes",
         Justification = "The presenter is associated with a view and a model. The parameter provides additional information.")]
-    [ExcludeFromCodeCoverage]
     public abstract class Presenter<TView, TModel, TParameter> : IPresenter
         where TParameter : Parameter
         where TView : IView<TModel>

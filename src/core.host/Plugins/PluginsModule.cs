@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using Apollo.Utilities;
 using Autofac;
@@ -18,7 +17,6 @@ namespace Apollo.Core.Host.Plugins
     /// Handles the component registrations for the plugins part 
     /// of the core.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     internal sealed class PluginsModule : Module
     {
         /// <summary>

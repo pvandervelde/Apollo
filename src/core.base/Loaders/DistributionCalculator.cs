@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Nuclei.Communication;
 
@@ -14,7 +13,6 @@ namespace Apollo.Core.Base.Loaders
     /// <summary>
     /// Generates dataset loading proposals for the local machine.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     internal sealed class DistributionCalculator : ICalculateDistributionParameters
     {
         /// <summary>

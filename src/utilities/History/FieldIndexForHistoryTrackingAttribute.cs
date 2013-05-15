@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Utilities.History
 {
@@ -14,7 +13,6 @@ namespace Apollo.Utilities.History
     /// history tracking system to order the field data.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    [ExcludeFromCodeCoverage]
     public sealed class FieldIndexForHistoryTrackingAttribute : Attribute
     {
         /// <summary>

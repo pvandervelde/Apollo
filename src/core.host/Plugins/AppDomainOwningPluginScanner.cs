@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
 using Nuclei.Diagnostics;
@@ -18,7 +17,6 @@ namespace Apollo.Core.Host.Plugins
     /// Provides an <see cref="IAssemblyScanner"/> wrapper that loads the actual scanner into a <c>AppDomain</c>, provides the data
     /// to that scanner and then unloads the <c>AppDomain</c> when the scanning process is complete.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     internal sealed class AppDomainOwningPluginScanner : IAssemblyScanner
     {
         /// <summary>

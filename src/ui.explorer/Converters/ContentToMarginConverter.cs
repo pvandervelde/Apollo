@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Data;
 
@@ -17,7 +16,6 @@ namespace Apollo.UI.Explorer.Converters
     /// <source>
     /// http://stackoverflow.com/questions/561931/how-to-create-trapezoid-tabs-in-wpf-tab-control.
     /// </source>
-    [ExcludeFromCodeCoverage]
     public class ContentToMarginConverter : IValueConverter
     {
         /// <summary>

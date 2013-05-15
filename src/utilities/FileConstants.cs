@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Lokad;
 using Nuclei;
@@ -42,7 +41,6 @@ namespace Apollo.Utilities
         /// <value>The extension for an assembly file.</value>
         public string AssemblyExtension
         {
-            [ExcludeFromCodeCoverage]
             get
             {
                 return "dll";
@@ -55,7 +53,6 @@ namespace Apollo.Utilities
         /// <value>The extension for a log file.</value>
         public string LogExtension
         {
-            [ExcludeFromCodeCoverage]
             get
             {
                 return "log";

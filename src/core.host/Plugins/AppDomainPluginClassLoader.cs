@@ -17,7 +17,6 @@ namespace Apollo.Core.Host.Plugins
     /// <summary>
     /// Defines methods to load an <see cref="IAssemblyScanner"/> object into a remote <c>AppDomain</c>.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     internal sealed class AppDomainPluginClassLoader : MarshalByRefObject
     {
         /// <summary>

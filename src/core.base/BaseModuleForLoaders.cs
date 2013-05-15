@@ -5,10 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Apollo.Core.Base.Loaders;
-using Apollo.Utilities;
 using Autofac;
 using Nuclei;
 using Nuclei.Diagnostics;
@@ -19,7 +16,6 @@ namespace Apollo.Core.Base
     /// Handles the component registrations for the loader components that
     /// are used by applications that start dataset applications.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public sealed class BaseModuleForLoaders : Module
     {
         /// <summary>

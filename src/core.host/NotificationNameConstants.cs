@@ -4,14 +4,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
-
 namespace Apollo.Core.Host
 {
     /// <summary>
     /// Stores the <see cref="NotificationName"/> objects in use by the core.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     internal sealed class NotificationNameConstants : INotificationNameConstants
     {
         /// <summary>

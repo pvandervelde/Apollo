@@ -18,7 +18,6 @@ namespace Apollo.Core.Host
         /// <summary>
         /// A vertex class which stores an <see cref="KernelService"/> object.
         /// </summary>
-        [ExcludeFromCodeCoverage]
         private sealed class ServiceVertex
         {
             /// <summary>

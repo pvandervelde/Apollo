@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Windows.Data;
 using Apollo.UI.Wpf.Views.Scripting;
 
@@ -14,7 +13,6 @@ namespace Apollo.UI.Wpf.Converters
     /// <summary>
     /// Converts a <see cref="ScriptDescriptionModel"/> to a text description of the model.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public sealed class ScriptDescriptionModelToTextConverter : IValueConverter
     {
         /// <summary>

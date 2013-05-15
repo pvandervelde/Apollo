@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<sherlock configurationVersion="1.0">
+    <!--
+        Provide some human readable information for the test. This information
+        is used in the reports.
+    -->
+    <description>
+        <product>${ProductName}</product>
+        <version>${ProductVersion}</version>
+        <testpurpose>Integration tests for ${ProductName}</testpurpose>
+    </description>
+
+    <!--
+        Define the environments that are required for the test. Environments are selected by limiting the
+        selection through constraints.
+    -->
+    <environments>
+        <environment name="Client">
+            <constraints>
+                <!-- 
+                    Indicates on which operating systems the tests have to be run.
+                    Note that you can specify what ever you want, however the tests
+                    will not be run if the operating system is not recognised 
+
+                    Service pack names are designated with SP and a number, e.g. SP1
+
+                    Operating system cultures follow the RFC 4646 specification: 
+                    The name is a combination of and ISO 639 two-letter lowercase
+                    culture code associated with a language and an ISO 3166 two-
+                    letter uppercase subculture code associated with a country or 
+                    region. Examples are: en-US (US english), jp-JP (japanese) etc.
+                    see here: 
+                    http://msdn.microsoft.com/en-us/library/system.globalization.cultureinfo.aspx
+                    for more information.
+                -->
+                <operatingsystem configurationVersion="1.0"
+                                 name="Windows7"
+                                 servicepack="SP1"
+                                 culture="en-US"
+                                 bitness="64"/>
+            </constraints>
+        </environment>
+    </environments>
+
+    <!-- 
+        The test steps that need to be taken for the test to be completed 
+    -->
+    <teststeps>
+        <!-- Copy the installers -->
+        <msi configurationVersion="1.0"
+             steporder="0"
+             environment="Client">
+            <file><![CDATA[${FileApolloInstaller}]]></file>
+            <params>
+            </params>
+        </msi>
+        
+        <!-- Copy the test files -->
+        <xcopy configurationVersion="1.0"
+               steporder="3" 
+               environment="Client">
+            <destination><![CDATA[${DirRemoteTestFiles}]]></destination>
+            <base><![CDATA[${DirLocalTestFiles}]]></base>
+            <paths>
+                <file><![CDATA[${DirLocalTestFiles}\packages.config]]></file>
+                <file><![CDATA[${DirLocalTestFiles}\knowngood.licenses.xml]]></file>
+            </paths>
+        </xcopy>
+        
+        <!-- Run nTreva on different package files -->
+        <script configurationVersion="1.0"
+                steporder="4" 
+                environment="Client" >
+            <file language="Powershell"><![CDATA[${FileNTrevaTest}]]></file>
+            <params>
+                <param key="installDir"><![CDATA[${DirRemoteInstall}\ntreva]]></param>
+                <param key="packageDir"><![CDATA[${DirRemoteInstall}]]></param>
+                <param key="packageConfigDir"><![CDATA[${DirRemoteTestFiles}]]></param>
+                <param key="knownGoodFile"><![CDATA[${DirRemoteTestFiles}\knowngood.licenses.xml]]></param>
+            </params>
+        </script>
+    </teststeps>
+
+    <completednotification>
+        <file configurationVersion="1.0">
+            <path><![CDATA[${DirSherlockLog}]]></path>
+        </file>
+    </completednotification>
+</sherlock>

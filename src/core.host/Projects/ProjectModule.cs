@@ -4,7 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Core.Base.Plugins;
@@ -19,7 +18,6 @@ namespace Apollo.Core.Host.Projects
     /// Handles the component registrations for the project part 
     /// of the core.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     internal sealed class ProjectModule : Module
     {
         /// <summary>

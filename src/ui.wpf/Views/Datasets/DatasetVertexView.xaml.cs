@@ -17,7 +17,6 @@ namespace Apollo.UI.Wpf.Views.Datasets
     /// Note that this class is instantiated directly by the WPF subsystem because it is being used in the
     /// template for the graph vertices (see DatasetGraphView.xaml). 
     /// </remarks>
-    [ExcludeFromCodeCoverage]
     public partial class DatasetVertexView : UserControl
     {
         /// <summary>

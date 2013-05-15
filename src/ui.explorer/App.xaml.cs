@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
@@ -20,7 +19,6 @@ namespace Apollo.UI.Explorer
     /// <summary>
     /// Interaction logic for App.xaml.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     internal partial class App : IDisposable
     {
         /// <summary>

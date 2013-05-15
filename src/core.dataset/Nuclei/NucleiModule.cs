@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -30,7 +29,6 @@ namespace Apollo.Core.Dataset.Nuclei
     /// Handles the component registrations for the utilities part 
     /// of the core.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     internal sealed class NucleiModule : Autofac.Module
     {
         /// <summary>

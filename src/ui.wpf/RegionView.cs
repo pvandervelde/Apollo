@@ -15,7 +15,6 @@ namespace Apollo.UI.Wpf
     /// <summary>
     /// A view that is shown in a region.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public class RegionView : UserControl, IRegionView
     {
         /// <summary>

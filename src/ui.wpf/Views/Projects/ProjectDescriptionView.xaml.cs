@@ -12,7 +12,6 @@ namespace Apollo.UI.Wpf.Views.Projects
     /// <summary>
     /// Interaction logic for ProjectDescriptionView.xaml.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public partial class ProjectDescriptionView : UserControl, IProjectDescriptionView
     {
         /// <summary>

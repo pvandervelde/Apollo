@@ -19,7 +19,6 @@ namespace Apollo.Core.Host
         /// <summary>
         /// Stores a link between a requested type and the KernelService which fulfills this request.
         /// </summary>
-        [ExcludeFromCodeCoverage]
         private sealed class ConnectionMap
         {
             /// <summary>

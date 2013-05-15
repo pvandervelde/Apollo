@@ -4,7 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using Apollo.Core.Base;
 using Apollo.Utilities.Commands;
@@ -18,7 +17,6 @@ namespace Apollo.Core.Host
     /// Handles the component registrations for the kernel part 
     /// of the core.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     internal sealed class KernelModule : Module
     {
         /// <summary>

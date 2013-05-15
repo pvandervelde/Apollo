@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Windows.Controls;
 
 namespace Apollo.UI.Wpf.Views.Datasets
@@ -14,7 +13,6 @@ namespace Apollo.UI.Wpf.Views.Datasets
     /// Interaction logic for DatasetGraphView.xaml.
     /// </summary>
     [CLSCompliant(false)]
-    [ExcludeFromCodeCoverage]
     public partial class DatasetGraphView : UserControl, IDatasetGraphView
     {
         /// <summary>

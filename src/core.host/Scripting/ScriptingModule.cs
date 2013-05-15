@@ -5,11 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Utilities;
 using Autofac;
@@ -20,7 +15,6 @@ namespace Apollo.Core.Host.Scripting
     /// Handles the component registrations for the User Interface part 
     /// of the core.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     internal sealed class ScriptingModule : Module
     {
         /// <summary>

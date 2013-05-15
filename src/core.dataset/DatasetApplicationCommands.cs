@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Concurrent;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,7 +21,6 @@ namespace Apollo.Core.Dataset
     /// Defines the commands that allow a dataset application to handle the dataset 
     /// persistence.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     internal sealed class DatasetApplicationCommands : IDatasetApplicationCommands
     {
         /// <summary>

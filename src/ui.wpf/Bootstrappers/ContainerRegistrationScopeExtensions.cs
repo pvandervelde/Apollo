@@ -14,7 +14,6 @@ namespace Apollo.UI.Wpf.Bootstrappers
     /// <source>
     /// Original source obtained from: http://www.paulstovell.com/wpf-model-view-presenter.
     /// </source>
-    [ExcludeFromCodeCoverage]
     public static class ContainerRegistrationScopeExtensions
     {
         /// <summary>

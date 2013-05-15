@@ -4,7 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
 using Autofac;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Regions;
@@ -14,7 +13,6 @@ namespace Apollo.UI.Wpf
     /// <summary>
     /// Defines methods for event handling.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public abstract class EventListener
     {
         /// <summary>

@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using Apollo.UI.Wpf.Feedback;
@@ -23,7 +22,6 @@ namespace Apollo.UI.Wpf
     /// <summary>
     /// Handles the component registrations for the Apollo.UI.Wpf assembly.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public sealed class CommonUIModule : Module
     {
         /// <summary>

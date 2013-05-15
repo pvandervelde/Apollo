@@ -4,7 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base.Scheduling;
 using Autofac;
 
@@ -13,7 +12,6 @@ namespace Apollo.Core.Base
     /// <summary>
     /// Handles the component registrations for the scheduling components.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public sealed class BaseModuleForScheduling : Module
     {
         private static void RegisterSchedules(ContainerBuilder builder)

@@ -14,7 +14,6 @@ namespace Apollo.Core.Dataset
     /// <summary>
     /// Defines the notifications that allow a dataset to signal the outside world.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     internal sealed class DatasetApplicationNotifications : IDatasetApplicationNotificationInvoker
     {
         /// <summary>

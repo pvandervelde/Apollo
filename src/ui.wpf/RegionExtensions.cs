@@ -15,7 +15,6 @@ namespace Apollo.UI.Wpf
     /// <summary>
     /// A set of extensions to provide presenter and parameter support for Composite WPF's region manager.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public static class RegionExtensions
     {
         /// <summary>

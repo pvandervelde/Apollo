@@ -20,7 +20,6 @@ namespace Apollo.Core.Dataset
     /// <summary>
     /// The main entry point for the application.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1400:AccessModifierMustBeDeclared",
             Justification = "Access modifiers should not be declared on the entry point for a command line application. See FxCop.")]
     static class Program

@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Core.Extensions.Plugins
 {
@@ -14,7 +13,6 @@ namespace Apollo.Core.Extensions.Plugins
     /// in a schedule.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-    [ExcludeFromCodeCoverage]
     public sealed class ScheduleConditionAttribute : Attribute
     {
         /// <summary>

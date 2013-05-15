@@ -4,14 +4,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
-
 namespace Apollo.Core.Base.Loaders
 {
     /// <summary>
     /// Stores the information that describes a loading request for a dataset.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public sealed class DatasetRequest
     {
         /// <summary>
