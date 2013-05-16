@@ -7,15 +7,18 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.Scripting;
-using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
-using Nuclei.Diagnostics.Profiling;
 
 namespace Apollo.UI.Wpf.Commands
 {
     /// <summary>
     /// Handles the closing of the script system.
     /// </summary>
+    /// <remarks>
+    /// This command is nearly the same as the <see cref="CancelScriptRunCommand"/> with the difference that
+    /// the current command doesn't care if there is a script running or not. If not we don't have to do anything,
+    /// if so then we just stop it.
+    /// </remarks>
     public sealed class CloseScriptCommand : DelegateCommand<object>
     {
         /// <summary>
@@ -46,9 +49,10 @@ namespace Apollo.UI.Wpf.Commands
                 return;
             }
 
+            // All we do in here is to stop the script if it is running. There is nothing else to do
             if (info != null)
             {
-                using (var interval = timer("Closing script"))
+                using (timer("Closing script"))
                 {
                     if ((info.CancellationToken != null) && (info.ScriptRunningTask != null))
                     {

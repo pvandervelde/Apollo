@@ -7,15 +7,17 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.Scripting;
-using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
-using Nuclei.Diagnostics.Profiling;
 
 namespace Apollo.UI.Wpf.Commands
 {
     /// <summary>
     /// Handles the cancelling of a running script.
     /// </summary>
+    /// <remarks>
+    /// This command is nearly the same as the <see cref="CloseScriptCommand"/> with the difference that
+    /// the current command can only be executed if there is a script running.
+    /// </remarks>
     public sealed class CancelScriptRunCommand : DelegateCommand<object>
     {
         /// <summary>

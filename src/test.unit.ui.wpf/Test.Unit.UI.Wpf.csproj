@@ -182,6 +182,11 @@
     <Compile Include="Commands\AddChildDatasetCommandTest.cs" />
     <Compile Include="Commands\CancelScriptRunCommandTest.cs" />
     <Compile Include="Commands\CloseProjectCommandTest.cs" />
+    <Compile Include="Commands\CloseScriptCommandTest.cs" />
+    <Compile Include="Commands\CreationOfNewScriptCanceledExceptionTest.cs" />
+    <Compile Include="Commands\DeleteDatasetCommandTest.cs" />
+    <Compile Include="Commands\ExitCommandTest.cs" />
+    <Compile Include="Commands\LoadingOfScriptCanceledExceptionTest.cs" />
     <Compile Include="Converters\CommandToToolTipTextConverterTest.cs" />
     <Compile Include="Converters\DistributionSuggestionToTextConverterTest.cs" />
     <Compile Include="Converters\FeedbackReportToTextConverterTest.cs" />

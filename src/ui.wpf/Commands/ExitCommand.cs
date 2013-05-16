@@ -31,12 +31,7 @@ namespace Apollo.UI.Wpf.Commands
         {
             // If there is no application facade, then we're in 
             // designer mode, or something else silly.
-            if (applicationFacade == null)
-            {
-                return false;
-            }
-
-            return true;
+            return applicationFacade != null;
         }
 
         /// <summary>

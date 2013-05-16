@@ -10,9 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Apollo.Core.Base.Loaders;
 using Apollo.Core.Host.UserInterfaces.Projects;
-using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
-using Nuclei.Diagnostics.Profiling;
 
 namespace Apollo.UI.Wpf.Commands
 {
@@ -69,7 +67,7 @@ namespace Apollo.UI.Wpf.Commands
                 return;
             }
 
-            using (var interval = timer("Loading dataset onto machine"))
+            using (timer("Loading dataset onto machine"))
             {
                 var source = new CancellationTokenSource();
                 dataset.LoadOntoMachine(
