@@ -4,12 +4,18 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Reflection;
+using System.Resources;
+using System.Security;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("est.Unit.Core.Extensions")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyProduct("Apollo")]
+[assembly: AssemblyTitle("Test.Integration.UI.Console")]
+[assembly: AssemblyDescription("Holds the integration tests for Apollo.UI.Console.")]
+[assembly: AssemblyProduct("Test.Integration.UI.Console")]
 [assembly: AssemblyCulture("")]
+
+// Indicate that the assembly is CLS compliant.
+[assembly: CLSCompliant(true)]

@@ -160,6 +160,15 @@
     <Compile Include="Plugins\UnknownImportDefinitionExceptionTest.cs" />
     <Compile Include="Plugins\UnknownPluginTypeExceptionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
+      <Link>Properties\AssemblyInfo.Base.cs</Link>
+    </Compile>
+    <Compile Include="..\..\build\temp\AssemblyInfo.BuildInformation.cs">
+      <Link>Properties\AssemblyInfo.BuildInformation.cs</Link>
+    </Compile>
+    <Compile Include="..\..\build\temp\AssemblyInfo.VersionNumber.cs">
+      <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
+    </Compile>
     <Compile Include="Scheduling\CannotCreateASynchronizationBlockWithoutVariablesExceptionTest.cs" />
     <Compile Include="Scheduling\CannotCreateInsertVertexWithLessThanOneInsertExceptionTest.cs" />
     <Compile Include="Scheduling\CannotCreateScheduleElementIdWithEmptyGuidExceptionTest.cs" />

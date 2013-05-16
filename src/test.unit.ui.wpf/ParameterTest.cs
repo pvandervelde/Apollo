@@ -6,12 +6,11 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.UI.Wpf;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 using Moq;
 
-namespace Apollo.UI
+namespace Apollo.UI.Wpf
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

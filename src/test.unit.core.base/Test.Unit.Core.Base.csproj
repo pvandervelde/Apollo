@@ -181,11 +181,21 @@
     <Compile Include="Plugins\ScheduleDefinitionTest.cs" />
     <Compile Include="Plugins\TypeDefinitionTest.cs" />
     <Compile Include="Plugins\TypeIdentityTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduling\ScheduleEdgeTest.cs" />
     <Compile Include="Scheduling\EditableScheduleTest.cs" />
     <Compile Include="Scheduling\FixedScheduleBuilderTest.cs" />
     <Compile Include="Scheduling\ScheduleVerifierTest.cs" />
     <Compile Include="Scheduling\UnknownScheduleExceptionTest.cs" />
+    <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
+      <Link>Properties\AssemblyInfo.Base.cs</Link>
+    </Compile>
+    <Compile Include="..\..\build\temp\AssemblyInfo.BuildInformation.cs">
+      <Link>Properties\AssemblyInfo.BuildInformation.cs</Link>
+    </Compile>
+    <Compile Include="..\..\build\temp\AssemblyInfo.VersionNumber.cs">
+      <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
