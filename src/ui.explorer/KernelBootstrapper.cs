@@ -77,7 +77,7 @@ namespace Apollo.UI.Explorer
         {
             return new List<IModule> 
                 { 
-                    new UtilitiesModule(),
+                    new NucleiModule(),
                     new CommunicationModule(
                         new List<CommunicationSubject>
                             {

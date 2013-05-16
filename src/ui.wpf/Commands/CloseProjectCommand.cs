@@ -7,9 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Projects;
-using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
-using Nuclei.Diagnostics.Profiling;
 
 namespace Apollo.UI.Wpf.Commands
 {
@@ -34,14 +32,9 @@ namespace Apollo.UI.Wpf.Commands
         {
             // If there is no project facade, then we're in 
             // designer mode, or something else silly.
-            if (projectFacade == null)
-            {
-                return false;
-            }
-
-            return projectFacade.CanUnloadProject();
+            return projectFacade != null && projectFacade.CanUnloadProject();
         }
-        
+
         /// <summary>
         /// Called when the existing project should be closed.
         /// </summary>
@@ -59,7 +52,7 @@ namespace Apollo.UI.Wpf.Commands
                 return;
             }
 
-            using (var interval = timer("Unloading project"))
+            using (timer("Unloading project"))
             {
                 projectFacade.UnloadProject();
             }

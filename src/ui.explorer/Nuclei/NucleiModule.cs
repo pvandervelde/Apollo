@@ -10,7 +10,6 @@ using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
 using Apollo.UI.Explorer.Nuclei.ExceptionHandling;
-using Apollo.UI.Explorer.Utilities;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
 using Autofac;
@@ -31,7 +30,7 @@ namespace Apollo.UI.Explorer.Nuclei
     /// Handles the component registrations for the utilities part 
     /// of the core.
     /// </summary>
-    internal sealed class UtilitiesModule : Autofac.Module
+    internal sealed class NucleiModule : Autofac.Module
     {
         /// <summary>
         /// The default name for the error log.
@@ -77,7 +76,7 @@ namespace Apollo.UI.Explorer.Nuclei
 
         private static void RegisterAppDomainBuilder(ContainerBuilder builder)
         {
-            builder.Register<Func<string, AppDomainPaths, AppDomain>>(
+            builder.Register(
                 c =>
                 {
                     // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
@@ -99,7 +98,7 @@ namespace Apollo.UI.Explorer.Nuclei
 
         private static void RegisterDiagnostics(ContainerBuilder builder)
         {
-            builder.Register<SystemDiagnostics>(
+            builder.Register(
                 c => 
                 {
                     var loggers = c.Resolve<IEnumerable<ILogger>>();

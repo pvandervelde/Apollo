@@ -28,7 +28,7 @@ namespace Apollo.UI.Wpf.Models
         internal static MostRecentlyUsed Deserialize(CultureInfo culture, string mru)
         {
             string[] parts = mru.Split(new char[] { '|' });
-            var result = new MostRecentlyUsed(parts[0], DateTimeOffset.ParseExact(parts[1], "0", culture));
+            var result = new MostRecentlyUsed(parts[0], DateTimeOffset.ParseExact(parts[1], "o", culture));
             return result;
         }
 
@@ -40,7 +40,7 @@ namespace Apollo.UI.Wpf.Models
         /// <returns>A string containing the most recently used information.</returns>
         internal static string Serialize(CultureInfo culture, MostRecentlyUsed mru)
         {
-            return string.Format(culture, "{0}|{1}", mru.FilePath, mru.LastTimeOpened);
+            return string.Format(culture, "{0}|{1:o}", mru.FilePath, mru.LastTimeOpened);
         }
 
         /// <summary>

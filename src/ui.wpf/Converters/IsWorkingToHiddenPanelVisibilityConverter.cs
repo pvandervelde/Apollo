@@ -25,7 +25,7 @@ namespace Apollo.UI.Wpf.Converters
         /// <returns>A converted value. If the method returns null, the valid null value is used.</returns>
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if ((value == null) || !(value is Boolean))
+            if ((value == null) || !(value is bool))
             {
                 return Visibility.Hidden;
             }

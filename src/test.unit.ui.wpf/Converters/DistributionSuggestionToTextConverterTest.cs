@@ -1,4 +1,10 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
@@ -69,7 +75,7 @@ namespace Apollo.UI.Wpf.Converters
             var model = new DistributionSuggestion(plan);
 
             var converter = new DistributionSuggestionToTextConverter();
-            var convertedValue = converter.Convert(null, null, null, null);
+            var convertedValue = converter.Convert(model, null, null, null);
             Assert.AreEqual(plan.MachineToDistributeTo.ToString(), convertedValue);
         }
 

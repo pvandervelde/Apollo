@@ -1,9 +1,14 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Apollo.UI.Wpf.Feedback;
+﻿//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 
-namespace Apollo.UI.Wpf.Views.Feedback
+namespace Apollo.UI.Wpf.Feedback
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

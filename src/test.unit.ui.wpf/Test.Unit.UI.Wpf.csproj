@@ -71,6 +71,15 @@
     <Reference Include="MbUnit40">
       <HintPath>..\..\packages\Gallio.Core.3.3.378.0\lib\net40\MbUnit40.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Practices.Prism, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Prism.4.0.0.0\lib\NET40\Microsoft.Practices.Prism.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Prism.4.0.0.0\lib\NET40\Microsoft.Practices.Prism.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.dll</HintPath>
     </Reference>
@@ -125,6 +134,9 @@
       <HintPath>..\..\packages\structuremap.2.6.3\lib\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.IO.Abstractions, Version=1.4.0.40, Culture=neutral, PublicKeyToken=d480b5b72fb413da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.IO.Abstractions.1.4.0.40\lib\net35\System.IO.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Reactive, Version=1.0.10621.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Rx-Main.1.0.10621\lib\Net4\System.Reactive.dll</HintPath>
     </Reference>
@@ -158,14 +170,31 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\test.srconly\Mocks\MockDirectory.cs">
+      <Link>Mocks\MockDirectory.cs</Link>
+    </Compile>
+    <Compile Include="..\test.srconly\Mocks\MockFile.cs">
+      <Link>Mocks\MockFile.cs</Link>
+    </Compile>
+    <Compile Include="..\test.srconly\Mocks\MockPath.cs">
+      <Link>Mocks\MockPath.cs</Link>
+    </Compile>
+    <Compile Include="Commands\AddChildDatasetCommandTest.cs" />
+    <Compile Include="Commands\CancelScriptRunCommandTest.cs" />
+    <Compile Include="Commands\CloseProjectCommandTest.cs" />
     <Compile Include="Converters\CommandToToolTipTextConverterTest.cs" />
     <Compile Include="Converters\DistributionSuggestionToTextConverterTest.cs" />
     <Compile Include="Converters\FeedbackReportToTextConverterTest.cs" />
     <Compile Include="Converters\IsWorkingToHiddenPanelVisibilityConverterTest.cs" />
     <Compile Include="Converters\ScriptDescriptionModelToTextConverterTest.cs" />
+    <Compile Include="Feedback\FeedbackReportCollectorTest.cs" />
+    <Compile Include="Feedback\FeedbackReportTransmitterTest.cs" />
+    <Compile Include="Models\MostRecentlyUsedCollectionTest.cs" />
+    <Compile Include="Models\MostRecentlyUsedTest.cs" />
     <Compile Include="ParameterTest.cs" />
+    <Compile Include="Profiling\TimingReportCollectionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\Feedback\FailedToSendFeedbackReportExceptionTest.cs" />
+    <Compile Include="Feedback\FailedToSendFeedbackReportExceptionTest.cs" />
     <Compile Include="Views\Projects\ProjectModelTest.cs" />
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
@@ -184,11 +213,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Commands\" />
-    <Folder Include="Feedback\" />
-    <Folder Include="Models\" />
-    <Folder Include="Profiling\" />
     <Folder Include="Views\Datasets\" />
+    <Folder Include="Views\Feedback\" />
     <Folder Include="Views\Notification\" />
     <Folder Include="Views\Profiling\" />
     <Folder Include="Views\Progress\" />

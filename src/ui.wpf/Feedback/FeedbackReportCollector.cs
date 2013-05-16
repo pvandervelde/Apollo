@@ -8,8 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
-using Lokad;
 using Nuclei;
 
 namespace Apollo.UI.Wpf.Feedback
@@ -20,6 +20,11 @@ namespace Apollo.UI.Wpf.Feedback
     public sealed class FeedbackReportCollector : ICollectFeedbackReports
     {
         /// <summary>
+        /// The object that provides access to the file system.
+        /// </summary>
+        private readonly IFileSystem m_FileSystem;
+
+        /// <summary>
         /// The object that holds the constant values that describe the application files and file paths.
         /// </summary>
         private readonly IFileConstants m_FileConstants;
@@ -27,15 +32,22 @@ namespace Apollo.UI.Wpf.Feedback
         /// <summary>
         /// Initializes a new instance of the <see cref="FeedbackReportCollector"/> class.
         /// </summary>
-        /// <param name="fileConstants">
-        ///     The object that holds the constant values that describe the application files and file paths.
-        /// </param>
-        public FeedbackReportCollector(IFileConstants fileConstants)
+        /// <param name="fileSystem">The object that provides access to the file system.</param>
+        /// <param name="fileConstants">The object that holds the constant values that describe the application files and file paths.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="fileSystem"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="fileConstants"/> is <see langword="null" />.
+        /// </exception>
+        public FeedbackReportCollector(IFileSystem fileSystem, IFileConstants fileConstants)
         {
             {
-                Enforce.Argument(() => fileConstants);
+                Lokad.Enforce.Argument(() => fileSystem);
+                Lokad.Enforce.Argument(() => fileConstants);
             }
 
+            m_FileSystem = fileSystem;
             m_FileConstants = fileConstants;
         }
 
@@ -59,7 +71,7 @@ namespace Apollo.UI.Wpf.Feedback
             try
             {
                 var path = m_FileConstants.CompanyUserPath();
-                return Directory.GetFiles(
+                return m_FileSystem.Directory.GetFiles(
                     path,
                     string.Format(
                         CultureInfo.InvariantCulture,

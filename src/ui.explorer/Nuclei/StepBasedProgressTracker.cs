@@ -7,7 +7,7 @@
 using System;
 using Nuclei.Progress;
 
-namespace Apollo.UI.Explorer.Utilities
+namespace Apollo.UI.Explorer.Nuclei
 {
     /// <summary>
     /// Defines methods used to track progress based on inputs from a user.

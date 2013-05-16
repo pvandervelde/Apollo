@@ -48,13 +48,16 @@ namespace Apollo.UI.Wpf.Converters
         /// <param name="parameter">The converter parameter to use.</param>
         /// <param name="culture">The culture to use in the converter.</param>
         /// <returns>A converted value. If the method returns null, the valid null value is used.</returns>
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var command = value as RoutedUICommand;
+            var formatString = (command != null) && (command.InputGestures != null) && (command.InputGestures.Count > 0)
+                ? "{0} ({1})"
+                : "{0}";
             return (command != null) 
                 ? string.Format(
                     CultureInfo.CurrentCulture, 
-                    "{0} ({1})", 
+                    formatString, 
                     command.Text, 
                     InputGesturesToString(command.InputGestures)) 
                 : string.Empty;
@@ -68,7 +71,7 @@ namespace Apollo.UI.Wpf.Converters
         /// <param name="parameter">The converter parameter to use.</param>
         /// <param name="culture">The culture to use in the converter.</param>
         /// <returns>A converted value. If the method returns null, the valid null value is used.</returns>
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

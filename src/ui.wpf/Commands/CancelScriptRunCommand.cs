@@ -29,7 +29,7 @@ namespace Apollo.UI.Wpf.Commands
             Justification = "Documentation can start with a language keyword")]
         private static bool CanCancelScriptRun(IHostScripts scriptHost)
         {
-            return (scriptHost != null) ? scriptHost.IsExecutingScript : false;
+            return (scriptHost != null) && scriptHost.IsExecutingScript;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Apollo.UI.Wpf.Commands
 
             if (info != null)
             {
-                using (var interval = timer("Cancelling script run"))
+                using (timer("Cancelling script run"))
                 {
                     // Note that the cancellation may take some time ...?
                     info.CancellationToken.Cancel();

@@ -1,4 +1,10 @@
-﻿using System.Collections.Generic;
+﻿//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Windows;
@@ -29,10 +35,10 @@ namespace Apollo.UI.Wpf.Converters
             var convertedValue = converter.Convert(command, null, null, null);
             
             var expected = string.Format(
-                CultureInfo.InvariantCulture,
+                CultureInfo.CurrentCulture,
                 "{0} ({1})",
                 text,
-                "Alt + A");
+                "Alt+A");
             Assert.AreEqual(expected, convertedValue);
         }
 

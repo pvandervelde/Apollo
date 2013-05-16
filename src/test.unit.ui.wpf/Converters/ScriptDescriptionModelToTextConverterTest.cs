@@ -1,4 +1,10 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.Scripting;
 using Apollo.UI.Wpf.Views.Scripting;
 using MbUnit.Framework;
@@ -18,7 +24,7 @@ namespace Apollo.UI.Wpf.Converters
             var value = new ScriptDescriptionModel(context.Object, ScriptLanguage.IronPython);
 
             var converter = new ScriptDescriptionModelToTextConverter();
-            var convertedValue = converter.Convert(null, null, null, null);
+            var convertedValue = converter.Convert(value, null, null, null);
             Assert.AreEqual(value.Description, convertedValue);
         }
 

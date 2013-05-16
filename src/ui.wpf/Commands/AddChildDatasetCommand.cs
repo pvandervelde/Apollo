@@ -7,10 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Projects;
-using Apollo.UI.Wpf.Properties;
-using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
-using Nuclei.Diagnostics.Profiling;
 
 namespace Apollo.UI.Wpf.Commands
 {
@@ -55,7 +52,7 @@ namespace Apollo.UI.Wpf.Commands
                 return;
             }
 
-            using (var interval = timer("Add dataset to graph"))
+            using (timer("Add dataset to graph"))
             {
                 datasetFacade.AddChild();
                 projectFacade.ActiveProject().History.Mark();

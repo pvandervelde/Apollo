@@ -151,7 +151,7 @@
       <InternalsVisibleTo Include="[assembly: InternalsVisibleTo(&quot;Test.Unit.Core.Base, PublicKey=$(PublicKeyLocal)&quot;)]" />
       <InternalsVisibleTo Include="[assembly: InternalsVisibleTo(&quot;Test.Unit.Core.Dataset, PublicKey=$(PublicKeyLocal)&quot;)]" />
       <InternalsVisibleTo Include="[assembly: InternalsVisibleTo(&quot;Test.Unit.Core.Extensions, PublicKey=$(PublicKeyLocal)&quot;)]" />
-      <InternalsVisibleTo Include="[assembly: InternalsVisibleTo(&quot;Test.Unit.UI, PublicKey=$(PublicKeyLocal)&quot;)]" />
+      <InternalsVisibleTo Include="[assembly: InternalsVisibleTo(&quot;Test.Unit.UI.Wpf, PublicKey=$(PublicKeyLocal)&quot;)]" />
       <InternalsVisibleTo Include="[assembly: InternalsVisibleTo(&quot;Test.Unit.Utilities, PublicKey=$(PublicKeyLocal)&quot;)]" />
       <InternalsVisibleTo Include="[assembly: InternalsVisibleTo(&quot;Test.Manual.Console, PublicKey=$(PublicKeyLocal)&quot;)]" />
       <InternalsVisibleTo Include="[assembly: InternalsVisibleTo(&quot;Moq, PublicKey=$(PublicKeyMoq)&quot;)]" />

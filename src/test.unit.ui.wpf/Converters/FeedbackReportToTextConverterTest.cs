@@ -1,4 +1,10 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Apollo.UI.Wpf.Views.Feedback;
@@ -26,14 +32,14 @@ namespace Apollo.UI.Wpf.Converters
             var model = new FeedbackFileModel(context.Object, path, date);
 
             var expected = string.Format(
-                CultureInfo.InvariantCulture,
-                "Error in: {0} - Occured on: {1}.",
+                CultureInfo.CurrentCulture,
+                "Error in: {0} - Occurred on: {1}",
                 applicationName,
                 date);
             
             var converter = new FeedbackReportToTextConverter();
             var convertedValue = converter.Convert(model, null, null, null);
-            
+            Assert.AreEqual(expected, convertedValue);
         }
 
         [Test]

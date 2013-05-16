@@ -6,6 +6,7 @@
 
 using System;
 using System.IO;
+using System.IO.Abstractions;
 using System.Text;
 using Apollo.UI.Wpf.Feedback;
 using Apollo.UI.Wpf.Profiling;
@@ -39,6 +40,7 @@ namespace Apollo.UI.Wpf
             // Register the global application objects
             {
                 builder.Register(c => new FeedbackReportCollector(
+                        c.Resolve<IFileSystem>(),
                         c.Resolve<IFileConstants>()))
                    .As<ICollectFeedbackReports>();
 
@@ -93,6 +95,9 @@ namespace Apollo.UI.Wpf
                         return result;
                     })
                     .SingleInstance();
+
+                builder.Register(c => new FileSystem())
+                    .As<IFileSystem>();
             }
         }
     }
