@@ -7,9 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Projects;
-using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
-using Nuclei.Diagnostics.Profiling;
 
 namespace Apollo.UI.Wpf.Commands
 {
@@ -59,7 +57,7 @@ namespace Apollo.UI.Wpf.Commands
                 return;
             }
 
-            using (var interval = timer("Unloading dataset"))
+            using (timer("Unloading dataset"))
             {
                 dataset.UnloadFromMachine();
                 projectFacade.ActiveProject().History.Mark();

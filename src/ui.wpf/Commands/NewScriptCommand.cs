@@ -8,9 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.Scripting;
 using Apollo.UI.Wpf.Views.Scripting;
-using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
-using Nuclei.Diagnostics.Profiling;
 
 namespace Apollo.UI.Wpf.Commands
 {
@@ -60,7 +58,7 @@ namespace Apollo.UI.Wpf.Commands
                 throw new CreationOfNewScriptCanceledException();
             }
 
-            using (var interval = timer("Creating new script"))
+            using (timer("Creating new script"))
             {
                 var tuple = selectScriptLanguage();
                 if (!tuple.Item1)

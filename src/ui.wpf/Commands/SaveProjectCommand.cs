@@ -10,7 +10,6 @@ using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.UI.Wpf.Properties;
 using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
-using Nuclei.Diagnostics.Profiling;
 
 namespace Apollo.UI.Wpf.Commands
 {
@@ -72,7 +71,7 @@ namespace Apollo.UI.Wpf.Commands
                 return;
             }
 
-            using (var interval = timer("Saving project"))
+            using (timer("Saving project"))
             {
                 var project = projectFacade.ActiveProject();
                 project.SaveProject(persistenceInformation);

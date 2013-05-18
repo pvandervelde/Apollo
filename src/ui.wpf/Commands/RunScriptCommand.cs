@@ -27,7 +27,7 @@ namespace Apollo.UI.Wpf.Commands
             Justification = "Documentation can start with a language keyword")]
         private static bool CanRunScript(IHostScripts scriptHost)
         {
-            return (scriptHost != null) ? !scriptHost.IsExecutingScript : false;
+            return (scriptHost != null) && !scriptHost.IsExecutingScript;
         }
 
         /// <summary>

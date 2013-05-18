@@ -8,9 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Host.UserInterfaces.Projects;
-using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
-using Nuclei.Diagnostics.Profiling;
 
 namespace Apollo.UI.Wpf.Commands
 {
@@ -79,7 +77,7 @@ namespace Apollo.UI.Wpf.Commands
                 return;
             }
 
-            using (var interval = timer("Undoing change"))
+            using (timer("Undoing change"))
             {
                 var project = projectFacade.ActiveProject();
                 if (project.History.CanRollBack)

@@ -29,7 +29,7 @@ namespace Apollo.UI.Wpf.Commands
             Justification = "Documentation can start with a language keyword")]
         private static bool CanSendReport(ISendFeedbackReports feedbackSender, Stream feedbackReport)
         {
-            return (feedbackSender != null) && (feedbackReport != null) && (feedbackReport != null);
+            return (feedbackSender != null) && (feedbackReport != null);
         }
         
         /// <summary>
