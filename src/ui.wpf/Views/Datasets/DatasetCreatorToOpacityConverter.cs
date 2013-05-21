@@ -54,6 +54,11 @@ namespace Apollo.UI.Wpf.Views.Datasets
             }
 
             var creator = (DatasetCreator)value;
+            if (creator == DatasetCreator.None)
+            {
+                throw new InvalidOperationException();
+            }
+
             return s_CreatorToImportanceMap[creator];
         }
 

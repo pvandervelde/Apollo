@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using Apollo.Utilities;
-using Autofac;
 
 namespace Apollo.UI.Wpf.Views.Notification
 {
@@ -18,13 +17,13 @@ namespace Apollo.UI.Wpf.Views.Notification
         /// <summary>
         /// The IOC container that is used to retrieve the commands for the menu.
         /// </summary>
-        private readonly IContainer m_Container;
+        private readonly IDependencyInjectionProxy m_Container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationPresenter"/> class.
         /// </summary>
         /// <param name="container">The IOC container that is used to retrieve the commands for the error reports presenter.</param>
-        public NotificationPresenter(IContainer container)
+        public NotificationPresenter(IDependencyInjectionProxy container)
         {
             m_Container = container;
         }

@@ -28,13 +28,13 @@ namespace Apollo.UI.Wpf.Views.Datasets
         /// <summary>
         /// The IOC container that is used to retrieve the commands for the dataset presenter.
         /// </summary>
-        private readonly IContainer m_Container;
+        private readonly IDependencyInjectionProxy m_Container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetGraphPresenter"/> class.
         /// </summary>
         /// <param name="container">The IOC container that is used to retrieve the commands for the dataset presenter.</param>
-        public DatasetGraphPresenter(IContainer container)
+        public DatasetGraphPresenter(IDependencyInjectionProxy container)
         {
             m_Container = container;
         }
@@ -48,14 +48,9 @@ namespace Apollo.UI.Wpf.Views.Datasets
 
             var serviceFacade = m_Container.Resolve<ILinkToProjects>();
             var project = serviceFacade.ActiveProject();
-            Func<DatasetFacade, DatasetModel> builder =
-                f =>
-                {
-                    return CreateModel(f);
-                };
 
             Debug.Assert(project != null, "There should be an active project.");
-            View.Model = new DatasetGraphModel(context, project, builder);
+            View.Model = new DatasetGraphModel(context, project, CreateModel);
         }
 
         /// <summary>
@@ -104,10 +99,8 @@ namespace Apollo.UI.Wpf.Views.Datasets
                     {
                         return new SelectedProposal(view.Model.SelectedPlan);
                     }
-                    else
-                    {
-                        return new SelectedProposal();
-                    }
+                    
+                    return new SelectedProposal();
                 };
 
             var command = m_Container.Resolve<LoadDatasetOntoMachineCommand>(

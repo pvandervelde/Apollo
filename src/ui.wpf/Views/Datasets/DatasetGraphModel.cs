@@ -70,7 +70,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
         ///     Thrown if <paramref name="datasetModelBuilder"/> is <see langword="null" />.
         /// </exception>
         public DatasetGraphModel(
-            IContextAware context, 
+            IContextAware context,
             ProjectFacade facade,
             Func<DatasetFacade, DatasetModel> datasetModelBuilder)
             : base(context)
@@ -86,8 +86,8 @@ namespace Apollo.UI.Wpf.Views.Datasets
             m_DatasetModelBuilder = datasetModelBuilder;
 
             LayoutType = "Tree";
-            LayoutParameters = new SimpleTreeLayoutParameters 
-                { 
+            LayoutParameters = new SimpleTreeLayoutParameters
+                {
                     LayerGap = 250,
                     VertexGap = 250,
                     Direction = LayoutDirection.TopToBottom,
@@ -100,27 +100,27 @@ namespace Apollo.UI.Wpf.Views.Datasets
         {
             Action<DatasetViewGraph, DatasetFacade, DatasetFacade> action =
                 (graph, parent, child) =>
+                {
+                    if (m_VertexMap.ContainsKey(child))
                     {
-                        if (m_VertexMap.ContainsKey(child))
-                        {
-                            return;
-                        }
+                        return;
+                    }
 
-                        var vertex = new DatasetViewVertex(InternalContext, m_DatasetModelBuilder(child));
-                        m_VertexMap.Add(child, vertex);
+                    var vertex = new DatasetViewVertex(InternalContext, m_DatasetModelBuilder(child));
+                    m_VertexMap.Add(child, vertex);
 
-                        graph.AddVertex(vertex);
-                        if (parent != null)
-                        {
-                            Debug.Assert(m_VertexMap.ContainsKey(parent), "Lost the parent!");
-                            var parentVertex = m_VertexMap[parent];
-                            var edge = new DatasetViewEdge(parentVertex, vertex);
-                            graph.AddEdge(edge);
-                        }
-                    };
+                    graph.AddVertex(vertex);
+                    if (parent != null)
+                    {
+                        Debug.Assert(m_VertexMap.ContainsKey(parent), "Lost the parent!");
+                        var parentVertex = m_VertexMap[parent];
+                        var edge = new DatasetViewEdge(parentVertex, vertex);
+                        graph.AddEdge(edge);
+                    }
+                };
 
             IterateOverGraph(action);
-             Notify(() => Graph);
+            Notify(() => Graph);
         }
 
         private void IterateOverGraph(Action<DatasetViewGraph, DatasetFacade, DatasetFacade> action)
@@ -137,16 +137,17 @@ namespace Apollo.UI.Wpf.Views.Datasets
                 var dataset = nodes.Dequeue();
                 foreach (var child in dataset.Children())
                 {
+                    var temp = child;
                     if (InternalContext.IsSynchronized)
                     {
-                        action(m_Graph, dataset, child);
+                        action(m_Graph, dataset, temp);
                     }
-                    else 
+                    else
                     {
-                        Action a = () => action(m_Graph, dataset, child);
+                        Action a = () => action(m_Graph, dataset, temp);
                         InternalContext.Invoke(a);
                     }
-                    
+
                     nodes.Enqueue(child);
                 }
             }
@@ -196,24 +197,24 @@ namespace Apollo.UI.Wpf.Views.Datasets
 
             Action<DatasetViewGraph, DatasetFacade, DatasetFacade> action =
                 (graph, parent, child) =>
+                {
+                    if (m_VertexMap.ContainsKey(child))
                     {
-                        if (m_VertexMap.ContainsKey(child))
-                        {
-                            return;
-                        }
+                        return;
+                    }
 
-                        var vertex = new DatasetViewVertex(InternalContext, m_DatasetModelBuilder(child));
-                        m_VertexMap.Add(child, vertex);
-                        graph.AddVertex(vertex);
+                    var vertex = new DatasetViewVertex(InternalContext, m_DatasetModelBuilder(child));
+                    m_VertexMap.Add(child, vertex);
+                    graph.AddVertex(vertex);
 
-                        if (parent != null)
-                        {
-                            Debug.Assert(m_VertexMap.ContainsKey(parent), "Lost the parent!");
-                            var parentVertex = m_VertexMap[parent];
-                            var edge = new DatasetViewEdge(parentVertex, vertex);
-                            graph.AddEdge(edge);
-                        }
-                    };
+                    if (parent != null)
+                    {
+                        Debug.Assert(m_VertexMap.ContainsKey(parent), "Lost the parent!");
+                        var parentVertex = m_VertexMap[parent];
+                        var edge = new DatasetViewEdge(parentVertex, vertex);
+                        graph.AddEdge(edge);
+                    }
+                };
 
             IterateOverGraph(action);
 
@@ -225,9 +226,9 @@ namespace Apollo.UI.Wpf.Views.Datasets
         /// </summary>
         public DatasetViewGraph Graph
         {
-            get 
-            { 
-                return m_Graph; 
+            get
+            {
+                return m_Graph;
             }
         }
 
@@ -236,12 +237,12 @@ namespace Apollo.UI.Wpf.Views.Datasets
         /// </summary>
         public string LayoutType
         {
-            get 
+            get
             {
                 return m_LayoutType;
             }
 
-            private set 
+            private set
             {
                 m_LayoutType = value;
             }
@@ -252,7 +253,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
         /// </summary>
         public ILayoutParameters LayoutParameters
         {
-            get 
+            get
             {
                 return m_LayoutParameters;
             }

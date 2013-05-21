@@ -34,6 +34,7 @@
     <Compile Include="Commands\IInvokeCommands.cs" />
     <Compile Include="Commands\ICommandContainer.cs" />
     <Compile Include="Commands\UnknownCommandException.cs" />
+    <Compile Include="DependencyInjectionProxy.cs" />
     <Compile Include="FileConstants.cs" />
     <Compile Include="History\BidirectionalGraphHistory.CollectionChange.cs" />
     <Compile Include="History\BidirectionalGraphHistory.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="History\ValueHistoryBase.cs" />
     <Compile Include="History\ValueTimelineRegistrationSource.cs" />
     <Compile Include="ICollectNotifications.cs" />
+    <Compile Include="IDependencyInjectionProxy.cs" />
     <Compile Include="ILogMessagesFromRemoteAppDomains.cs" />
     <Compile Include="IPersistenceInformation.cs" />
     <Compile Include="LogForwardingPipe.cs" />

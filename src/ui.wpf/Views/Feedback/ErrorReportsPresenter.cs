@@ -6,7 +6,7 @@
 
 using Apollo.UI.Wpf.Commands;
 using Apollo.UI.Wpf.Feedback;
-using Autofac;
+using Apollo.Utilities;
 
 namespace Apollo.UI.Wpf.Views.Feedback
 {
@@ -19,13 +19,13 @@ namespace Apollo.UI.Wpf.Views.Feedback
         /// <summary>
         /// The IOC container that is used to retrieve the commands for the menu.
         /// </summary>
-        private readonly IContainer m_Container;
+        private readonly IDependencyInjectionProxy m_Container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ErrorReportsPresenter"/> class.
         /// </summary>
         /// <param name="container">The IOC container that is used to retrieve the commands for the error reports presenter.</param>
-        public ErrorReportsPresenter(IContainer container)
+        public ErrorReportsPresenter(IDependencyInjectionProxy container)
         {
             m_Container = container;
         }

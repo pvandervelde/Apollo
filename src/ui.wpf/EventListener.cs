@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Autofac;
+using Apollo.Utilities;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Regions;
 
@@ -19,7 +19,7 @@ namespace Apollo.UI.Wpf
         /// The IOC container that is used to resolve presenters that are associated with
         /// the events.
         /// </summary>
-        private readonly IContainer m_Container;
+        private readonly IDependencyInjectionProxy m_Container;
 
         /// <summary>
         /// The <c>Dispatcher</c> context used to pull all actions onto the correct thread.
@@ -31,7 +31,7 @@ namespace Apollo.UI.Wpf
         /// </summary>
         /// <param name="container">The IOC container.</param>
         /// <param name="dispatcherContext">The dispatcher context.</param>
-        protected EventListener(IContainer container, IContextAware dispatcherContext)
+        protected EventListener(IDependencyInjectionProxy container, IContextAware dispatcherContext)
         {
             m_Container = container;
             m_Context = dispatcherContext;
@@ -41,7 +41,7 @@ namespace Apollo.UI.Wpf
         /// Gets the IOC container.
         /// </summary>
         /// <value>The IOC container.</value>
-        public IContainer Container
+        public IDependencyInjectionProxy Container
         {
             get 
             { 

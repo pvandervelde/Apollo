@@ -12,6 +12,7 @@ using System.Windows;
 using Apollo.Core.Host.Scripting;
 using Apollo.UI.Wpf.Commands;
 using Apollo.UI.Wpf.Properties;
+using Apollo.Utilities;
 using Autofac;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
@@ -57,13 +58,13 @@ namespace Apollo.UI.Wpf.Views.Scripting
         /// <summary>
         /// The IOC container that is used to retrieve the commands for the menu.
         /// </summary>
-        private readonly IContainer m_Container;
+        private readonly IDependencyInjectionProxy m_Container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScriptPresenter"/> class.
         /// </summary>
         /// <param name="container">The IOC container that is used to retrieve the project facade.</param>
-        public ScriptPresenter(IContainer container)
+        public ScriptPresenter(IDependencyInjectionProxy container)
         {
             m_Container = container;
         }

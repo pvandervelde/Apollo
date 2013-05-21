@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using Apollo.UI.Wpf.Commands;
-using Autofac;
+using Apollo.Utilities;
 
 namespace Apollo.UI.Wpf.Views.Projects
 {
@@ -17,13 +17,13 @@ namespace Apollo.UI.Wpf.Views.Projects
         /// <summary>
         /// The IOC container that is used to retrieve the commands for the menu.
         /// </summary>
-        private readonly IContainer m_Container;
+        private readonly IDependencyInjectionProxy m_Container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectPresenter"/> class.
         /// </summary>
         /// <param name="container">The IOC container that is used to retrieve the project facade.</param>
-        public ProjectPresenter(IContainer container)
+        public ProjectPresenter(IDependencyInjectionProxy container)
         {
             m_Container = container;
         }

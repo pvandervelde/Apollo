@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using Apollo.UI.Wpf.Profiling;
-using Autofac;
+using Apollo.Utilities;
 
 namespace Apollo.UI.Wpf.Views.Profiling
 {
@@ -18,13 +18,13 @@ namespace Apollo.UI.Wpf.Views.Profiling
         /// <summary>
         /// The IOC container that is used to retrieve the commands for the menu.
         /// </summary>
-        private readonly IContainer m_Container;
+        private readonly IDependencyInjectionProxy m_Container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProfilePresenter"/> class.
         /// </summary>
         /// <param name="container">The IOC container that is used to retrieve the commands for the error reports presenter.</param>
-        public ProfilePresenter(IContainer container)
+        public ProfilePresenter(IDependencyInjectionProxy container)
         {
             m_Container = container;
         }

@@ -5,14 +5,12 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Input;
 using Apollo.UI.Explorer.Properties;
 using Apollo.UI.Explorer.Views.Welcome;
 using Apollo.UI.Wpf;
 using Apollo.UI.Wpf.Commands;
+using Apollo.Utilities;
 using Autofac;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
@@ -56,7 +54,7 @@ namespace Apollo.UI.Explorer.Views
         /// <typeparam name="T">The type of command that should be invoked.</typeparam>
         /// <param name="container">The IOC container that contains all the UI controls.</param>
         /// <returns>The desired command.</returns>
-        public static CompositeCommand CloseWelcomeViewAndInvokeCommand<T>(IContainer container) where T : ICommand
+        public static CompositeCommand CloseWelcomeViewAndInvokeCommand<T>(IDependencyInjectionProxy container) where T : ICommand
         {
             var compositeCommand = new CompositeCommand();
 

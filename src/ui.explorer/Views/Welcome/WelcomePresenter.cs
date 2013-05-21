@@ -7,6 +7,7 @@
 using System.Windows.Input;
 using Apollo.UI.Wpf;
 using Apollo.UI.Wpf.Commands;
+using Apollo.Utilities;
 using Autofac;
 using Microsoft.Practices.Prism.Events;
 
@@ -20,13 +21,13 @@ namespace Apollo.UI.Explorer.Views.Welcome
         /// <summary>
         /// The IOC container that is used to retrieve the commands for the menu.
         /// </summary>
-        private readonly IContainer m_Container;
+        private readonly IDependencyInjectionProxy m_Container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WelcomePresenter"/> class.
         /// </summary>
         /// <param name="container">The IOC container that is used to retrieve the project facade.</param>
-        public WelcomePresenter(IContainer container)
+        public WelcomePresenter(IDependencyInjectionProxy container)
         {
             m_Container = container;
         }

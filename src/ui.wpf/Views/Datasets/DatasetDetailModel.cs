@@ -84,8 +84,8 @@ namespace Apollo.UI.Wpf.Views.Datasets
             m_Dataset.OnProgressOfCurrentAction += HandleDatasetProgress;
             m_Dataset.OnUnloaded += (s, e) =>
                 { 
-                    Notify(() => this.IsLoaded);
-                    Notify(() => this.Endpoint);
+                    Notify(() => IsLoaded);
+                    Notify(() => Endpoint);
                     RaiseOnUnloaded();
                 };
         }

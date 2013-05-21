@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using Apollo.Utilities;
-using Autofac;
 using Nuclei.Progress;
 
 namespace Apollo.UI.Wpf.Views.Progress
@@ -19,13 +18,13 @@ namespace Apollo.UI.Wpf.Views.Progress
         /// <summary>
         /// The IOC container that is used to retrieve the commands for the menu.
         /// </summary>
-        private readonly IContainer m_Container;
+        private readonly IDependencyInjectionProxy m_Container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProgressPresenter"/> class.
         /// </summary>
         /// <param name="container">The IOC container that is used to retrieve the commands for the error reports presenter.</param>
-        public ProgressPresenter(IContainer container)
+        public ProgressPresenter(IDependencyInjectionProxy container)
         {
             m_Container = container;
         }

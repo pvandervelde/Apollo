@@ -213,6 +213,13 @@
     <Compile Include="Profiling\TimingReportCollectionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Feedback\FailedToSendFeedbackReportExceptionTest.cs" />
+    <Compile Include="Views\Datasets\DatasetCreatorToOpacityConverterTest.cs" />
+    <Compile Include="Views\Datasets\DatasetDetailModelTest.cs" />
+    <Compile Include="Views\Datasets\DatasetDetailParameterTest.cs" />
+    <Compile Include="Views\Datasets\DatasetDetailPresenterTest.cs" />
+    <Compile Include="Views\Datasets\DatasetGraphModelTest.cs" />
+    <Compile Include="Views\Datasets\DatasetGraphPresenterTest.cs" />
+    <Compile Include="Views\Datasets\DatasetModelTest.cs" />
     <Compile Include="Views\Projects\ProjectModelTest.cs" />
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
@@ -231,7 +238,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\Datasets\" />
     <Folder Include="Views\Feedback\" />
     <Folder Include="Views\Notification\" />
     <Folder Include="Views\Profiling\" />

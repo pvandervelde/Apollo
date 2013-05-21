@@ -5,12 +5,9 @@
 //-----------------------------------------------------------------------
 
 using Apollo.UI.Explorer.Commands;
-using Apollo.UI.Explorer.Views.Welcome;
 using Apollo.UI.Wpf;
 using Apollo.UI.Wpf.Commands;
-using Autofac;
-using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.Events;
+using Apollo.Utilities;
 
 namespace Apollo.UI.Explorer.Views.Menu
 {
@@ -22,13 +19,13 @@ namespace Apollo.UI.Explorer.Views.Menu
         /// <summary>
         /// The IOC container that is used to retrieve the commands for the menu.
         /// </summary>
-        private readonly IContainer m_Container;
+        private readonly IDependencyInjectionProxy m_Container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MenuPresenter"/> class.
         /// </summary>
         /// <param name="container">The IOC container that is used to retrieve the commands for the menu.</param>
-        public MenuPresenter(IContainer container)
+        public MenuPresenter(IDependencyInjectionProxy container)
         {
             m_Container = container;
         }

@@ -10,6 +10,7 @@ using System.IO.Abstractions;
 using System.Text;
 using Apollo.UI.Wpf.Feedback;
 using Apollo.UI.Wpf.Profiling;
+using Apollo.Utilities;
 using Autofac;
 using NSarrac.Framework;
 using Nuclei;
@@ -39,6 +40,10 @@ namespace Apollo.UI.Wpf
 
             // Register the global application objects
             {
+                builder.Register(c => new DependencyInjectionProxy(
+                        c.Resolve<IContainer>()))
+                    .As<IDependencyInjectionProxy>();
+
                 builder.Register(c => new FeedbackReportCollector(
                         c.Resolve<IFileSystem>(),
                         c.Resolve<IFileConstants>()))

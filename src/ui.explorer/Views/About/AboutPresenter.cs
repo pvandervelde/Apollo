@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using Apollo.UI.Wpf;
-using Autofac;
+using Apollo.Utilities;
 
 namespace Apollo.UI.Explorer.Views.About
 {
@@ -17,13 +17,13 @@ namespace Apollo.UI.Explorer.Views.About
         /// <summary>
         /// The IOC container that is used to retrieve the commands for the menu.
         /// </summary>
-        private readonly IContainer m_Container;
+        private readonly IDependencyInjectionProxy m_Container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AboutPresenter"/> class.
         /// </summary>
         /// <param name="container">The IOC container that is used to retrieve the commands for the menu.</param>
-        public AboutPresenter(IContainer container)
+        public AboutPresenter(IDependencyInjectionProxy container)
         {
             m_Container = container;
         }

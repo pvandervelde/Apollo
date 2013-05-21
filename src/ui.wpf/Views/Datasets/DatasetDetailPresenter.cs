@@ -4,7 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.UI.Wpf.Commands;
 using Apollo.Utilities;
@@ -23,13 +22,13 @@ namespace Apollo.UI.Wpf.Views.Datasets
         /// <summary>
         /// The IOC container that is used to retrieve the commands for the menu.
         /// </summary>
-        private readonly IContainer m_Container;
+        private readonly IDependencyInjectionProxy m_Container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetDetailPresenter"/> class.
         /// </summary>
         /// <param name="container">The IOC container that is used to retrieve the project facade.</param>
-        public DatasetDetailPresenter(IContainer container)
+        public DatasetDetailPresenter(IDependencyInjectionProxy container)
         {
             m_Container = container;
         }
@@ -45,7 +44,6 @@ namespace Apollo.UI.Wpf.Views.Datasets
 
             var model = new DatasetDetailModel(context, progressTracker, projectFacade, Parameter.Dataset) 
                 {
-                    // ShowDatasetAdvancedViewCommand = new ShowDatasetAdvancedViewCommand(context, eventAggregator, Parameter.Dataset),
                     SwitchDatasetToEditModeCommand = new SwitchDatasetToEditModeCommand(Parameter.Dataset),
                     SwitchDatasetToExecutingModeCommand = new SwitchDatasetToExecutingModeCommand(Parameter.Dataset),
                     CloseCommand = CreateCloseCommand(),

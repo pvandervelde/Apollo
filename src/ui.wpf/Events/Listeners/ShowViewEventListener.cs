@@ -7,7 +7,7 @@
 using System;
 using System.Globalization;
 using System.Windows;
-using Autofac;
+using Apollo.Utilities;
 using Microsoft.Practices.Prism.Regions;
 
 namespace Apollo.UI.Wpf.Events.Listeners
@@ -22,7 +22,7 @@ namespace Apollo.UI.Wpf.Events.Listeners
         /// </summary>
         /// <param name="container">The IOC container.</param>
         /// <param name="dispatcherContext">The dispatcher context.</param>
-        public ShowViewEventListener(IContainer container, IContextAware dispatcherContext)
+        public ShowViewEventListener(IDependencyInjectionProxy container, IContextAware dispatcherContext)
             : base(container, dispatcherContext)
         {
         }
