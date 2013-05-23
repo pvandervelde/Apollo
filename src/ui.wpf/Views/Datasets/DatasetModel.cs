@@ -81,8 +81,8 @@ namespace Apollo.UI.Wpf.Views.Datasets
             m_Dataset.OnLoaded += HandleDatasetOnLoad;
             m_Dataset.OnUnloaded += (s, e) =>
                 { 
-                    Notify(() => this.IsLoaded);
-                    Notify(() => this.RunsOn);
+                    Notify(() => IsLoaded);
+                    Notify(() => RunsOn);
                     RaiseOnUnloaded();
                 };
         }
@@ -106,8 +106,8 @@ namespace Apollo.UI.Wpf.Views.Datasets
 
         private void HandleDatasetOnLoad(object sender, EventArgs e)
         {
-            Notify(() => this.IsLoaded);
-            Notify(() => this.RunsOn);
+            Notify(() => IsLoaded);
+            Notify(() => RunsOn);
 
             Progress = 0.0;
             ProgressDescription = string.Empty;

@@ -116,6 +116,9 @@
     <Reference Include="Nuclei.Diagnostics">
       <HintPath>..\..\packages\Nuclei.Core.0.4.0.0\lib\net40\Nuclei.Diagnostics.dll</HintPath>
     </Reference>
+    <Reference Include="ParallelExtensionsExtras">
+      <HintPath>..\..\packages\ParallelExtensionsExtras.1.2.3.2\lib\ParallelExtensionsExtras.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="QuickGraph, Version=3.6.61114.1, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
@@ -220,6 +223,11 @@
     <Compile Include="Views\Datasets\DatasetGraphModelTest.cs" />
     <Compile Include="Views\Datasets\DatasetGraphPresenterTest.cs" />
     <Compile Include="Views\Datasets\DatasetModelTest.cs" />
+    <Compile Include="Views\Datasets\DatasetViewVertexTest.cs" />
+    <Compile Include="Views\Datasets\DatasetViewVertexToDatasetModelConverterTest.cs" />
+    <Compile Include="Views\Datasets\MachineSelectorModelTest.cs" />
+    <Compile Include="Views\Datasets\MachineSelectorParameterTest.cs" />
+    <Compile Include="Views\Datasets\MachineSelectorPresenterTest.cs" />
     <Compile Include="Views\Projects\ProjectModelTest.cs" />
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>

@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.UI.Wpf
@@ -16,11 +15,6 @@ namespace Apollo.UI.Wpf
     public abstract class Parameter : Observable, IEquatable<Parameter>
     {
         /// <summary>
-        /// The collection of properties for the current parameter.
-        /// </summary>
-        private readonly List<Func<object>> m_Properties = new List<Func<object>>();
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Parameter"/> class.
         /// </summary>
         /// <param name="context">The context that is used to execute actions on the UI thread.</param>
@@ -30,16 +24,6 @@ namespace Apollo.UI.Wpf
         protected Parameter(IContextAware context)
             : base(context)
         { 
-        }
-
-        /// <summary>
-        /// Reuses the view by.
-        /// </summary>
-        /// <param name="properties">The properties.</param>
-        protected void ReuseViewBy(params Func<object>[] properties)
-        {
-            m_Properties.Clear();
-            m_Properties.AddRange(properties);
         }
 
         /// <summary>
@@ -63,7 +47,7 @@ namespace Apollo.UI.Wpf
                 return true;
             }
 
-            return other.GetHashCode() == GetHashCode();
+            return other.GetType() == GetType();
         }
 
         /// <summary>
@@ -75,7 +59,7 @@ namespace Apollo.UI.Wpf
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public override bool Equals(object obj)
+        public override sealed bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
             {
@@ -87,12 +71,7 @@ namespace Apollo.UI.Wpf
                 return true;
             }
 
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((Parameter)obj);
+            return obj.GetType() == GetType() && Equals((Parameter)obj);
         }
 
         /// <summary>
@@ -105,14 +84,7 @@ namespace Apollo.UI.Wpf
         {
             unchecked
             {
-                var result = GetType().GetHashCode();
-                foreach (var property in m_Properties)
-                {
-                    var value = property();
-                    result = (result * 397) ^ (value != null ? value.GetHashCode() : 0);
-                }
-
-                return result;
+                return GetType().GetHashCode();
             }
         }
     }

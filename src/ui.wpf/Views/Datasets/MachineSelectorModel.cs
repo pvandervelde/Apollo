@@ -29,7 +29,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
         /// <summary>
         /// Indicates that the collection is loading.
         /// </summary>
-        private bool m_IsLoading = false;
+        private bool m_IsLoading;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MachineSelectorModel"/> class.
@@ -61,13 +61,14 @@ namespace Apollo.UI.Wpf.Views.Datasets
                     IsLoading = true;
                     foreach (var suggestion in suggestions)
                     {
+                        var temp = suggestion;
                         if (context.IsSynchronized)
                         {
-                            m_Proposals.Add(suggestion);
+                            m_Proposals.Add(temp);
                         }
                         else
                         {
-                            context.Invoke(() => m_Proposals.Add(suggestion));
+                            context.Invoke(() => m_Proposals.Add(temp));
                         }
                     }
 

@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using Apollo.Core.Base;
 using Lokad;
 
@@ -40,14 +39,8 @@ namespace Apollo.UI.Wpf.Views.Datasets
             }
 
             m_Dataset = model;
-            m_Dataset.OnLoaded += (s, e) =>
-            {
-                Notify(() => this.IsDatasetLoaded);
-            };
-            m_Dataset.OnUnloaded += (s, e) =>
-            {
-                Notify(() => this.IsDatasetLoaded);
-            };
+            m_Dataset.OnLoaded += (s, e) => Notify(() => IsDatasetLoaded);
+            m_Dataset.OnUnloaded += (s, e) => Notify(() => IsDatasetLoaded);
         }
 
         /// <summary>
