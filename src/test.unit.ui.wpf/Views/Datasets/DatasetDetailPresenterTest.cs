@@ -30,6 +30,10 @@ namespace Apollo.UI.Wpf.Views.Datasets
             var aggregator = new Mock<IEventAggregator>();
 
             var view = new Mock<IDatasetDetailView>();
+            {
+                view.SetupSet(v => v.Model = It.IsAny<DatasetDetailModel>())
+                    .Verifiable();
+            }
 
             var proxy = new Mock<IProxyDataset>();
             var dataset = new DatasetFacade(proxy.Object);
@@ -52,6 +56,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
 
             Assert.AreSame(view.Object, presenter.View);
             Assert.AreSame(parameter, presenter.Parameter);
+            view.VerifySet(v => v.Model = It.IsAny<DatasetDetailModel>(), Times.Once());
         }
     }
 }

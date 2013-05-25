@@ -30,12 +30,12 @@ namespace Test.Mocks
 
         public override void AppendAllText(string path, string contents)
         {
-            throw new NotImplementedException();
+            // Do nothing for now
         }
 
         public override void AppendAllText(string path, string contents, Encoding encoding)
         {
-            throw new NotImplementedException();
+            // Do nothing for now
         }
 
         public override StreamWriter AppendText(string path)
@@ -80,17 +80,17 @@ namespace Test.Mocks
 
         public override void Decrypt(string path)
         {
-            throw new NotImplementedException();
+            // Do nothing for now
         }
 
         public override void Delete(string path)
         {
-            throw new NotImplementedException();
+            // Do nothing for now
         }
 
         public override void Encrypt(string path)
         {
-            throw new NotImplementedException();
+            // Do nothing for now
         }
 
         public override bool Exists(string path)

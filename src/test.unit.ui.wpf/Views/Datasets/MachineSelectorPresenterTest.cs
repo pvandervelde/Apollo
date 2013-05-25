@@ -70,6 +70,11 @@ namespace Apollo.UI.Wpf.Views.Datasets
             var context = new Mock<IContextAware>();
 
             var view = new Mock<IMachineSelectorView>();
+            {
+                view.SetupSet(v => v.Model = It.IsAny<MachineSelectorModel>())
+                    .Verifiable();
+            }
+
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             var plan = CreateNewDistributionPlan(
                 new DatasetLoadingProposal(),
@@ -95,6 +100,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
 
             Assert.AreSame(view.Object, presenter.View);
             Assert.AreSame(parameter, presenter.Parameter);
+            view.VerifySet(v => v.Model = It.IsAny<MachineSelectorModel>(), Times.Once());
         }
     }
 }

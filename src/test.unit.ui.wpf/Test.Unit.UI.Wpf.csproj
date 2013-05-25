@@ -228,6 +228,12 @@
     <Compile Include="Views\Datasets\MachineSelectorModelTest.cs" />
     <Compile Include="Views\Datasets\MachineSelectorParameterTest.cs" />
     <Compile Include="Views\Datasets\MachineSelectorPresenterTest.cs" />
+    <Compile Include="Views\Feedback\ErrorReportsModelTest.cs" />
+    <Compile Include="Views\Feedback\ErrorReportsPresenterTest.cs" />
+    <Compile Include="Views\Feedback\FeedbackFileModelTest.cs" />
+    <Compile Include="Views\Feedback\FeedbackModelTest.cs" />
+    <Compile Include="Views\Feedback\FeedbackPresenterTest.cs" />
+    <Compile Include="Views\Notification\NotificationModelTest.cs" />
     <Compile Include="Views\Projects\ProjectModelTest.cs" />
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
@@ -246,8 +252,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\Feedback\" />
-    <Folder Include="Views\Notification\" />
     <Folder Include="Views\Profiling\" />
     <Folder Include="Views\Progress\" />
     <Folder Include="Views\Scripting\" />

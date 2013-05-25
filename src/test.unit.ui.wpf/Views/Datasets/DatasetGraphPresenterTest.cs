@@ -80,6 +80,11 @@ namespace Apollo.UI.Wpf.Views.Datasets
             }
 
             var view = new Mock<IDatasetGraphView>();
+            {
+                view.SetupSet(v => v.Model = It.IsAny<DatasetGraphModel>())
+                    .Verifiable();
+            }
+
             var parameter = new DatasetGraphParameter(context.Object);
 
             var container = new Mock<IDependencyInjectionProxy>();
@@ -101,6 +106,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
 
             Assert.AreSame(view.Object, presenter.View);
             Assert.AreSame(parameter, presenter.Parameter);
+            view.VerifySet(v => v.Model = It.IsAny<DatasetGraphModel>(), Times.Once());
         }
     }
 }

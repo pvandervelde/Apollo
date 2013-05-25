@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.IO.Abstractions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Apollo.UI.Wpf.Feedback;
@@ -32,11 +33,17 @@ namespace Apollo.UI.Wpf.Views.Feedback
         private readonly ICollectFeedbackReports m_FeedbackCollector;
 
         /// <summary>
+        /// The object that provides access to the file system.
+        /// </summary>
+        private readonly IFileSystem m_FileSystem;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ErrorReportsModel"/> class.
         /// </summary>
         /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="sendReportsCommand">The command that is used to send the feedback reports to the remote server.</param>
         /// <param name="feedbackCollector">The object that collects the feedback reports that have been stored on the disk.</param>
+        /// <param name="fileSystem">The object that provides access to the file system.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="context"/> is <see langword="null" />.
         /// </exception>
@@ -46,16 +53,25 @@ namespace Apollo.UI.Wpf.Views.Feedback
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="feedbackCollector"/> is <see langword="null" />.
         /// </exception>
-        public ErrorReportsModel(IContextAware context, ICommand sendReportsCommand, ICollectFeedbackReports feedbackCollector)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="fileSystem"/> is <see langword="null" />.
+        /// </exception>
+        public ErrorReportsModel(
+            IContextAware context, 
+            ICommand sendReportsCommand, 
+            ICollectFeedbackReports feedbackCollector,
+            IFileSystem fileSystem)
             : base(context)
         {
             {
                 Lokad.Enforce.Argument(() => sendReportsCommand);
                 Lokad.Enforce.Argument(() => feedbackCollector);
+                Lokad.Enforce.Argument(() => fileSystem);
             }
 
             SendReportsCommand = sendReportsCommand;
             m_FeedbackCollector = feedbackCollector;
+            m_FileSystem = fileSystem;
 
             RelocateReports();
         }
@@ -63,29 +79,17 @@ namespace Apollo.UI.Wpf.Views.Feedback
         /// <summary>
         /// Initiates the search for feedback reports which are stored on the disk.
         /// </summary>
-        public void RelocateReports()
+        private void RelocateReports()
         {
-            m_Reports.Clear();
-            Action<FileInfo> action =
-                item =>
-                {
-                    m_Reports.Add(new FeedbackFileModel(InternalContext, item.FullName, item.CreationTime));
-                };
-
             Task.Factory.StartNew(
                 () =>
                 {
+                    m_Reports.Clear();
+
                     var list = m_FeedbackCollector.LocateFeedbackReports();
                     foreach (var item in list)
                     {
-                        if (InternalContext.IsSynchronized)
-                        {
-                            action(item);
-                        }
-                        else
-                        {
-                            InternalContext.Invoke(() => action(item));
-                        }
+                        m_Reports.Add(new FeedbackFileModel(InternalContext, item.FullName, item.CreationTime));
                     }
 
                     Notify(() => HasErrorReports);
@@ -102,12 +106,12 @@ namespace Apollo.UI.Wpf.Views.Feedback
             {
                 try
                 {
-                    using (var stream = File.Open(report.Path, FileMode.Open, FileAccess.Read, FileShare.None))
+                    using (var stream = m_FileSystem.File.Open(report.Path, FileMode.Open, FileAccess.Read, FileShare.None))
                     {
                         SendReportsCommand.Execute(stream);
                     }
 
-                    File.Delete(report.Path);
+                    m_FileSystem.File.Delete(report.Path);
                 }
                 catch (UnauthorizedAccessException)
                 {

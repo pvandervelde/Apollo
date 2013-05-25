@@ -7,7 +7,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Profiling;
@@ -17,7 +16,7 @@ namespace Apollo.UI.Wpf.Views.Feedback
     /// <summary>
     /// Interaction logic for FeedbackIconView.xaml.
     /// </summary>
-    public partial class FeedbackIconView : UserControl, IFeedbackView
+    public partial class FeedbackIconView : IFeedbackView
     {
         /// <summary>
         /// The routed command used to send the error reports to the server.
@@ -87,7 +86,7 @@ namespace Apollo.UI.Wpf.Views.Feedback
         private void CommandSendReportsCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.Handled = true;
-            e.CanExecute = Model != null ? Model.CanSendReport() : false;
+            e.CanExecute = Model != null ? Model.CanSendReport : false;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
@@ -96,7 +95,7 @@ namespace Apollo.UI.Wpf.Views.Feedback
         {
             e.Handled = true;
 
-            using (var interval = m_Diagnostics.Profiler.Measure("Sending feedback report"))
+            using (m_Diagnostics.Profiler.Measure("Sending feedback report"))
             {
                 Model.SendReport();
             }
@@ -140,7 +139,7 @@ namespace Apollo.UI.Wpf.Views.Feedback
             }
         }
 
-        private void OnFeedbackPopupClosed(object sender, System.EventArgs e)
+        private void OnFeedbackPopupClosed(object sender, EventArgs e)
         {
             ClearControls();
         }

@@ -40,7 +40,7 @@ namespace Apollo.UI.Wpf.Views.Feedback
         {
             try
             {
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher(
+                var searcher = new ManagementObjectSearcher(
                     "root\\CIMV2",
                     "SELECT * FROM Win32_Processor");
 
@@ -71,7 +71,7 @@ namespace Apollo.UI.Wpf.Views.Feedback
         {
             try
             {
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher(
+                var searcher = new ManagementObjectSearcher(
                     "root\\CIMV2",
                     "SELECT * FROM CIM_OperatingSystem");
 
@@ -101,6 +101,11 @@ namespace Apollo.UI.Wpf.Views.Feedback
             var os = Environment.OSVersion;
             return new OperatingSystemData(os.Platform.ToString(), os.Version, CultureInfo.InstalledUICulture);
         }
+
+        /// <summary>
+        /// The command used to send the report.
+        /// </summary>
+        private readonly ICommand m_SendReportsCommand;
 
         /// <summary>
         /// The function that returns the report builders.
@@ -140,21 +145,19 @@ namespace Apollo.UI.Wpf.Views.Feedback
                 Lokad.Enforce.Argument(() => builders);
             }
 
-            SendReportsCommand = sendReportsCommand;
+            m_SendReportsCommand = sendReportsCommand;
             m_Builders = builders;
         }
 
         /// <summary>
-        /// Returns a value indicating if the feedback report can be send.
+        /// Gets a value indicating whether the feedback report can be send.
         /// </summary>
-        /// <returns>
-        ///     <see langword="true" /> if the report can be send; otherwise, <see langword="false" />.
-        /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
-            Justification = "Documentation can start with a language keyword")]
-        public bool CanSendReport()
+        public bool CanSendReport
         {
-            return Level != FeedbackLevel.None;
+            get
+            {
+                return Level != FeedbackLevel.None;
+            }
         }
 
         /// <summary>
@@ -172,7 +175,7 @@ namespace Apollo.UI.Wpf.Views.Feedback
 
             try
             {
-                SendReportsCommand.Execute(report);
+                m_SendReportsCommand.Execute(report);
             }
             catch (FailedToSendFeedbackReportException)
             {
@@ -205,6 +208,7 @@ namespace Apollo.UI.Wpf.Views.Feedback
             {
                 m_Level = value;
                 Notify(() => Level);
+                Notify(() => CanSendReport);
             }
         }
 
@@ -223,16 +227,6 @@ namespace Apollo.UI.Wpf.Views.Feedback
                 m_Description = value;
                 Notify(() => Description);
             }
-        }
-
-        /// <summary>
-        /// Gets or sets the command that can be used to send a given set of reports 
-        /// to the server.
-        /// </summary>
-        private ICommand SendReportsCommand
-        {
-            get;
-            set;
         }
     }
 }

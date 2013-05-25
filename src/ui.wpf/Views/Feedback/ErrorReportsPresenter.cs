@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.IO.Abstractions;
 using Apollo.UI.Wpf.Commands;
 using Apollo.UI.Wpf.Feedback;
 using Apollo.Utilities;
@@ -38,7 +39,8 @@ namespace Apollo.UI.Wpf.Views.Feedback
             var context = m_Container.Resolve<IContextAware>();
             var command = m_Container.Resolve<SendFeedbackReportCommand>();
             var reportCollector = m_Container.Resolve<ICollectFeedbackReports>();
-            View.Model = new ErrorReportsModel(context, command, reportCollector);
+            var fileSystem = m_Container.Resolve<IFileSystem>();
+            View.Model = new ErrorReportsModel(context, command, reportCollector, fileSystem);
         }
     }
 }
