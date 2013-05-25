@@ -32,7 +32,7 @@ namespace Apollo.UI.Wpf.Converters
             var model = new FeedbackFileModel(context.Object, path, date);
 
             var expected = string.Format(
-                CultureInfo.CurrentCulture,
+                CultureInfo.CurrentUICulture,
                 "Error in: {0} - Occurred on: {1}",
                 applicationName,
                 date);
