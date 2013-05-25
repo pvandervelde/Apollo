@@ -4,13 +4,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Apollo.Utilities;
 using MbUnit.Framework;
+using Moq;
 
 namespace Apollo.UI.Wpf.Views.Notification
 {
@@ -19,5 +17,37 @@ namespace Apollo.UI.Wpf.Views.Notification
                 Justification = "Unit tests do not need documentation.")]
     public sealed class NotificationModelTest
     {
+        [Test]
+        public void Notification()
+        {
+            var context = new Mock<IContextAware>();
+            {
+                context.Setup(c => c.IsSynchronized)
+                    .Returns(true);
+            }
+
+            var collector = new Mock<ICollectNotifications>();
+            var model = new NotificationModel(context.Object, collector.Object);
+
+            var propertyChangedWasRaised = 0;
+            var properties = new List<string>();
+            model.PropertyChanged += (s, e) =>
+            {
+                propertyChangedWasRaised++;
+                properties.Add(e.PropertyName);
+            };
+
+            var text = "a";
+            collector.Raise(c => c.OnNotification += null, new NotificationEventArgs(text));
+
+            Assert.AreEqual(1, propertyChangedWasRaised);
+            Assert.AreEqual(text, model.Notification);
+            Assert.AreElementsEqual(
+                new List<string>
+                    {
+                        "Notification",
+                    },
+                properties);
+        }
     }
 }

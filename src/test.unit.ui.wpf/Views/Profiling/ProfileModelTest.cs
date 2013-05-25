@@ -5,19 +5,31 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Apollo.UI.Wpf.Profiling;
 using MbUnit.Framework;
+using Moq;
 
-namespace Apollo.UI.Wpf.Views.Projects
+namespace Apollo.UI.Wpf.Views.Profiling
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class ProjectModelTest
+    public sealed class ProfileModelTest
     {
         [Test]
-        [Ignore("Not implemented yet")]
         public void Create()
         {
+            var context = new Mock<IContextAware>();
+            var collection = new TimingReportCollection();
+
+            var report = new Mock<IProfilingTimeReport>();
+            collection.Add(report.Object);
+
+            var model = new ProfileModel(context.Object, collection);
+            Assert.AreElementsEqual(
+                collection,
+                model.Results.Cast<IProfilingTimeReport>());
         }
     }
 }

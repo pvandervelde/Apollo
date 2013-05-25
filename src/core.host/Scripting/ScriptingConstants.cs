@@ -4,13 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Apollo.Core.Host.Scripting
 {
     /// <summary>
@@ -29,10 +22,8 @@ namespace Apollo.Core.Host.Scripting
         public const string RubyFileExtension = "rb";
 
         /// <summary>
-        /// Defines the file extension for Powershell script files.
+        /// Defines the file extension for PowerShell script files.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Powershell",
-            Justification = "Powershell is correctly spelled.")]
-        public const string PowershellFileExtension = "ps1";
+        public const string PowerShellFileExtension = "ps1";
     }
 }

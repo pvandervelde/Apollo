@@ -113,20 +113,21 @@ namespace Apollo.UI.Wpf.Views.Scripting
             Func<Tuple<bool, ScriptDescriptionModel>> selectScriptLanguage =
                 () =>
                 {
-                    var presenter = (IPresenter)m_Container.Resolve(typeof(SelectScriptLanguagePresenter));
+                    var presenter = (IPresenter)m_Container.Resolve<SelectScriptLanguagePresenter>();
                     var view = m_Container.Resolve(presenter.ViewType) as ISelectScriptLanguageView;
                     presenter.Initialize(view, new SelectScriptLanguageParameter(context));
 
                     var window = view as Window;
-                    window.Owner = Application.Current.MainWindow;
-                    if (window.ShowDialog() ?? false)
+                    if (window != null)
                     {
-                        return new Tuple<bool, ScriptDescriptionModel>(true, view.Model.SelectedLanguage);
+                        window.Owner = Application.Current.MainWindow;
+                        if (window.ShowDialog() ?? false)
+                        {
+                            return new Tuple<bool, ScriptDescriptionModel>(true, view.Model.SelectedLanguage);
+                        }
                     }
-                    else
-                    {
-                        return new Tuple<bool, ScriptDescriptionModel>(false, null);
-                    }
+
+                    return new Tuple<bool, ScriptDescriptionModel>(false, null);
                 };
 
             Action<ScriptDescriptionModel, ISyntaxVerifier> storeVerifier =
@@ -160,16 +161,14 @@ namespace Apollo.UI.Wpf.Views.Scripting
                             Title = Resources.ScriptPresenter_SelectScriptFile,
                             ValidateNames = true,
                         };
-                    if (dlg.ShowDialog(Application.Current.MainWindow) ?? false)
+                    if ((bool)dlg.ShowDialog(Application.Current.MainWindow))
                     {
                         return new Tuple<FileInfo, ScriptDescriptionModel>(
                             new FileInfo(dlg.FileName), 
                             new ScriptDescriptionModel(context, LanguageFromFileExtension(Path.GetExtension(dlg.FileName))));
                     }
-                    else
-                    {
-                        return new Tuple<FileInfo, ScriptDescriptionModel>(null, null);
-                    }
+                    
+                    return new Tuple<FileInfo, ScriptDescriptionModel>(null, null);
                 };
 
             Action<ScriptDescriptionModel, FileInfo, ISyntaxVerifier> storeVerifier =

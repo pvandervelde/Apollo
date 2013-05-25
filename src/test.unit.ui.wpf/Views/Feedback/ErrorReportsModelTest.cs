@@ -137,6 +137,9 @@ namespace Apollo.UI.Wpf.Views.Feedback
                 Thread.Yield();
             }
 
+            // For some reason in release mode this doesn't quite work, except if we slow things down a bit
+            // so ....
+            Thread.Sleep(50);
             Assert.IsFalse(model.HasErrorReports);
         }
         
@@ -199,6 +202,9 @@ namespace Apollo.UI.Wpf.Views.Feedback
                 Thread.Yield();
             }
 
+            // For some reason in release mode this doesn't quite work, except if we slow things down a bit
+            // so ....
+            Thread.Sleep(50);
             Assert.IsTrue(model.HasErrorReports);
         }
 

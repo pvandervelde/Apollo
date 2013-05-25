@@ -764,4 +764,7 @@ Please wait ...</value>
   <data name="DatasetDetailView_ViewName" xml:space="preserve">
     <value>Details for: {0}</value>
   </data>
+  <data name="ScriptDescription_Language_PowerShell" xml:space="preserve">
+    <value>PowerShell</value>
+  </data>
 </root>

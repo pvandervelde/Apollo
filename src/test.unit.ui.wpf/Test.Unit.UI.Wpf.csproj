@@ -234,7 +234,13 @@
     <Compile Include="Views\Feedback\FeedbackModelTest.cs" />
     <Compile Include="Views\Feedback\FeedbackPresenterTest.cs" />
     <Compile Include="Views\Notification\NotificationModelTest.cs" />
-    <Compile Include="Views\Projects\ProjectModelTest.cs" />
+    <Compile Include="Views\Notification\NotificationPresenterTest.cs" />
+    <Compile Include="Views\Profiling\ProfileModelTest.cs" />
+    <Compile Include="Views\Profiling\ProfilePresenterTest.cs" />
+    <Compile Include="Views\Progress\ProgressModelTest.cs" />
+    <Compile Include="Views\Progress\ProgressPresenterTest.cs" />
+    <Compile Include="Views\Projects\ProjectDescriptionModelTest.cs" />
+    <Compile Include="Views\Projects\ProjectDescriptionPresenterTest.cs" />
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
@@ -244,6 +250,13 @@
     <Compile Include="..\..\build\temp\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
+    <Compile Include="Views\Projects\ProjectPresenterTest.cs" />
+    <Compile Include="Views\Scripting\ScriptDescriptionModelTest.cs" />
+    <Compile Include="Views\Scripting\ScriptModelTest.cs" />
+    <Compile Include="Views\Scripting\ScriptPresenterTest.cs" />
+    <Compile Include="Views\Scripting\SelectScriptLanguageModelTest.cs" />
+    <Compile Include="Views\Scripting\SelectScriptLanguagePresenterTest.cs" />
+    <Compile Include="Views\Settings\MostRecentlyUsedModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
@@ -251,12 +264,7 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Profiling\" />
-    <Folder Include="Views\Progress\" />
-    <Folder Include="Views\Scripting\" />
-    <Folder Include="Views\Settings\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="README.txt" />
   </ItemGroup>

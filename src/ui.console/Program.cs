@@ -168,7 +168,7 @@ namespace Apollo.UI.Console
                 WriteInputParametersToLog(s_ScriptFile);
                 System.Console.WriteLine(Resources.Output_Information_LoadingScriptFile);
 
-                var text = string.Empty;
+                string text;
                 using (var reader = new StreamReader(s_ScriptFile))
                 {
                     text = reader.ReadToEnd();
@@ -222,11 +222,7 @@ namespace Apollo.UI.Console
 
         private static void ShowHeader()
         {
-            System.Console.WriteLine(
-                string.Format(
-                    CultureInfo.CurrentCulture,
-                    Resources.Header_ApplicationAndVersion,
-                    GetVersion()));
+            System.Console.WriteLine(Resources.Header_ApplicationAndVersion, GetVersion());
             System.Console.WriteLine(GetCopyright());
             System.Console.WriteLine(GetLibraryLicenses());
         }
@@ -376,7 +372,7 @@ namespace Apollo.UI.Console
                     return ScriptLanguage.IronPython;
                 case ScriptingConstants.RubyFileExtension:
                     return ScriptLanguage.IronRuby;
-                case ScriptingConstants.PowershellFileExtension:
+                case ScriptingConstants.PowerShellFileExtension:
                     return ScriptLanguage.PowerShell;
                 default:
                     return ScriptLanguage.None;
