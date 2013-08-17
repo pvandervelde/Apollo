@@ -3,7 +3,7 @@
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension "
      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
 
-    <?include $(var.SolutionDir)Dependencies.wxi ?>
+    <?include $(var.SolutionDir)..\build\temp\Dependencies.wxi ?>
 
     <Fragment>
         <!-- 

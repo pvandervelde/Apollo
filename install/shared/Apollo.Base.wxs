@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 
     <?include $(var.CurrentProjectDir)\includes.wxi ?>
-    <?include $(var.SolutionDir)Dependencies.wxi ?>
+    <?include $(var.SolutionDir)..\build\temp\Dependencies.wxi ?>
     
     <Fragment>
         <!-- 

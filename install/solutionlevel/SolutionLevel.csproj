@@ -16,6 +16,7 @@
     <BuildPlatform Condition=" '$(BuildPlatform)' == ''">Any CPU</BuildPlatform>
     <BuildPlatformTranslated>$(BuildPlatform.Replace(" ",""))</BuildPlatformTranslated>
     
+    <DirWorkspace>$(SolutionDir)\..</DirWorkspace>
     <DirTemplates>$(DirWorkspace)\templates</DirTemplates>
     <DirBuild>$(DirWorkspace)\build</DirBuild>
     <DirBuildBin>$(DirBuild)\bin\$(BuildPlatformTranslated)\$(BuildConfiguration)</DirBuildBin>
@@ -27,8 +28,8 @@
     <FileTemplateDependencies>$(DirTemplates)\Dependencies.wxi.in</FileTemplateDependencies>
     
     <!-- Generated files -->
-    <FileGeneratedVersion>$(SolutionDir)\VersionNumber.wxi</FileGeneratedVersion>
-    <FileGeneratedDependencies>$(SolutionDir)\Dependencies.wxi</FileGeneratedDependencies>
+    <FileGeneratedVersion>$(DirBuildTemp)\VersionNumber.wxi</FileGeneratedVersion>
+    <FileGeneratedDependencies>$(DirBuildTemp)\Dependencies.wxi</FileGeneratedDependencies>
     
     <!-- Version number -->
     <VersionMajor>0</VersionMajor>
@@ -78,6 +79,9 @@
       </VersionTokens>
     </ItemGroup>
     <TemplateFile Template="$(FileTemplateVersion)" OutputFileName="$(FileGeneratedVersion)" Tokens="@(VersionTokens)" />
+    
+    <Message Text="File $(FileTemplateVersion)" Condition="Exists('$(FileTemplateVersion)')" />
+    <Message Text="File $(FileGeneratedVersion)" Condition="Exists('$(FileGeneratedVersion)')" />
   </Target>
   
   <Target Name="GenerateDependencies">
@@ -93,5 +97,8 @@
       </BuildInfoTokens>
     </ItemGroup>
     <TemplateFile Template="$(FileTemplateDependencies)" OutputFileName="$(FileGeneratedDependencies)" Tokens="@(BuildInfoTokens)" />
+    
+    <Message Text="File $(FileTemplateDependencies)" Condition="Exists('$(FileTemplateDependencies)')" />
+    <Message Text="File $(FileGeneratedDependencies)" Condition="Exists('$(FileGeneratedDependencies)')" />
   </Target>
 </Project>

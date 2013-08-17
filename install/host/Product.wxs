@@ -6,14 +6,14 @@
         Include the dependencies file. This contains links to file paths and the 
         client WiX files.
    -->
-    <?include $(var.SolutionDir)Dependencies.wxi ?>
+    <?include $(var.SolutionDir)..\build\temp\Dependencies.wxi ?>
 
     <!--
         Include the version number file. This contains the current version number
         and the version number of the oldest version of Apollo that we allow 
         upgrading from.
    -->
-    <?include $(var.SolutionDir)VersionNumber.wxi ?>
+    <?include $(var.SolutionDir)..\build\temp\VersionNumber.wxi ?>
 
     <!--
         Include the company include file. This contains some general information

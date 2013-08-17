@@ -34,6 +34,11 @@
         <Optimize>true</Optimize>
         <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
     </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Deploy|AnyCPU' ">
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
+    </PropertyGroup>
     <PropertyGroup>
         <DirWorkspace>$(SolutionDir)..</DirWorkspace>
         <DirPackages>$(DirWorkspace)\packages</DirPackages>

@@ -49,10 +49,16 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DefineConstants>CurrentProjectDir=$(MSBuildProjectDirectory)</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Deploy|x86' ">
+    <DefineConstants>CurrentProjectDir=$(MSBuildProjectDirectory)</DefineConstants>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <DefineConstants>Debug;CurrentProjectDir=$(MSBuildProjectDirectory)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DefineConstants>CurrentProjectDir=$(MSBuildProjectDirectory)</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Deploy|x64' ">
     <DefineConstants>CurrentProjectDir=$(MSBuildProjectDirectory)</DefineConstants>
   </PropertyGroup>
   <Import Project="$(WixTargetsPath)" />

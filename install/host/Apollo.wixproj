@@ -28,10 +28,10 @@
     <Content Include="..\CompanyIncludes.wxi">
       <Link>CompanyIncludes.wxi</Link>
     </Content>
-    <Content Include="..\Dependencies.wxi">
+    <Content Include="..\..\build\temp\Dependencies.wxi">
       <Link>Dependencies.wxi</Link>
     </Content>
-    <Content Include="..\VersionNumber.wxi">
+    <Content Include="..\..\build\temp\VersionNumber.wxi">
       <Link>VersionNumber.wxi</Link>
     </Content>
     <Content Include="Includes.wxi" />
