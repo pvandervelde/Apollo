@@ -22,7 +22,7 @@
     <Import Project="$(MsBuildExtensionsPath)\FindToolFromPackages.msbuild" 
             Condition="Exists('$(MsBuildExtensionsPath)\FindToolFromPackages.msbuild')" />
    
-    <Target Name="Run" DependsOnTargets="_DisplayInfo;_StripPdbPaths">
+    <Target Name="Run" DependsOnTargets="_DisplayInfo;_StripPdbPaths;_ResignBinaries">
         <!-- Do nothing in here, just call the dependencies ... -->
     </Target>
    
@@ -45,5 +45,31 @@
                            Exclude="$(DirBuildBin)\*vshost*.*" />
         </ItemGroup>
         <Exec Command="&quot;$(PathStripExe)&quot; &quot;%(AssemblyFiles.Identity)&quot; clean-path" />
+    </Target>
+    
+    <PropertyGroup>
+        <FileSNExe>NotSet</FileSNExe>
+    </PropertyGroup>
+    <Target Name="_GetSnPath">
+        <GetFrameworkSdkPath>
+            <Output TaskParameter="Path" PropertyName="WindowsSdkPath" />
+        </GetFrameworkSdkPath>
+        
+        <PropertyGroup>
+            <FileSNExe>$(WindowsSdkPath)bin\sn.exe</FileSNExe>
+        </PropertyGroup>
+        
+        <!-- Sometimes there is nothing in the WindowsSdkPath dir and there's stuff in a deeper folder called 'NETFX 4.0 Tools'. -->
+        <PropertyGroup>
+            <FileSNExe Condition="!Exists($(FileSNExe))">$(WindowsSdkPath)bin\NETFX 4.0 Tools\sn.exe</FileSNExe>
+        </PropertyGroup>
+    </Target>  
+    <Target Name="_ResignBinaries" DependsOnTargets="_StripPdbPaths;_GetSnPath">
+        <ItemGroup>
+            <AssemblyFiles Include="$(DirBuildBin)\Apollo*.dll;$(DirBuildBin)\Apollo*.exe"
+                           Exclude="$(DirBuildBin)\*vshost*.*" />
+        </ItemGroup>
+        <Exec Command="&quot;$(FileSNExe)&quot; -Ra &quot;%(AssemblyFiles.Identity)&quot; $(SOFTWARE_SIGNING_KEY_PATH)" />
+        <Exec Command="&quot;$(FileSNExe)&quot; -v &quot;%(AssemblyFiles.Identity)&quot;" />
     </Target>
  </Project>

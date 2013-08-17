@@ -7,10 +7,6 @@
         <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
         <Platform Condition=" '$(Platform)' == ''">Any CPU</Platform>
         <PlatformTranslated>$(Platform.Replace(" ",""))</PlatformTranslated>
-    
-        <!-- Build flags -->
-        <ShouldClean>true</ShouldClean>
-        <ShouldCleanPackages>false</ShouldCleanPackages>
         
         <!-- Directories -->
         <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
@@ -20,12 +16,6 @@
         <DirBuildBin>$(DirBuild)\bin\$(PlatformTranslated)\$(Configuration)</DirBuildBin>
         <DirBuildLogs>$(DirBuild)\logs</DirBuildLogs>
         <DirBuildTemp>$(DirBuild)\temp</DirBuildTemp>
-        
-        <!-- Version number -->
-        <VersionMajor>0</VersionMajor>
-        <VersionMinor>0</VersionMinor>
-        <VersionBuild>0</VersionBuild>
-        <VersionRevision>0</VersionRevision>
         
         <!-- Tools -->
         <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
@@ -40,7 +30,7 @@
     <Import Project="$(MsBuildExtensionsPath)\ReportGeneratorOutputToCsv.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\ReportGeneratorOutputToCsv.msbuild')"/> 
 
-    <Target Name="Run" DependsOnTargets="_ExecuteUnitTestsWithoutCoverage;_ExecuteUnitTestsWithCoverage">
+    <Target Name="Run" DependsOnTargets="_ExecuteUnitTestsWithCoverage">
         <!-- Do nothing here -->
     </Target>
     
@@ -52,23 +42,6 @@
     <PropertyGroup>
         <FileMbUnitExe>Gallio.Echo.x86.exe</FileMbUnitExe>
     </PropertyGroup>
-    <Target Name="_ExecuteUnitTestsWithoutCoverage" Condition="!$(ShouldHaveCoverage) AND '$(Configuration)' != 'Deploy'" DependsOnTargets="_DisplayInfo">
-        <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
-        
-        <FindToolDirectoryFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileMbUnitExe)">
-          <Output TaskParameter="Path" PropertyName="PathMbUnitDir" />
-        </FindToolDirectoryFromPackages>
-        
-        <ItemGroup>
-            <MbUnitTestAssemblies Include="$(DirBuildBin)\**\test.unit.*.dll" />
-        </ItemGroup>
-        
-        <MbUnit MbUnitExe="$(FileMbUnitExe)"
-                MbUnitDir="$(PathMbUnitDir)"
-                OutputDir="$(DirBuildLogs)"
-                TargetAssemblies="@(MbUnitTestAssemblies)"/>
-    </Target>
-    
     <PropertyGroup>
         <FileOpenCoverReport>$(DirBuildLogs)\opencover.xml</FileOpenCoverReport>
         <FileOpenCoverExe>opencover.console.exe</FileOpenCoverExe>
@@ -77,7 +50,7 @@
         <ReportGeneratorXmlSummaryFile>$(ReportGeneratorOutputDir)\Summary.xml</ReportGeneratorXmlSummaryFile>
         <CoverageCsvFile>$(DirBuildLogs)\coverage.csv</CoverageCsvFile>
     </PropertyGroup>
-    <Target Name="_ExecuteUnitTestsWithCoverage" Condition="$(ShouldHaveCoverage) AND '$(Configuration)' != 'Deploy'" DependsOnTargets="_DisplayInfo">
+    <Target Name="_ExecuteUnitTestsWithCoverage" Condition="'$(Configuration)' != 'Deploy'" DependsOnTargets="_DisplayInfo">
         <MakeDir Directories="$(DirBuildTemp)" Condition="!Exists('$(DirBuildTemp)')" />
         <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
         <MakeDir Directories="$(ReportGeneratorOutputDir)" Condition="!Exists('$(ReportGeneratorOutputDir)')" />

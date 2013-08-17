@@ -44,25 +44,8 @@
         </FindToolFromPackages>
         
         <ItemGroup>
-            <MomaFiles Include="$(DirBuildBin)\Apollo.Core.Base.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Apollo.Core.Extensions.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Apollo.Core.Dataset.exe"/>
-            <MomaFiles Include="$(DirBuildBin)\Apollo.Core.Host.dll"/>
-            <MomaFiles Include="$(DirBuildBin)\Apollo.UI.Console.exe" />
-            <MomaFiles Include="$(DirBuildBin)\Apollo.Utilities.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Autofac.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Castle.Core.dll" />
-            <MomaFiles Include="$(DirBuildBin)\IronPython.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Lokad.Shared.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Microsoft.Scripting.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Mono.Options.dll" />
-            <MomaFiles Include="$(DirBuildBin)\NLog.dll" />
-            <MomaFiles Include="$(DirBuildBin)\NSarrac.Framework.dll" />
-            <MomaFiles Include="$(DirBuildBin)\QuickGraph.dll" />
-            <MomaFiles Include="$(DirBuildBin)\System.Reactive.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Nuclei.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Nuclei.Diagnostics.dll" />
-            <MomaFiles Include="$(DirBuildBin)\Nuclei.Communication.dll" />
+            <MomaFiles Include="$(DirBuildBin)\*.dll" />
+            <MomaFiles Include="$(DirBuildBin)\*.exe"/>
         </ItemGroup>
         
         <Exec Command="$(PathMomaExe) --nogui --out &quot;$(MomaOutputFile)&quot; @(MomaFiles->'%22%(FullPath)%22', ' ')"

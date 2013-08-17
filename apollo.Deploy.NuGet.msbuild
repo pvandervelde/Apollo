@@ -34,9 +34,6 @@
         <DirNuget>$(DirSrc)\.nuget</DirNuget>
     </PropertyGroup>
     <Target Name="_DeployNugetPackage" DependsOnTargets="_DisplayInfo;" Condition=" '$(NugetFeedService)' != '' AND '$(ShouldDeploy)' == 'true'">
-        <Exec Command="&quot;$(DirNuget)\nuget.exe&quot; push &quot;$(DirBuildDeploy)\*.nupkg&quot; -Source $(NugetFeedService)"
-              Condition=" '$(NugetFeedService)' != '' AND '$(ShouldDeploy)' == 'true'" />
-        
         <Exec Command="&quot;$(DirNuget)\nuget.exe&quot; push &quot;$(DirBuildDeploy)\*.symbols.nupkg&quot; -Source $(NugetFeedService)"
               Condition=" '$(NugetFeedService)' != '' AND '$(ShouldDeploy)' == 'true'" />
     </Target>

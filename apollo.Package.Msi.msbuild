@@ -16,7 +16,6 @@
     <!-- Display info -->
     <Target Name="_DisplayInfo">
         <Message Text="Creating MSI installer..." />
-        <Message Text="Version: $(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)" />
     </Target>
     
     <PropertyGroup>

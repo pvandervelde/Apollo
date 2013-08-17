@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0"
+         DefaultTargets="Run"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- Build flags -->
+        <ShouldClean>true</ShouldClean>
+        <ShouldHaveCoverage>true</ShouldHaveCoverage>
+        <ShouldCleanPackages>false</ShouldCleanPackages>
+        
+        <!-- Directories -->
+        <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
+    </PropertyGroup>
+
+    <Target Name="Run" DependsOnTargets="_PrepareWorkspace;_SwitchIssuesToTesting;_CodeAnalysisCcm;_CodeAnalysisSourceMonitor;_BuildBinaries;_StripPdbPaths;_ExecuteUnitTests;_CodeAnalysisFxCop;_CodeAnalysisMoma;_BuildApiDocumentation;_PackageNuget;_PackageMsi;_SwitchIssuesToRelease">
+        <!-- Do nothing here -->
+    </Target>
+    
+    <Target Name="_DisplayInfo">
+        <Message Text="Building Apollo ..." />
+    </Target>
+    
+    <PropertyGroup>
+        <MsBuildPrepareWorkspace>$(DirWorkspace)\apollo.Prepare.Workspace.msbuild</MsBuildPrepareWorkspace>
+    </PropertyGroup>
+    <Target Name="_PrepareWorkspace" DependsOnTargets="_DisplayInfo">
+        <MSBuild Projects="$(MsBuildPrepareWorkspace)" Properties="ShouldClean=$(ShouldClean);ShouldCleanPackages=$(ShouldCleanPackages)" />
+    </Target>
+    
+    <PropertyGroup>
+        <MsBuildPrepareSwitchIssuesToTesting>$(DirWorkspace)\apollo.Prepare.SwitchIssuesToTesting.msbuild</MsBuildPrepareSwitchIssuesToTesting>
+    </PropertyGroup>
+    <Target Name="_SwitchIssuesToTesting" >
+        <MSBuild Projects="$(MsBuildPrepareSwitchIssuesToTesting)" />
+    </Target>
+    
+    <PropertyGroup>
+        <MsBuildAnalyzeCcm>$(DirWorkspace)\apollo.Analyze.Ccm.msbuild</MsBuildAnalyzeCcm>
+    </PropertyGroup>
+    <Target Name="_CodeAnalysisCcm" DependsOnTargets="_PrepareWorkspace">
+        <MSBuild Projects="$(MsBuildAnalyzeCcm)" />
+    </Target>
+    
+    <PropertyGroup>
+        <MsBuildAnalyzeSourceMonitor>$(DirWorkspace)\apollo.Analyze.SourceMonitor.msbuild</MsBuildAnalyzeSourceMonitor>
+    </PropertyGroup>
+    <Target Name="_CodeAnalysisSourceMonitor" DependsOnTargets="_PrepareWorkspace">
+        <MSBuild Projects="$(MsBuildAnalyzeSourceMonitor)" />
+    </Target>
+    
+    <PropertyGroup>
+        <MsBuildBuildBinaries>$(DirWorkspace)\apollo.Build.Binaries.msbuild</MsBuildBuildBinaries>
+    </PropertyGroup>
+    <Target Name="_BuildBinaries" DependsOnTargets="_PrepareWorkspace">
+        <MSBuild Projects="$(MsBuildBuildBinaries)" Properties="Configuration=Release" />
+        <MSBuild Projects="$(MsBuildBuildBinaries)" Properties="Configuration=Deploy" />
+    </Target>
+    
+    <PropertyGroup>
+        <MsBuildBuildStripPdbPaths>$(DirWorkspace)\apollo.Build.StripPdbPaths.msbuild</MsBuildBuildStripPdbPaths>
+    </PropertyGroup>
+    <Target Name="_StripPdbPaths" DependsOnTargets="_PrepareWorkspace">
+        <MSBuild Projects="$(MsBuildBuildStripPdbPaths)" Properties="Configuration=Release" />
+        <MSBuild Projects="$(MsBuildBuildStripPdbPaths)" Properties="Configuration=Deploy" />
+    </Target>
+    
+    <PropertyGroup>
+        <MsBuildExecuteUnitTest>$(DirWorkspace)\apollo.Test.Unit.msbuild</MsBuildExecuteUnitTest>
+    </PropertyGroup>
+    <Target Name="_ExecuteUnitTests" DependsOnTargets="_BuildBinaries">
+        <MSBuild Projects="$(MsBuildExecuteUnitTest)" Properties="Configuration=Release" />
+    </Target>
+
+    <PropertyGroup>
+        <MsBuildAnalyzeFxCop>$(DirWorkspace)\apollo.Analyze.FxCop.msbuild</MsBuildAnalyzeFxCop>
+    </PropertyGroup>
+    <Target Name="_CodeAnalysisFxCop" DependsOnTargets="_BuildBinaries">
+        <MSBuild Projects="$(MsBuildAnalyzeFxCop)" Properties="Configuration=Release" />
+    </Target>
+
+    <PropertyGroup>
+        <MsBuildAnalyzeMoma>$(DirWorkspace)\apollo.Analyze.Moma.msbuild</MsBuildAnalyzeMoma>
+    </PropertyGroup>
+    <Target Name="_CodeAnalysisMoma" DependsOnTargets="_BuildBinaries">
+        <MSBuild Projects="$(MsBuildAnalyzeMoma)" Properties="Configuration=Release" />
+    </Target>
+    
+    <PropertyGroup>
+        <MsBuildBuildApiDocumentation>$(DirWorkspace)\apollo.Build.ApiDocumentation.msbuild</MsBuildBuildApiDocumentation>
+    </PropertyGroup>
+    <Target Name="_BuildApiDocumentation" DependsOnTargets="_BuildBinaries">
+        <MSBuild Projects="$(MsBuildBuildApiDocumentation)" Properties="Configuration=Deploy" />
+    </Target>
+    
+    <PropertyGroup>
+        <MsBuildPackageNuGet>$(DirWorkspace)\apollo.Package.NuGet.msbuild</MsBuildPackageNuGet>
+    </PropertyGroup>
+    <Target Name="_PackageNuget" DependsOnTargets="_BuildBinaries;_SwitchIssuesToTesting">
+        <MSBuild Projects="$(MsBuildPackageNuGet)" Properties="Configuration=Deploy" />
+    </Target>
+    
+    <PropertyGroup>
+        <MsBuildPackageMsi>$(DirWorkspace)\apollo.Package.Msi.msbuild</MsBuildPackageMsi>
+    </PropertyGroup>
+    <Target Name="_PackageMsi" DependsOnTargets="_BuildBinaries">
+        <MSBuild Projects="$(MsBuildPackageMsi)" Properties="Configuration=Deploy" />
+    </Target>
+    
+    <PropertyGroup>
+        <MsBuildDeploySwitchIssuesToRelease>$(DirWorkspace)\apollo.Deploy.SwitchIssuesToRelease.msbuild</MsBuildDeploySwitchIssuesToRelease>
+    </PropertyGroup>
+    <Target Name="_SwitchIssuesToRelease" >
+        <MSBuild Projects="$(MsBuildDeploySwitchIssuesToRelease)" />
+    </Target>
+</Project>
