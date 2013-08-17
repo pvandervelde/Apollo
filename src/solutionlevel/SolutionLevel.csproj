@@ -91,7 +91,7 @@
             $(BuildDependsOn);
         </BuildDependsOn>
   </PropertyGroup>
-  <Target Name="GenerateAssemblyInfoVersionNumber" DependsOnTargets="RestorePackages">
+  <Target Name="GenerateAssemblyInfoVersionNumber" DependsOnTargets="_PrepareBuildEnvironment" >
     <!-- Generate the version number file -->
     <ItemGroup>
       <VersionTokens Include="Major">
@@ -109,7 +109,7 @@
     </ItemGroup>
     <TemplateFile Template="$(FileTemplateAssemblyVersion)" OutputFileName="$(FileGeneratedAssemblyVersion)" Tokens="@(VersionTokens)" />
   </Target>
-  <Target Name="GenerateAssemblyInfoBuildInfo" DependsOnTargets="RestorePackages">
+  <Target Name="GenerateAssemblyInfoBuildInfo" DependsOnTargets="_PrepareBuildEnvironment" >
     <GitCommitHash LocalPath="$(DirWorkspace)">
       <Output TaskParameter="RevNo" PropertyName="VcsRevision" />
     </GitCommitHash>
@@ -136,7 +136,7 @@
     <FileMoqDll>moq.dll</FileMoqDll>
     <SnExe Condition="">$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.0A\bin\sn.exe</SnExe>
   </PropertyGroup>
-  <Target Name="GenerateAssemblyInternalsVisbibleTo" DependsOnTargets="_PrepareBuildEnvironment;RestorePackages">
+  <Target Name="GenerateAssemblyInternalsVisbibleTo" DependsOnTargets="_PrepareBuildEnvironment">
     <FindToolFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileMoqDll)">
       <Output TaskParameter="Path" PropertyName="PathMoqDll" />
     </FindToolFromPackages>
@@ -171,7 +171,7 @@
             $(BuildDependsOn);
         </BuildDependsOn>
   </PropertyGroup>
-  <Target Name="GenerateLicenses" Condition="!Exists('$(FileGeneratedLicenses)')" DependsOnTargets="RestorePackages">
+  <Target Name="GenerateLicenses" Condition="!Exists('$(FileGeneratedLicenses)')" DependsOnTargets="_PrepareBuildEnvironment">
     <FindToolFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileNTrevaExe)">
       <Output TaskParameter="Path" PropertyName="PathNTrevaExe" />
     </FindToolFromPackages>

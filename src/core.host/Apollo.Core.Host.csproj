@@ -30,9 +30,11 @@
     </Reference>
     <Reference Include="IronPython">
       <HintPath>..\..\packages\IronPython.2.7.3\lib\Net40\IronPython.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="IronPython.Modules">
       <HintPath>..\..\packages\IronPython.2.7.3\lib\Net40\IronPython.Modules.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="IronPython.SQLite">
       <HintPath>..\..\packages\IronPython.2.7.3\lib\Net40\IronPython.SQLite.dll</HintPath>
@@ -69,15 +71,18 @@
     </Reference>
     <Reference Include="Microsoft.Dynamic">
       <HintPath>..\..\packages\IronPython.2.7.3\lib\Net40\Microsoft.Dynamic.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Scripting">
       <HintPath>..\..\packages\IronPython.2.7.3\lib\Net40\Microsoft.Scripting.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Scripting.AspNet">
       <HintPath>..\..\packages\IronPython.2.7.3\lib\Net40\Microsoft.Scripting.AspNet.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Scripting.Metadata">
       <HintPath>..\..\packages\IronPython.2.7.3\lib\Net40\Microsoft.Scripting.Metadata.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.dll</HintPath>

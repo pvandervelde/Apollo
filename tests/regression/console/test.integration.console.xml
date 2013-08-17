@@ -57,26 +57,23 @@
         
         <!-- Copy the test files -->
         <xcopy configurationVersion="1.0"
-               steporder="3" 
+               steporder="1" 
                environment="Client">
             <destination><![CDATA[${DirRemoteTestFiles}]]></destination>
             <base><![CDATA[${DirLocalTestFiles}]]></base>
             <paths>
-                <file><![CDATA[${DirLocalTestFiles}\packages.config]]></file>
-                <file><![CDATA[${DirLocalTestFiles}\knowngood.licenses.xml]]></file>
+                <directory><![CDATA[${DirLocalTestFiles}\scripts]]></directory>
             </paths>
         </xcopy>
         
-        <!-- Run nTreva on different package files -->
+        <!-- Run the scripts -->
         <script configurationVersion="1.0"
-                steporder="4" 
+                steporder="2" 
                 environment="Client" >
-            <file language="Powershell"><![CDATA[${FileNTrevaTest}]]></file>
+            <file language="Powershell"><![CDATA[${FileApolloConsoleTest}]]></file>
             <params>
-                <param key="installDir"><![CDATA[${DirRemoteInstall}\ntreva]]></param>
-                <param key="packageDir"><![CDATA[${DirRemoteInstall}]]></param>
-                <param key="packageConfigDir"><![CDATA[${DirRemoteTestFiles}]]></param>
-                <param key="knownGoodFile"><![CDATA[${DirRemoteTestFiles}\knowngood.licenses.xml]]></param>
+                <param key="installDir"><![CDATA[${DirRemoteInstall}]]></param>
+                <param key="scriptsDir"><![CDATA[${DirRemoteTestFiles}\scripts]]></param>
             </params>
         </script>
     </teststeps>
