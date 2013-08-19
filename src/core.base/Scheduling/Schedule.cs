@@ -7,7 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
+using System.Runtime.Serialization;
 using Apollo.Core.Base.Properties;
 using Apollo.Core.Extensions.Scheduling;
 using QuickGraph;
@@ -18,8 +20,43 @@ namespace Apollo.Core.Base.Scheduling
     /// Stores a schedule in editable format.
     /// </summary>
     [Serializable]
-    internal sealed class Schedule : ISchedule
+    internal sealed class Schedule : ISchedule, ISerializable
     {
+        /// <summary>
+        /// The tag used during serialization to indicate how many vertices there are in the schedule graph.
+        /// </summary>
+        private const string SerializationVertexCount = "Schedule.VertexCount";
+
+        /// <summary>
+        /// The tag used during serialization to indicate how many edges there are in the schedule graph.
+        /// </summary>
+        private const string SerializationEdgeCount = "Schedule.EdgeCount";
+
+        /// <summary>
+        /// The tag used during serialization to indicate the type of a given vertex.
+        /// </summary>
+        private const string SerializationVertexType = "Schedule.VertexType_{0}";
+
+        /// <summary>
+        /// The tag used during serialization to indicate the data of a given vertex.
+        /// </summary>
+        private const string SerializationVertex = "Schedule.Vertex_{0}";
+
+        /// <summary>
+        /// The tag used during serialization to indicate the data of a given edge.
+        /// </summary>
+        private const string SerializationEdge = "Schedule.Edge_{0}";
+
+        /// <summary>
+        /// The tag used during serialization to indicate the index of the graph start vertex.
+        /// </summary>
+        private const string SerializationStartVertex = "Schedule.StartVertex";
+
+        /// <summary>
+        /// The tag used during serialization to indicate the index of the graph end vertex.
+        /// </summary>
+        private const string SerializationEndVertex = "Schedule.EndVertex";
+
         /// <summary>
         /// The graph of schedule nodes.
         /// </summary>
@@ -73,6 +110,128 @@ namespace Apollo.Core.Base.Scheduling
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Schedule"/> class.
+        /// </summary>
+        /// <param name="information">The serialization information containing the data for the schedule.</param>
+        /// <param name="context">The serialization context.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="information"/> is <see langword="null" />.
+        /// </exception>
+        public Schedule(SerializationInfo information, StreamingContext context)
+        {
+            {
+                Lokad.Enforce.Argument(() => information);
+            }
+
+            m_Graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
+            var vertices = new List<IScheduleVertex>();
+
+            var vertexCount = information.GetInt32(SerializationVertexCount);
+            for (int i = 0; i < vertexCount; i++)
+            {
+                var type = (Type)information.GetValue(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        SerializationVertexType,
+                        i),
+                    typeof(Type));
+
+                var vertex = (IScheduleVertex)information.GetValue(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        SerializationVertex,
+                        i),
+                    type);
+
+                vertices.Add(vertex);
+                m_Graph.AddVertex(vertex);
+            }
+
+            var edgeCount = information.GetInt32(SerializationEdgeCount);
+            for (int i = 0; i < edgeCount; i++)
+            {
+                var tuple = (Tuple<int, int, ScheduleElementId>)information.GetValue(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        SerializationEdge,
+                        i),
+                    typeof(Tuple<int, int, ScheduleElementId>));
+
+                m_Graph.AddEdge(
+                    new ScheduleEdge(
+                        vertices[tuple.Item1],
+                        vertices[tuple.Item2],
+                        tuple.Item3));
+            }
+
+            var startIndex = information.GetInt32(SerializationStartVertex);
+            m_Start = vertices[startIndex];
+
+            var endIndex = information.GetInt32(SerializationEndVertex);
+            m_End = vertices[endIndex];
+        }
+
+        /// <summary>
+        /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo"/> with the data needed to serialize the target object.
+        /// </summary>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> to populate with data.</param>
+        /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext"/>) for this serialization.</param>
+        /// <exception cref="T:System.Security.SecurityException">The caller does not have the required permission.</exception>
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            // Split the graph into parts
+            var vertices = m_Graph.Vertices.ToList();
+            var connections = new List<Tuple<int, int, ScheduleElementId>>();
+            foreach (var edge in m_Graph.Edges)
+            {
+                var start = vertices.FindIndex(v => ReferenceEquals(v, edge.Source));
+                Debug.Assert(start > -1, "There should be an index for the start of the edge.");
+
+                var end = vertices.FindIndex(v => ReferenceEquals(v, edge.Target));
+                Debug.Assert(end > -1, "There should be an index for the end of the edge.");
+
+                connections.Add(new Tuple<int, int, ScheduleElementId>(start, end, edge.TraversingCondition));
+            }
+
+            info.AddValue(SerializationVertexCount, vertices.Count);
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                info.AddValue(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        SerializationVertexType,
+                        i),
+                    vertices[i].GetType());
+                info.AddValue(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        SerializationVertex,
+                        i),
+                    vertices[i]);
+            }
+
+            info.AddValue(SerializationEdgeCount, connections.Count);
+            for (int i = 0; i < connections.Count; i++)
+            {
+                info.AddValue(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        SerializationEdge,
+                        i),
+                    connections[i]);
+            }
+
+            var startIndex = vertices.FindIndex(s => s.Equals(Start));
+            Debug.Assert(startIndex > -1, "There should be an index for the graph start vertex.");
+
+            var endIndex = vertices.FindIndex(s => s.Equals(End));
+            Debug.Assert(startIndex > -1, "There should be an index for the graph end vertex.");
+
+            info.AddValue(SerializationStartVertex, startIndex);
+            info.AddValue(SerializationEndVertex, endIndex);
+        }
+
+        /// <summary>
         /// Gets the start vertex for the schedule.
         /// </summary>
         public IScheduleVertex Start
@@ -119,14 +278,14 @@ namespace Apollo.Core.Base.Scheduling
         /// A flag indicating if the schedule should be traversed via the outbound edges of the vertices, or the inbound ones.
         /// </param>
         public void TraverseAllScheduleVertices(
-            IScheduleVertex start, 
-            Func<IScheduleVertex, IEnumerable<Tuple<ScheduleElementId, IScheduleVertex>>, bool> vertexAction, 
+            IScheduleVertex start,
+            Func<IScheduleVertex, IEnumerable<Tuple<ScheduleElementId, IScheduleVertex>>, bool> vertexAction,
             bool traverseViaOutBoundVertices = true)
         {
             {
                 Lokad.Enforce.Argument(() => start);
                 Lokad.Enforce.With<UnknownScheduleVertexException>(
-                    m_Graph.ContainsVertex(start), 
+                    m_Graph.ContainsVertex(start),
                     Resources.Exceptions_Messages_UnknownScheduleVertex);
 
                 Lokad.Enforce.Argument(() => vertexAction);

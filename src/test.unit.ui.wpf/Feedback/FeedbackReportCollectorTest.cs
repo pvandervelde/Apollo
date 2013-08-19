@@ -34,15 +34,9 @@ namespace Apollo.UI.Wpf.Feedback
                     .Returns(mockDirectory);
             }
 
-            var fileConstants = new Mock<FileConstants>();
-            {
-                fileConstants.Setup(f => f.CompanyCommonPath())
-                    .Returns("A");
-                fileConstants.Setup(f => f.FeedbackReportExtension)
-                    .Returns("b");
-            }
+            var fileConstants = new FileConstants(new ApplicationConstants());
 
-            var collector = new FeedbackReportCollector(fileSystem.Object, fileConstants.Object);
+            var collector = new FeedbackReportCollector(fileSystem.Object, fileConstants);
             var reports = collector.LocateFeedbackReports();
 
             Assert.AreElementsEqualIgnoringOrder(files, reports.Select(r => r.FullName));

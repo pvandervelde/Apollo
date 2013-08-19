@@ -66,12 +66,12 @@ namespace Apollo.Core.Base.Scheduling
 
             var vertices = new List<int>();
             schedule.TraverseAllScheduleVertices(
-                schedule.Start, 
+                schedule.Start,
                 (vertex, edges) =>
-                    {
-                        vertices.Add(vertex.Index);
-                        return vertex.Index != 3;
-                    });
+                {
+                    vertices.Add(vertex.Index);
+                    return vertex.Index != 3;
+                });
 
             Assert.AreElementsEqual(new int[] { 1, 3 }, vertices);
         }
@@ -104,7 +104,7 @@ namespace Apollo.Core.Base.Scheduling
 
             var vertices = new List<int>();
             schedule.TraverseAllScheduleVertices(
-                schedule.Start, 
+                schedule.Start,
                 (vertex, edges) =>
                 {
                     vertices.Add(vertex.Index);
@@ -153,7 +153,7 @@ namespace Apollo.Core.Base.Scheduling
 
             var vertices = new List<int>();
             schedule.TraverseAllScheduleVertices(
-                schedule.Start, 
+                schedule.Start,
                 (vertex, edges) =>
                 {
                     vertices.Add(vertex.Index);
@@ -216,7 +216,71 @@ namespace Apollo.Core.Base.Scheduling
 
             var vertices = new List<int>();
             schedule.TraverseAllScheduleVertices(
-                schedule.Start, 
+                schedule.Start,
+                (vertex, edges) =>
+                {
+                    vertices.Add(vertex.Index);
+                    return true;
+                });
+
+            Assert.AreElementsEqual(new int[] { 1, 3, 4, 2, 5, 6, 7 }, vertices);
+        }
+
+        [Test]
+        public void RoundTripSerialise()
+        {
+            // Making a schedule that looks like:
+            // start -> node1 --> node2 -> end
+            //            ^           |
+            //            |-- node3 <-|
+            //                ^  |
+            //         node5--|  |->  node4
+            //           ^              |
+            //           |--------------|
+            Schedule schedule = null;
+            {
+                var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
+
+                var start = new StartVertex(1);
+                graph.AddVertex(start);
+
+                var end = new EndVertex(2);
+                graph.AddVertex(end);
+
+                var vertex1 = new InsertVertex(3);
+                graph.AddVertex(vertex1);
+
+                var vertex2 = new InsertVertex(4);
+                graph.AddVertex(vertex2);
+
+                var vertex3 = new InsertVertex(5);
+                graph.AddVertex(vertex3);
+
+                var vertex4 = new InsertVertex(6);
+                graph.AddVertex(vertex4);
+
+                var vertex5 = new InsertVertex(7);
+                graph.AddVertex(vertex5);
+
+                graph.AddEdge(new ScheduleEdge(start, vertex1));
+                graph.AddEdge(new ScheduleEdge(vertex1, vertex2));
+
+                graph.AddEdge(new ScheduleEdge(vertex2, end));
+                graph.AddEdge(new ScheduleEdge(vertex2, vertex3));
+
+                graph.AddEdge(new ScheduleEdge(vertex3, vertex1));
+                graph.AddEdge(new ScheduleEdge(vertex3, vertex4));
+
+                graph.AddEdge(new ScheduleEdge(vertex4, vertex5));
+                graph.AddEdge(new ScheduleEdge(vertex5, vertex3));
+
+                schedule = new Schedule(graph, start, end);
+            }
+
+            var otherSchedule = Assert.BinarySerializeThenDeserialize(schedule);
+            var vertices = new List<int>();
+            otherSchedule.TraverseAllScheduleVertices(
+                otherSchedule.Start,
                 (vertex, edges) =>
                 {
                     vertices.Add(vertex.Index);
