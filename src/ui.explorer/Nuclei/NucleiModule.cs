@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
+using Apollo.UI.Explorer.Nuclei.AppDomains;
 using Apollo.UI.Explorer.Nuclei.ExceptionHandling;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
@@ -22,7 +23,6 @@ using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 using Nuclei.Diagnostics.Profiling;
 using Nuclei.Diagnostics.Profiling.Reporting;
-using Nuclei.Progress;
 
 namespace Apollo.UI.Explorer.Nuclei
 {
@@ -47,7 +47,7 @@ namespace Apollo.UI.Explorer.Nuclei
         /// </summary>
         private const string PluginsDirectoryName = "plugins";
 
-        private static AppDomainResolutionPaths AppDomainResolutionPathsFor(IFileConstants fileConstants, AppDomainPaths paths)
+        private static AppDomainResolutionPaths AppDomainResolutionPathsFor(FileConstants fileConstants, AppDomainPaths paths)
         {
             List<string> filePaths = new List<string>();
             List<string> directoryPaths = new List<string>();
@@ -86,8 +86,7 @@ namespace Apollo.UI.Explorer.Nuclei
                     {
                         return AppDomainBuilder.Assemble(
                             name,
-                            AppDomainResolutionPathsFor(ctx.Resolve<IFileConstants>(), paths),
-                            ctx.Resolve<IFileConstants>());
+                            AppDomainResolutionPathsFor(ctx.Resolve<FileConstants>(), paths));
                     };
 
                     return result;
@@ -133,7 +132,7 @@ namespace Apollo.UI.Explorer.Nuclei
         private static void RegisterLoggers(ContainerBuilder builder)
         {
             builder.Register(c => LoggerBuilder.ForFile(
-                    Path.Combine(c.Resolve<IFileConstants>().LogPath(), DefaultInfoFileName),
+                    Path.Combine(c.Resolve<FileConstants>().LogPath(), DefaultInfoFileName),
                     new DebugLogTemplate(
                         c.Resolve<IConfiguration>(),
                         () => DateTimeOffset.Now)))
@@ -219,16 +218,14 @@ namespace Apollo.UI.Explorer.Nuclei
             {
                 // Utilities
                 builder.Register(c => new ApplicationConstants())
-                   .As<IApplicationConstants>()
-                   .As<ICompanyConstants>();
+                   .As<ApplicationConstants>();
 
-                builder.Register(c => new FileConstants(c.Resolve<IApplicationConstants>()))
-                    .As<IFileConstants>();
+                builder.Register(c => new FileConstants(c.Resolve<ApplicationConstants>()))
+                    .As<FileConstants>();
 
                 builder.Register((c, p) => new ExceptionHandler(
-                        p.Positional<string>(0),
-                        p.Positional<string>(1)))
-                    .As<IExceptionHandler>();
+                        p.TypedAs<ExceptionProcessor[]>()))
+                    .As<ExceptionHandler>();
 
                 builder.Register(c => new XmlConfiguration(
                         CommunicationConfigurationKeys.ToCollection(),

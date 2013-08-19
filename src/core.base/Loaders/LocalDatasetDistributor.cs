@@ -7,15 +7,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Apollo.Utilities;
 using Lokad;
 using Nuclei.Communication;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Profiling;
-using Nuclei.Progress;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -175,7 +174,7 @@ namespace Apollo.Core.Base.Loaders
         public Task<DatasetOnlineInformation> ImplementPlan(
             DistributionPlan planToImplement, 
             CancellationToken token,
-            Action<int, IProgressMark, TimeSpan> progressReporter)
+            Action<int, string> progressReporter)
         {
             Func<DatasetOnlineInformation> result =
                 () =>
@@ -215,7 +214,7 @@ namespace Apollo.Core.Base.Loaders
                     }
 
                     EventHandler<ProgressEventArgs> progressHandler = 
-                        (s, e) => progressReporter(e.Progress, e.CurrentlyProcessing, e.EstimatedFinishingTime);
+                        (s, e) => progressReporter(e.Progress, e.Description);
                     var notifications = m_NotificationHub.NotificationsFor<IDatasetApplicationNotifications>(endpoint);
                     notifications.OnProgress += progressHandler;
                     try

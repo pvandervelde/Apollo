@@ -7,7 +7,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Nuclei.Progress;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -28,6 +27,6 @@ namespace Apollo.Core.Base.Loaders
         Task<DatasetOnlineInformation> ImplementPlan(
             DistributionPlan planToImplement,
             CancellationToken token,
-            Action<int, IProgressMark, TimeSpan> progressReporter);
+            Action<int, string> progressReporter);
     }
 }

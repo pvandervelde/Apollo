@@ -7,7 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base;
-using Nuclei.Progress;
+using Apollo.Utilities;
 
 namespace Apollo.Core.Dataset
 {
@@ -26,7 +26,7 @@ namespace Apollo.Core.Dataset
         /// </summary>
         /// <param name="progress">The progress percentage, ranging from 0 to 100.</param>
         /// <param name="currentlyProcessing">The action that is currently being processed.</param>
-        public void RaiseOnProgress(int progress, IProgressMark currentlyProcessing)
+        public void RaiseOnProgress(int progress, string currentlyProcessing)
         {
             var local = OnProgress;
             if (local != null)

@@ -15,7 +15,6 @@ using MbUnit.Framework;
 using Moq;
 using Nuclei.Communication;
 using Nuclei.Diagnostics;
-using Nuclei.Progress;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -228,7 +227,7 @@ namespace Apollo.Core.Base.Loaders
                 systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 
-            Action<int, IProgressMark, TimeSpan> progress = (p, m, t) => { };
+            Action<int, string> progress = (p, m) => { };
             var result = distributor.ImplementPlan(plan, new CancellationToken(), progress);
             result.Wait();
 

@@ -21,6 +21,7 @@ using Apollo.Core.Dataset.Scheduling.Processors;
 using Apollo.Core.Extensions.Scheduling;
 using Apollo.Utilities.History;
 using Autofac;
+using Autofac.Core;
 using Nuclei.Communication;
 using Nuclei.Diagnostics;
 
@@ -251,16 +252,16 @@ namespace Apollo.Core.Dataset
         {
             // For now we fake this out by pretending it takes time to load.
             var progressAction = container.Resolve<IDatasetApplicationNotificationInvoker>();
-            progressAction.RaiseOnProgress(0, new StreamLoadProgressMark());
+            progressAction.RaiseOnProgress(0, "Starting dataset load ...");
 
             Thread.Sleep(1000);
-            progressAction.RaiseOnProgress(33, new StreamLoadProgressMark());
+            progressAction.RaiseOnProgress(33, "Loading ...");
 
             Thread.Sleep(1000);
-            progressAction.RaiseOnProgress(66, new StreamLoadProgressMark());
+            progressAction.RaiseOnProgress(66, "Loading ...");
 
             Thread.Sleep(1000);
-            progressAction.RaiseOnProgress(100, new StreamLoadProgressMark());
+            progressAction.RaiseOnProgress(100, "Load complete");
         }
     }
 }

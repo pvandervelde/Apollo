@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Dataset.Properties;
 using Apollo.Core.Extensions.Scheduling;
-using Nuclei.Progress;
+using Apollo.Utilities;
 
 namespace Apollo.Core.Dataset.Scheduling
 {
@@ -252,7 +252,7 @@ namespace Apollo.Core.Dataset.Scheduling
                                 return false;
                             }
 
-                            RaiseOnExecutionProgress(-1, new ScheduleExecutionProgressMark());
+                            RaiseOnExecutionProgress(-1, Resources.Progress_ExecutingSchedule);
                         }
                         catch (Exception)
                         {
@@ -410,7 +410,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// </summary>
         public event EventHandler<ProgressEventArgs> OnExecutionProgress;
 
-        private void RaiseOnExecutionProgress(int progress, IProgressMark mark)
+        private void RaiseOnExecutionProgress(int progress, string mark)
         {
             var local = OnExecutionProgress;
             if (local != null)

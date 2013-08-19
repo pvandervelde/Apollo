@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
-// <copyright company="P. van der Velde">
-//     Copyright (c) P. van der Velde. All rights reserved.
+// <copyright company="Nuclei">
+//     Copyright 2013 Nuclei. Licensed under the Apache License, Version 2.0.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -27,3 +27,4 @@ namespace Apollo.Core.Dataset.Nuclei.ExceptionHandling
         Failure,
     }
 }
+

@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
-// <copyright company="P. van der Velde">
-//     Copyright (c) P. van der Velde. All rights reserved.
+// <copyright company="Nuclei">
+//     Copyright 2013 Nuclei. Licensed under the Apache License, Version 2.0.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -21,36 +21,34 @@ namespace Apollo.UI.Console.Nuclei.ExceptionHandling
         /// but will log errors to a file and the event log.
         /// </summary>
         /// <param name="actionToExecute">The action that should be executed.</param>
-        /// <param name="eventLogSource">The name of the event log source.</param>
-        /// <param name="errorLogFileName">The name of the file that contains the error log.</param>
+        /// <param name="exceptionProcessors">The collection of exception processors that will be used to log any unhandled exception.</param>
         /// <returns>
         /// A value indicating whether the action executed successfully or not.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "Catching an Exception object here because this is the top-level exception handler.")]
-        public static GuardResult RunGuarded(Action actionToExecute, string eventLogSource, string errorLogFileName)
+        public static GuardResult RunGuarded(Action actionToExecute, params ExceptionProcessor[] exceptionProcessors)
         {
             {
                 Debug.Assert(actionToExecute != null, "The application method should not be null.");
             }
 
-            using (var processor = new ExceptionHandler(eventLogSource, errorLogFileName))
-            {
-                GuardResult result = GuardResult.None;
-                ExceptionFilter.ExecuteWithFilter(
-                    () =>
-                    {
-                        actionToExecute();
-                        result = GuardResult.Success;
-                    },
-                    e =>
-                    {
-                        processor.OnException(e, false);
-                        result = GuardResult.Failure;
-                    });
+            var processor = new ExceptionHandler(exceptionProcessors);
+            var result = GuardResult.None;
+            ExceptionFilter.ExecuteWithFilter(
+                () =>
+                {
+                    actionToExecute();
+                    result = GuardResult.Success;
+                },
+                e =>
+                {
+                    processor.OnException(e, false);
+                    result = GuardResult.Failure;
+                });
 
-                return result;
-            }
+            return result;
         }
     }
 }
+

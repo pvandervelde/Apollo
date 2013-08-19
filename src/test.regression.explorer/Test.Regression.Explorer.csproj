@@ -14,11 +14,48 @@
     <NoWarn>1685</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\packages\Autofac.3.1.1\lib\net40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.Core">
       <HintPath>..\..\packages\Castle.Core.3.2.0\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
-     <Reference Include="Nuclei">
-      <HintPath>..\..\packages\Nuclei.Core.0.4.0.0\lib\net40\Nuclei.dll</HintPath>
+    <Reference Include="log4net">
+      <HintPath>..\..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.ActionPolicy">
+      <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.ActionPolicy.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Logging">
+      <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Quality">
+      <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.Quality.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Shared">
+      <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Stack">
+      <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.Stack.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Testing">
+      <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.Testing.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclei.Build, Version=0.6.2.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Nuclei.Build.0.6.2.0\lib\net45\Nuclei.Build.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
@@ -30,8 +67,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="TestStack.White">
-      <HintPath>..\..\packages\TestStack.White.0.10.3.118\lib\net40\TestStack.White.dll</HintPath>
+    <Reference Include="TestStack.White, Version=0.11.0.207, Culture=neutral, PublicKeyToken=2672efbf3e161801, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\TestStack.White.0.11.0.207\lib\net40\TestStack.White.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

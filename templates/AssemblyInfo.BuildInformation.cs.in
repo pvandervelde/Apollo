@@ -15,7 +15,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using Nuclei;
+using Nuclei.Build;
 
 /*
  * THIS IS A GENERATED FILE. DO NOT MAKE CHANGES IN THIS FILE BECAUSE ANY

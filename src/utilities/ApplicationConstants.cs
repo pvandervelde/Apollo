@@ -7,7 +7,6 @@
 using System;
 using System.Diagnostics;
 using System.Reflection;
-using Nuclei;
 
 namespace Apollo.Utilities
 {
@@ -15,7 +14,7 @@ namespace Apollo.Utilities
     /// Holds a set of constants that apply to the application.
     /// </summary>
     [Serializable]
-    public sealed class ApplicationConstants : IApplicationConstants, ICompanyConstants
+    public sealed class ApplicationConstants
     {
         /// <summary>
         /// Gets the assembly that called into this assembly.

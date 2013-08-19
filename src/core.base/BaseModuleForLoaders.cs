@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using Apollo.Core.Base.Loaders;
+using Apollo.Utilities;
 using Autofac;
 using Nuclei;
 using Nuclei.Diagnostics;
@@ -27,7 +28,7 @@ namespace Apollo.Core.Base
             base.Load(builder);
 
             builder.Register(c => new DatasetApplicationLoader(
-                    c.Resolve<IApplicationConstants>(),
+                    c.Resolve<ApplicationConstants>(),
                     c.Resolve<SystemDiagnostics>()))
                 .As<IApplicationLoader>();
 

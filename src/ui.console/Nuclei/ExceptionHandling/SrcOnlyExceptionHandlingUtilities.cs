@@ -6,7 +6,7 @@
 
 using System.Reflection;
 using System.Security.Cryptography;
-using NSarrac.Framework;
+using Nuclei;
 
 namespace Apollo.UI.Console.Nuclei.ExceptionHandling
 {

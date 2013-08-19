@@ -10,10 +10,10 @@ using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host;
 using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces.Projects;
+using Apollo.Utilities;
 using Apollo.Utilities.History;
 using MbUnit.Framework;
 using Moq;
-using Nuclei.Progress;
 
 namespace Apollo.UI.Wpf.Views.Datasets
 {
@@ -323,7 +323,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
                     .Verifiable();
                 progressTracker.Setup(p => p.StopTracking())
                     .Verifiable();
-                progressTracker.Setup(p => p.UpdateProgress(It.IsAny<int>(), It.IsAny<IProgressMark>(), It.IsAny<TimeSpan>()))
+                progressTracker.Setup(p => p.UpdateProgress(It.IsAny<int>(), It.IsAny<string>()))
                     .Verifiable();
             }
 
@@ -334,19 +334,19 @@ namespace Apollo.UI.Wpf.Views.Datasets
             var dataset = new DatasetFacade(proxy.Object);
             var model = new DatasetModel(context.Object, progressTracker.Object, projectLink.Object, dataset);
 
-            proxy.Raise(p => p.OnProgressOfCurrentAction += null, new ProgressEventArgs(0, new IndeterminateProgressMark()));
+            proxy.Raise(p => p.OnProgressOfCurrentAction += null, new ProgressEventArgs(0, "a"));
             progressTracker.Verify(p => p.StartTracking(), Times.Once());
-            progressTracker.Verify(p => p.UpdateProgress(It.IsAny<int>(), It.IsAny<IProgressMark>(), It.IsAny<TimeSpan>()), Times.Once());
+            progressTracker.Verify(p => p.UpdateProgress(It.IsAny<int>(), It.IsAny<string>()), Times.Once());
             progressTracker.Verify(p => p.StopTracking(), Times.Never());
 
-            proxy.Raise(p => p.OnProgressOfCurrentAction += null, new ProgressEventArgs(50, new IndeterminateProgressMark()));
+            proxy.Raise(p => p.OnProgressOfCurrentAction += null, new ProgressEventArgs(50, "b"));
             progressTracker.Verify(p => p.StartTracking(), Times.Once());
-            progressTracker.Verify(p => p.UpdateProgress(It.IsAny<int>(), It.IsAny<IProgressMark>(), It.IsAny<TimeSpan>()), Times.Exactly(2));
+            progressTracker.Verify(p => p.UpdateProgress(It.IsAny<int>(), It.IsAny<string>()), Times.Exactly(2));
             progressTracker.Verify(p => p.StopTracking(), Times.Never());
 
-            proxy.Raise(p => p.OnProgressOfCurrentAction += null, new ProgressEventArgs(100, new IndeterminateProgressMark()));
+            proxy.Raise(p => p.OnProgressOfCurrentAction += null, new ProgressEventArgs(100, "c"));
             progressTracker.Verify(p => p.StartTracking(), Times.Once());
-            progressTracker.Verify(p => p.UpdateProgress(It.IsAny<int>(), It.IsAny<IProgressMark>(), It.IsAny<TimeSpan>()), Times.Exactly(3));
+            progressTracker.Verify(p => p.UpdateProgress(It.IsAny<int>(), It.IsAny<string>()), Times.Exactly(3));
             progressTracker.Verify(p => p.StopTracking(), Times.Once());
         }
     }

@@ -10,7 +10,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
-using Nuclei;
+using Apollo.Utilities;
 
 namespace Apollo.UI.Wpf.Feedback
 {
@@ -27,7 +27,7 @@ namespace Apollo.UI.Wpf.Feedback
         /// <summary>
         /// The object that holds the constant values that describe the application files and file paths.
         /// </summary>
-        private readonly IFileConstants m_FileConstants;
+        private readonly FileConstants m_FileConstants;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FeedbackReportCollector"/> class.
@@ -40,7 +40,7 @@ namespace Apollo.UI.Wpf.Feedback
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="fileConstants"/> is <see langword="null" />.
         /// </exception>
-        public FeedbackReportCollector(IFileSystem fileSystem, IFileConstants fileConstants)
+        public FeedbackReportCollector(IFileSystem fileSystem, FileConstants fileConstants)
         {
             {
                 Lokad.Enforce.Argument(() => fileSystem);

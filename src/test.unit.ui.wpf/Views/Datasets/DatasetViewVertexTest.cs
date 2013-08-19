@@ -9,9 +9,9 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces.Projects;
+using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
-using Nuclei.Progress;
 
 namespace Apollo.UI.Wpf.Views.Datasets
 {

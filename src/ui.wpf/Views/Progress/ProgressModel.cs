@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Nuclei.Progress;
+using Apollo.Utilities;
 
 namespace Apollo.UI.Wpf.Views.Progress
 {

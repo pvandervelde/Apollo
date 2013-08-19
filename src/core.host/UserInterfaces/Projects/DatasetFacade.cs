@@ -15,7 +15,6 @@ using Apollo.Core.Base.Loaders;
 using Apollo.Core.Host.Projects;
 using Apollo.Utilities;
 using Lokad;
-using Nuclei.Progress;
 
 namespace Apollo.Core.Host.UserInterfaces.Projects
 {
@@ -100,8 +99,7 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
 
             m_Dataset = dataset;
             m_Dataset.OnDeleted += (s, e) => RaiseOnInvalidate();
-            m_Dataset.OnProgressOfCurrentAction += 
-                (s, e) => RaiseOnProgressOfCurrentAction(e.Progress, e.CurrentlyProcessing, e.EstimatedFinishingTime);
+            m_Dataset.OnProgressOfCurrentAction += (s, e) => RaiseOnProgressOfCurrentAction(e.Progress, e.Description);
             m_Dataset.OnLoaded += (s, e) => RaiseOnLoaded();
             m_Dataset.OnUnloaded += (s, e) => RaiseOnUnloaded();
             m_Dataset.OnNameChanged += (s, e) => RaiseOnNameChanged();
@@ -332,12 +330,12 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         /// </summary>
         public event EventHandler<ProgressEventArgs> OnProgressOfCurrentAction;
 
-        private void RaiseOnProgressOfCurrentAction(int progress, IProgressMark mark, TimeSpan estimatedTime)
+        private void RaiseOnProgressOfCurrentAction(int progress, string mark)
         {
             var local = OnProgressOfCurrentAction;
             if (local != null)
             {
-                local(this, new ProgressEventArgs(progress, mark, estimatedTime));
+                local(this, new ProgressEventArgs(progress, mark));
             }
         }
 

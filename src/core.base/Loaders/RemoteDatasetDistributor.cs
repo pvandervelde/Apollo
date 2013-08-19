@@ -11,11 +11,11 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Apollo.Utilities;
 using Nuclei.Communication;
 using Nuclei.Configuration;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Profiling;
-using Nuclei.Progress;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -333,15 +333,15 @@ namespace Apollo.Core.Base.Loaders
                 }
             }
 
-            using (var interval = m_Diagnostics.Profiler.Measure("Generating remote proposal"))
+            using (m_Diagnostics.Profiler.Measure("Generating remote proposal"))
             {
                 var proposals = RetrieveProposals(availableEndpoints, m_Configuration, request, token);
                 return from proposal in proposals
-                       select new DistributionPlan(
-                           (p, t, r) => ImplementPlan(p, t, r),
-                           request.DatasetToLoad,
-                           new NetworkIdentifier(proposal.Endpoint.OriginatesOnMachine()),
-                           proposal);
+                    select new DistributionPlan(
+                        ImplementPlan,
+                        request.DatasetToLoad,
+                        new NetworkIdentifier(proposal.Endpoint.OriginatesOnMachine()),
+                        proposal);
             }
         }
 
@@ -357,12 +357,12 @@ namespace Apollo.Core.Base.Loaders
         public Task<DatasetOnlineInformation> ImplementPlan(
             DistributionPlan planToImplement, 
             CancellationToken token,
-            Action<int, IProgressMark, TimeSpan> progressReporter)
+            Action<int, string> progressReporter)
         {
             Func<DatasetOnlineInformation> result =
                 () =>
                 {
-                    IDatasetLoaderCommands loaderCommands = null;
+                    IDatasetLoaderCommands loaderCommands;
                     lock (m_Lock)
                     {
                         if (!m_LoaderCommands.ContainsKey(planToImplement.Proposal.Endpoint))
@@ -402,7 +402,7 @@ namespace Apollo.Core.Base.Loaders
                     }
 
                     EventHandler<ProgressEventArgs> progressHandler = 
-                        (s, e) => progressReporter(e.Progress, e.CurrentlyProcessing, e.EstimatedFinishingTime);
+                        (s, e) => progressReporter(e.Progress, e.Description);
                     var notifications = m_NotificationHub.NotificationsFor<IDatasetApplicationNotifications>(endpoint);
                     notifications.OnProgress += progressHandler;
                     try

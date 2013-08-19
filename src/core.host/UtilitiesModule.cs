@@ -8,8 +8,6 @@ using System;
 using System.IO.Abstractions;
 using Apollo.Utilities;
 using Autofac;
-using Nuclei;
-using Nuclei.Progress;
 
 namespace Apollo.Core.Host
 {
@@ -34,16 +32,10 @@ namespace Apollo.Core.Host
             // Register the global application objects
             {
                 builder.Register(c => new ApplicationConstants())
-                    .As<IApplicationConstants>()
-                    .As<ICompanyConstants>();
+                    .As<ApplicationConstants>();
 
-                builder.Register(c => new FileConstants(c.Resolve<IApplicationConstants>()))
-                    .As<IFileConstants>();
-
-                builder.Register((c, p) => new ProgressTimer(
-                        p.TypedAs<TimeSpan>()))
-                    .As<IProgressTimer>()
-                    .InstancePerDependency();
+                builder.Register(c => new FileConstants(c.Resolve<ApplicationConstants>()))
+                    .As<FileConstants>();
 
                 builder.Register(c => new FileSystem())
                     .As<IFileSystem>();

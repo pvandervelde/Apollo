@@ -7,9 +7,9 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
-using White.Core;
-using White.Core.Factory;
-using White.Core.UIItems.Finders;
+using TestStack.White;
+using TestStack.White.Factory;
+using TestStack.White.UIItems.Finders;
 
 namespace Test.Regression.Explorer.Automation.Views
 {

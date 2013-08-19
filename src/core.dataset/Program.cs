@@ -7,13 +7,15 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Reflection;
+using System.IO;
 using System.Windows.Forms;
-using Apollo.Core.Dataset.Nuclei;
+using Apollo.Core.Dataset.Nuclei.ExceptionHandling;
+using Apollo.Utilities;
 using Autofac;
 using Mono.Options;
 using Nuclei.Communication;
+using Nuclei.Configuration;
+using Nuclei.Diagnostics.Logging;
 
 namespace Apollo.Core.Dataset
 {
@@ -24,6 +26,16 @@ namespace Apollo.Core.Dataset
             Justification = "Access modifiers should not be declared on the entry point for a command line application. See FxCop.")]
     static class Program
     {
+        /// <summary>
+        /// Defines the error code for a normal application exit (i.e without errors).
+        /// </summary>
+        private const int NormalApplicationExitCode = 0;
+
+        /// <summary>
+        /// Defines the error code for an application exit with an unhandled exception.
+        /// </summary>
+        private const int UnhandledExceptionApplicationExitCode = 1;
+
         /// <summary>
         /// The default name for the error log.
         /// </summary>
@@ -43,21 +55,20 @@ namespace Apollo.Core.Dataset
                 Debug.Assert(args != null, "The arguments array should not be null.");
             }
 
-            Func<int> applicationLogic =
-                () =>
-                {
-                    var context = new ApplicationContext();
-                    return RunApplication(args, context);
-                };
+            int functionReturnResult = -1;
 
-            var eventLogSource = Assembly.GetExecutingAssembly().GetName().Name;
-            return CommandLineProgram.EntryPoint(
-                applicationLogic, 
-                eventLogSource, 
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    DefaultErrorFileName,
-                    Process.GetCurrentProcess().Id));
+            var processor = new LogBasedExceptionProcessor(
+                LoggerBuilder.ForFile(
+                    Path.Combine(new FileConstants(new ApplicationConstants()).LogPath(), DefaultErrorFileName),
+                    new DebugLogTemplate(new NullConfiguration(), () => DateTimeOffset.Now)));
+            var result = TopLevelExceptionGuard.RunGuarded(
+                () => functionReturnResult = RunApplication(args, new ApplicationContext()),
+                new ExceptionProcessor[]
+                    {
+                        processor.Process,
+                    });
+
+            return (result == GuardResult.Failure) ? UnhandledExceptionApplicationExitCode : functionReturnResult;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
@@ -121,7 +132,7 @@ namespace Apollo.Core.Dataset
             // Start with the message processing loop and then we 
             // wait for it to either get terminated or until we kill ourselves.
             Application.Run(context);
-            return CommandLineProgram.NormalApplicationExitCode;
+            return NormalApplicationExitCode;
         }
     }
 }

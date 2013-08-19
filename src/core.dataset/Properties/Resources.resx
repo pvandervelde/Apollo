@@ -168,4 +168,7 @@
   <data name="Exceptions_Messages_ConstructionOfPluginTypeFailed" xml:space="preserve">
     <value>The instantiation of a plug-in type failed.</value>
   </data>
+  <data name="Progress_ExecutingSchedule" xml:space="preserve">
+    <value>Executing schedule ...</value>
+  </data>
 </root>

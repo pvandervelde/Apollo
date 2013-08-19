@@ -7,7 +7,6 @@
 using System;
 using System.IO;
 using Lokad;
-using Nuclei;
 
 namespace Apollo.Utilities
 {
@@ -15,18 +14,18 @@ namespace Apollo.Utilities
     /// Defines a set of values related to files and file paths.
     /// </summary>
     [Serializable]
-    public sealed class FileConstants : IFileConstants
+    public sealed class FileConstants
     {
         /// <summary>
         /// The object that stores constant values for the application.
         /// </summary>
-        private readonly IApplicationConstants m_Constants;
+        private readonly ApplicationConstants m_Constants;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileConstants"/> class.
         /// </summary>
         /// <param name="constants">The object that stores constant values for the application.</param>
-        public FileConstants(IApplicationConstants constants)
+        public FileConstants(ApplicationConstants constants)
         {
             {
                 Enforce.Argument(() => constants);

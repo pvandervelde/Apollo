@@ -13,7 +13,6 @@ using Apollo.UI.Explorer.Nuclei;
 using Autofac.Core;
 using Lokad;
 using Nuclei.Communication;
-using Nuclei.Progress;
 
 namespace Apollo.UI.Explorer
 {
@@ -40,12 +39,8 @@ namespace Apollo.UI.Explorer
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelBootstrapper"/> class.
         /// </summary>
-        /// <param name="progress">The object used to track the progress of the bootstrapping process.</param>
         /// <param name="shutdownEvent">The event that signals to the application that it is safe to shut down.</param>
         /// <param name="onStartUserInterface">The function used to store the DI container which holds the kernel UI references.</param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="progress"/> is <see langword="null"/>.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="shutdownEvent"/> is <see langword="null" />.
         /// </exception>
@@ -53,10 +48,9 @@ namespace Apollo.UI.Explorer
         /// Thrown when <paramref name="onStartUserInterface"/> is <see langword="null"/>.
         /// </exception>
         public KernelBootstrapper(
-            ITrackProgress progress,
             AutoResetEvent shutdownEvent,
             Action<IModule> onStartUserInterface)
-            : base(progress, shutdownEvent)
+            : base(shutdownEvent)
         {
             {
                 Enforce.Argument(() => onStartUserInterface);

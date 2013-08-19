@@ -11,8 +11,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using Apollo.Core.Host.Properties;
+using Apollo.Utilities;
 using Lokad;
-using Nuclei.Progress;
 using QuickGraph;
 using QuickGraph.Algorithms;
 
@@ -78,7 +78,7 @@ namespace Apollo.Core.Host
         /// </summary>
         /// <param name="progress">The progress percentage.</param>
         /// <param name="mark">The progress mark.</param>
-        private void RaiseOnStartupProgress(int progress, IProgressMark mark)
+        private void RaiseOnStartupProgress(int progress, string mark)
         {
             var local = OnStartupProgress;
             if (local != null)
@@ -151,7 +151,7 @@ namespace Apollo.Core.Host
                             var currentPercentage = e.Progress / (100.0 * startupOrder.Count);
                             var total = finishedPercentage + currentPercentage;
 
-                            RaiseOnStartupProgress((int)Math.Floor(total * 100), e.CurrentlyProcessing);
+                            RaiseOnStartupProgress((int)Math.Floor(total * 100), e.Description);
                         };
 
                     currentService.OnStartupProgress += handler;

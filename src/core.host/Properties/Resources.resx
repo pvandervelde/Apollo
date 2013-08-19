@@ -405,4 +405,7 @@
   <data name="Exceptions_Messages_DuplicateTypeDefinition" xml:space="preserve">
     <value>A type with the given type identity is already registered.</value>
   </data>
+  <data name="Progress_LoadingDataset" xml:space="preserve">
+    <value>Loading dataset ...</value>
+  </data>
 </root>

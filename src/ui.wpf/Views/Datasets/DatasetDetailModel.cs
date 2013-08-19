@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.UI.Wpf.Properties;
-using Nuclei.Progress;
+using Apollo.Utilities;
 using ICommand = System.Windows.Input.ICommand;
 
 namespace Apollo.UI.Wpf.Views.Datasets
@@ -92,14 +92,14 @@ namespace Apollo.UI.Wpf.Views.Datasets
 
         private void HandleDatasetProgress(object sender, ProgressEventArgs e)
         {
-            ProgressDescription = e.CurrentlyProcessing.ToString();
+            ProgressDescription = e.Description;
             Progress = e.Progress / 100.0;
             if (e.Progress <= 0)
             {
                 m_ProgressTracker.StartTracking();
             }
 
-            m_ProgressTracker.UpdateProgress(e.Progress, e.CurrentlyProcessing, e.EstimatedFinishingTime);
+            m_ProgressTracker.UpdateProgress(e.Progress, e.Description);
 
             if (e.Progress >= 100)
             {

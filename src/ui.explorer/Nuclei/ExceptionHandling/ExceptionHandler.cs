@@ -1,17 +1,11 @@
 //-----------------------------------------------------------------------
-// <copyright company="P. van der Velde">
-//     Copyright (c) P. van der Velde. All rights reserved.
+// <copyright company="Nuclei">
+//     Copyright 2013 Nuclei. Licensed under the Apache License, Version 2.0.
 // </copyright>
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using Autofac;
-using NSarrac.Framework;
-using Nuclei.Configuration;
-using Nuclei.Diagnostics.Logging;
 
 namespace Apollo.UI.Explorer.Nuclei.ExceptionHandling
 {
@@ -22,121 +16,20 @@ namespace Apollo.UI.Explorer.Nuclei.ExceptionHandling
     /// This class must be public because we use it in the AppDomainBuilder.
     /// </design>
     [Serializable]
-    public sealed class ExceptionHandler : IExceptionHandler, IDisposable
+    public sealed class ExceptionHandler
     {
-        /// <summary>
-        /// The event log name to which the application writes.
-        /// </summary>
-        private const string ApplicationEventLog = "Application";
-
-        /// <summary>
-        /// The default name for the error log.
-        /// </summary>
-        private const string DefaultErrorFileName = "apollo.error.log";
-
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "We don't really care if we get a processor or not but we really don't want a crash here.")]
-        private static IExceptionProcessor CreateReportBuildingProcessor()
-        {
-            var builder = new ContainerBuilder();
-            {
-                var rsaParameters = SrcOnlyExceptionHandlingUtilities.ReportingPublicKey();
-                builder.RegisterModule(new FeedbackReportingModule(() => rsaParameters));
-            }
-
-            var container = builder.Build();
-            return new ReportingExceptionProcessor(container.Resolve<IBuildReports>);
-        }
-        
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "We don't really care if we get a processor or not but we really don't want a crash here.")]
-        private static IExceptionProcessor CreateFileLoggingProcessor(string logFile)
-        {
-            try
-            {
-                var logDir = ReportingUtilities.ProductSpecificApplicationDataDirectory();
-                if (!Directory.Exists(logDir))
-                {
-                    Directory.CreateDirectory(logDir);
-                }
-
-                return new LogBasedExceptionProcessor(
-                    LoggerBuilder.ForFile(
-                        Path.Combine(logDir, logFile),
-                        new DebugLogTemplate(new NullConfiguration(), () => DateTimeOffset.Now)));
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "We don't really care if we get a processor or not but we really don't want a crash here.")]
-        private static IExceptionProcessor CreateEventLoggingProcessor(string eventLog)
-        {
-            try
-            {
-                return new LogBasedExceptionProcessor(
-                    LoggerBuilder.ForEventLog(
-                        eventLog,
-                        new DebugLogTemplate(new NullConfiguration(), () => DateTimeOffset.Now)));
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
         /// <summary>
         /// The collection of loggers that must be notified if an exception happens.
         /// </summary>
-        private readonly IExceptionProcessor[] m_Loggers;
-
-        /// <summary>
-        /// Indicates if the object has been disposed or not.
-        /// </summary>
-        private volatile bool m_WasDisposed;
+        private readonly ExceptionProcessor[] m_Loggers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExceptionHandler"/> class.
         /// </summary>
-        /// <param name="eventLogSource">The name of the event log source.</param>
-        /// <param name="errorLogFileName">The name of the file that contains the error log.</param>
-        public ExceptionHandler(string eventLogSource, string errorLogFileName)
+        /// <param name="exceptionProcessors">The collection of exception processors that will be used to log any unhandled exception.</param>
+        public ExceptionHandler(params ExceptionProcessor[] exceptionProcessors)
         {
-            var eventLog = !string.IsNullOrWhiteSpace(eventLogSource)
-                ? eventLogSource
-                : ApplicationEventLog;
-
-            var logFile = !string.IsNullOrWhiteSpace(errorLogFileName)
-                ? errorLogFileName
-                : DefaultErrorFileName;
-
-            // Pre allocate these so that we actually have them.
-            // Note that the loading of a processor may fail for many reasons
-            // so we guard against that and then we just ignore the result.
-            // This may lead to a case where we have no loggers ...
-            var loggers = new List<IExceptionProcessor>();
-            var toFile = CreateFileLoggingProcessor(logFile);
-            if (toFile != null)
-            {
-                loggers.Add(toFile);
-            }
-
-            var toEventLog = CreateEventLoggingProcessor(eventLog);
-            if (toEventLog != null)
-            {
-                loggers.Add(toEventLog);
-            }
-
-            var toReport = CreateReportBuildingProcessor();
-            if (toReport != null)
-            {
-                loggers.Add(toReport);
-            }
-
-            m_Loggers = loggers.ToArray();
+            m_Loggers = exceptionProcessors ?? new ExceptionProcessor[0];
         }
 
         /// <summary>
@@ -148,11 +41,6 @@ namespace Apollo.UI.Explorer.Nuclei.ExceptionHandling
             Justification = "We're doing exception handling here, we don't really want anything to escape.")]
         public void OnException(Exception exception, bool isApplicationTerminating)
         {
-            if (m_WasDisposed)
-            {
-                return;
-            }
-
             // Something has gone really wrong here. We need to be very careful
             // when we try to deal with this exception because:
             // - We might be here due to assembly loading issues, so we can't load
@@ -168,7 +56,7 @@ namespace Apollo.UI.Explorer.Nuclei.ExceptionHandling
             {
                 try
                 {
-                    logger.Process(exception);
+                    logger(exception);
                 }
                 catch (Exception)
                 {
@@ -176,31 +64,6 @@ namespace Apollo.UI.Explorer.Nuclei.ExceptionHandling
                 }
             }
         }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or
-        /// resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            if (m_WasDisposed)
-            {
-                return;
-            }
-
-            foreach (var logger in m_Loggers)
-            {
-                try
-                {
-                    logger.Dispose();
-                }
-                catch (ObjectDisposedException)
-                {
-                    throw;
-                }
-            }
-
-            m_WasDisposed = true;
-        }
     }
 }
+

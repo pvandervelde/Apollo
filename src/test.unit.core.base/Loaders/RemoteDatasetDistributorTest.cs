@@ -17,7 +17,6 @@ using Moq;
 using Nuclei.Communication;
 using Nuclei.Configuration;
 using Nuclei.Diagnostics;
-using Nuclei.Progress;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -296,7 +295,7 @@ namespace Apollo.Core.Base.Loaders
                     loaderEndpoint,
                     new[] { typeof(IDatasetLoaderCommands) }));
 
-            Action<int, IProgressMark, TimeSpan> progress = (p, m, t) => { };
+            Action<int, string> progress = (p, m) => { };
             var result = distributor.ImplementPlan(plan, new CancellationToken(), progress);
             result.Wait();
 

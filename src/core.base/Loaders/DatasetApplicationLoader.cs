@@ -11,6 +11,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Apollo.Utilities;
 using Nuclei;
 using Nuclei.Communication;
 using Nuclei.Diagnostics;
@@ -39,7 +40,7 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// The object that stores the application wide constants.
         /// </summary>
-        private readonly IApplicationConstants m_ApplicationConstants;
+        private readonly ApplicationConstants m_ApplicationConstants;
 
         /// <summary>
         /// The object that provides the diagnostics methods for the system.
@@ -57,7 +58,7 @@ namespace Apollo.Core.Base.Loaders
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
         /// </exception>
-        public DatasetApplicationLoader(IApplicationConstants applicationConstants, SystemDiagnostics diagnostics)
+        public DatasetApplicationLoader(ApplicationConstants applicationConstants, SystemDiagnostics diagnostics)
         {
             {
                 Lokad.Enforce.Argument(() => applicationConstants);

@@ -8,9 +8,9 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using System.Linq;
+using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
-using Nuclei;
 using Test.Mocks;
 
 namespace Apollo.UI.Wpf.Feedback
@@ -34,7 +34,7 @@ namespace Apollo.UI.Wpf.Feedback
                     .Returns(mockDirectory);
             }
 
-            var fileConstants = new Mock<IFileConstants>();
+            var fileConstants = new Mock<FileConstants>();
             {
                 fileConstants.Setup(f => f.CompanyCommonPath())
                     .Returns("A");

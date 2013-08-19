@@ -15,7 +15,6 @@ using Apollo.Utilities;
 using Autofac;
 using Microsoft.Practices.Prism.Events;
 using Nuclei.Diagnostics;
-using Nuclei.Progress;
 
 namespace Apollo.UI.Wpf.Views.Datasets
 {

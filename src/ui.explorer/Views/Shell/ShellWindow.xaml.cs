@@ -8,8 +8,8 @@ using System;
 using System.ComponentModel;
 using System.Windows.Shell;
 using Apollo.UI.Wpf.Commands;
+using Apollo.Utilities;
 using Lokad;
-using Nuclei.Progress;
 
 namespace Apollo.UI.Explorer.Views.Shell
 {

@@ -13,7 +13,6 @@ using Apollo.UI.Wpf.Profiling;
 using Apollo.Utilities;
 using Autofac;
 using NSarrac.Framework;
-using Nuclei;
 using Nuclei.Configuration;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Profiling;
@@ -46,7 +45,7 @@ namespace Apollo.UI.Wpf
 
                 builder.Register(c => new FeedbackReportCollector(
                         c.Resolve<IFileSystem>(),
-                        c.Resolve<IFileConstants>()))
+                        c.Resolve<FileConstants>()))
                    .As<ICollectFeedbackReports>();
 
                 builder.Register(c => new FeedbackReportTransmitter(

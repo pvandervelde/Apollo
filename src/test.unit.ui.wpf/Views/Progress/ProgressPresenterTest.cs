@@ -8,7 +8,6 @@ using System.Diagnostics.CodeAnalysis;
 using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
-using Nuclei.Progress;
 
 namespace Apollo.UI.Wpf.Views.Progress
 {

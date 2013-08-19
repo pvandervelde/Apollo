@@ -196,10 +196,10 @@
     <value>The object with history ID {0} does not exist in the current timeline.</value>
   </data>
   <data name="Exceptions_Messages_ProgressToLarge" xml:space="preserve">
-    <value>Progress needs to be {0}% or smaller.</value>
+    <value>Progress needs to be 100% or smaller but is {0}%.</value>
   </data>
   <data name="Exceptions_Messages_ProgressToSmall" xml:space="preserve">
-    <value>Progress needs to be {0}% or larger.</value>
+    <value>Progress needs to be 0% or larger but is {0}%.</value>
   </data>
   <data name="Exceptions_Messages_TheArrayIsShorterThanTheNumberOfItems_WithValues" xml:space="preserve">
     <value>The array to which the values should be copied is shorter ({0}) than the number of items to be copied ({1}).</value>

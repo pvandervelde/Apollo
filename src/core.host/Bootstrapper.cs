@@ -17,7 +17,6 @@ using Autofac;
 using Autofac.Core;
 using Lokad;
 using Nuclei.Diagnostics;
-using Nuclei.Progress;
 
 namespace Apollo.Core.Host
 {
@@ -121,11 +120,6 @@ namespace Apollo.Core.Host
         }
 
         /// <summary>
-        /// Tracks the progress of the bootstrapping process.
-        /// </summary>
-        private readonly ITrackProgress m_Progress;
-
-        /// <summary>
         /// The event that is used to signal the application that it is safe to shut down.
         /// </summary>
         private readonly AutoResetEvent m_ShutdownEvent;
@@ -133,24 +127,16 @@ namespace Apollo.Core.Host
         /// <summary>
         /// Initializes a new instance of the <see cref="Bootstrapper"/> class.
         /// </summary>
-        /// <param name="progress">The object used to track the progress of the bootstrapping process.</param>
         /// <param name="shutdownEvent">The event that signals to the application that it is safe to shut down.</param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="progress"/> is <see langword="null"/>.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="shutdownEvent"/> is <see langword="null" />.
         /// </exception>
-        protected Bootstrapper(
-            ITrackProgress progress,
-            AutoResetEvent shutdownEvent)
+        protected Bootstrapper(AutoResetEvent shutdownEvent)
         {
             {
-                Enforce.Argument(() => progress);
                 Enforce.Argument(() => shutdownEvent);
             }
 
-            m_Progress = progress;
             m_ShutdownEvent = shutdownEvent;
         }
 
@@ -159,19 +145,8 @@ namespace Apollo.Core.Host
         /// </summary>
         public void Load()
         {
-            // Mark beginning of startup.
-            {
-                m_Progress.Mark(new ApplicationStartingProgressMark());
-                m_Progress.StartTracking();
-            }
-
             // Load up the IOC container
             var container = CreateIocContainer(AdditionalCoreModules());
-
-            // Mark progress from UI to core
-            {
-                m_Progress.Mark(new CoreLoadingProgressMark());
-            }
 
             Action shutdownAction = () =>
                 {
@@ -193,18 +168,7 @@ namespace Apollo.Core.Host
             var userInterfaceService = CreateUserInterfaceService(container);
             kernel.Install(userInterfaceService);
 
-            // Mark progress to starting core
-            {
-                m_Progress.Mark(new CoreStartingProgressMark());
-            }
-
             kernel.Start();
-
-            // Indicate core startup is done
-            {
-                m_Progress.Mark(new ApplicationStartupFinishedProgressMark());
-                m_Progress.StopTracking();
-            }
         }
 
         /// <summary>
@@ -215,16 +179,6 @@ namespace Apollo.Core.Host
         /// <param name="container">The IOC container that contains all the references.</param>
         private void CreateService(Type serviceType, IKernel kernel, IContainer container)
         {
-            // Mark progress for service 'serviceType'
-            {
-                var markers = serviceType.GetCustomAttributes(typeof(ProgressMarkerTypeAttribute), false);
-                if (markers.Length == 1)
-                {
-                    var marker = Activator.CreateInstance(((ProgressMarkerTypeAttribute)markers[0]).MarkerType) as IProgressMark;
-                    m_Progress.Mark(marker);
-                }
-            }
-
             var service = container.Resolve(serviceType) as KernelService;
             kernel.Install(service);
         }

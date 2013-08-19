@@ -17,7 +17,6 @@ using Apollo.Core.Base.Loaders;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
-using Nuclei.Progress;
 
 namespace Apollo.Core.Host.Projects
 {
@@ -671,7 +670,7 @@ namespace Apollo.Core.Host.Projects
                     return;
                 }
 
-                RaiseOnProgressOfCurrentAction(0, new DatasetLoadingProgressMark(), TimeSpan.FromTicks(1));
+                RaiseOnProgressOfCurrentAction(0, Resources.Progress_LoadingDataset);
                 var task = selectedPlan.Plan.Accept(token, RaiseOnProgressOfCurrentAction);
                 task.ContinueWith(
                     t =>
@@ -916,12 +915,12 @@ namespace Apollo.Core.Host.Projects
         /// </summary>
         public event EventHandler<ProgressEventArgs> OnProgressOfCurrentAction;
 
-        private void RaiseOnProgressOfCurrentAction(int progress, IProgressMark mark, TimeSpan estimatedTime)
+        private void RaiseOnProgressOfCurrentAction(int progress, string mark)
         {
             var local = OnProgressOfCurrentAction;
             if (local != null)
             {
-                local(this, new ProgressEventArgs(progress, mark, estimatedTime));
+                local(this, new ProgressEventArgs(progress, mark));
             }
         }
 

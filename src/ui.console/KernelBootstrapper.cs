@@ -50,7 +50,7 @@ namespace Apollo.UI.Console
         public KernelBootstrapper(
             AutoResetEvent shutdownEvent,
             Action<IModule> onStartUserInterface)
-            : base(new FakeProgressTracker(), shutdownEvent)
+            : base(shutdownEvent)
         {
             {
                 Enforce.Argument(() => onStartUserInterface);
@@ -71,7 +71,7 @@ namespace Apollo.UI.Console
         {
             return new List<IModule> 
                 { 
-                    new UtilitiesModule(),
+                    new NucleiModule(),
                     new CommunicationModule(
                         new List<CommunicationSubject>
                             {

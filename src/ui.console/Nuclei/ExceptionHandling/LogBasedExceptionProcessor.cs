@@ -1,12 +1,11 @@
 //-----------------------------------------------------------------------
-// <copyright company="P. van der Velde">
-//     Copyright (c) P. van der Velde. All rights reserved.
+// <copyright company="Sherlock">
+//     Copyright 2013 Sherlock. Licensed under the Apache License, Version 2.0.
 // </copyright>
 //-----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Nuclei.Diagnostics.Logging;
 
@@ -15,7 +14,7 @@ namespace Apollo.UI.Console.Nuclei.ExceptionHandling
     /// <summary>
     /// An exception processor that writes the exception out to an <see cref="ILogger"/> object.
     /// </summary>
-    public sealed class LogBasedExceptionProcessor : IExceptionProcessor
+    internal sealed class LogBasedExceptionProcessor
     {
         /// <summary>
         /// The logger which is used to store the exception message.

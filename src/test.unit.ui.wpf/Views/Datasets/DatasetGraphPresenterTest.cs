@@ -16,7 +16,6 @@ using Apollo.Utilities;
 using MbUnit.Framework;
 using Microsoft.Practices.Prism.Events;
 using Moq;
-using Nuclei.Progress;
 
 namespace Apollo.UI.Wpf.Views.Datasets
 {

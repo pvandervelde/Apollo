@@ -9,8 +9,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
+using Apollo.UI.Console.Nuclei.AppDomains;
 using Apollo.UI.Console.Nuclei.ExceptionHandling;
-using Apollo.UI.Console.Utilities;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
 using Autofac;
@@ -23,7 +23,6 @@ using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 using Nuclei.Diagnostics.Profiling;
 using Nuclei.Diagnostics.Profiling.Reporting;
-using Nuclei.Progress;
 
 namespace Apollo.UI.Console.Nuclei
 {
@@ -31,7 +30,7 @@ namespace Apollo.UI.Console.Nuclei
     /// Handles the component registrations for the utilities part 
     /// of the core.
     /// </summary>
-    internal sealed class UtilitiesModule : Autofac.Module
+    internal sealed class NucleiModule : Autofac.Module
     {
         /// <summary>
         /// The default name for the error log.
@@ -48,7 +47,7 @@ namespace Apollo.UI.Console.Nuclei
         /// </summary>
         private const string PluginsDirectoryName = "plugins";
 
-        private static AppDomainResolutionPaths AppDomainResolutionPathsFor(IFileConstants fileConstants, AppDomainPaths paths)
+        private static AppDomainResolutionPaths AppDomainResolutionPathsFor(FileConstants fileConstants, AppDomainPaths paths)
         {
             var filePaths = new List<string>();
             var directoryPaths = new List<string>();
@@ -86,8 +85,7 @@ namespace Apollo.UI.Console.Nuclei
                     Func<string, AppDomainPaths, AppDomain> result = 
                         (name, paths) => AppDomainBuilder.Assemble(
                             name,
-                            AppDomainResolutionPathsFor(ctx.Resolve<IFileConstants>(), paths),
-                            ctx.Resolve<IFileConstants>());
+                            AppDomainResolutionPathsFor(ctx.Resolve<FileConstants>(), paths));
 
                     return result;
                 })
@@ -132,7 +130,7 @@ namespace Apollo.UI.Console.Nuclei
         private static void RegisterLoggers(ContainerBuilder builder)
         {
             builder.Register(c => LoggerBuilder.ForFile(
-                    Path.Combine(c.Resolve<IFileConstants>().LogPath(), DefaultInfoFileName),
+                    Path.Combine(c.Resolve<FileConstants>().LogPath(), DefaultInfoFileName),
                     new DebugLogTemplate(
                         c.Resolve<IConfiguration>(),
                         () => DateTimeOffset.Now)))
@@ -218,16 +216,14 @@ namespace Apollo.UI.Console.Nuclei
             {
                 // Utilities
                 builder.Register(c => new ApplicationConstants())
-                   .As<IApplicationConstants>()
-                   .As<ICompanyConstants>();
+                   .As<ApplicationConstants>();
 
-                builder.Register(c => new FileConstants(c.Resolve<IApplicationConstants>()))
-                    .As<IFileConstants>();
+                builder.Register(c => new FileConstants(c.Resolve<ApplicationConstants>()))
+                    .As<FileConstants>();
 
                 builder.Register((c, p) => new ExceptionHandler(
-                        p.Positional<string>(0),
-                        p.Positional<string>(1)))
-                    .As<IExceptionHandler>();
+                        p.TypedAs<ExceptionProcessor[]>()))
+                    .As<ExceptionHandler>();
 
                 builder.Register(c => new XmlConfiguration(
                         CommunicationConfigurationKeys.ToCollection(),

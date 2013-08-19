@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
-// <copyright company="P. van der Velde">
-//     Copyright (c) P. van der Velde. All rights reserved.
+// <copyright company="Nuclei">
+//     Copyright 2013 Nuclei. Licensed under the Apache License, Version 2.0.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -91,7 +91,7 @@ namespace Apollo.Core.Dataset.Nuclei.ExceptionHandling
                 body, 
                 (e) =>
                 {
-                    System.Diagnostics.Debugger.Log(10, "ExceptionFilter", "Saw unexpected exception: " + e.ToString());
+                    Debugger.Log(10, "ExceptionFilter", "Saw unexpected exception: " + e.ToString());
 
                     // Terminate the process with this fatal error
                     Environment.FailFast("Unexpected Exception", e);
@@ -247,3 +247,4 @@ namespace Apollo.Core.Dataset.Nuclei.ExceptionHandling
         }
     }
 }
+

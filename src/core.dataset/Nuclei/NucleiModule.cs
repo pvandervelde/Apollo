@@ -84,7 +84,7 @@ namespace Apollo.Core.Dataset.Nuclei
         {
             builder.Register(c => LoggerBuilder.ForFile(
                     Path.Combine(
-                        c.Resolve<IFileConstants>().LogPath(), 
+                        c.Resolve<FileConstants>().LogPath(), 
                         string.Format(
                             CultureInfo.InvariantCulture,
                             DefaultInfoFileName,
@@ -180,11 +180,10 @@ namespace Apollo.Core.Dataset.Nuclei
             {
                 // Utilities
                 builder.Register(c => new ApplicationConstants())
-                   .As<IApplicationConstants>()
-                   .As<ICompanyConstants>();
+                   .As<ApplicationConstants>();
 
-                builder.Register(c => new FileConstants(c.Resolve<IApplicationConstants>()))
-                    .As<IFileConstants>();
+                builder.Register(c => new FileConstants(c.Resolve<ApplicationConstants>()))
+                    .As<FileConstants>();
 
                 builder.Register(c => new XmlConfiguration(
                         CommunicationConfigurationKeys.ToCollection(), 

@@ -6,7 +6,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base;
-using Nuclei.Progress;
 
 namespace Apollo.Core.Dataset
 {
@@ -23,7 +22,7 @@ namespace Apollo.Core.Dataset
         /// <param name="currentlyProcessing">The action that is currently being processed.</param>
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
             Justification = "This method is used to raise an event, hence the naming.")]
-        void RaiseOnProgress(int progress, IProgressMark currentlyProcessing);
+        void RaiseOnProgress(int progress, string currentlyProcessing);
 
         /// <summary>
         /// Raises the <see cref="IDatasetApplicationNotifications.OnSwitchToEditingMode"/> event.

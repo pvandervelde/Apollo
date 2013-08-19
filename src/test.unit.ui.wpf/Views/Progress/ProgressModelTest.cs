@@ -7,9 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
-using Nuclei.Progress;
 
 namespace Apollo.UI.Wpf.Views.Progress
 {
@@ -71,7 +71,7 @@ namespace Apollo.UI.Wpf.Views.Progress
             };
 
             var progress = 50;
-            collector.Raise(c => c.OnProgress += null, new ProgressEventArgs(progress, new IndeterminateProgressMark()));
+            collector.Raise(c => c.OnProgress += null, new ProgressEventArgs(progress, "a"));
 
             Assert.AreEqual(progress / 100.0, model.Progress);
             Assert.AreEqual(1, propertyChangedWasRaised);

@@ -5,14 +5,16 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Reflection;
+using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Shell;
 using Apollo.UI.Explorer.Nuclei.ExceptionHandling;
+using Apollo.Utilities;
 using Autofac;
 using Autofac.Core;
-using Nuclei.Progress;
+using Nuclei.Configuration;
+using Nuclei.Diagnostics.Logging;
 
 namespace Apollo.UI.Explorer
 {
@@ -51,13 +53,20 @@ namespace Apollo.UI.Explorer
                     app.InitializeComponent();
                     app.Run();
 
-                    functionReturnResult = 0;
+                    functionReturnResult = NormalApplicationExitCode;
                 };
 
+            var processor = new LogBasedExceptionProcessor(
+                LoggerBuilder.ForFile(
+                    Path.Combine(new FileConstants(new ApplicationConstants()).LogPath(), DefaultErrorFileName),
+                    new DebugLogTemplate(new NullConfiguration(), () => DateTimeOffset.Now)));
             var result = TopLevelExceptionGuard.RunGuarded(
-                applicationAction, 
-                Assembly.GetExecutingAssembly().GetName().Name, 
-                DefaultErrorFileName);
+                applicationAction,
+                new ExceptionProcessor[]
+                    {
+                        processor.Process,
+                    });
+
             return (result == GuardResult.Failure) ? UnhandledExceptionApplicationExitCode : functionReturnResult;
         }
 
@@ -91,15 +100,7 @@ namespace Apollo.UI.Explorer
         /// </summary>
         private void LoadKernel()
         {
-            // At a later stage we need to clean this up.
-            // there are two constants and a DI reference.
-            var progressTracker = new TimeBasedProgressTracker(
-                new ProgressTimer(new TimeSpan(0, 0, 0, 0, 500)),
-                -1,
-                new StartupTimeStorage());
-
             var bootstrapper = new KernelBootstrapper(
-                progressTracker,
                 m_ShutdownEvent,
                 module => LoadUserInterface(module));
 

@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Nuclei.Progress;
+using Apollo.Utilities;
 
 namespace Apollo.Core.Host
 {
@@ -36,7 +36,7 @@ namespace Apollo.Core.Host
         /// </summary>
         /// <param name="progress">The progress percentage which ranges between 0 and 100.</param>
         /// <param name="currentAction">The current action which is being processed.</param>
-        protected void RaiseOnStartupProgress(int progress, IProgressMark currentAction)
+        protected void RaiseOnStartupProgress(int progress, string currentAction)
         {
             EventHandler<ProgressEventArgs> local = OnStartupProgress;
             if (local != null)

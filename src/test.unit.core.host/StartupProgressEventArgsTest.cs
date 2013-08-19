@@ -5,9 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Utilities;
 using MbUnit.Framework;
-using Moq;
-using Nuclei.Progress;
 
 namespace Apollo.Core.Host
 {
@@ -20,11 +19,11 @@ namespace Apollo.Core.Host
         public void Create()
         {
             int progress = 10;
-            var progressMock = new Mock<IProgressMark>();
+            var text = "a";
 
-            var args = new ProgressEventArgs(progress, progressMock.Object);
-            Assert.AreEqual<int>(progress, args.Progress);
-            Assert.AreEqual<IProgressMark>(progressMock.Object, args.CurrentlyProcessing);
+            var args = new ProgressEventArgs(progress, text);
+            Assert.AreEqual(progress, args.Progress);
+            Assert.AreEqual(text, args.Description);
         }
     }
 }
