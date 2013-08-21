@@ -60,16 +60,6 @@
                       KeyPath="yes" />
             </Component>
             
-            <!-- Microsoft.Dynamic.dll -->
-            <Component Id="C.Microsoft.Dynamic.dll"
-                       Guid="{3B32CCAB-BF89-4027-AD01-EB5374AAC557}">
-                <File Id="File.Microsoft.Dynamic.dll"
-                      Name="Microsoft.Dynamic.dll"
-                      DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Microsoft.Dynamic.dll"
-                      KeyPath="yes" />
-            </Component>
-
             <!-- Microsoft.Practices.Prism.dll -->
             <Component Id="C.Microsoft.Practices.Prism.dll"
                        Guid="{5BD306B0-29E2-4641-A057-2AE3770F8B2B}">
@@ -149,7 +139,6 @@
             <ComponentRef Id="C.GreyableImage.dll" />
             <ComponentRef Id="C.ICSharpCode.AvalonEdit.dll" />
 
-            <ComponentRef Id="C.Microsoft.Dynamic.dll" />
             <ComponentRef Id="C.Microsoft.Practices.Prism.dll" />
             <ComponentRef Id="C.Microsoft.Practices.Prism.Interactivity.dll" />
             <ComponentRef Id="C.Microsoft.Practices.ServiceLocation.dll" />
@@ -158,9 +147,6 @@
             <ComponentRef Id="C.PixelLab.Wpf.dll" />
             <ComponentRef Id="C.WPFExtensions.dll" />
             <ComponentRef Id="C.WPFLocalizeExtension.dll" />
-
-            <ComponentGroupRef Id="CGroup.Apollo.Base" />
-            <ComponentGroupRef Id="CGroup.Apollo.Core.Host" />
         </ComponentGroup>
     </Fragment>
 </Wix>

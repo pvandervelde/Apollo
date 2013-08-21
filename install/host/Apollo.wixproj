@@ -18,6 +18,7 @@
     <Compile Include="Apollo.UI.Console.wxs" />
     <Compile Include="Apollo.UI.Explorer.wxs" />
     <Compile Include="Apollo.Core.wxs" />
+    <Compile Include="Apollo.UI.wxs" />
     <Compile Include="Product.wxs" />
     <Compile Include="Product.Generated.wxs">
       <DependentUpon>Product.wxs</DependentUpon>

@@ -44,17 +44,6 @@
                       Source="$(var.Apollo_BinFolder)\Apollo.Core.Dataset.exe.config"
                       KeyPath="yes" />
             </Component>
-
-            <!-- Mono.Options.dll -->
-            <Component Id="C.Mono.Options.dll"
-                       Guid="{B898F10A-8EE2-47D3-859C-279B5AD8A074}">
-                <File Id="File.Mono.Options.dll"
-                      Name="Mono.Options.dll"
-                      DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Mono.Options.dll"
-                      KeyPath="yes" />
-            </Component>
-
             
         </DirectoryRef>
 
@@ -62,7 +51,6 @@
         <ComponentGroup Id="CGroup.Apollo.Core.Dataset">
             <ComponentRef Id="C.Apollo.Core.Dataset.Exe" />
             <ComponentRef Id="C.Apollo.Core.Dataset.Exe.Config" />
-            <ComponentRef Id="C.Mono.Options.dll" />
 
             <ComponentGroupRef Id="CGroup.Apollo.Base" />
         </ComponentGroup>

@@ -81,7 +81,7 @@
                     KeyPath="yes" />
             </Component>
 
-            <!-- Utilities.dll -->
+            <!-- Nuclei.dll -->
             <Component Id="C.Nuclei.dll"
                        Guid="{852E1980-B41A-48BF-B36C-29D43AEDA26E}">
                 <File Id="File.Nuclei.dll"
@@ -91,7 +91,7 @@
                       KeyPath="yes" />
             </Component>
             
-            <!-- Utilities.Diagnostics.dll -->
+            <!-- Nuclei.Diagnostics.dll -->
             <Component Id="C.Nuclei.Diagnostics.dll"
                        Guid="{09724582-A966-4275-991B-2961B8A9678E}">
                 <File Id="File.Nuclei.Diagnostics.dll"
@@ -100,8 +100,18 @@
                       Source="$(var.Apollo_BinFolder)\Nuclei.Diagnostics.dll"
                       KeyPath="yes" />
             </Component>
-            
-            <!-- Utilities.Communication.dll -->
+
+            <!-- Nuclei.Configuration.dll -->
+            <Component Id="C.Nuclei.Configuration.dll"
+                       Guid="{68A6A43B-65DF-4990-8911-9031F077B725}">
+                <File Id="File.Nuclei.Configuration.dll"
+                      Name="Nuclei.Configuration.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Nuclei.Configuration.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- Nuclei.Communication.dll -->
             <Component Id="C.Nuclei.Communication.dll"
                        Guid="{50726AD8-D225-4B21-950E-13990B5FE583}">
                 <File Id="File.Nuclei.Communication.dll"
@@ -131,13 +141,53 @@
                       KeyPath="yes" />
             </Component>
 
-            <!-- System.Reactive.dll -->
-            <Component Id="C.System.Reactive.dll"
-                       Guid="{022520DB-88C9-4509-B692-F9FA2C736A1E}">
-                <File Id="File.System.Reactive.dll"
-                      Name="System.Reactive.dll"
+            <!-- System.IO.Abstractions.dll -->
+            <Component Id="C.System.IO.Abstractions.dll"
+                       Guid="{DC444B3A-094B-47E3-B582-F99A6346D614}">
+                <File Id="File.System.IO.Abstractions.dll"
+                      Name="System.IO.Abstractions.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\System.Reactive.dll"
+                      Source="$(var.Apollo_BinFolder)\System.IO.Abstractions.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- System.Reactive.Core.dll -->
+            <Component Id="C.System.Reactive.Core.dll"
+                       Guid="{022520DB-88C9-4509-B692-F9FA2C736A1E}">
+                <File Id="File.System.Reactive.Core.dll"
+                      Name="System.Reactive.Core.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\System.Reactive.Core.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- System.Reactive.Interfaces.dll -->
+            <Component Id="C.System.Reactive.Interfaces.dll"
+                       Guid="{3CE9D734-39D0-4135-958D-E595ABF3F25B}">
+                <File Id="File.System.Reactive.Interfaces.dll"
+                      Name="System.Reactive.Interfaces.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\System.Reactive.Interfaces.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- System.Reactive.Linq.dll -->
+            <Component Id="C.System.Reactive.Linq.dll"
+                       Guid="{BF4AC7EE-E99D-4958-8A78-75ABE8668676}">
+                <File Id="File.System.Reactive.Linq.dll"
+                      Name="System.Reactive.Linq.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\System.Reactive.Linq.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- System.Reactive.PlatformServices.dll -->
+            <Component Id="C.System.Reactive.PlatformServices.dll"
+                       Guid="{38961179-88F6-4114-9212-C9398619A6E2}">
+                <File Id="File.System.Reactive.PlatformServices.dll"
+                      Name="System.Reactive.PlatformServices.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\System.Reactive.PlatformServices.dll"
                       KeyPath="yes" />
             </Component>
         </DirectoryRef>
@@ -164,9 +214,14 @@
             <ComponentRef Id="C.Nuclei.dll" />
             <ComponentRef Id="C.Nuclei.Diagnostics.dll" />
             <ComponentRef Id="C.Nuclei.Communication.dll" />
+            <ComponentRef Id="C.Nuclei.Configuration.dll" />
             <ComponentRef Id="C.NSarrac.Framework.dll" />
             <ComponentRef Id="C.QuickGraph.dll" />
-            <ComponentRef Id="C.System.Reactive.dll" />
+            <ComponentRef Id="C.System.IO.Abstractions.dll" />
+            <ComponentRef Id="C.System.Reactive.Core.dll" />
+            <ComponentRef Id="C.System.Reactive.Interfaces.dll" />
+            <ComponentRef Id="C.System.Reactive.Linq.dll" />
+            <ComponentRef Id="C.System.Reactive.PlatformServices.dll" />
         </ComponentGroup>
     </Fragment>
 </Wix>

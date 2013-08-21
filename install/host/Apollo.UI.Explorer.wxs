@@ -64,6 +64,7 @@
                  Absent="allow"
                  Level="10">
             <FeatureRef Id="F.Apollo.UI.Explorer.Exe" />
+            <ComponentGroupRef Id="CGroup.Apollo.Ui" />
             <ComponentGroupRef Id="CGroup.Apollo.Ui.Wpf" />
         </Feature>
     </Fragment>

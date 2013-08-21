@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <?include includes.wxi ?>
+    <?include $(var.SolutionDir)..\build\temp\Dependencies.wxi ?>
+
+    <Fragment>
+        <!-- 
+            Define all the files that will be installed in the program files folder.
+            The user may decide to install in a different location which will be
+            reflected in a change to the value of the INSTALLLOCATION directory.
+        -->
+        <DirectoryRef Id="INSTALLLOCATION">
+            <!-- Microsoft.Dynamic.dll -->
+            <Component Id="C.Microsoft.Dynamic.dll"
+                       Guid="{3B32CCAB-BF89-4027-AD01-EB5374AAC557}">
+                <File Id="File.Microsoft.Dynamic.dll"
+                      Name="Microsoft.Dynamic.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Microsoft.Dynamic.dll"
+                      KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+
+        <ComponentGroup Id="CGroup.Apollo.Ui">
+            <ComponentRef Id="C.Microsoft.Dynamic.dll" />
+
+            <ComponentGroupRef Id="CGroup.Apollo.Base" />
+            <ComponentGroupRef Id="CGroup.Apollo.Core.Host" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

@@ -64,7 +64,7 @@
                  Absent="allow"
                  Level="10">
             <FeatureRef Id="F.Apollo.UI.Console.Exe" />
-            <ComponentGroupRef Id="CGroup.Apollo.Ui.Wpf" />
+            <ComponentGroupRef Id="CGroup.Apollo.Ui" />
         </Feature>
     </Fragment>
 </Wix>

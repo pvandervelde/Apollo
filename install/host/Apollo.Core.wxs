@@ -20,6 +20,16 @@
                       KeyPath="yes" />
             </Component>
 
+            <!-- Apollo.Core.Scripting.dll -->
+            <Component Id="C.Apollo.Core.Scripting.dll"
+                       Guid="{285914BA-8DFF-4F22-AA76-936B8AF8C5B7}">
+                <File Id="File.Apollo.Core.Scripting.dll"
+                      Name="Apollo.Core.Scripting.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Apollo.Core.Scripting.dll"
+                      KeyPath="yes" />
+            </Component>
+
             <!-- IronPython.dll -->
             <Component Id="C.IronPython.dll"
                        Guid="{76AC7D70-BFA5-4F54-9BC7-97859B251F3B}">
@@ -43,6 +53,8 @@
 
         <ComponentGroup Id="CGroup.Apollo.Core.Host">
             <ComponentRef Id="C.Apollo.Core.Host.dll" />
+            <ComponentRef Id="C.Apollo.Core.Scripting.dll" />
+            
             <ComponentRef Id="C.IronPython.dll" />
             <ComponentRef Id="C.Microsoft.Scripting.dll" />
 
