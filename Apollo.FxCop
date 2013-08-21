@@ -4,8 +4,8 @@
   <SharedProject>True</SharedProject>
   <Stylesheet Apply="False">$(FxCopDir)\Xml\FxCopReport.xsl</Stylesheet>
   <SaveMessages>
-   <Project Status="Active, Excluded" NewOnly="False" />
-   <Report Status="Active" NewOnly="False" />
+   <Project Status="None" NewOnly="False" />
+   <Report Status="None" NewOnly="False" />
   </SaveMessages>
   <ProjectFile Compress="True" DefaultTargetCheck="True" DefaultRuleCheck="True" SaveByRuleGroup="" Deterministic="True" />
   <EnableMultithreadedLoad>True</EnableMultithreadedLoad>
@@ -15,12 +15,17 @@
   <RuleExceptionsThreshold>1</RuleExceptionsThreshold>
   <Spelling Locale="en-US" />
   <OverrideRuleVisibilities>False</OverrideRuleVisibilities>
-  <CustomDictionaries SearchFxCopDir="False" SearchUserProfile="True" SearchProjectDir="True" />
+  <CustomDictionaries SearchFxCopDir="True" SearchUserProfile="True" SearchProjectDir="True" />
   <SearchGlobalAssemblyCache>True</SearchGlobalAssemblyCache>
   <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
   <IgnoreGeneratedCode>True</IgnoreGeneratedCode>
  </ProjectOptions>
  <Targets>
+  <AssemblyReferenceDirectories>
+   <Directory>C:/Program Files (x86)/Reference Assemblies/Microsoft/WindowsPowerShell/3.0/</Directory>
+   <Directory>C:/Program Files/Microsoft Silverlight/5.1.20513.0/</Directory>
+   <Directory>$(ProjectDir)/packages/Microsoft.Net.Http.2.0.20710.0/lib/net40/</Directory>
+  </AssemblyReferenceDirectories>
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Base.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Dataset.exe" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Extensions.dll" Analyze="True" AnalyzeAllChildren="True" />
@@ -104,192 +109,5 @@
   <Groups />
   <Settings />
  </Rules>
- <FxCopReport Version="10.0">
-  <Targets>
-   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Base.dll">
-    <Modules>
-     <Module Name="apollo.core.base.dll">
-      <Namespaces>
-       <Namespace Name="Apollo.Core.Base.Plugins">
-        <Types>
-         <Type Name="GroupCompositionId">
-          <Members>
-           <Member Name="#s_InvalidId">
-            <Messages>
-             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2013-05-07 12:40:00Z">
-              <Issue>
-               <Item>'GroupCompositionId.s_InvalidId'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-        </Types>
-       </Namespace>
-       <Namespace Name="Apollo.Core.Base.Scheduling">
-        <Types>
-         <Type Name="IScheduleDependency">
-          <Messages>
-           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2012-12-09 01:59:46Z">
-            <Issue>
-             <Item>'IScheduleDependency'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
-        </Types>
-       </Namespace>
-      </Namespaces>
-     </Module>
-    </Modules>
-   </Target>
-   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Dataset.exe">
-    <Modules>
-     <Module Name="apollo.core.dataset.exe">
-      <Namespaces>
-       <Namespace Name="Apollo.Core.Dataset.Plugins">
-        <Types>
-         <Type Name="PartInstanceId">
-          <Members>
-           <Member Name="#s_InvalidId">
-            <Messages>
-             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2013-05-07 12:40:00Z">
-              <Issue>
-               <Item>'PartInstanceId.s_InvalidId'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-        </Types>
-       </Namespace>
-      </Namespaces>
-     </Module>
-    </Modules>
-   </Target>
-   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Extensions.dll">
-    <Modules>
-     <Module Name="apollo.core.extensions.dll">
-      <Namespaces>
-       <Namespace Name="Apollo.Core.Extensions.Scheduling">
-        <Types>
-         <Type Name="IScheduleVariable">
-          <Messages>
-           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2012-07-21 06:19:10Z">
-            <Issue>
-             <Item>'IScheduleVariable'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
-        </Types>
-       </Namespace>
-      </Namespaces>
-     </Module>
-    </Modules>
-   </Target>
-   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Host.dll">
-    <Modules>
-     <Module Name="apollo.core.host.dll">
-      <Namespaces>
-       <Namespace Name="Apollo.Core.Host.Projects">
-        <Types>
-         <Type Name="Project">
-          <Members>
-           <Member Name="#RestoreFromStore(Apollo.Utilities.IPersistenceInformation)">
-            <Messages>
-             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2011-12-18 02:32:33Z" FixCategory="NonBreaking">
-              <Issue>
-               <Item>'Project.RestoreFromStore(IPersistenceInformation)'</Item>
-              </Issue>
-             </Message>
-             <Message Id="persistenceInfo" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2011-12-18 02:32:33Z" FixCategory="NonBreaking">
-              <Issue>
-               <Item>'persistenceInfo'</Item>
-               <Item>'Project.RestoreFromStore(IPersistenceInformation)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-        </Types>
-       </Namespace>
-      </Namespaces>
-     </Module>
-    </Modules>
-   </Target>
-   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.UI.Console.exe">
-    <Modules>
-     <Module Name="apollo.ui.console.exe">
-      <Namespaces>
-       <Namespace Name="Apollo.UI.Console">
-        <Types>
-         <Type Name="FakeProgressTracker">
-          <Members>
-           <Member Name="#RaiseOnMarkAdded(Nuclei.Progress.IProgressMark)">
-            <Messages>
-             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2013-05-06 07:13:53Z">
-              <Issue>
-               <Item>'FakeProgressTracker.RaiseOnMarkAdded(IProgressMark)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#RaiseOnProgress(System.Int32,Nuclei.Progress.IProgressMark)">
-            <Messages>
-             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2013-05-06 07:13:53Z">
-              <Issue>
-               <Item>'FakeProgressTracker.RaiseOnProgress(int, IProgressMark)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#RaiseOnStartProgress()">
-            <Messages>
-             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2013-05-06 07:13:53Z">
-              <Issue>
-               <Item>'FakeProgressTracker.RaiseOnStartProgress()'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#RaiseOnStopProgress()">
-            <Messages>
-             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2013-05-06 07:13:53Z">
-              <Issue>
-               <Item>'FakeProgressTracker.RaiseOnStopProgress()'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-        </Types>
-       </Namespace>
-      </Namespaces>
-     </Module>
-    </Modules>
-   </Target>
-  </Targets>
-  <Rules>
-   <Rule TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040">
-    <Resolution Name="Default">Define a custom attribute to replace {0}.</Resolution>
-   </Rule>
-   <Rule TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811">
-    <Resolution Name="Default">{0} appears to have no upstream public or protected callers.</Resolution>
-   </Rule>
-   <Rule TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823">
-    <Resolution Name="Default">It appears that field {0} is never used or is only ever assigned to. Use this field or remove it.</Resolution>
-   </Rule>
-   <Rule TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822">
-    <Resolution Name="Default">The 'this' parameter (or 'Me' in Visual Basic) of {0} is never used. Mark the member as static (or Shared in Visual Basic) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Resolution>
-   </Rule>
-   <Rule TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801">
-    <Resolution Name="Default">Parameter {0} of {1} is never used. Remove the parameter or use it in the method body.</Resolution>
-   </Rule>
-  </Rules>
- </FxCopReport>
+ <FxCopReport Version="10.0" />
 </FxCopProject>
