@@ -3,10 +3,6 @@
          DefaultTargets="Run"
          xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <!-- Build flags -->
-        <ShouldClean>true</ShouldClean>
-        <ShouldCleanPackages>false</ShouldCleanPackages>
-        
         <!-- Build configuration -->
         <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
         <Platform Condition=" '$(Platform)' == ''">Any CPU</Platform>
@@ -48,25 +44,33 @@
         <Message Text="Preparing workspace ..." />
     </Target>
     
+    <Target Name="Run" DependsOnTargets="_DisplayInfo;_FindInstalledSandcastle;_BuildDocumentationWithInstalledSandcastle;_BuildDocumentationWithLocalSandcastle">
+    </Target>
+            
+    <!-- Display info -->
+    <Target Name="_DisplayInfo">
+        <Message Text="Building API documentation ..." />
+    </Target>
+    
     <PropertyGroup>
-        <FileSandcastleExe>fxReflection.proj</FileSandcastleExe>
-        <FileSandcastleHelpFileBuilderExe>SandcastleBuilderGUI.exe</FileSandcastleHelpFileBuilderExe>
-        <FileTemplateSandcastle>$(DirTemplates)\sandcastle.shfbproj.in</FileTemplateSandcastle>
-        <FileGeneratedSandcastle>$(DirBuildTemp)\apollo.shfbproj</FileGeneratedSandcastle>
+        <DirSandcastle></DirSandcastle>
+        <DirSandcastleHelpFileBuilder></DirSandcastleHelpFileBuilder>
     </PropertyGroup>
-    <Target Name="Run" DependsOnTargets="_DisplayInfo">
-        <MakeDir Directories="$(DirBuildTemp)" Condition="!Exists('$(DirBuildTemp)')" />
-        <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
-        <MakeDir Directories="$(DirBuildDoc)" Condition="!Exists('$(DirBuildDoc)')" />
-        
-        <FindToolDirectoryFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileSandcastleExe)">
-          <Output TaskParameter="Path" PropertyName="DirSandcastle" />
-        </FindToolDirectoryFromPackages>
-        
-        <FindToolDirectoryFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileSandcastleHelpFileBuilderExe)">
-          <Output TaskParameter="Path" PropertyName="DirSandcastleHelpFileBuilder" />
-        </FindToolDirectoryFromPackages>
-        
+    <Target Name="_FindInstalledSandcastle" >
+        <CreateProperty Value="$(DXROOT)" Condition="Exists('$(DXROOT)')">
+            <Output TaskParameter="Value" PropertyName="DirSandcastle" />
+        </CreateProperty>
+
+        <CreateProperty Value="$(SHFBROOT)" Condition="Exists('$(SHFBROOT)')">
+            <Output TaskParameter="Value" PropertyName="DirSandcastleHelpFileBuilder" />
+        </CreateProperty>
+    </Target>
+
+    <PropertyGroup>
+        <FileTemplateSandcastle>$(DirTemplates)\sandcastle.shfbproj.in</FileTemplateSandcastle>
+        <FileGeneratedSandcastle>$(DirBuildTemp)\sandcastle.shfbproj</FileGeneratedSandcastle>
+    </PropertyGroup>
+    <Target Name="_GenerateTemplate" DependsOnTargets="_DisplayInfo;_FindInstalledSandcastle">
         <ItemGroup>
             <SandcastleTokens Include="DirShfbRoot">
                 <ReplacementValue>$(DirSandcastleHelpFileBuilder)</ReplacementValue>
@@ -83,14 +87,48 @@
             <SandcastleTokens Include="DirBin">
                 <ReplacementValue>$(DirBuildBin)</ReplacementValue>
             </SandcastleTokens>
+            <SandcastleTokens Include="Version">
+                <ReplacementValue>$(VersionMajor).$(VersionMinor).$(VersionBuild).$(BuildNumber)</ReplacementValue>
+            </SandcastleTokens>
         </ItemGroup>
         <TemplateFile Template="$(FileTemplateSandcastle)" OutputFileName="$(FileGeneratedSandcastle)" Tokens="@(SandcastleTokens)" />
+    </Target>
+    
+    <Target Name="_BuildDocumentationWithInstalledSandcastle" DependsOnTargets="_GenerateTemplate" Condition="Exists('$(DirSandcastle)')">
+        <Message Text="DirSandcastle = $(DirSandcastle)" />
+        <Message Text="DirSandcastleHelpFileBuilder = $(DirSandcastleHelpFileBuilder)" />
+        
+        <!-- Run sandcastle via msbuild -->
+        <Exec Command="&quot;$(MSBuildToolsPath)/msbuild.exe&quot; &quot;$(FileGeneratedSandcastle)&quot;" />
+    </Target>
+    
+    <PropertyGroup>
+        <FileSandcastleExe>BuildReflectionData.proj</FileSandcastleExe>
+        <FileSandcastleHelpFileBuilderExe>SandcastleBuilderGUI.exe</FileSandcastleHelpFileBuilderExe>
+    </PropertyGroup>
+    <Target Name="_BuildDocumentationWithLocalSandcastle" DependsOnTargets="_GenerateTemplate" Condition="!Exists('$(DirSandcastle)')" >
+        <FindToolDirectoryFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileSandcastleExe)" Condition=" '$(DirSandcastle)' == '' ">
+          <Output TaskParameter="Path" PropertyName="DirSandcastle" />
+        </FindToolDirectoryFromPackages>
+
+        <!-- 
+            We're coming up one directory too deep (i.e. getting packages\sandcastle.1.2.3.4\data 
+        -->
+        <PropertyGroup>
+            <DirSandcastle Condition=" '$(DirSandcastle)' != '' ">$([System.IO.Path]::GetDirectoryName($(DirSandcastle)))</DirSandcastle>
+        </PropertyGroup>
+        
+        <FindToolDirectoryFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileSandcastleHelpFileBuilderExe)">
+          <Output TaskParameter="Path" PropertyName="DirSandcastleHelpFileBuilder" />
+        </FindToolDirectoryFromPackages>
+        
+        <Message Text="DirSandcastle = $(DirSandcastle)" />
+        <Message Text="DirSandcastleHelpFileBuilder = $(DirSandcastleHelpFileBuilder)" />
         
         <!-- 
-            This doesn't stick because:
-            a) MsBuild never reloads the Environment variables and the msbuild target
-               runs the same instance of msbuild
-            b) They're only set for the current process so ....
+            Set an environment variable for the sandcastle process. Note that MsBuild itself won't be able to pick this 
+            variable up because MsBuild never reloads the Environment variables and the msbuild target
+            runs the same instance of msbuild
         -->
         <SetEnvironmentVariable Name="DXROOT" Value="$(DirSandcastle)" />
         
@@ -99,7 +137,7 @@
             Exec task because we need a child process so that the change in environment 
             variables is picked up (MsBuild doesn't listen for changes in environment variables)
         -->
-        <Exec Command="&quot;$(MSBuildToolsPath)/msbuild.exe&quot; &quot;$(DirSandcastle)\fxReflection.proj&quot;" Condition="!Exists('$(DirSandcastle)\Data')" />
+        <Exec Command="&quot;$(MSBuildToolsPath)/msbuild.exe&quot; &quot;$(DirSandcastle)\Data\BuildReflectionData.proj&quot; /p:ToolsRoot=$(DirSandcastle)" Condition="!Exists('$(DirSandcastle)\Data\Reflection')" />
         
         <!-- Run sandcastle via msbuild -->
         <Exec Command="&quot;$(MSBuildToolsPath)/msbuild.exe&quot; &quot;$(FileGeneratedSandcastle)&quot; /p:SHFBROOT=$(DirSandcastleHelpFileBuilder)" />
