@@ -21,7 +21,7 @@ namespace Apollo.Utilities.History
         Justification = "Unit tests do not need documentation.")]
     public sealed class HistoryIdTest : EqualityContractVerifierTest
     {
-        private sealed class EndpointIdEqualityContractVerifier : EqualityContractVerifier<HistoryId>
+        private sealed class HistoryIdEqualityContractVerifier : EqualityContractVerifier<HistoryId>
         {
             private readonly HistoryId m_First = new HistoryId(1);
 
@@ -57,7 +57,7 @@ namespace Apollo.Utilities.History
             }
         }
 
-        private sealed class EndpointIdHashcodeContractVerfier : HashcodeContractVerifier
+        private sealed class HistoryIdHashcodeContractVerfier : HashcodeContractVerifier
         {
             private readonly IEnumerable<HistoryId> m_DistinctInstances
                 = new List<HistoryId> 
@@ -78,9 +78,9 @@ namespace Apollo.Utilities.History
             }
         }
 
-        private readonly EndpointIdHashcodeContractVerfier m_HashcodeVerifier = new EndpointIdHashcodeContractVerfier();
+        private readonly HistoryIdHashcodeContractVerfier m_HashcodeVerifier = new HistoryIdHashcodeContractVerfier();
 
-        private readonly EndpointIdEqualityContractVerifier m_EqualityVerifier = new EndpointIdEqualityContractVerifier();
+        private readonly HistoryIdEqualityContractVerifier m_EqualityVerifier = new HistoryIdEqualityContractVerifier();
 
         protected override HashcodeContractVerifier HashContract
         {

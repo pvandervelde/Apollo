@@ -21,7 +21,7 @@ namespace Apollo.Utilities.Commands
             Justification = "Unit tests do not need documentation.")]
     public sealed class CommandIdTest : EqualityContractVerifierTest
     {
-        private sealed class EndpointIdEqualityContractVerifier : EqualityContractVerifier<CommandId>
+        private sealed class CommandIdEqualityContractVerifier : EqualityContractVerifier<CommandId>
         {
             private readonly CommandId m_First = new CommandId("a");
 
@@ -57,7 +57,7 @@ namespace Apollo.Utilities.Commands
             }
         }
 
-        private sealed class EndpointIdHashcodeContractVerfier : HashcodeContractVerifier
+        private sealed class CommandIdHashcodeContractVerfier : HashcodeContractVerifier
         {
             private readonly IEnumerable<CommandId> m_DistinctInstances
                 = new List<CommandId> 
@@ -79,9 +79,9 @@ namespace Apollo.Utilities.Commands
             }
         }
 
-        private readonly EndpointIdHashcodeContractVerfier m_HashcodeVerifier = new EndpointIdHashcodeContractVerfier();
+        private readonly CommandIdHashcodeContractVerfier m_HashcodeVerifier = new CommandIdHashcodeContractVerfier();
 
-        private readonly EndpointIdEqualityContractVerifier m_EqualityVerifier = new EndpointIdEqualityContractVerifier();
+        private readonly CommandIdEqualityContractVerifier m_EqualityVerifier = new CommandIdEqualityContractVerifier();
 
         protected override HashcodeContractVerifier HashContract
         {

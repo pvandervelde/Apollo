@@ -18,7 +18,7 @@ namespace Apollo.Utilities.History
         Justification = "Unit tests do not need documentation.")]
     public sealed class TimeMarkerTest : EqualityContractVerifierTest
     {
-        private sealed class EndpointIdEqualityContractVerifier : EqualityContractVerifier<TimeMarker>
+        private sealed class TimeMarkerEqualityContractVerifier : EqualityContractVerifier<TimeMarker>
         {
             private readonly TimeMarker m_First = new TimeMarker(1);
 
@@ -54,7 +54,7 @@ namespace Apollo.Utilities.History
             }
         }
 
-        private sealed class EndpointIdHashcodeContractVerfier : HashcodeContractVerifier
+        private sealed class TimeMarkerHashcodeContractVerfier : HashcodeContractVerifier
         {
             private readonly IEnumerable<TimeMarker> m_DistinctInstances
                 = new List<TimeMarker> 
@@ -75,9 +75,9 @@ namespace Apollo.Utilities.History
             }
         }
 
-        private readonly EndpointIdHashcodeContractVerfier m_HashcodeVerifier = new EndpointIdHashcodeContractVerfier();
+        private readonly TimeMarkerHashcodeContractVerfier m_HashcodeVerifier = new TimeMarkerHashcodeContractVerfier();
 
-        private readonly EndpointIdEqualityContractVerifier m_EqualityVerifier = new EndpointIdEqualityContractVerifier();
+        private readonly TimeMarkerEqualityContractVerifier m_EqualityVerifier = new TimeMarkerEqualityContractVerifier();
 
         protected override HashcodeContractVerifier HashContract
         {
