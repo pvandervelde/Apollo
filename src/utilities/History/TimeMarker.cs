@@ -9,7 +9,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Apollo.Utilities.Properties;
-using Lokad;
 
 namespace Apollo.Utilities.History
 {
@@ -255,11 +254,28 @@ namespace Apollo.Utilities.History
         public TimeMarker(ulong positionInTime, string name)
         {
             {
-                Enforce.Argument(() => name);
+                Lokad.Enforce.Argument(() => name);
             }
 
             m_PositionInTime = positionInTime;
             m_Name = name;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TimeMarker"/> class.
+        /// </summary>
+        /// <param name="original">The original marker which indicates what position this time marker has on the timeline.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="original"/> is <see langword="null" />.
+        /// </exception>
+        public TimeMarker(TimeMarker original)
+        {
+            {
+                Lokad.Enforce.Argument(() => original);
+            }
+
+            m_PositionInTime = original.m_PositionInTime;
+            m_Name = original.m_Name;
         }
 
         /// <summary>
