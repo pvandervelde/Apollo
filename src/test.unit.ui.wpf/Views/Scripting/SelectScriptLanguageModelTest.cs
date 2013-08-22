@@ -6,8 +6,8 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Views.Scripting
 {
@@ -25,7 +25,7 @@ namespace Apollo.UI.Wpf.Views.Scripting
             var model = new SelectScriptLanguageModel(context.Object);
 
             Assert.IsNotNull(model.AvailableLanguages);
-            Assert.LessThan(0, model.AvailableLanguages.Count);
+            Assert.Less(0, model.AvailableLanguages.Count);
         }
 
         [Test]

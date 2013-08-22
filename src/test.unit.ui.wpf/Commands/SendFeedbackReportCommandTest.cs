@@ -7,8 +7,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Apollo.UI.Wpf.Feedback;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Commands
 {

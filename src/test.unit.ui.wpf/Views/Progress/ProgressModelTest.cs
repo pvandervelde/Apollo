@@ -8,8 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Utilities;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Views.Progress
 {
@@ -42,12 +42,13 @@ namespace Apollo.UI.Wpf.Views.Progress
 
             Assert.AreEqual(0.0, model.Progress);
             Assert.AreEqual(1, propertyChangedWasRaised);
-            Assert.AreElementsEqual(
-                new List<string>
+            Assert.That(
+                properties,
+                Is.EquivalentTo(
+                    new List<string>
                     {
                         "Progress",
-                    },
-                properties);
+                    }));
         }
 
         [Test]
@@ -75,12 +76,13 @@ namespace Apollo.UI.Wpf.Views.Progress
 
             Assert.AreEqual(progress / 100.0, model.Progress);
             Assert.AreEqual(1, propertyChangedWasRaised);
-            Assert.AreElementsEqual(
-                new List<string>
+            Assert.That(
+                properties,
+                Is.EquivalentTo(
+                    new List<string>
                     {
                         "Progress",
-                    },
-                properties);
+                    }));
         }
 
         [Test]
@@ -107,12 +109,13 @@ namespace Apollo.UI.Wpf.Views.Progress
 
             Assert.AreEqual(0.0, model.Progress);
             Assert.AreEqual(1, propertyChangedWasRaised);
-            Assert.AreElementsEqual(
-                new List<string>
+            Assert.That(
+                properties,
+                Is.EquivalentTo(
+                    new List<string>
                     {
                         "Progress",
-                    },
-                properties);
+                    }));
         }
     }
 }

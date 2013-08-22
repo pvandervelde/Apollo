@@ -9,8 +9,8 @@ using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.UI.Wpf.Commands;
 using Apollo.Utilities;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Views.Projects
 {

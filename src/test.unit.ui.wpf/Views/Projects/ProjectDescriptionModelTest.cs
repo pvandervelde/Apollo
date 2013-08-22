@@ -11,8 +11,8 @@ using Apollo.Core.Host;
 using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Utilities.History;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Views.Projects
 {
@@ -47,12 +47,13 @@ namespace Apollo.UI.Wpf.Views.Projects
             project.Raise(p => p.OnNameChanged += null, new ValueChangedEventArgs<string>(text));
 
             Assert.AreEqual(1, propertyChangedWasRaised);
-            Assert.AreElementsEqual(
-                new List<string>
+            Assert.That(
+                properties,
+                Is.EquivalentTo(
+                    new List<string>
                     {
                         "Name",
-                    },
-                properties);
+                    }));
         }
 
         [Test]
@@ -81,12 +82,13 @@ namespace Apollo.UI.Wpf.Views.Projects
             project.Raise(p => p.OnSummaryChanged += null, new ValueChangedEventArgs<string>(text));
 
             Assert.AreEqual(1, propertyChangedWasRaised);
-            Assert.AreElementsEqual(
-                new List<string>
+            Assert.That(
+                properties,
+                Is.EquivalentTo(
+                    new List<string>
                     {
                         "Summary",
-                    },
-                properties);
+                    }));
         }
 
         [Test]
@@ -114,12 +116,13 @@ namespace Apollo.UI.Wpf.Views.Projects
             project.Raise(p => p.OnDatasetCreated += null, EventArgs.Empty);
 
             Assert.AreEqual(1, propertyChangedWasRaised);
-            Assert.AreElementsEqual(
-                new List<string>
+            Assert.That(
+                properties,
+                Is.EquivalentTo(
+                    new List<string>
                     {
                         "NumberOfDatasets",
-                    },
-                properties);
+                    }));
         }
 
         [Test]
@@ -147,12 +150,13 @@ namespace Apollo.UI.Wpf.Views.Projects
             project.Raise(p => p.OnDatasetDeleted += null, EventArgs.Empty);
 
             Assert.AreEqual(1, propertyChangedWasRaised);
-            Assert.AreElementsEqual(
-                new List<string>
+            Assert.That(
+                properties,
+                Is.EquivalentTo(
+                    new List<string>
                     {
                         "NumberOfDatasets",
-                    },
-                properties);
+                    }));
         }
 
         [Test]

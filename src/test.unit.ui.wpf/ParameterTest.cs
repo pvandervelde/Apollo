@@ -6,69 +6,117 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using System.Linq;
 using Moq;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class ParameterTest
+    public sealed class ParameterTest : EqualityContractVerifierTest
     {
-        private sealed class MockParameter1 : Parameter 
+        private sealed class MockParameter1 : Parameter
         {
             public MockParameter1(IContextAware context)
                 : base(context)
-            { 
+            {
             }
         }
 
-        private sealed class MockParameter2 : Parameter 
-        { 
+        private sealed class MockParameter2 : Parameter
+        {
             public MockParameter2(IContextAware context)
                 : base(context)
-            { 
+            {
             }
         }
 
-        private sealed class MockParameter3 : Parameter 
-        { 
+        private sealed class MockParameter3 : Parameter
+        {
             public MockParameter3(IContextAware context)
                 : base(context)
-            { 
+            {
             }
         }
 
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<Parameter>
+        private sealed class ParameterEqualityContractVerifier : EqualityContractVerifier<Parameter>
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<Parameter> 
-                        {
-                            new MockParameter1(new Mock<IContextAware>().Object),
-                            new MockParameter2(new Mock<IContextAware>().Object),
-                            new MockParameter3(new Mock<IContextAware>().Object),
-                        },
-        };
+            private readonly Parameter m_First = new MockParameter1(new Mock<IContextAware>().Object);
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<Parameter>
+            private readonly Parameter m_Second = new MockParameter2(new Mock<IContextAware>().Object);
+
+            protected override Parameter Copy(Parameter original)
+            {
+                if (original.GetType() == typeof(MockParameter1))
+                {
+                    return new MockParameter1(new Mock<IContextAware>().Object);
+                }
+
+                return new MockParameter2(new Mock<IContextAware>().Object);
+            }
+
+            protected override Parameter FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override Parameter SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
+
+        private sealed class ParameterHashcodeContractVerfier : HashcodeContractVerifier
         {
-            ImplementsOperatorOverloads = false,
-            EquivalenceClasses = new EquivalenceClassCollection
-                    { 
+            private readonly IEnumerable<Parameter> m_DistinctInstances
+                = new List<Parameter> 
+                     {
                         new MockParameter1(new Mock<IContextAware>().Object),
                         new MockParameter2(new Mock<IContextAware>().Object),
                         new MockParameter3(new Mock<IContextAware>().Object),
-                    },
-        };
+                     };
+
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly ParameterHashcodeContractVerfier m_HashcodeVerifier = new ParameterHashcodeContractVerfier();
+
+        private readonly ParameterEqualityContractVerifier m_EqualityVerifier = new ParameterEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
+        {
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
     }
 }

@@ -9,8 +9,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using System.Linq;
 using Apollo.Utilities;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 using Test.Mocks;
 
 namespace Apollo.UI.Wpf.Feedback
@@ -39,7 +39,9 @@ namespace Apollo.UI.Wpf.Feedback
             var collector = new FeedbackReportCollector(fileSystem.Object, fileConstants);
             var reports = collector.LocateFeedbackReports();
 
-            Assert.AreElementsEqualIgnoringOrder(files, reports.Select(r => r.FullName));
+            Assert.That(
+                reports.Select(r => r.FullName),
+                Is.EquivalentTo(files));
         }
     }
 }

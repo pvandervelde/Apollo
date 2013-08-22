@@ -10,8 +10,8 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Host.Scripting;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Commands
 {

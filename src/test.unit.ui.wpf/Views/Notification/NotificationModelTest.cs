@@ -7,8 +7,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Utilities;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Views.Notification
 {
@@ -42,12 +42,13 @@ namespace Apollo.UI.Wpf.Views.Notification
 
             Assert.AreEqual(1, propertyChangedWasRaised);
             Assert.AreEqual(text, model.Notification);
-            Assert.AreElementsEqual(
-                new List<string>
+            Assert.That(
+                properties,
+                Is.EquivalentTo(
+                    new List<string>
                     {
                         "Notification",
-                    },
-                properties);
+                    }));
         }
     }
 }

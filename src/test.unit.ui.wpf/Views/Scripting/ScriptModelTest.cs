@@ -7,8 +7,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.Scripting;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Views.Scripting
 {
@@ -40,12 +40,13 @@ namespace Apollo.UI.Wpf.Views.Scripting
             model.ScriptLanguage = description;
 
             Assert.AreEqual(1, propertyChangedWasRaised);
-            Assert.AreElementsEqual(
-                new List<string>
+            Assert.That(
+                properties,
+                Is.EquivalentTo(
+                    new List<string>
                     {
                         "ScriptLanguage",
-                    },
-                properties);
+                    }));
 
             var newDescription = new ScriptDescriptionModel(context.Object, Core.Host.Scripting.ScriptLanguage.IronRuby);
             model.ScriptLanguage = newDescription;
@@ -81,12 +82,13 @@ namespace Apollo.UI.Wpf.Views.Scripting
             model.SyntaxVerifier = verifier.Object;
 
             Assert.AreEqual(1, propertyChangedWasRaised);
-            Assert.AreElementsEqual(
-                new List<string>
+            Assert.That(
+                properties,
+                Is.EquivalentTo(
+                    new List<string>
                     {
                         "SyntaxVerifier",
-                    },
-                properties);
+                    }));
 
             model.SyntaxVerifier = verifier.Object;
 
@@ -116,12 +118,13 @@ namespace Apollo.UI.Wpf.Views.Scripting
             model.ScriptFile = path;
 
             Assert.AreEqual(1, propertyChangedWasRaised);
-            Assert.AreElementsEqual(
-                new List<string>
+            Assert.That(
+                properties,
+                Is.EquivalentTo(
+                    new List<string>
                     {
                         "ScriptFile",
-                    },
-                properties);
+                    }));
 
             var newPath = "a";
             model.ScriptFile = newPath;

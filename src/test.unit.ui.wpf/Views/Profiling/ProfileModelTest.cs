@@ -7,8 +7,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.UI.Wpf.Profiling;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Views.Profiling
 {
@@ -27,9 +27,9 @@ namespace Apollo.UI.Wpf.Views.Profiling
             collection.Add(report.Object);
 
             var model = new ProfileModel(context.Object, collection);
-            Assert.AreElementsEqual(
-                collection,
-                model.Results.Cast<IProfilingTimeReport>());
+            Assert.That(
+                model.Results.Cast<IProfilingTimeReport>(),
+                Is.EquivalentTo(collection));
         }
     }
 }

@@ -8,8 +8,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Apollo.UI.Wpf.Models;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Views.Settings
 {

@@ -5,21 +5,15 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Feedback
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class FailedToSendFeedbackReportExceptionTest
+    public sealed class FailedToSendFeedbackReportExceptionTest : ExceptionContractVerifier<FailedToSendFeedbackReportException>
     {
-        [VerifyContract]
-        public readonly IContract ExceptionTests = new ExceptionContract<FailedToSendFeedbackReportException>
-        {
-            ImplementsSerialization = true,
-            ImplementsStandardConstructors = true,
-        };
     }
 }

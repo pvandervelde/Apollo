@@ -7,8 +7,8 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Profiling
 {
@@ -33,12 +33,13 @@ namespace Apollo.UI.Wpf.Profiling
                 };
 
             collection.Add(report.Object);
-            Assert.AreElementsSame(
-                new List<IProfilingTimeReport>
+            Assert.That(
+                collection,
+                Is.EquivalentTo(
+                    new List<IProfilingTimeReport>
                     {
                         report.Object,
-                    },
-                collection);
+                    }));
         }
     }
 }

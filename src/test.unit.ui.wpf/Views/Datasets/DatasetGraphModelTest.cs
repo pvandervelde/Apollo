@@ -13,8 +13,8 @@ using Apollo.Core.Base;
 using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Utilities;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Views.Datasets
 {
@@ -279,9 +279,9 @@ namespace Apollo.UI.Wpf.Views.Datasets
                 }
             }
 
-            Assert.AreElementsEqual(
-                nodes.Select(n => n.Object.Name),
-                linearisedVertices.Select(l => l.Model.Name));
+            Assert.That(
+                linearisedVertices.Select(l => l.Model.Name),
+                Is.EquivalentTo(nodes.Select(n => n.Object.Name)));
         }
     }
 }

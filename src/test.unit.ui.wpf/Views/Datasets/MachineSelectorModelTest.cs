@@ -11,10 +11,10 @@ using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Utilities;
-using MbUnit.Framework;
 using Moq;
 using Nuclei.Communication;
 using Nuclei.Diagnostics;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Views.Datasets
 {
@@ -91,12 +91,14 @@ namespace Apollo.UI.Wpf.Views.Datasets
                 new CurrentThreadTaskScheduler());
 
             Assert.IsNotNull(model.AvailableProposals);
-            Assert.AreElementsSame(
-                new List<DistributionSuggestion>
+            
+            Assert.That(
+                model.AvailableProposals,
+                Is.EquivalentTo(
+                    new List<DistributionSuggestion>
                     {
                         suggestion,
-                    },
-                model.AvailableProposals);
+                    }));
 
             Assert.IsFalse(model.IsLoading);
         }

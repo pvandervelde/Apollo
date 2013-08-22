@@ -6,7 +6,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Converters
 {

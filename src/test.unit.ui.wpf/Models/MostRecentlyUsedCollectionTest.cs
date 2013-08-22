@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Models
 {
@@ -35,12 +35,13 @@ namespace Apollo.UI.Wpf.Models
             for (int i = 0; i < paths.Count; i++)
             {
                 mruCollection.Add(paths[i]);
-                Assert.AreElementsEqual(
-                    paths
-                        .Skip(i >= mruCollection.MaximumSize ? i - mruCollection.MaximumSize + 1 : 0)
-                        .Take(i >= mruCollection.MaximumSize ? mruCollection.MaximumSize : i + 1)
-                        .Reverse(),
-                    mruCollection.Select(m => m.FilePath));
+                Assert.That(
+                    mruCollection.Select(m => m.FilePath),
+                    Is.EquivalentTo(
+                        paths
+                            .Skip(i >= mruCollection.MaximumSize ? i - mruCollection.MaximumSize + 1 : 0)
+                            .Take(i >= mruCollection.MaximumSize ? mruCollection.MaximumSize : i + 1)
+                            .Reverse()));
             }
         }
 
@@ -64,8 +65,8 @@ namespace Apollo.UI.Wpf.Models
                 CultureInfo.InvariantCulture,
                 serializedCollection) as MostRecentlyUsedCollection;
 
-            Assert.AreElementsEqual(mruCollection.Select(m => m.FilePath), deserializedCollection.Select(m => m.FilePath));
-            Assert.AreElementsEqual(mruCollection.Select(m => m.LastTimeOpened), deserializedCollection.Select(m => m.LastTimeOpened));
+            Assert.That(deserializedCollection.Select(m => m.FilePath), Is.EquivalentTo(mruCollection.Select(m => m.FilePath)));
+            Assert.That(deserializedCollection.Select(m => m.LastTimeOpened), Is.EquivalentTo(mruCollection.Select(m => m.LastTimeOpened)));
         }
     }
 }

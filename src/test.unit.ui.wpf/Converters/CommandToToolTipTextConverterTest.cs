@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Converters
 {

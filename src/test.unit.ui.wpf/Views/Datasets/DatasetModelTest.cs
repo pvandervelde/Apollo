@@ -12,8 +12,8 @@ using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Views.Datasets
 {
@@ -185,12 +185,13 @@ namespace Apollo.UI.Wpf.Views.Datasets
 
             proxy.Raise(p => p.OnNameChanged += null, new ValueChangedEventArgs<string>("a"));
             Assert.AreEqual(1, wasRaised);
-            Assert.AreElementsEqualIgnoringOrder(
-                new List<string>
+            Assert.That(
+                properties,
+                Is.EquivalentTo(
+                    new List<string>
                     {
                         "Name",
-                    },
-                properties);
+                    }));
         }
 
         [Test]
@@ -258,15 +259,16 @@ namespace Apollo.UI.Wpf.Views.Datasets
 
             proxy.Raise(p => p.OnLoaded += null, EventArgs.Empty);
             Assert.AreEqual(4, propertyChangedWasRaised);
-            Assert.AreElementsEqualIgnoringOrder(
-                new List<string>
+            Assert.That(
+                properties,
+                Is.EquivalentTo(
+                    new List<string>
                     {
                         "IsLoaded",
                         "RunsOn",
                         "Progress",
                         "ProgressDescription",
-                    },
-                properties);
+                    }));
             Assert.IsTrue(onLoadedWasRaised);
             progressTracker.Verify(p => p.StopTracking(), Times.Once());
         }
@@ -303,13 +305,14 @@ namespace Apollo.UI.Wpf.Views.Datasets
 
             proxy.Raise(p => p.OnUnloaded += null, EventArgs.Empty);
             Assert.AreEqual(2, propertyChangedWasRaised);
-            Assert.AreElementsEqualIgnoringOrder(
-                new List<string>
+            Assert.That(
+                properties,
+                Is.EquivalentTo(
+                    new List<string>
                     {
                         "IsLoaded",
                         "RunsOn",
-                    },
-                properties);
+                    }));
             Assert.IsTrue(onUnloadedWasRaised);
         }
 

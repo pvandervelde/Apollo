@@ -10,9 +10,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Windows.Input;
 using Apollo.UI.Wpf.Feedback;
-using MbUnit.Framework;
 using Moq;
 using NSarrac.Framework;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Views.Feedback
 {
@@ -72,13 +72,14 @@ namespace Apollo.UI.Wpf.Views.Feedback
             model.Level = FeedbackLevel.Neutral;
             Assert.AreEqual(FeedbackLevel.Neutral, model.Level);
             Assert.AreEqual(2, propertyChangedWasRaised);
-            Assert.AreElementsEqual(
-                new List<string>
+            Assert.That(
+                properties,
+                Is.EquivalentTo(
+                    new List<string>
                     {
                         "Level",
                         "CanSendReport"
-                    },
-                properties);
+                    }));
         }
 
         [Test]
@@ -107,12 +108,13 @@ namespace Apollo.UI.Wpf.Views.Feedback
             model.Description = text;
             Assert.AreEqual(text, model.Description);
             Assert.AreEqual(1, propertyChangedWasRaised);
-            Assert.AreElementsEqual(
-                new List<string>
+            Assert.That(
+                properties,
+                Is.EquivalentTo(
+                    new List<string>
                     {
                         "Description",
-                    },
-                properties);
+                    }));
         }
 
         [Test]

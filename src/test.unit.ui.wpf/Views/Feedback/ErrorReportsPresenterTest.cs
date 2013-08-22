@@ -11,8 +11,8 @@ using System.IO.Abstractions;
 using Apollo.UI.Wpf.Commands;
 using Apollo.UI.Wpf.Feedback;
 using Apollo.Utilities;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Views.Feedback
 {

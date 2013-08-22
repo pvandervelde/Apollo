@@ -6,8 +6,8 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Application;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Commands
 {

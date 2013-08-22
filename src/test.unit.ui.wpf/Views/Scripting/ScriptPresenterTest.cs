@@ -10,9 +10,9 @@ using System.IO;
 using Apollo.Core.Host.Scripting;
 using Apollo.UI.Wpf.Commands;
 using Apollo.Utilities;
-using MbUnit.Framework;
 using Microsoft.Practices.Prism.Events;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Views.Scripting
 {

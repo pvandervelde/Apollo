@@ -13,9 +13,9 @@ using System.Reflection;
 using System.Threading;
 using System.Windows.Input;
 using Apollo.UI.Wpf.Feedback;
-using MbUnit.Framework;
 using Moq;
 using Nuclei;
+using NUnit.Framework;
 using Test.Mocks;
 
 namespace Apollo.UI.Wpf.Views.Feedback
@@ -62,12 +62,13 @@ namespace Apollo.UI.Wpf.Views.Feedback
             }
 
             Assert.IsTrue(model.HasErrorReports);
-            Assert.AreElementsEqual(
-                new List<FeedbackFileModel>
+            Assert.That(
+                model.Reports,
+                Is.EquivalentTo(
+                    new List<FeedbackFileModel>
                     {
                         new FeedbackFileModel(context.Object, file.FullName, file.CreationTime)
-                    },
-                model.Reports);
+                    }));
         }
 
         [Test]

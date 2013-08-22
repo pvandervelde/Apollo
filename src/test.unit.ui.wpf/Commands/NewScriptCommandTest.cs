@@ -8,8 +8,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.Scripting;
 using Apollo.UI.Wpf.Views.Scripting;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Commands
 {

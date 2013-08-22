@@ -7,50 +7,91 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using System.Linq;
 using Moq;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.UI.Wpf.Views.Feedback
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class FeedbackFileModelTest
+    public sealed class FeedbackFileModelTest : EqualityContractVerifierTest
     {
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<FeedbackFileModel>
+        private sealed class FeedbackFileModelEqualityContractVerifier : EqualityContractVerifier<FeedbackFileModel>
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<FeedbackFileModel> 
-                        {
-                            new FeedbackFileModel(new Mock<IContextAware>().Object, "a", DateTimeOffset.Now),
-                            new FeedbackFileModel(new Mock<IContextAware>().Object, "b", DateTimeOffset.Now),
-                            new FeedbackFileModel(new Mock<IContextAware>().Object, "c", DateTimeOffset.Now),
-                            new FeedbackFileModel(new Mock<IContextAware>().Object, "d", DateTimeOffset.Now),
-                            new FeedbackFileModel(new Mock<IContextAware>().Object, "e", DateTimeOffset.Now),
-                        },
-        };
+            private readonly FeedbackFileModel m_First = new FeedbackFileModel(new Mock<IContextAware>().Object, "a", DateTimeOffset.Now);
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<FeedbackFileModel>
+            private readonly FeedbackFileModel m_Second = new FeedbackFileModel(new Mock<IContextAware>().Object, "b", DateTimeOffset.Now);
+
+            protected override FeedbackFileModel Copy(FeedbackFileModel original)
+            {
+                return new FeedbackFileModel(new Mock<IContextAware>().Object, original.Path, original.Date);
+            }
+
+            protected override FeedbackFileModel FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override FeedbackFileModel SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
+
+        private sealed class FeedbackFileModelHashcodeContractVerfier : HashcodeContractVerifier
         {
-            ImplementsOperatorOverloads = false,
-            EquivalenceClasses = new EquivalenceClassCollection
-                    { 
+            private readonly IEnumerable<FeedbackFileModel> m_DistinctInstances
+                = new List<FeedbackFileModel> 
+                     {
                         new FeedbackFileModel(new Mock<IContextAware>().Object, "a", DateTimeOffset.Now),
                         new FeedbackFileModel(new Mock<IContextAware>().Object, "b", DateTimeOffset.Now),
                         new FeedbackFileModel(new Mock<IContextAware>().Object, "c", DateTimeOffset.Now),
                         new FeedbackFileModel(new Mock<IContextAware>().Object, "d", DateTimeOffset.Now),
                         new FeedbackFileModel(new Mock<IContextAware>().Object, "e", DateTimeOffset.Now),
-                    },
-        };
+                     };
+
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly FeedbackFileModelHashcodeContractVerfier m_HashcodeVerifier = new FeedbackFileModelHashcodeContractVerfier();
+
+        private readonly FeedbackFileModelEqualityContractVerifier m_EqualityVerifier = new FeedbackFileModelEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
+        {
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void Create()
