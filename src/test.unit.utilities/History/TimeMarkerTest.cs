@@ -4,79 +4,257 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using System.Linq;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Utilities.History
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
-    public sealed class TimeMarkerTest
+    public sealed class TimeMarkerTest : EqualityContractVerifierTest
     {
-        private static TimeMarker Create(ulong id)
+        private sealed class EndpointIdEqualityContractVerifier : EqualityContractVerifier<TimeMarker>
         {
-            return (TimeMarker)Mirror.ForType<TimeMarker>().Constructor.Invoke(id);
+            private readonly TimeMarker m_First = new TimeMarker(1);
+
+            private readonly TimeMarker m_Second = new TimeMarker(2);
+
+            protected override TimeMarker Copy(TimeMarker original)
+            {
+                return new TimeMarker(original);
+            }
+
+            protected override TimeMarker FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override TimeMarker SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
         }
 
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<TimeMarker>
+        private sealed class EndpointIdHashcodeContractVerfier : HashcodeContractVerifier
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<TimeMarker> 
-                    {
-                        Create(0),
-                        Create(1),
-                        Create(2),
-                        Create(3),
-                        Create(4),
-                        Create(5),
-                        Create(6),
-                        Create(7),
-                        Create(8),
-                        Create(9),
-                    },
-        };
+            private readonly IEnumerable<TimeMarker> m_DistinctInstances
+                = new List<TimeMarker> 
+                     {
+                        new TimeMarker(1),
+                        new TimeMarker(2),
+                        new TimeMarker(3),
+                        new TimeMarker(4),
+                        new TimeMarker(5),
+                        new TimeMarker(6),
+                        new TimeMarker(7),
+                        new TimeMarker(8),
+                     };
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<TimeMarker>
-        {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                { 
-                    Create(0),
-                    Create(1),
-                    Create(2),
-                    Create(3),
-                    Create(4),
-                    Create(5),
-                    Create(6),
-                    Create(7),
-                    Create(8),
-                    Create(9),
-                },
-        };
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
 
-        [VerifyContract]
-        public readonly IContract ComparableVerification = new ComparisonContract<TimeMarker>
+        private readonly EndpointIdHashcodeContractVerfier m_HashcodeVerifier = new EndpointIdHashcodeContractVerfier();
+
+        private readonly EndpointIdEqualityContractVerifier m_EqualityVerifier = new EndpointIdEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection 
-                { 
-                    Create(0),
-                    Create(1),
-                    Create(2),
-                    Create(3),
-                    Create(4),
-                },
-        };
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
+
+        [Test]
+        public void LargerThanOperatorWithFirstObjectNull()
+        {
+            TimeMarker first = null;
+            var second = new TimeMarker(1);
+
+            Assert.IsFalse(first > second);
+        }
+
+        [Test]
+        public void LargerThanOperatorWithSecondObjectNull()
+        {
+            var first = new TimeMarker(1);
+            TimeMarker second = null;
+
+            Assert.IsTrue(first > second);
+        }
+
+        [Test]
+        public void LargerThanOperatorWithBothObjectsNull()
+        {
+            TimeMarker first = null;
+            TimeMarker second = null;
+
+            Assert.IsFalse(first > second);
+        }
+
+        [Test]
+        public void LargerThanOperatorWithEqualObjects()
+        {
+            var first = new TimeMarker(1);
+            var second = new TimeMarker(1);
+
+            Assert.IsFalse(first > second);
+        }
+
+        [Test]
+        public void LargerThanOperatorWithFirstObjectLarger()
+        {
+            var first = new TimeMarker(2);
+            var second = new TimeMarker(1);
+
+            Assert.IsTrue(first > second);
+        }
+
+        [Test]
+        public void LargerThanOperatorWithFirstObjectSmaller()
+        {
+            var first = new TimeMarker(1);
+            var second = new TimeMarker(2);
+
+            Assert.IsFalse(first > second);
+        }
+
+        [Test]
+        public void SmallerThanOperatorWithFirstObjectNull()
+        {
+            TimeMarker first = null;
+            var second = new TimeMarker(1);
+
+            Assert.IsTrue(first < second);
+        }
+
+        [Test]
+        public void SmallerThanOperatorWithSecondObjectNull()
+        {
+            var first = new TimeMarker(1);
+            TimeMarker second = null;
+
+            Assert.IsFalse(first < second);
+        }
+
+        [Test]
+        public void SmallerThanOperatorWithBothObjectsNull()
+        {
+            TimeMarker first = null;
+            TimeMarker second = null;
+
+            Assert.IsFalse(first < second);
+        }
+
+        [Test]
+        public void SmallerThanOperatorWithEqualObjects()
+        {
+            var first = new TimeMarker(1);
+            var second = new TimeMarker(1);
+
+            Assert.IsFalse(first < second);
+        }
+
+        [Test]
+        public void SmallerThanOperatorWithFirstObjectLarger()
+        {
+            var first = new TimeMarker(2);
+            var second = new TimeMarker(1);
+
+            Assert.IsFalse(first < second);
+        }
+
+        [Test]
+        public void SmallerThanOperatorWithFirstObjectSmaller()
+        {
+            var first = new TimeMarker(1);
+            var second = new TimeMarker(2);
+
+            Assert.IsTrue(first < second);
+        }
+
+        [Test]
+        public void Clone()
+        {
+            var first = new TimeMarker(1);
+            var second = new TimeMarker(first);
+
+            Assert.AreEqual(first, second);
+        }
+
+        [Test]
+        public void CompareToWithNullObject()
+        {
+            var first = new TimeMarker(1);
+            object second = null;
+
+            Assert.AreEqual(1, first.CompareTo(second));
+        }
+
+        [Test]
+        public void CompareToOperatorWithEqualObjects()
+        {
+            var first = new TimeMarker(1);
+            object second = new TimeMarker(1);
+
+            Assert.AreEqual(0, first.CompareTo(second));
+        }
+
+        [Test]
+        public void CompareToWithLargerFirstObject()
+        {
+            var first = new TimeMarker(2);
+            object second = new TimeMarker(1);
+
+            Assert.IsTrue(first.CompareTo(second) > 0);
+        }
+
+        [Test]
+        public void CompareToWithSmallerFirstObject()
+        {
+            var first = new TimeMarker(1);
+            object second = new TimeMarker(2);
+
+            Assert.IsTrue(first.CompareTo(second) < 0);
+        }
+
+        [Test]
+        public void CompareToWithUnequalObjectTypes()
+        {
+            var first = new TimeMarker(1);
+            var second = new object();
+
+            Assert.Throws<ArgumentException>(() => first.CompareTo(second));
+        }
     }
 }

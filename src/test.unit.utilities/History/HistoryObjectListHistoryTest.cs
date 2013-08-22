@@ -7,8 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using NUnit.Framework;
 
 namespace Apollo.Utilities.History
 {
@@ -166,13 +165,10 @@ namespace Apollo.Utilities.History
             return new MockHistoryObject(id);
         }
 
-        [VerifyContract]
-        public readonly IContract ListTests = new ListContract<HistoryObjectListHistory<MockHistoryObject>, MockHistoryObject>
+        [Test]
+        public void IndexerGetItemsAtInvalidIndex()
         {
-            AcceptEqualItems = true,
-            AcceptNullReference = true,
-            DefaultInstance = () => new HistoryObjectListHistory<MockHistoryObject>(FromId),
-            DistinctInstances = new DistinctInstanceCollection<MockHistoryObject> 
+            var list = new HistoryObjectListHistory<MockHistoryObject>(FromId)
                 {
                     new MockHistoryObject(0),
                     new MockHistoryObject(1),
@@ -180,8 +176,165 @@ namespace Apollo.Utilities.History
                     new MockHistoryObject(3),
                     new MockHistoryObject(4),
                     new MockHistoryObject(5),
-                }
-        };
+                };
+
+            Assert.Throws<IndexOutOfRangeException>(
+                () =>
+                {
+                    var result = list[-1];
+                });
+
+            Assert.Throws<IndexOutOfRangeException>(
+                () =>
+                {
+                    var result = list[list.Count];
+                });
+        }
+
+        [Test]
+        public void IndexerGetSetItems()
+        {
+            var list = new HistoryObjectListHistory<MockHistoryObject>(FromId)
+                {
+                    new MockHistoryObject(0),
+                    new MockHistoryObject(1),
+                    new MockHistoryObject(2),
+                    new MockHistoryObject(3),
+                    new MockHistoryObject(4),
+                    new MockHistoryObject(5),
+                };
+
+            Assert.AreEqual(new MockHistoryObject(0), list[0]);
+            list[0] = new MockHistoryObject(10);
+            Assert.AreEqual(new MockHistoryObject(10), list[0]);
+
+            Assert.AreEqual(new MockHistoryObject(2), list[2]);
+            list[2] = new MockHistoryObject(20);
+            Assert.AreEqual(new MockHistoryObject(20), list[2]);
+
+            Assert.AreEqual(new MockHistoryObject(5), list[5]);
+            list[5] = new MockHistoryObject(50);
+            Assert.AreEqual(new MockHistoryObject(50), list[5]);
+        }
+
+        [Test]
+        public void IndexOfItems()
+        {
+            var list = new HistoryObjectListHistory<MockHistoryObject>(FromId)
+                {
+                    new MockHistoryObject(0),
+                    new MockHistoryObject(1),
+                    new MockHistoryObject(2),
+                    new MockHistoryObject(3),
+                    new MockHistoryObject(4),
+                    new MockHistoryObject(5),
+                };
+
+            Assert.AreEqual(0, list.IndexOf(new MockHistoryObject(0)));
+            Assert.AreEqual(1, list.IndexOf(new MockHistoryObject(1)));
+            Assert.AreEqual(2, list.IndexOf(new MockHistoryObject(2)));
+            Assert.AreEqual(3, list.IndexOf(new MockHistoryObject(3)));
+            Assert.AreEqual(4, list.IndexOf(new MockHistoryObject(4)));
+            Assert.AreEqual(5, list.IndexOf(new MockHistoryObject(5)));
+        }
+
+        [Test]
+        public void InsertItemsAtInvalidIndex()
+        {
+            var list = new HistoryObjectListHistory<MockHistoryObject>(FromId)
+                {
+                    new MockHistoryObject(0),
+                    new MockHistoryObject(1),
+                    new MockHistoryObject(2),
+                    new MockHistoryObject(3),
+                    new MockHistoryObject(4),
+                    new MockHistoryObject(5),
+                };
+
+            Assert.Throws<IndexOutOfRangeException>(() => list.Insert(-1, new MockHistoryObject(10)));
+            Assert.Throws<IndexOutOfRangeException>(() => list.Insert(list.Count, new MockHistoryObject(20)));
+        }
+
+        [Test]
+        public void RemoveItemsAtInvalidIndex()
+        {
+            var list = new HistoryObjectListHistory<MockHistoryObject>(FromId)
+                {
+                    new MockHistoryObject(0),
+                    new MockHistoryObject(1),
+                    new MockHistoryObject(2),
+                    new MockHistoryObject(3),
+                    new MockHistoryObject(4),
+                    new MockHistoryObject(5),
+                };
+
+            Assert.Throws<IndexOutOfRangeException>(() => list.RemoveAt(-1));
+            Assert.Throws<IndexOutOfRangeException>(() => list.RemoveAt(list.Count));
+        }
+
+        [Test]
+        public void RemoveItemsAt()
+        {
+            var list = new HistoryObjectListHistory<MockHistoryObject>(FromId)
+                {
+                    new MockHistoryObject(0),
+                    new MockHistoryObject(1),
+                    new MockHistoryObject(2),
+                    new MockHistoryObject(3),
+                    new MockHistoryObject(4),
+                    new MockHistoryObject(5),
+                };
+
+            list.RemoveAt(3);
+            Assert.IsFalse(list.Contains(new MockHistoryObject(3)));
+
+            list.RemoveAt(3);
+            Assert.IsFalse(list.Contains(new MockHistoryObject(4)));
+
+            list.RemoveAt(3);
+            Assert.IsFalse(list.Contains(new MockHistoryObject(5)));
+
+            list.RemoveAt(2);
+            Assert.IsFalse(list.Contains(new MockHistoryObject(2)));
+
+            list.RemoveAt(1);
+            Assert.IsFalse(list.Contains(new MockHistoryObject(1)));
+
+            list.RemoveAt(0);
+            Assert.IsFalse(list.Contains(new MockHistoryObject(0)));
+        }
+
+        [Test]
+        public void RemoveItems()
+        {
+            var list = new HistoryObjectListHistory<MockHistoryObject>(FromId)
+                {
+                    new MockHistoryObject(0),
+                    new MockHistoryObject(1),
+                    new MockHistoryObject(2),
+                    new MockHistoryObject(3),
+                    new MockHistoryObject(4),
+                    new MockHistoryObject(5),
+                };
+
+            list.Remove(new MockHistoryObject(0));
+            Assert.IsFalse(list.Contains(new MockHistoryObject(0)));
+
+            list.Remove(new MockHistoryObject(1));
+            Assert.IsFalse(list.Contains(new MockHistoryObject(1)));
+
+            list.Remove(new MockHistoryObject(2));
+            Assert.IsFalse(list.Contains(new MockHistoryObject(2)));
+
+            list.Remove(new MockHistoryObject(3));
+            Assert.IsFalse(list.Contains(new MockHistoryObject(3)));
+
+            list.Remove(new MockHistoryObject(4));
+            Assert.IsFalse(list.Contains(new MockHistoryObject(4)));
+
+            list.Remove(new MockHistoryObject(5));
+            Assert.IsFalse(list.Contains(new MockHistoryObject(5)));
+        }
 
         [Test]
         public void RollBackToBeforeLastSnapshot()

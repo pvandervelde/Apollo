@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Apollo.Utilities.History
 {
@@ -363,7 +363,9 @@ namespace Apollo.Utilities.History
                 Assert.AreEqual(i + 1, obj.LotsOfValues.Count);
                 
                 var expected = Enumerable.Range(0, i + 1);
-                Assert.AreElementsEqual(expected, obj.LotsOfValues);
+                Assert.That(
+                    obj.LotsOfValues,
+                    Is.EquivalentTo(expected));
             }
         }
 
@@ -488,7 +490,9 @@ namespace Apollo.Utilities.History
                 Assert.AreEqual(i, obj.SomeValue);
 
                 var expected = Enumerable.Range(0, i + 1);
-                Assert.AreElementsEqual(expected, obj.LotsOfValues);
+                Assert.That(
+                    obj.LotsOfValues,
+                    Is.EquivalentTo(expected));
             }
         }
 
@@ -517,7 +521,9 @@ namespace Apollo.Utilities.History
             Assert.AreEqual(maximumValue - 1, obj.SomeValue);
 
             var expected = Enumerable.Range(0, maximumValue);
-            Assert.AreElementsEqual(expected, obj.LotsOfValues);
+            Assert.That(
+                obj.LotsOfValues,
+                Is.EquivalentTo(expected));
         }
 
         [Test]
@@ -569,7 +575,9 @@ namespace Apollo.Utilities.History
 
             timeline.RollForwardTo(secondChange);
             Assert.AreEqual(2, obj.SomeValue);
-            Assert.AreElementsEqual(new[] { 2, 4 }, obj.LotsOfValues);
+            Assert.That(
+                obj.LotsOfValues,
+                Is.EquivalentTo(new[] { 2, 4 }));
             Assert.IsFalse(timeline.DoesObjectExistCurrently(otherObj.HistoryId));
             Assert.IsFalse(timeline.HasObjectEverExisted(otherObj.HistoryId));
         }
@@ -579,7 +587,7 @@ namespace Apollo.Utilities.History
         {
             var timeline = new Timeline(BuildStorageOfType);
             var firstMark = timeline.Mark();
-            Assert.GreaterThan(firstMark, TimeMarker.TheBeginOfTime);
+            Assert.Greater(firstMark, TimeMarker.TheBeginOfTime);
             Assert.AreEqual(TimeMarker.TheBeginOfTime.Next(), firstMark);
         }
 

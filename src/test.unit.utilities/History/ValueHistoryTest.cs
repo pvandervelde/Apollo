@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Apollo.Utilities.History
 {

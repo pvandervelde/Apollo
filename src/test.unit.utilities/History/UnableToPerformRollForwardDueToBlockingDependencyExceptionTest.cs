@@ -5,21 +5,16 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Utilities.History
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class UnableToPerformRollForwardDueToBlockingDependencyExceptionTest
+    public sealed class UnableToPerformRollForwardDueToBlockingDependencyExceptionTest 
+        : ExceptionContractVerifier<UnableToPerformRollForwardDueToBlockingDependencyException>
     {
-        [VerifyContract]
-        public readonly IContract ExceptionTests = new ExceptionContract<UnableToPerformRollForwardDueToBlockingDependencyException>
-        {
-            ImplementsSerialization = true,
-            ImplementsStandardConstructors = true,
-        };
     }
 }

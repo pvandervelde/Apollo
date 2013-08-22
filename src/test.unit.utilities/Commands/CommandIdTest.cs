@@ -5,10 +5,11 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Utilities.Commands
 {
@@ -18,30 +19,85 @@ namespace Apollo.Utilities.Commands
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class CommandIdTest
+    public sealed class CommandIdTest : EqualityContractVerifierTest
     {
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<CommandId>
+        private sealed class EndpointIdEqualityContractVerifier : EqualityContractVerifier<CommandId>
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances = DataGenerators.Random.Strings(100, RandomStringStock.EnCountries).Select(o => new CommandId(o)),
-        };
+            private readonly CommandId m_First = new CommandId("a");
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<CommandId>
+            private readonly CommandId m_Second = new CommandId("b");
+
+            protected override CommandId Copy(CommandId original)
+            {
+                return original.Clone();
+            }
+
+            protected override CommandId FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override CommandId SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
+
+        private sealed class EndpointIdHashcodeContractVerfier : HashcodeContractVerifier
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                { 
-                    new CommandId(1.ToString()),
-                    new CommandId(2.ToString()),
-                },
-        };
+            private readonly IEnumerable<CommandId> m_DistinctInstances
+                = new List<CommandId> 
+                     {
+                        new CommandId(1.ToString()),
+                        new CommandId(2.ToString()),
+                        new CommandId(3.ToString()),
+                        new CommandId(4.ToString()),
+                        new CommandId(5.ToString()),
+                        new CommandId(6.ToString()),
+                        new CommandId(7.ToString()),
+                        new CommandId(8.ToString()),
+                        new CommandId(9.ToString()),
+                     };
+
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly EndpointIdHashcodeContractVerfier m_HashcodeVerifier = new EndpointIdHashcodeContractVerfier();
+
+        private readonly EndpointIdEqualityContractVerifier m_EqualityVerifier = new EndpointIdEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
+        {
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void LargerThanOperatorWithFirstObjectNull()

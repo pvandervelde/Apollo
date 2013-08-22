@@ -5,12 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using NUnit.Framework;
 
 namespace Apollo.Utilities.History
 {
@@ -19,13 +15,10 @@ namespace Apollo.Utilities.History
                 Justification = "Unit tests do not need documentation.")]
     public sealed class ListHistoryTest
     {
-        [VerifyContract]
-        public readonly IContract ListTests = new ListContract<ListHistory<string>, string>
+        [Test]
+        public void IndexerGetItemsAtInvalidIndex()
         {
-            AcceptEqualItems = true,
-            AcceptNullReference = true,
-            DefaultInstance = () => new ListHistory<string>(),
-            DistinctInstances = new DistinctInstanceCollection<string> 
+            var list = new ListHistory<string>
                 {
                     "a",
                     "b",
@@ -33,8 +26,165 @@ namespace Apollo.Utilities.History
                     "d",
                     "e",
                     "f",
-                }
-        };
+                };
+
+            Assert.Throws<IndexOutOfRangeException>(
+                () =>
+                {
+                    var result = list[-1];
+                });
+
+            Assert.Throws<IndexOutOfRangeException>(
+                () =>
+                {
+                    var result = list[list.Count];
+                });
+        }
+
+        [Test]
+        public void IndexerGetSetItems()
+        {
+            var list = new ListHistory<string>
+                {
+                    "a",
+                    "b",
+                    "c",
+                    "d",
+                    "e",
+                    "f",
+                };
+
+            Assert.AreEqual("a", list[0]);
+            list[0] = "aa";
+            Assert.AreEqual("aa", list[0]);
+
+            Assert.AreEqual("c", list[2]);
+            list[2] = "cc";
+            Assert.AreEqual("cc", list[2]);
+
+            Assert.AreEqual("f", list[5]);
+            list[5] = "ff";
+            Assert.AreEqual("ff", list[5]);
+        }
+
+        [Test]
+        public void IndexOfItems()
+        {
+            var list = new ListHistory<string>
+                {
+                    "a",
+                    "b",
+                    "c",
+                    "d",
+                    "e",
+                    "f",
+                };
+
+            Assert.AreEqual(0, list.IndexOf("a"));
+            Assert.AreEqual(1, list.IndexOf("b"));
+            Assert.AreEqual(2, list.IndexOf("c"));
+            Assert.AreEqual(3, list.IndexOf("d"));
+            Assert.AreEqual(4, list.IndexOf("e"));
+            Assert.AreEqual(5, list.IndexOf("f"));
+        }
+
+        [Test]
+        public void InsertItemsAtInvalidIndex()
+        {
+            var list = new ListHistory<string>
+                {
+                    "a",
+                    "b",
+                    "c",
+                    "d",
+                    "e",
+                    "f",
+                };
+
+            Assert.Throws<IndexOutOfRangeException>(() => list.Insert(-1, "aa"));
+            Assert.Throws<IndexOutOfRangeException>(() => list.Insert(list.Count, "bb"));
+        }
+
+        [Test]
+        public void RemoveItemsAtInvalidIndex()
+        {
+            var list = new ListHistory<string>
+                {
+                    "a",
+                    "b",
+                    "c",
+                    "d",
+                    "e",
+                    "f",
+                };
+
+            Assert.Throws<IndexOutOfRangeException>(() => list.RemoveAt(-1));
+            Assert.Throws<IndexOutOfRangeException>(() => list.RemoveAt(list.Count));
+        }
+
+        [Test]
+        public void RemoveItemsAt()
+        {
+            var list = new ListHistory<string>
+                {
+                    "a",
+                    "b",
+                    "c",
+                    "d",
+                    "e",
+                    "f",
+                };
+
+            list.RemoveAt(3);
+            Assert.IsFalse(list.Contains("d"));
+
+            list.RemoveAt(3);
+            Assert.IsFalse(list.Contains("e"));
+
+            list.RemoveAt(3);
+            Assert.IsFalse(list.Contains("f"));
+
+            list.RemoveAt(2);
+            Assert.IsFalse(list.Contains("c"));
+
+            list.RemoveAt(1);
+            Assert.IsFalse(list.Contains("b"));
+
+            list.RemoveAt(0);
+            Assert.IsFalse(list.Contains("a"));
+        }
+
+        [Test]
+        public void RemoveItems()
+        {
+            var list = new ListHistory<string>
+                {
+                    "a",
+                    "b",
+                    "c",
+                    "d",
+                    "e",
+                    "f",
+                };
+
+            list.Remove("a");
+            Assert.IsFalse(list.Contains("a"));
+
+            list.Remove("b");
+            Assert.IsFalse(list.Contains("b"));
+
+            list.Remove("c");
+            Assert.IsFalse(list.Contains("c"));
+            
+            list.Remove("d");
+            Assert.IsFalse(list.Contains("d"));
+
+            list.Remove("e");
+            Assert.IsFalse(list.Contains("e"));
+
+            list.Remove("f");
+            Assert.IsFalse(list.Contains("f"));
+        }
 
         [Test]
         public void RollBackToBeforeLastSnapshot()
@@ -50,9 +200,10 @@ namespace Apollo.Utilities.History
 
             // The snapshot is at 20
             storage.RollBackTo(new TimeMarker(26));
-            Assert.AreElementsEqual(
-                new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(
+                    new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 }));
         }
 
         [Test]
@@ -69,9 +220,10 @@ namespace Apollo.Utilities.History
 
             // The first snapshot is at 1, the next one is 20 further so it is at 20
             storage.RollBackTo(new TimeMarker(21));
-            Assert.AreElementsEqual(
-                new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(
+                    new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 }));
         }
 
         [Test]
@@ -88,9 +240,10 @@ namespace Apollo.Utilities.History
 
             // The snapshot is at 20
             storage.RollBackTo(new TimeMarker(16));
-            Assert.AreElementsEqual(
-                new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(
+                    new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 }));
         }
 
         [Test]
@@ -106,9 +259,10 @@ namespace Apollo.Utilities.History
             }
 
             storage.RollBackTo(new TimeMarker((ulong)maximumValue));
-            Assert.AreElementsEqual(
-                new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(
+                    new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
         }
 
         [Test]
@@ -124,9 +278,10 @@ namespace Apollo.Utilities.History
             }
 
             storage.RollBackTo(new TimeMarker(1));
-            Assert.AreElementsEqual(
-                new int[] { 0 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(
+                    new int[] { 0 }));
         }
 
         [Test]
@@ -142,9 +297,10 @@ namespace Apollo.Utilities.History
             }
 
             storage.RollBackTo(new TimeMarker(0));
-            Assert.AreElementsEqual(
-                new int[] { },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(
+                    new int[] { }));
         }
 
         [Test]
@@ -197,9 +353,9 @@ namespace Apollo.Utilities.History
             }
 
             storage.RollBackToStart();
-            Assert.AreElementsEqual(
-                new int[0],
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(new int[0]));
         }
 
         [Test]
@@ -221,9 +377,9 @@ namespace Apollo.Utilities.History
             storage.StoreCurrent(new TimeMarker(2));
 
             storage.RollBackTo(new TimeMarker(1));
-            Assert.AreElementsEqual(
-                new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
         }
 
         [Test]
@@ -243,9 +399,9 @@ namespace Apollo.Utilities.History
             storage.StoreCurrent(new TimeMarker(2));
 
             storage.RollBackTo(new TimeMarker(1));
-            Assert.AreElementsEqual(
-                new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
         }
 
         [Test]
@@ -265,9 +421,9 @@ namespace Apollo.Utilities.History
             storage.StoreCurrent(new TimeMarker(2));
 
             storage.RollBackTo(new TimeMarker(1));
-            Assert.AreElementsEqual(
-                new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
         }
 
         [Test]
@@ -286,9 +442,9 @@ namespace Apollo.Utilities.History
             storage.RollBackTo(new TimeMarker(16));
             storage.RollForwardTo(new TimeMarker(20));
 
-            Assert.AreElementsEqual(
-                new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 }));
         }
 
         [Test]
@@ -307,9 +463,9 @@ namespace Apollo.Utilities.History
             storage.RollBackTo(new TimeMarker(16));
             storage.RollForwardTo(new TimeMarker(21));
 
-            Assert.AreElementsEqual(
-                new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 }));
         }
 
         [Test]
@@ -328,9 +484,9 @@ namespace Apollo.Utilities.History
             storage.RollBackTo(new TimeMarker(16));
             storage.RollForwardTo(new TimeMarker(26));
 
-            Assert.AreElementsEqual(
-                new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 }));
         }
 
         [Test]
@@ -347,9 +503,9 @@ namespace Apollo.Utilities.History
 
             storage.RollBackTo(new TimeMarker(6));
             storage.RollForwardTo(new TimeMarker(6));
-            Assert.AreElementsEqual(
-                new int[] { 0, 1, 2, 3, 4, 5 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(new int[] { 0, 1, 2, 3, 4, 5 }));
         }
 
         [Test]
@@ -366,9 +522,9 @@ namespace Apollo.Utilities.History
 
             storage.RollBackTo(new TimeMarker(6));
             storage.RollForwardTo(new TimeMarker((ulong)maximumValue));
-            Assert.AreElementsEqual(
-                new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
         }
 
         [Test]
@@ -385,9 +541,9 @@ namespace Apollo.Utilities.History
 
             storage.RollBackTo(new TimeMarker(6));
             storage.RollForwardTo(new TimeMarker((ulong)(maximumValue + 1)));
-            Assert.AreElementsEqual(
-                new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
         }
 
         [Test]
@@ -460,9 +616,9 @@ namespace Apollo.Utilities.History
 
             storage.RollBackToStart();
             storage.RollForwardTo(new TimeMarker(2));
-            Assert.AreElementsEqual(
-                new int[] { maximumValue + 1 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(new int[] { maximumValue + 1 }));
         }
 
         [Test]
@@ -483,9 +639,9 @@ namespace Apollo.Utilities.History
 
             storage.RollBackToStart();
             storage.RollForwardTo(new TimeMarker(2));
-            Assert.AreElementsEqual(
-                new int[] { 0, 1, 2, 3, 4, 6, 7, 8, 9 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(new int[] { 0, 1, 2, 3, 4, 6, 7, 8, 9 }));
         }
 
         [Test]
@@ -506,9 +662,9 @@ namespace Apollo.Utilities.History
 
             storage.RollBackToStart();
             storage.RollForwardTo(new TimeMarker(2));
-            Assert.AreElementsEqual(
-                new int[] { 0, 1, 2, 3, 4, maximumValue, 6, 7, 8, 9 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(new int[] { 0, 1, 2, 3, 4, maximumValue, 6, 7, 8, 9 }));
         }
 
         [Test]
@@ -532,9 +688,9 @@ namespace Apollo.Utilities.History
             storage.StoreCurrent(new TimeMarker(3));
 
             storage.RollForwardTo(new TimeMarker(2));
-            Assert.AreElementsEqual(
-                new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11 }));
         }
 
         [Test]
@@ -559,9 +715,9 @@ namespace Apollo.Utilities.History
             storage.StoreCurrent(new TimeMarker(3));
 
             storage.RollForwardTo(new TimeMarker(2));
-            Assert.AreElementsEqual(
-                new int[] { maximumValue + 1 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(new int[] { maximumValue + 1 }));
         }
 
         [Test]
@@ -585,9 +741,9 @@ namespace Apollo.Utilities.History
             storage.StoreCurrent(new TimeMarker(3));
 
             storage.RollForwardTo(new TimeMarker(2));
-            Assert.AreElementsEqual(
-                new int[] { 0, 1, 2, 3, 4, 6, 7, 8, 9 },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(new int[] { 0, 1, 2, 3, 4, 6, 7, 8, 9 }));
         }
 
         [Test]
@@ -612,9 +768,9 @@ namespace Apollo.Utilities.History
 
             storage.RollForwardTo(new TimeMarker(2));
 
-            Assert.AreElementsEqual(
-                new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, maximumValue },
-                storage);
+            Assert.That(
+                storage,
+                Is.EquivalentTo(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, maximumValue }));
         }
     }
 }

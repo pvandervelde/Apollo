@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Apollo.Utilities.History
 {
@@ -443,7 +443,9 @@ namespace Apollo.Utilities.History
             Assert.IsTrue(timeline.IsAlive());
             Assert.IsNotNull(timeline.Object);
             Assert.AreEqual(1, timeline.Object.SomeValue);
-            Assert.AreElementsEqual(new int[] { 2 }, timeline.Object.LotsOfValues);
+            Assert.That(
+                timeline.Object.LotsOfValues,
+                Is.EquivalentTo(new int[] { 2 }));
         }
 
         [Test]
@@ -485,7 +487,9 @@ namespace Apollo.Utilities.History
 
             timeline.RollForwardTo(new TimeMarker(2));
             Assert.AreEqual(1, timeline.Object.SomeValue);
-            Assert.AreElementsEqual(new int[] { 2 }, timeline.Object.LotsOfValues);
+            Assert.That(
+                timeline.Object.LotsOfValues,
+                Is.EquivalentTo(new int[] { 2 }));
         }
 
         [Test]
@@ -552,7 +556,9 @@ namespace Apollo.Utilities.History
 
             timeline.RollForwardTo(new TimeMarker(3));
             Assert.AreEqual(1, timeline.Object.SomeValue);
-            Assert.AreElementsEqual(new int[] { 2 }, timeline.Object.LotsOfValues);
+            Assert.That(
+                timeline.Object.LotsOfValues,
+                Is.EquivalentTo(new int[] { 2 }));
         }
 
         [Test]
@@ -602,7 +608,9 @@ namespace Apollo.Utilities.History
 
             timeline.RollForwardTo(new TimeMarker(3));
             Assert.AreEqual(2, timeline.Object.SomeValue);
-            Assert.AreElementsEqual(new int[] { 2, 4 }, timeline.Object.LotsOfValues);
+            Assert.That(
+                timeline.Object.LotsOfValues,
+                Is.EquivalentTo(new int[] { 2, 4 }));
         }
 
         [Test]
@@ -687,7 +695,9 @@ namespace Apollo.Utilities.History
 
             timeline.RollForwardTo(new TimeMarker(10));
             Assert.AreEqual(2, timeline.Object.SomeValue);
-            Assert.AreElementsEqual(new int[] { 3 }, timeline.Object.LotsOfValues);
+            Assert.That(
+                timeline.Object.LotsOfValues,
+                Is.EquivalentTo(new int[] { 3 }));
         }
     }
 }

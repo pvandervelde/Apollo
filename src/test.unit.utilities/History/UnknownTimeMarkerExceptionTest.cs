@@ -5,21 +5,15 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Utilities.History
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class UnknownTimeMarkerExceptionTest
+    public sealed class UnknownTimeMarkerExceptionTest : ExceptionContractVerifier<UnknownTimeMarkerException>
     {
-        [VerifyContract]
-        public readonly IContract ExceptionTests = new ExceptionContract<UnknownTimeMarkerException>
-        {
-            ImplementsSerialization = true,
-            ImplementsStandardConstructors = true,
-        };
     }
 }

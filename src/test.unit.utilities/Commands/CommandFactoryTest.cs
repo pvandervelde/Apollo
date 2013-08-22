@@ -6,8 +6,8 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.Utilities.Commands
 {
