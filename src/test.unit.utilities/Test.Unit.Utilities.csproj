@@ -18,12 +18,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Autofac.3.1.1\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="Gallio">
-      <HintPath>..\..\packages\Gallio.Core.3.3.378.0\lib\net40\Gallio.dll</HintPath>
-    </Reference>
-    <Reference Include="Gallio40">
-      <HintPath>..\..\packages\Gallio.Core.3.3.378.0\lib\net40\Gallio40.dll</HintPath>
-    </Reference>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
@@ -46,12 +40,6 @@
     <Reference Include="Lokad.Testing, Version=1.5.181.0, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.Testing.dll</HintPath>
     </Reference>
-    <Reference Include="MbUnit">
-      <HintPath>..\..\packages\Gallio.Core.3.3.378.0\lib\net40\MbUnit.dll</HintPath>
-    </Reference>
-    <Reference Include="MbUnit40">
-      <HintPath>..\..\packages\Gallio.Core.3.3.378.0\lib\net40\MbUnit40.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.dll</HintPath>
     </Reference>
@@ -67,17 +55,16 @@
     <Reference Include="Moq, Version=4.0.10827.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="Nuclei, Version=0.6.2.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+    <Reference Include="Nuclei, Version=0.6.3.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Nuclei.0.6.2.0\lib\net45\Nuclei.dll</HintPath>
+      <HintPath>..\..\packages\Nuclei.0.6.3.0\lib\net45\Nuclei.dll</HintPath>
     </Reference>
-    <Reference Include="Nuclei.Build, Version=0.6.2.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+    <Reference Include="Nuclei.Build, Version=0.6.3.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Nuclei.Build.0.6.2.0\lib\net45\Nuclei.Build.dll</HintPath>
+      <HintPath>..\..\packages\Nuclei.Build.0.6.3.0\lib\net45\Nuclei.Build.dll</HintPath>
     </Reference>
-    <Reference Include="Nuclei.Nunit.Extensions, Version=0.6.2.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Nuclei.Nunit.Extensions.0.6.2.0\lib\net45\Nuclei.Nunit.Extensions.dll</HintPath>
+    <Reference Include="Nuclei.Nunit.Extensions">
+      <HintPath>..\..\packages\Nuclei.Nunit.Extensions.0.6.3.0\lib\net45\Nuclei.Nunit.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
@@ -135,7 +122,7 @@
     <Compile Include="History\UnableToPerformRollBackDueToBlockingDependencyExceptionTest.cs" />
     <Compile Include="History\UnableToPerformRollForwardDueToBlockingDependencyExceptionTest.cs" />
     <Compile Include="History\UnknownHistoryMemberTypeExceptionTest.cs" />
-    <Compile Include="History\UnknownMemberNameExceptionTest.cs" />
+    <Compile Include="History\UnknownMemberExceptionTest.cs" />
     <Compile Include="History\UnknownTimeMarkerExceptionTest.cs" />
     <Compile Include="History\ValueAtTimeTest.cs" />
     <Compile Include="History\ValueHistoryTest.cs" />
