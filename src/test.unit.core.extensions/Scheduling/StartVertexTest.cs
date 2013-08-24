@@ -6,45 +6,58 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using System.Linq;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Extensions.Scheduling
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class StartVertexTest
+    public sealed class StartVertexTest : EqualityContractVerifierTest
     {
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<StartVertex>
+        private sealed class StartVertexEqualityContractVerifier : EqualityContractVerifier<StartVertex>
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<StartVertex> 
-                        {
-                            new StartVertex(0),
-                            new StartVertex(1),
-                            new StartVertex(2),
-                            new StartVertex(3),
-                            new StartVertex(4),
-                            new StartVertex(5),
-                            new StartVertex(6),
-                            new StartVertex(7),
-                        },
-        };
+            private readonly StartVertex m_First = new StartVertex(0);
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<IScheduleVertex>
+            private readonly StartVertex m_Second = new StartVertex(1);
+
+            protected override StartVertex Copy(StartVertex original)
+            {
+                return new StartVertex(original.Index);
+            }
+
+            protected override StartVertex FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override StartVertex SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
+
+        private sealed class StartVertexHashcodeContractVerfier : HashcodeContractVerifier
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                    { 
+            private readonly IEnumerable<StartVertex> m_DistinctInstances
+                = new List<StartVertex> 
+                     {
                         new StartVertex(0),
                         new StartVertex(1),
                         new StartVertex(2),
@@ -53,8 +66,33 @@ namespace Apollo.Core.Extensions.Scheduling
                         new StartVertex(5),
                         new StartVertex(6),
                         new StartVertex(7),
-                    },
-        };
+                     };
+
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly StartVertexHashcodeContractVerfier m_HashcodeVerifier = new StartVertexHashcodeContractVerfier();
+
+        private readonly StartVertexEqualityContractVerifier m_EqualityVerifier = new StartVertexEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
+        {
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void Index()

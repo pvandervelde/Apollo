@@ -5,21 +5,15 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Extensions.Scheduling
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class CannotInsertExistingVertexExceptionTest
+    public sealed class CannotInsertExistingVertexExceptionTest : ExceptionContractVerifier<CannotInsertExistingVertexException>
     {
-        [VerifyContract]
-        public readonly IContract ExceptionTests = new ExceptionContract<CannotInsertExistingVertexException>
-        {
-            ImplementsSerialization = true,
-            ImplementsStandardConstructors = true,
-        };
     }
 }

@@ -6,45 +6,58 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using System.Linq;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Extensions.Scheduling
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class MarkHistoryVertexTest
+    public sealed class MarkHistoryVertexTest : EqualityContractVerifierTest
     {
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<MarkHistoryVertex>
+        private sealed class MarkHistoryVertexEqualityContractVerifier : EqualityContractVerifier<MarkHistoryVertex>
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<MarkHistoryVertex> 
-                        {
-                            new MarkHistoryVertex(0),
-                            new MarkHistoryVertex(1),
-                            new MarkHistoryVertex(2),
-                            new MarkHistoryVertex(3),
-                            new MarkHistoryVertex(4),
-                            new MarkHistoryVertex(5),
-                            new MarkHistoryVertex(6),
-                            new MarkHistoryVertex(7),
-                        },
-        };
+            private readonly MarkHistoryVertex m_First = new MarkHistoryVertex(0);
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<IScheduleVertex>
+            private readonly MarkHistoryVertex m_Second = new MarkHistoryVertex(1);
+
+            protected override MarkHistoryVertex Copy(MarkHistoryVertex original)
+            {
+                return new MarkHistoryVertex(original.Index);
+            }
+
+            protected override MarkHistoryVertex FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override MarkHistoryVertex SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
+
+        private sealed class MarkHistoryVertexHashcodeContractVerfier : HashcodeContractVerifier
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                    { 
+            private readonly IEnumerable<MarkHistoryVertex> m_DistinctInstances
+                = new List<MarkHistoryVertex> 
+                     {
                         new MarkHistoryVertex(0),
                         new MarkHistoryVertex(1),
                         new MarkHistoryVertex(2),
@@ -53,8 +66,33 @@ namespace Apollo.Core.Extensions.Scheduling
                         new MarkHistoryVertex(5),
                         new MarkHistoryVertex(6),
                         new MarkHistoryVertex(7),
-                    },
-        };
+                     };
+
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly MarkHistoryVertexHashcodeContractVerfier m_HashcodeVerifier = new MarkHistoryVertexHashcodeContractVerfier();
+
+        private readonly MarkHistoryVertexEqualityContractVerifier m_EqualityVerifier = new MarkHistoryVertexEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
+        {
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void Index()

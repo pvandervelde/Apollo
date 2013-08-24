@@ -7,8 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using System.Linq;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Extensions.Scheduling
 {
@@ -18,49 +19,84 @@ namespace Apollo.Core.Extensions.Scheduling
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class ScheduleIdTest
+    public sealed class ScheduleIdTest : EqualityContractVerifierTest
     {
-        private static ScheduleId Create(Guid id)
+        private sealed class ScheduleIdEqualityContractVerifier : EqualityContractVerifier<ScheduleId>
         {
-            return (ScheduleId)Mirror.ForType<ScheduleId>().Constructor.Invoke(id);
+            private readonly ScheduleId m_First = new ScheduleId();
+
+            private readonly ScheduleId m_Second = new ScheduleId();
+
+            protected override ScheduleId Copy(ScheduleId original)
+            {
+                return original.Clone();
+            }
+
+            protected override ScheduleId FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override ScheduleId SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
         }
 
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<ScheduleId>
+        private sealed class ScheduleIdHashcodeContractVerfier : HashcodeContractVerifier
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<ScheduleId> 
-                        {
-                            new ScheduleId(),
-                            new ScheduleId(),
-                            new ScheduleId(),
-                            new ScheduleId(),
-                            new ScheduleId(),
-                            new ScheduleId(),
-                            new ScheduleId(),
-                            new ScheduleId(),
-                        },
-        };
+            private readonly IEnumerable<ScheduleId> m_DistinctInstances
+                = new List<ScheduleId> 
+                     {
+                        new ScheduleId(),
+                        new ScheduleId(),
+                        new ScheduleId(),
+                        new ScheduleId(),
+                        new ScheduleId(),
+                        new ScheduleId(),
+                        new ScheduleId(),
+                        new ScheduleId(),
+                     };
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<ScheduleId>
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly ScheduleIdHashcodeContractVerfier m_HashcodeVerifier = new ScheduleIdHashcodeContractVerfier();
+
+        private readonly ScheduleIdEqualityContractVerifier m_EqualityVerifier = new ScheduleIdEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                    { 
-                        Create(Guid.NewGuid()),
-                        Create(Guid.NewGuid()),
-                        Create(Guid.NewGuid()),
-                        Create(Guid.NewGuid()),
-                        Create(Guid.NewGuid()),
-                    },
-        };
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void LargerThanOperatorWithFirstObjectNull()
@@ -104,8 +140,8 @@ namespace Apollo.Core.Extensions.Scheduling
             var firstGuid = Guid.NewGuid();
             var secondGuid = Guid.NewGuid();
 
-            var first = (firstGuid.CompareTo(secondGuid) > 0) ? Create(firstGuid) : Create(secondGuid);
-            var second = (firstGuid.CompareTo(secondGuid) < 0) ? Create(firstGuid) : Create(secondGuid);
+            var first = (firstGuid.CompareTo(secondGuid) > 0) ? new ScheduleId(firstGuid) : new ScheduleId(secondGuid);
+            var second = (firstGuid.CompareTo(secondGuid) < 0) ? new ScheduleId(firstGuid) : new ScheduleId(secondGuid);
 
             Assert.IsTrue(first > second);
         }
@@ -116,8 +152,8 @@ namespace Apollo.Core.Extensions.Scheduling
             var firstGuid = Guid.NewGuid();
             var secondGuid = Guid.NewGuid();
 
-            var first = (firstGuid.CompareTo(secondGuid) < 0) ? Create(firstGuid) : Create(secondGuid);
-            var second = (firstGuid.CompareTo(secondGuid) > 0) ? Create(firstGuid) : Create(secondGuid);
+            var first = (firstGuid.CompareTo(secondGuid) < 0) ? new ScheduleId(firstGuid) : new ScheduleId(secondGuid);
+            var second = (firstGuid.CompareTo(secondGuid) > 0) ? new ScheduleId(firstGuid) : new ScheduleId(secondGuid);
 
             Assert.IsFalse(first > second);
         }
@@ -164,8 +200,8 @@ namespace Apollo.Core.Extensions.Scheduling
             var firstGuid = Guid.NewGuid();
             var secondGuid = Guid.NewGuid();
 
-            var first = (firstGuid.CompareTo(secondGuid) > 0) ? Create(firstGuid) : Create(secondGuid);
-            var second = (firstGuid.CompareTo(secondGuid) < 0) ? Create(firstGuid) : Create(secondGuid);
+            var first = (firstGuid.CompareTo(secondGuid) > 0) ? new ScheduleId(firstGuid) : new ScheduleId(secondGuid);
+            var second = (firstGuid.CompareTo(secondGuid) < 0) ? new ScheduleId(firstGuid) : new ScheduleId(secondGuid);
 
             Assert.IsFalse(first < second);
         }
@@ -176,8 +212,8 @@ namespace Apollo.Core.Extensions.Scheduling
             var firstGuid = Guid.NewGuid();
             var secondGuid = Guid.NewGuid();
 
-            var first = (firstGuid.CompareTo(secondGuid) < 0) ? Create(firstGuid) : Create(secondGuid);
-            var second = (firstGuid.CompareTo(secondGuid) > 0) ? Create(firstGuid) : Create(secondGuid);
+            var first = (firstGuid.CompareTo(secondGuid) < 0) ? new ScheduleId(firstGuid) : new ScheduleId(secondGuid);
+            var second = (firstGuid.CompareTo(secondGuid) > 0) ? new ScheduleId(firstGuid) : new ScheduleId(secondGuid);
 
             Assert.IsTrue(first < second);
         }
@@ -215,8 +251,8 @@ namespace Apollo.Core.Extensions.Scheduling
             var firstGuid = Guid.NewGuid();
             var secondGuid = Guid.NewGuid();
 
-            var first = (firstGuid.CompareTo(secondGuid) > 0) ? Create(firstGuid) : Create(secondGuid);
-            var second = (firstGuid.CompareTo(secondGuid) < 0) ? Create(firstGuid) : Create(secondGuid);
+            var first = (firstGuid.CompareTo(secondGuid) > 0) ? new ScheduleId(firstGuid) : new ScheduleId(secondGuid);
+            var second = (firstGuid.CompareTo(secondGuid) < 0) ? new ScheduleId(firstGuid) : new ScheduleId(secondGuid);
 
             Assert.IsTrue(first.CompareTo(second) > 0);
         }
@@ -227,8 +263,8 @@ namespace Apollo.Core.Extensions.Scheduling
             var firstGuid = Guid.NewGuid();
             var secondGuid = Guid.NewGuid();
 
-            var first = (firstGuid.CompareTo(secondGuid) < 0) ? Create(firstGuid) : Create(secondGuid);
-            var second = (firstGuid.CompareTo(secondGuid) > 0) ? Create(firstGuid) : Create(secondGuid);
+            var first = (firstGuid.CompareTo(secondGuid) < 0) ? new ScheduleId(firstGuid) : new ScheduleId(secondGuid);
+            var second = (firstGuid.CompareTo(secondGuid) > 0) ? new ScheduleId(firstGuid) : new ScheduleId(secondGuid);
 
             Assert.IsTrue(first.CompareTo(second) < 0);
         }

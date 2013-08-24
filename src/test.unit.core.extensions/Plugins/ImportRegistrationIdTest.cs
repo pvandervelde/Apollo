@@ -7,8 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using System.Linq;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Extensions.Plugins
 {
@@ -18,39 +19,80 @@ namespace Apollo.Core.Extensions.Plugins
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class ImportRegistrationIdTest
+    public sealed class ImportRegistrationIdTest : EqualityContractVerifierTest
     {
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<ImportRegistrationId>
+        private sealed class ImportRegistrationIdEqualityContractVerifier : EqualityContractVerifier<ImportRegistrationId>
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<ImportRegistrationId> 
-                        {
-                            new ImportRegistrationId(typeof(string), 0, "a"),
-                            new ImportRegistrationId(typeof(int), 0, "a"),
-                            new ImportRegistrationId(typeof(string), 1, "a"),
-                            new ImportRegistrationId(typeof(string), 0, "b"),
-                        },
-        };
+            private readonly ImportRegistrationId m_First = new ImportRegistrationId(typeof(string), 0, "a");
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<ImportRegistrationId>
+            private readonly ImportRegistrationId m_Second = new ImportRegistrationId(typeof(int), 0, "a");
+
+            protected override ImportRegistrationId Copy(ImportRegistrationId original)
+            {
+                return original.Clone();
+            }
+
+            protected override ImportRegistrationId FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override ImportRegistrationId SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
+
+        private sealed class ImportRegistrationIdHashcodeContractVerfier : HashcodeContractVerifier
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                    { 
+            private readonly IEnumerable<ImportRegistrationId> m_DistinctInstances
+                = new List<ImportRegistrationId> 
+                     {
                         new ImportRegistrationId(typeof(string), 0, "a"),
                         new ImportRegistrationId(typeof(int), 0, "a"),
                         new ImportRegistrationId(typeof(string), 1, "a"),
                         new ImportRegistrationId(typeof(string), 0, "b"),
-                    },
-        };
+                     };
+
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly ImportRegistrationIdHashcodeContractVerfier m_HashcodeVerifier = new ImportRegistrationIdHashcodeContractVerfier();
+
+        private readonly ImportRegistrationIdEqualityContractVerifier m_EqualityVerifier = new ImportRegistrationIdEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
+        {
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void LargerThanOperatorWithFirstObjectNull()

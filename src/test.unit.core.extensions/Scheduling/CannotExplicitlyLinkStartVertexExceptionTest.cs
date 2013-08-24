@@ -5,21 +5,15 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Extensions.Scheduling
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class CannotExplicitlyLinkStartVertexExceptionTest
+    public sealed class CannotExplicitlyLinkStartVertexExceptionTest : ExceptionContractVerifier<CannotExplicitlyLinkStartVertexException>
     {
-        [VerifyContract]
-        public readonly IContract ExceptionTests = new ExceptionContract<CannotExplicitlyLinkStartVertexException>
-        {
-            ImplementsSerialization = true,
-            ImplementsStandardConstructors = true,
-        };
     }
 }

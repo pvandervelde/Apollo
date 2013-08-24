@@ -7,8 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using System.Linq;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Extensions.Plugins
 {
@@ -18,37 +19,79 @@ namespace Apollo.Core.Extensions.Plugins
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class PartRegistrationIdTest
+    public sealed class PartRegistrationIdTest : EqualityContractVerifierTest
     {
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<PartRegistrationId>
+        private sealed class PartRegistrationIdEqualityContractVerifier : EqualityContractVerifier<PartRegistrationId>
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<PartRegistrationId> 
-                        {
-                            new PartRegistrationId(typeof(string).FullName, 0),
-                            new PartRegistrationId(typeof(int).FullName, 0),
-                            new PartRegistrationId(typeof(string).FullName, 1),
-                        },
-        };
+            private readonly PartRegistrationId m_First = new PartRegistrationId(typeof(string).FullName, 0);
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<PartRegistrationId>
+            private readonly PartRegistrationId m_Second = new PartRegistrationId(typeof(int).FullName, 0);
+
+            protected override PartRegistrationId Copy(PartRegistrationId original)
+            {
+                return original.Clone();
+            }
+
+            protected override PartRegistrationId FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override PartRegistrationId SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
+
+        private sealed class PartRegistrationIdHashcodeContractVerfier : HashcodeContractVerifier
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                    { 
+            private readonly IEnumerable<PartRegistrationId> m_DistinctInstances
+                = new List<PartRegistrationId> 
+                     {
                         new PartRegistrationId(typeof(string).FullName, 0),
                         new PartRegistrationId(typeof(int).FullName, 0),
                         new PartRegistrationId(typeof(string).FullName, 1),
-                    },
-        };
+                     };
+
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly PartRegistrationIdHashcodeContractVerfier m_HashcodeVerifier = new PartRegistrationIdHashcodeContractVerfier();
+
+        private readonly PartRegistrationIdEqualityContractVerifier m_EqualityVerifier = new PartRegistrationIdEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
+        {
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void LargerThanOperatorWithFirstObjectNull()

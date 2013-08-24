@@ -7,8 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using System.Linq;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Extensions.Plugins
 {
@@ -18,39 +19,82 @@ namespace Apollo.Core.Extensions.Plugins
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class ScheduleActionRegistrationIdTest
+    public sealed class ScheduleActionRegistrationIdTest : EqualityContractVerifierTest
     {
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<ScheduleActionRegistrationId>
+        private sealed class ScheduleActionRegistrationIdEqualityContractVerifier : EqualityContractVerifier<ScheduleActionRegistrationId>
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<ScheduleActionRegistrationId> 
-                        {
-                            new ScheduleActionRegistrationId(typeof(string), 0, "a"),
-                            new ScheduleActionRegistrationId(typeof(int), 0, "a"),
-                            new ScheduleActionRegistrationId(typeof(string), 1, "a"),
-                            new ScheduleActionRegistrationId(typeof(string), 0, "b"),
-                        },
-        };
+            private readonly ScheduleActionRegistrationId m_First = new ScheduleActionRegistrationId(typeof(string), 0, "a");
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<ScheduleActionRegistrationId>
+            private readonly ScheduleActionRegistrationId m_Second = new ScheduleActionRegistrationId(typeof(int), 0, "a");
+
+            protected override ScheduleActionRegistrationId Copy(ScheduleActionRegistrationId original)
+            {
+                return original.Clone();
+            }
+
+            protected override ScheduleActionRegistrationId FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override ScheduleActionRegistrationId SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
+
+        private sealed class ScheduleActionRegistrationIdHashcodeContractVerfier : HashcodeContractVerifier
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                    { 
+            private readonly IEnumerable<ScheduleActionRegistrationId> m_DistinctInstances
+                = new List<ScheduleActionRegistrationId> 
+                     {
                         new ScheduleActionRegistrationId(typeof(string), 0, "a"),
                         new ScheduleActionRegistrationId(typeof(int), 0, "a"),
                         new ScheduleActionRegistrationId(typeof(string), 1, "a"),
                         new ScheduleActionRegistrationId(typeof(string), 0, "b"),
-                    },
-        };
+                     };
+
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly ScheduleActionRegistrationIdHashcodeContractVerfier m_HashcodeVerifier 
+            = new ScheduleActionRegistrationIdHashcodeContractVerfier();
+
+        private readonly ScheduleActionRegistrationIdEqualityContractVerifier m_EqualityVerifier 
+            = new ScheduleActionRegistrationIdEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
+        {
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void LargerThanOperatorWithFirstObjectNull()
