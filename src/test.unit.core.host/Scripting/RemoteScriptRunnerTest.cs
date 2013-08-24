@@ -9,8 +9,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Scripting.Projects;
 using IronPython.Hosting;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host.Scripting
 {

@@ -12,8 +12,8 @@ using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Utilities.Commands;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host.Scripting.Projects
 {

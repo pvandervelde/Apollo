@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host.Projects
 {
@@ -39,7 +39,7 @@ namespace Apollo.Core.Host.Projects
 
             var args = new DatasetLoadEventArgs(id, machines);
             Assert.AreSame(id, args.Id);
-            Assert.AreElementsSameIgnoringOrder(machines, args.LoadedOn);
+            Assert.That(args.LoadedOn, Is.EquivalentTo(machines));
         }
     }
 }

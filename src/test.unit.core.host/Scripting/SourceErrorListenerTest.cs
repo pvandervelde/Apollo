@@ -6,8 +6,8 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
 using Microsoft.Scripting;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host.Scripting
 {
@@ -39,7 +39,7 @@ namespace Apollo.Core.Host.Scripting
                             Severity = SyntaxVerificationSeverity.Error,
                         },
                 };
-            Assert.AreElementsEqualIgnoringOrder(list, listener.Errors());
+            Assert.That(listener.Errors(), Is.EquivalentTo(list));
         }
     }
 }

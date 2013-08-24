@@ -5,21 +5,16 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host.Projects
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class CannotLoadDatasetWithoutLoadingLocationExceptionTest
+    public sealed class CannotLoadDatasetWithoutLoadingLocationExceptionTest 
+        : ExceptionContractVerifier<CannotLoadDatasetWithoutLoadingLocationException>
     {
-        [VerifyContract]
-        public readonly IContract ExceptionTests = new ExceptionContract<CannotLoadDatasetWithoutLoadingLocationException>
-        {
-            ImplementsSerialization = true,
-            ImplementsStandardConstructors = true,
-        };
     }
 }

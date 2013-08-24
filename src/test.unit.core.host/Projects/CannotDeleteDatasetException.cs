@@ -5,21 +5,15 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host.Projects
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class CannotDeleteDatasetExceptionTest
+    public sealed class CannotDeleteDatasetExceptionTest : ExceptionContractVerifier<CannotDeleteDatasetException>
     {
-        [VerifyContract]
-        public readonly IContract ExceptionTests = new ExceptionContract<CannotDeleteDatasetException>
-        {
-            ImplementsSerialization = true,
-            ImplementsStandardConstructors = true,
-        };
     }
 }

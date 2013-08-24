@@ -7,8 +7,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Utilities.Commands;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host.UserInterfaces.Application
 {

@@ -10,8 +10,8 @@ using System.Linq;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Host.Plugins;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host.Projects
 {

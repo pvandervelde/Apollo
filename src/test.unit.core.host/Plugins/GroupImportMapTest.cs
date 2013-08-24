@@ -6,30 +6,60 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Extensions.Scheduling;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class GroupImportMapTest
+    public sealed class GroupImportMapTest : EqualityContractVerifierTest
     {
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<GroupImportMap>
+        private sealed class GroupImportMapEqualityContractVerifier : EqualityContractVerifier<GroupImportMap>
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<GroupImportMap> 
-                    {
+            private readonly GroupImportMap m_First = new GroupImportMap("a");
+
+            private readonly GroupImportMap m_Second = new GroupImportMap("b", new InsertVertex(1));
+
+            protected override GroupImportMap Copy(GroupImportMap original)
+            {
+                return new GroupImportMap(original.ContractName, original.InsertPoint, original.ObjectImports);
+            }
+
+            protected override GroupImportMap FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override GroupImportMap SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
+
+        private sealed class GroupImportMapHashcodeContractVerfier : HashcodeContractVerifier
+        {
+            private readonly IEnumerable<GroupImportMap> m_DistinctInstances
+                = new List<GroupImportMap> 
+                     {
                         new GroupImportMap("a"),
                         new GroupImportMap("b", new InsertVertex(1)),
                         new GroupImportMap(
@@ -45,32 +75,33 @@ namespace Apollo.Core.Host.Plugins
                                 { 
                                     new ImportRegistrationId(typeof(string), 0, "aa") 
                                 }),
-                    },
-        };
+                     };
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<GroupImportMap>
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly GroupImportMapHashcodeContractVerfier m_HashcodeVerifier = new GroupImportMapHashcodeContractVerfier();
+
+        private readonly GroupImportMapEqualityContractVerifier m_EqualityVerifier = new GroupImportMapEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                { 
-                    new GroupImportMap("a"),
-                    new GroupImportMap("b", new InsertVertex(1)),
-                    new GroupImportMap(
-                        "c", 
-                        objectImports: new List<ImportRegistrationId> 
-                            { 
-                                new ImportRegistrationId(typeof(string), 0, "aa") 
-                            }),
-                    new GroupImportMap(
-                        "d", 
-                        new InsertVertex(1),
-                        new List<ImportRegistrationId> 
-                            { 
-                                new ImportRegistrationId(typeof(string), 0, "aa") 
-                            }),
-                },
-        };
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void RoundTripSerialise()
@@ -82,7 +113,7 @@ namespace Apollo.Core.Host.Plugins
                     { 
                         new ImportRegistrationId(typeof(string), 0, "aa") 
                     });
-            var copy = Assert.BinarySerializeThenDeserialize(original);
+            var copy = AssertExtensions.RoundTripSerialize(original);
 
             Assert.AreEqual(original, copy);
         }
@@ -103,135 +134,6 @@ namespace Apollo.Core.Host.Plugins
         }
 
         [Test]
-        public void EqualsOperatorWithSecondObjectNull()
-        {
-            var first = new GroupImportMap(
-                "c",
-                new InsertVertex(1),
-                new List<ImportRegistrationId> 
-                    { 
-                        new ImportRegistrationId(typeof(string), 0, "aa") 
-                    });
-            GroupImportMap second = null;
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithEqualObject()
-        {
-            var first = new GroupImportMap(
-                "c",
-                new InsertVertex(1),
-                new List<ImportRegistrationId> 
-                    { 
-                        new ImportRegistrationId(typeof(string), 0, "aa") 
-                    });
-            var second = new GroupImportMap(
-                "c",
-                new InsertVertex(2),
-                new List<ImportRegistrationId> 
-                    { 
-                        new ImportRegistrationId(typeof(string), 1, "aa") 
-                    });
-
-            Assert.IsTrue(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithNonequalObjects()
-        {
-            var first = new GroupImportMap(
-                "c",
-                new InsertVertex(1),
-                new List<ImportRegistrationId> 
-                    { 
-                        new ImportRegistrationId(typeof(string), 0, "aa") 
-                    });
-            var second = new GroupImportMap(
-                "d",
-                new InsertVertex(1),
-                new List<ImportRegistrationId> 
-                    { 
-                        new ImportRegistrationId(typeof(string), 0, "aa") 
-                    });
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithFirstObjectNull()
-        {
-            GroupImportMap first = null;
-            var second = new GroupImportMap(
-                "c",
-                new InsertVertex(1),
-                new List<ImportRegistrationId> 
-                    { 
-                        new ImportRegistrationId(typeof(string), 0, "aa") 
-                    });
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithSecondObjectNull()
-        {
-            var first = new GroupImportMap(
-                "c",
-                new InsertVertex(1),
-                new List<ImportRegistrationId> 
-                    { 
-                        new ImportRegistrationId(typeof(string), 0, "aa") 
-                    });
-            GroupImportMap second = null;
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var first = new GroupImportMap(
-                "c",
-                new InsertVertex(1),
-                new List<ImportRegistrationId> 
-                    { 
-                        new ImportRegistrationId(typeof(string), 0, "aa") 
-                    });
-            var second = new GroupImportMap(
-                "c",
-                new InsertVertex(2),
-                new List<ImportRegistrationId> 
-                    { 
-                        new ImportRegistrationId(typeof(string), 1, "aa") 
-                    });
-
-            Assert.IsFalse(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var first = new GroupImportMap(
-                "c",
-                new InsertVertex(1),
-                new List<ImportRegistrationId> 
-                    { 
-                        new ImportRegistrationId(typeof(string), 0, "aa") 
-                    });
-            var second = new GroupImportMap(
-                "d",
-                new InsertVertex(1),
-                new List<ImportRegistrationId> 
-                    { 
-                        new ImportRegistrationId(typeof(string), 0, "aa") 
-                    });
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
         public void Create()
         {
             var name = "a";
@@ -244,7 +146,7 @@ namespace Apollo.Core.Host.Plugins
 
             Assert.AreEqual(name, obj.ContractName);
             Assert.AreEqual(insertVertex, obj.InsertPoint);
-            Assert.AreElementsEqual(imports, obj.ObjectImports);
+            Assert.That(obj.ObjectImports, Is.EquivalentTo(imports));
         }
 
         [Test]

@@ -12,17 +12,71 @@ using Apollo.Core.Base;
 using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Utilities;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
 using Moq;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host.Scripting.Projects
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class DatasetFacadeForScriptsTest
+    public sealed class DatasetFacadeForScriptsTest : EqualityContractVerifierTest
     {
+        private sealed class DatasetFacadeForScriptsEqualityContractVerifier : EqualityContractVerifier<DatasetFacadeForScripts>
+        {
+            private readonly DatasetFacadeForScripts m_First = new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset()));
+
+            private readonly DatasetFacadeForScripts m_Second = new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset()));
+
+            protected override DatasetFacadeForScripts Copy(DatasetFacadeForScripts original)
+            {
+                return new DatasetFacadeForScripts(original.Facade);
+            }
+
+            protected override DatasetFacadeForScripts FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override DatasetFacadeForScripts SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
+
+        private sealed class DatasetFacadeForScriptsHashcodeContractVerfier : HashcodeContractVerifier
+        {
+            private readonly IEnumerable<DatasetFacadeForScripts> m_DistinctInstances
+                = new List<DatasetFacadeForScripts> 
+                     {
+                        new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
+                        new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
+                        new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
+                        new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
+                        new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
+                     };
+
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
         private static IProxyDataset CreateMockDataset()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -40,38 +94,25 @@ namespace Apollo.Core.Host.Scripting.Projects
             return dataset.Object;
         }
 
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<DatasetFacadeForScripts>
-        {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances = new List<DatasetFacadeForScripts> 
-                { 
-                    new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
-                    new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
-                    new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
-                    new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
-                    new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
-                },
-        };
+        private readonly DatasetFacadeForScriptsHashcodeContractVerfier m_HashcodeVerifier = new DatasetFacadeForScriptsHashcodeContractVerfier();
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<DatasetFacadeForScripts>
+        private readonly DatasetFacadeForScriptsEqualityContractVerifier m_EqualityVerifier = new DatasetFacadeForScriptsEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                    { 
-                        new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
-                        new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
-                        new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
-                        new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
-                        new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
-                    },
-        };
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void Name()
@@ -220,7 +261,6 @@ namespace Apollo.Core.Host.Scripting.Projects
         public void AddChild()
         {
             DatasetCreationInformation creationInformation = null;
-            var childId = new DatasetId();
 
             var storage = new Mock<IPersistenceInformation>();
             var child = CreateMockDataset();

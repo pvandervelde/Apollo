@@ -11,24 +11,78 @@ using System.Linq;
 using Apollo.Core.Base;
 using Apollo.Core.Host.Projects;
 using Apollo.Utilities;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
 using Moq;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host.UserInterfaces.Projects
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class DatasetFacadeTest
+    public sealed class DatasetFacadeTest : EqualityContractVerifierTest
     {
+        private sealed class DatasetFacadeEqualityContractVerifier : EqualityContractVerifier<DatasetFacade>
+        {
+            private readonly DatasetFacade m_First = new DatasetFacade(CreateMockDataset());
+
+            private readonly DatasetFacade m_Second = new DatasetFacade(CreateMockDataset());
+
+            protected override DatasetFacade Copy(DatasetFacade original)
+            {
+                return new DatasetFacade(original.Proxy);
+            }
+
+            protected override DatasetFacade FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override DatasetFacade SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
+
+        private sealed class DatasetFacadeHashcodeContractVerfier : HashcodeContractVerifier
+        {
+            private readonly IEnumerable<DatasetFacade> m_DistinctInstances
+                = new List<DatasetFacade> 
+                     {
+                        new DatasetFacade(CreateMockDataset()),
+                        new DatasetFacade(CreateMockDataset()),
+                        new DatasetFacade(CreateMockDataset()),
+                        new DatasetFacade(CreateMockDataset()),
+                        new DatasetFacade(CreateMockDataset()),
+                     };
+
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
         private static IProxyDataset CreateMockDataset()
         {
             var dataset = new Mock<IProxyDataset>();
             {
                 dataset.Setup(d => d.Equals(It.IsAny<IProxyDataset>()))
                     .Returns<IProxyDataset>(other => ReferenceEquals(other, dataset.Object));
-                
+
                 dataset.Setup(d => d.Equals(It.IsAny<object>()))
                     .Returns<object>(other => ReferenceEquals(other, dataset.Object));
 
@@ -39,97 +93,24 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
             return dataset.Object;
         }
 
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<DatasetFacade>
-        {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances = new List<DatasetFacade> 
-                { 
-                    new DatasetFacade(CreateMockDataset()),
-                    new DatasetFacade(CreateMockDataset()),
-                    new DatasetFacade(CreateMockDataset()),
-                    new DatasetFacade(CreateMockDataset()),
-                    new DatasetFacade(CreateMockDataset()),
-                },
-        };
+        private readonly DatasetFacadeHashcodeContractVerfier m_HashcodeVerifier = new DatasetFacadeHashcodeContractVerfier();
 
-        [Test]
-        public void EqualsOperatorWithFirstObjectNull()
-        {
-            DatasetFacade first = null;
-            var second = new DatasetFacade(CreateMockDataset());
+        private readonly DatasetFacadeEqualityContractVerifier m_EqualityVerifier = new DatasetFacadeEqualityContractVerifier();
 
-            Assert.IsFalse(first == second);
+        protected override HashcodeContractVerifier HashContract
+        {
+            get
+            {
+                return m_HashcodeVerifier;
+            }
         }
 
-        [Test]
-        public void EqualsOperatorWithSecondObjectNull()
+        protected override IEqualityContractVerifier EqualityContract
         {
-            var first = new DatasetFacade(CreateMockDataset());
-            DatasetFacade second = null;
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithEqualObject()
-        {
-            var dataset = CreateMockDataset();
-            var first = new DatasetFacade(dataset);
-            var second = new DatasetFacade(dataset);
-
-            Assert.IsTrue(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithNonequalObjects()
-        {
-            var first = new DatasetFacade(CreateMockDataset());
-            var second = new DatasetFacade(CreateMockDataset());
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithFirstObjectNull()
-        {
-            DatasetFacade first = null;
-            var second = new DatasetFacade(CreateMockDataset());
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithSecondObjectNull()
-        {
-            var first = new DatasetFacade(CreateMockDataset());
-            DatasetFacade second = null;
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var dataset = CreateMockDataset();
-            var first = new DatasetFacade(dataset);
-            var second = new DatasetFacade(dataset);
-
-            Assert.IsFalse(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var first = new DatasetFacade(CreateMockDataset());
-            var second = new DatasetFacade(CreateMockDataset());
-
-            Assert.IsTrue(first != second);
+            get
+            {
+                return m_EqualityVerifier;
+            }
         }
 
         [Test]

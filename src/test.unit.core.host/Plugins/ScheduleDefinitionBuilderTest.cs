@@ -4,17 +4,13 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Extensions.Scheduling;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 using QuickGraph;
 
 namespace Apollo.Core.Host.Plugins
@@ -114,7 +110,7 @@ namespace Apollo.Core.Host.Plugins
             var vertex = builder.AddSynchronizationStart(synchronizationVariables);
 
             Assert.IsNotNull(vertex);
-            Assert.AreElementsSame(synchronizationVariables, variables);
+            Assert.That(variables, Is.EquivalentTo(synchronizationVariables));
         }
 
         [Test]
@@ -395,8 +391,8 @@ namespace Apollo.Core.Host.Plugins
                     .Callback<ISchedule, Dictionary<ScheduleActionRegistrationId, ScheduleElementId>, Dictionary<ScheduleConditionRegistrationId, ScheduleElementId>>(
                         (s, a, c) => 
                         {
-                            Assert.AreElementsEqual(new List<ScheduleActionRegistrationId> { actionId }, a.Keys);
-                            Assert.AreElementsEqual(new List<ScheduleConditionRegistrationId> { conditionId }, c.Keys);
+                            Assert.That(a.Keys, Is.EquivalentTo(new List<ScheduleActionRegistrationId> { actionId }));
+                            Assert.That(c.Keys, Is.EquivalentTo(new List<ScheduleConditionRegistrationId> { conditionId }));
                         });
             }
 

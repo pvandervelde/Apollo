@@ -15,9 +15,9 @@ using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Utilities.Commands;
 using Apollo.Utilities.History;
 using Autofac.Core;
-using MbUnit.Framework;
 using Moq;
 using Nuclei.Diagnostics;
+using NUnit.Framework;
 using QuickGraph;
 
 namespace Apollo.Core.Host.UserInterfaces
@@ -111,14 +111,13 @@ namespace Apollo.Core.Host.UserInterfaces
                         LoadProjectCommand.CommandId,
                         UnloadProjectCommand.CommandId,
                     };
-                Assert.AreElementsEqualIgnoringOrder(original, commandCollection);
+                Assert.That(commandCollection, Is.EquivalentTo(original));
             }
         }
 
         [Test]
         public void Contains()
         {
-            var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             {
                 commands.Setup(c => c.Contains(It.IsAny<CommandId>()))
@@ -141,7 +140,6 @@ namespace Apollo.Core.Host.UserInterfaces
         [Test]
         public void InvokeWithIdNotFullyFunctional()
         {
-            var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             {
                 commands.Setup(c => c.Invoke(It.IsAny<CommandId>()))
@@ -164,7 +162,6 @@ namespace Apollo.Core.Host.UserInterfaces
         [Test]
         public void InvokeWithIdFullyFunctional()
         {
-            var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             {
                 commands.Setup(c => c.Invoke(It.IsAny<CommandId>()))
@@ -206,7 +203,6 @@ namespace Apollo.Core.Host.UserInterfaces
         [Test]
         public void InvokeWithIdAndContextNotFullyFunctional()
         {
-            var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             {
                 commands.Setup(c => c.Invoke(It.IsAny<CommandId>(), It.IsAny<ICommandContext>()))
@@ -229,7 +225,6 @@ namespace Apollo.Core.Host.UserInterfaces
         [Test]
         public void InvokeWithIdAndContextFullyFunctional()
         {
-            var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             {
                 commands.Setup(c => c.Invoke(It.IsAny<CommandId>(), It.IsAny<ICommandContext>()))
@@ -271,7 +266,6 @@ namespace Apollo.Core.Host.UserInterfaces
         [Test]
         public void ServicesToConnectTo()
         {
-            var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
@@ -283,19 +277,19 @@ namespace Apollo.Core.Host.UserInterfaces
                 systemDiagnostics,
                 onStartService);
 
-            Assert.AreElementsEqualIgnoringOrder(
-                new Type[] 
+            Assert.That(
+                service.ServicesToConnectTo(),
+                Is.EquivalentTo(
+                    new[] 
                     { 
                         typeof(CoreProxy),
                         typeof(ProjectService),
-                    }, 
-                service.ServicesToConnectTo());
+                    }));
         }
 
         [Test]
         public void ConnectTo()
         {
-            var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
@@ -330,7 +324,6 @@ namespace Apollo.Core.Host.UserInterfaces
         [Test]
         public void RegisterNotificationWithNullName()
         {
-            var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
@@ -348,7 +341,6 @@ namespace Apollo.Core.Host.UserInterfaces
         [Test]
         public void RegisterNotificationWithNullCallback()
         {
-            var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
@@ -366,7 +358,6 @@ namespace Apollo.Core.Host.UserInterfaces
         [Test]
         public void RegisterNotificationWithExistingName()
         {
-            var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
@@ -387,7 +378,6 @@ namespace Apollo.Core.Host.UserInterfaces
         [Test]
         public void StopWithMissingAction()
         {
-            var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
@@ -425,7 +415,6 @@ namespace Apollo.Core.Host.UserInterfaces
         [Test]
         public void StopWithFailingAction()
         {
-            var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
@@ -465,7 +454,6 @@ namespace Apollo.Core.Host.UserInterfaces
         [Test]
         public void Stop()
         {
-            var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
@@ -508,7 +496,6 @@ namespace Apollo.Core.Host.UserInterfaces
         [Test]
         public void HandleApplicationStartupCompleteMessage()
         {
-            var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
 

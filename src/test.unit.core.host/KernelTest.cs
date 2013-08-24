@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host
 {
@@ -349,7 +349,7 @@ namespace Apollo.Core.Host
         public void InstallServiceThatDependsOnItself()
         {
             var testMock = new AdaptableKernelService(
-                new Type[] { typeof(AdaptableKernelService) });
+                new[] { typeof(AdaptableKernelService) });
 
             var kernel = new Kernel();
             Assert.Throws<ServiceCannotDependOnItselfException>(() => kernel.Install(testMock));
@@ -359,7 +359,7 @@ namespace Apollo.Core.Host
         public void InstallServiceThatDependsOnKernelService()
         {
             var testMock = new AdaptableKernelService(
-                new Type[] { typeof(KernelService) });
+                new[] { typeof(KernelService) });
 
             var kernel = new Kernel();
             Assert.Throws<ServiceCannotDependOnGenericKernelServiceException>(() => kernel.Install(testMock));
@@ -371,21 +371,17 @@ namespace Apollo.Core.Host
             var kernelTestMock1 = new KernelService1(
                 service =>
                     {
-                        return;
                     },
                 service =>
                     {
-                       return;
                     });
 
             var kernelTestMock2 = new KernelService2(
                 service =>
                 {
-                    return;
                 },
                 service =>
                 {
-                    return;
                 });
 
             var kernel = new Kernel();
@@ -401,21 +397,17 @@ namespace Apollo.Core.Host
             var kernelTestMock1 = new KernelService1(
                 service =>
                 {
-                    return;
                 },
                 service =>
                 {
-                    return;
                 });
 
             var kernelTestMock2 = new KernelService2(
                 service =>
                 {
-                    return;
                 },
                 service =>
                 {
-                    return;
                 });
 
             var kernel = new Kernel();
@@ -440,11 +432,11 @@ namespace Apollo.Core.Host
             // Service 4
             var startupOrder = new List<KernelService>();
 
-            Action<KernelService> storeAction = service => startupOrder.Add(service);
-            var testMock1 = new KernelService1(storeAction, service => { return; });
-            var testMock2 = new KernelService2(storeAction, service => { return; });
-            var testMock3 = new KernelService3(storeAction, service => { return; });
-            var testMock4 = new KernelService4(storeAction, service => { return; });
+            Action<KernelService> storeAction = startupOrder.Add;
+            var testMock1 = new KernelService1(storeAction, service => { });
+            var testMock2 = new KernelService2(storeAction, service => { });
+            var testMock3 = new KernelService3(storeAction, service => { });
+            var testMock4 = new KernelService4(storeAction, service => { });
 
             var kernel = new Kernel();
             kernel.Install(testMock1);
@@ -455,15 +447,16 @@ namespace Apollo.Core.Host
             kernel.Start();
 
             Assert.AreEqual(4, startupOrder.Count);
-            Assert.AreElementsEqual(
-                new List<KernelService> 
+            Assert.That(
+                startupOrder,
+                Is.EquivalentTo(
+                    new List<KernelService> 
                     { 
                         testMock1,
                         testMock2,
                         testMock3,
                         testMock4
-                    },
-                startupOrder);
+                    }));
         }
 
         [Test]
@@ -481,11 +474,11 @@ namespace Apollo.Core.Host
             // Service 4
             var stopOrder = new List<KernelService>();
 
-            Action<KernelService> storeAction = service => stopOrder.Add(service);
-            var testMock1 = new KernelService1(service => { return; }, storeAction);
-            var testMock2 = new KernelService2(service => { return; }, storeAction);
-            var testMock3 = new KernelService3(service => { return; }, storeAction);
-            var testMock4 = new KernelService4(service => { return; }, storeAction);
+            Action<KernelService> storeAction = stopOrder.Add;
+            var testMock1 = new KernelService1(service => { }, storeAction);
+            var testMock2 = new KernelService2(service => { }, storeAction);
+            var testMock3 = new KernelService3(service => { }, storeAction);
+            var testMock4 = new KernelService4(service => { }, storeAction);
 
             var kernel = new Kernel();
             kernel.Install(testMock1);
@@ -497,15 +490,15 @@ namespace Apollo.Core.Host
             kernel.Shutdown();
 
             Assert.AreEqual(4, stopOrder.Count);
-            Assert.AreElementsEqual(
-                new List<KernelService> 
+            Assert.That(
+                stopOrder,
+                Is.EquivalentTo(new List<KernelService> 
                     { 
                         testMock4,
                         testMock3,
                         testMock2,
                         testMock1,
-                    },
-                stopOrder);
+                    }));
         }
     }
 }

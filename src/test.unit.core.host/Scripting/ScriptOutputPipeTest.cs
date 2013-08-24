@@ -6,7 +6,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host.Scripting
 {

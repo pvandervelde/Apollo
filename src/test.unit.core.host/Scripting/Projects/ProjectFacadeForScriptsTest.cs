@@ -8,8 +8,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces.Projects;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host.Scripting.Projects
 {

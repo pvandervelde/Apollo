@@ -5,21 +5,15 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class MissingServiceDependencyExceptionTest
+    public sealed class MissingServiceDependencyExceptionTest : ExceptionContractVerifier<MissingServiceDependencyException>
     {
-        [VerifyContract]
-        public readonly IContract ExceptionTests = new ExceptionContract<MissingServiceDependencyException>
-        {
-            ImplementsSerialization = true,
-            ImplementsStandardConstructors = true,
-        };
     }
 }

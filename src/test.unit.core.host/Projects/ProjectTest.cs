@@ -15,10 +15,10 @@ using Apollo.Core.Base.Loaders;
 using Apollo.Core.Host.Plugins;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
-using MbUnit.Framework;
 using Moq;
 using Nuclei.Communication;
 using Nuclei.Diagnostics;
+using NUnit.Framework;
 using QuickGraph;
 
 namespace Apollo.Core.Host.Projects

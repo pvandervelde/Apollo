@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Primitives;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -15,10 +16,9 @@ using Apollo.Core.Base.Plugins;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Utilities;
-using Gallio.Framework;
-using MbUnit.Framework;
 using Moq;
 using Nuclei;
+using NUnit.Framework;
 using Test.Mocks;
 
 namespace Apollo.Core.Host.Plugins
@@ -151,7 +151,7 @@ namespace Apollo.Core.Host.Plugins
                 };
         }
 
-        [FixtureSetUp]
+        [TestFixtureSetUp]
         public void Setup()
         {
             try
@@ -162,15 +162,15 @@ namespace Apollo.Core.Host.Plugins
                 var repository = new Mock<IPluginRepository>();
                 {
                     repository.Setup(r => r.ContainsDefinitionForType(It.IsAny<string>()))
-                        .Returns<string>(n => types.Where(t => t.Identity.AssemblyQualifiedName.Equals(n)).Any());
+                        .Returns<string>(n => types.Any(t => t.Identity.AssemblyQualifiedName.Equals(n)));
                     repository.Setup(r => r.ContainsDefinitionForType(It.IsAny<TypeIdentity>()))
-                        .Returns<TypeIdentity>(n => types.Where(t => t.Identity.Equals(n)).Any());
+                        .Returns<TypeIdentity>(n => types.Any(t => t.Identity.Equals(n)));
                     repository.Setup(r => r.IdentityByName(It.IsAny<string>()))
                         .Returns<string>(n => types.Where(t => t.Identity.AssemblyQualifiedName.Equals(n)).Select(t => t.Identity).First());
                     repository.Setup(r => r.Parts())
                         .Returns(parts);
                     repository.Setup(r => r.AddType(It.IsAny<TypeDefinition>()))
-                        .Callback<TypeDefinition>(t => types.Add(t));
+                        .Callback<TypeDefinition>(types.Add);
                     repository.Setup(r => r.AddPart(It.IsAny<PartDefinition>(), It.IsAny<PluginFileInfo>()))
                         .Callback<PartDefinition, PluginFileInfo>((p, f) => parts.Add(p));
                     repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>(), It.IsAny<PluginFileInfo>()))
@@ -197,7 +197,7 @@ namespace Apollo.Core.Host.Plugins
             }
             catch (Exception e)
             {
-                DiagnosticLog.WriteLine(
+                Trace.WriteLine(
                     string.Format(
                         "Exception in RemoteAssemblyScannerTest.Setup: {0}",
                         e));
@@ -214,11 +214,11 @@ namespace Apollo.Core.Host.Plugins
                 repository.Setup(r => r.Parts())
                     .Returns(s_Parts);
                 repository.Setup(r => r.Part(It.IsAny<TypeIdentity>()))
-                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Identity.Equals(t)).FirstOrDefault());
+                    .Returns<TypeIdentity>(t => s_Parts.FirstOrDefault(p => p.Identity.Equals(t)));
                 repository.Setup(r => r.Groups())
                     .Returns(s_Groups);
                 repository.Setup(r => r.Group(It.IsAny<GroupRegistrationId>()))
-                    .Returns<GroupRegistrationId>(id => s_Groups.Where(g => g.Id.Equals(id)).FirstOrDefault());
+                    .Returns<GroupRegistrationId>(id => s_Groups.FirstOrDefault(g => g.Id.Equals(id)));
             }
 
             var partImportEngine = new Mock<IConnectParts>();
@@ -239,11 +239,11 @@ namespace Apollo.Core.Host.Plugins
                 repository.Setup(r => r.Parts())
                     .Returns(s_Parts);
                 repository.Setup(r => r.Part(It.IsAny<TypeIdentity>()))
-                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Identity.Equals(t)).FirstOrDefault());
+                    .Returns<TypeIdentity>(t => s_Parts.FirstOrDefault(p => p.Identity.Equals(t)));
                 repository.Setup(r => r.Groups())
                     .Returns(s_Groups);
                 repository.Setup(r => r.Group(It.IsAny<GroupRegistrationId>()))
-                    .Returns<GroupRegistrationId>(id => s_Groups.Where(g => g.Id.Equals(id)).FirstOrDefault());
+                    .Returns<GroupRegistrationId>(id => s_Groups.FirstOrDefault(g => g.Id.Equals(id)));
             }
 
             var partImportEngine = new Mock<IConnectParts>();
@@ -264,11 +264,11 @@ namespace Apollo.Core.Host.Plugins
                 repository.Setup(r => r.Parts())
                     .Returns(s_Parts);
                 repository.Setup(r => r.Part(It.IsAny<TypeIdentity>()))
-                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Identity.Equals(t)).FirstOrDefault());
+                    .Returns<TypeIdentity>(t => s_Parts.FirstOrDefault(p => p.Identity.Equals(t)));
                 repository.Setup(r => r.Groups())
                     .Returns(s_Groups);
                 repository.Setup(r => r.Group(It.IsAny<GroupRegistrationId>()))
-                    .Returns<GroupRegistrationId>(id => s_Groups.Where(g => g.Id.Equals(id)).FirstOrDefault());
+                    .Returns<GroupRegistrationId>(id => s_Groups.FirstOrDefault(g => g.Id.Equals(id)));
             }
 
             var partImportEngine = new Mock<IConnectParts>();
@@ -289,11 +289,11 @@ namespace Apollo.Core.Host.Plugins
                 repository.Setup(r => r.Parts())
                     .Returns(s_Parts);
                 repository.Setup(r => r.Part(It.IsAny<TypeIdentity>()))
-                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Identity.Equals(t)).FirstOrDefault());
+                    .Returns<TypeIdentity>(t => s_Parts.FirstOrDefault(p => p.Identity.Equals(t)));
                 repository.Setup(r => r.Groups())
                     .Returns(s_Groups);
                 repository.Setup(r => r.Group(It.IsAny<GroupRegistrationId>()))
-                    .Returns<GroupRegistrationId>(id => s_Groups.Where(g => g.Id.Equals(id)).FirstOrDefault());
+                    .Returns<GroupRegistrationId>(id => s_Groups.FirstOrDefault(g => g.Id.Equals(id)));
             }
 
             var partImportEngine = new Mock<IConnectParts>();
@@ -314,11 +314,11 @@ namespace Apollo.Core.Host.Plugins
                 repository.Setup(r => r.Parts())
                     .Returns(s_Parts);
                 repository.Setup(r => r.Part(It.IsAny<TypeIdentity>()))
-                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Identity.Equals(t)).FirstOrDefault());
+                    .Returns<TypeIdentity>(t => s_Parts.FirstOrDefault(p => p.Identity.Equals(t)));
                 repository.Setup(r => r.Groups())
                     .Returns(s_Groups);
                 repository.Setup(r => r.Group(It.IsAny<GroupRegistrationId>()))
-                    .Returns<GroupRegistrationId>(id => s_Groups.Where(g => g.Id.Equals(id)).FirstOrDefault());
+                    .Returns<GroupRegistrationId>(id => s_Groups.FirstOrDefault(g => g.Id.Equals(id)));
             }
 
             var partImportEngine = new Mock<IConnectParts>();
@@ -342,11 +342,11 @@ namespace Apollo.Core.Host.Plugins
                 repository.Setup(r => r.Parts())
                     .Returns(s_Parts);
                 repository.Setup(r => r.Part(It.IsAny<TypeIdentity>()))
-                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Identity.Equals(t)).FirstOrDefault());
+                    .Returns<TypeIdentity>(t => s_Parts.FirstOrDefault(p => p.Identity.Equals(t)));
                 repository.Setup(r => r.Groups())
                     .Returns(s_Groups);
                 repository.Setup(r => r.Group(It.IsAny<GroupRegistrationId>()))
-                    .Returns<GroupRegistrationId>(id => s_Groups.Where(g => g.Id.Equals(id)).FirstOrDefault());
+                    .Returns<GroupRegistrationId>(id => s_Groups.FirstOrDefault(g => g.Id.Equals(id)));
             }
 
             var partImportEngine = new Mock<IConnectParts>();
@@ -370,11 +370,11 @@ namespace Apollo.Core.Host.Plugins
                 repository.Setup(r => r.Parts())
                     .Returns(s_Parts);
                 repository.Setup(r => r.Part(It.IsAny<TypeIdentity>()))
-                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Identity.Equals(t)).FirstOrDefault());
+                    .Returns<TypeIdentity>(t => s_Parts.FirstOrDefault(p => p.Identity.Equals(t)));
                 repository.Setup(r => r.Groups())
                     .Returns(s_Groups);
                 repository.Setup(r => r.Group(It.IsAny<GroupRegistrationId>()))
-                    .Returns<GroupRegistrationId>(id => s_Groups.Where(g => g.Id.Equals(id)).FirstOrDefault());
+                    .Returns<GroupRegistrationId>(id => s_Groups.FirstOrDefault(g => g.Id.Equals(id)));
             }
 
             var partImportEngine = new Mock<IConnectParts>();
@@ -397,11 +397,11 @@ namespace Apollo.Core.Host.Plugins
                 repository.Setup(r => r.Parts())
                     .Returns(s_Parts);
                 repository.Setup(r => r.Part(It.IsAny<TypeIdentity>()))
-                    .Returns<TypeIdentity>(t => s_Parts.Where(p => p.Identity.Equals(t)).FirstOrDefault());
+                    .Returns<TypeIdentity>(t => s_Parts.FirstOrDefault(p => p.Identity.Equals(t)));
                 repository.Setup(r => r.Groups())
                     .Returns(s_Groups);
                 repository.Setup(r => r.Group(It.IsAny<GroupRegistrationId>()))
-                    .Returns<GroupRegistrationId>(id => s_Groups.Where(g => g.Id.Equals(id)).FirstOrDefault());
+                    .Returns<GroupRegistrationId>(id => s_Groups.FirstOrDefault(g => g.Id.Equals(id)));
             }
 
             var partImportEngine = new Mock<IConnectParts>();
@@ -467,13 +467,14 @@ namespace Apollo.Core.Host.Plugins
             connection = connections.ElementAt(1);
             Assert.AreEqual(group2.GroupImports.First().ImportsToMatch.ElementAt(1), connection.Import);
             Assert.AreEqual(2, connection.Exports.Count());
-            Assert.AreElementsEqualIgnoringOrder(
-                new List<ExportRegistrationId> 
+            Assert.That(
+                connection.Exports,
+                Is.EquivalentTo(
+                    new List<ExportRegistrationId> 
                     {
                         group1.GroupExport.ProvidedExports.ElementAt(1),
                         group1.GroupExport.ProvidedExports.ElementAt(2),
-                    },
-                connection.Exports);
+                    }));
         }
     }
 }

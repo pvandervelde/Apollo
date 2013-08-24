@@ -6,28 +6,58 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using System.Linq;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class GroupExportMapTest
+    public sealed class GroupExportMapTest : EqualityContractVerifierTest
     {
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<GroupExportMap>
+        private sealed class GroupExportMapEqualityContractVerifier : EqualityContractVerifier<GroupExportMap>
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<GroupExportMap> 
-                    {
+            private readonly GroupExportMap m_First = new GroupExportMap("a");
+
+            private readonly GroupExportMap m_Second = new GroupExportMap("b");
+
+            protected override GroupExportMap Copy(GroupExportMap original)
+            {
+                return new GroupExportMap(original.ContractName);
+            }
+
+            protected override GroupExportMap FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override GroupExportMap SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
+
+        private sealed class GroupExportMapHashcodeContractVerfier : HashcodeContractVerifier
+        {
+            private readonly IEnumerable<GroupExportMap> m_DistinctInstances
+                = new List<GroupExportMap> 
+                     {
                         new GroupExportMap("a"),
                         new GroupExportMap("b"),
                         new GroupExportMap("c"),
@@ -35,104 +65,41 @@ namespace Apollo.Core.Host.Plugins
                         new GroupExportMap("e"),
                         new GroupExportMap("f"),
                         new GroupExportMap("g"),
-                    },
-        };
+                     };
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<GroupExportMap>
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly GroupExportMapHashcodeContractVerfier m_HashcodeVerifier = new GroupExportMapHashcodeContractVerfier();
+
+        private readonly GroupExportMapEqualityContractVerifier m_EqualityVerifier = new GroupExportMapEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                { 
-                    new GroupExportMap("a"),
-                    new GroupExportMap("b"),
-                    new GroupExportMap("c"),
-                    new GroupExportMap("d"),
-                    new GroupExportMap("e"),
-                    new GroupExportMap("f"),
-                    new GroupExportMap("g"),
-                },
-        };
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void RoundTripSerialise()
         {
             var original = new GroupExportMap("a");
-            var copy = Assert.BinarySerializeThenDeserialize(original);
+            var copy = AssertExtensions.RoundTripSerialize(original);
 
             Assert.AreEqual(original, copy);
-        }
-
-        [Test]
-        public void EqualsOperatorWithFirstObjectNull()
-        {
-            GroupExportMap first = null;
-            var second = new GroupExportMap("a");
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithSecondObjectNull()
-        {
-            var first = new GroupExportMap("a");
-            GroupExportMap second = null;
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithEqualObject()
-        {
-            var first = new GroupExportMap("a");
-            var second = new GroupExportMap("a");
-
-            Assert.IsTrue(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithNonequalObjects()
-        {
-            var first = new GroupExportMap("a");
-            var second = new GroupExportMap("b");
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithFirstObjectNull()
-        {
-            GroupExportMap first = null;
-            var second = new GroupExportMap("a");
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithSecondObjectNull()
-        {
-            var first = new GroupExportMap("a");
-            GroupExportMap second = null;
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var first = new GroupExportMap("a");
-            var second = new GroupExportMap("a");
-
-            Assert.IsFalse(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var first = new GroupExportMap("a");
-            var second = new GroupExportMap("b");
-
-            Assert.IsTrue(first != second);
         }
 
         [Test]

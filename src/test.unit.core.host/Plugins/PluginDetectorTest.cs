@@ -9,9 +9,9 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using System.Linq;
-using MbUnit.Framework;
 using Moq;
 using Nuclei.Diagnostics;
+using NUnit.Framework;
 using Test.Mocks;
 
 namespace Apollo.Core.Host.Plugins
@@ -73,7 +73,7 @@ namespace Apollo.Core.Host.Plugins
                 new SystemDiagnostics((p, s) => { }, null));
 
             detector.SearchDirectory(@"c:\temp");
-            Assert.AreElementsEqualIgnoringOrder(files, scanner.FilesToScan);
+            Assert.That(scanner.FilesToScan, Is.EquivalentTo(files));
         }
 
         [Test]
@@ -117,7 +117,7 @@ namespace Apollo.Core.Host.Plugins
                 new SystemDiagnostics((p, s) => { }, null));
 
             detector.SearchDirectory(@"c:\temp");
-            Assert.AreElementsEqualIgnoringOrder(files, scanner.FilesToScan);
+            Assert.That(scanner.FilesToScan, Is.EquivalentTo(files));
         }
 
         [Test]
@@ -161,7 +161,7 @@ namespace Apollo.Core.Host.Plugins
                 new SystemDiagnostics((p, s) => { }, null));
 
             detector.SearchDirectory(@"c:\temp");
-            Assert.AreElementsEqualIgnoringOrder(new List<string> { files[1] }, scanner.FilesToScan);
+            Assert.That(scanner.FilesToScan, Is.EquivalentTo(new List<string> { files[1] }));
         }
 
         [Test]

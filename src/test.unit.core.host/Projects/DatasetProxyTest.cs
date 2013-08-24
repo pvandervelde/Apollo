@@ -16,11 +16,11 @@ using Apollo.Core.Base.Loaders;
 using Apollo.Core.Host.Plugins;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
 using Moq;
 using Nuclei.Communication;
 using Nuclei.Diagnostics;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 using QuickGraph;
 
 namespace Apollo.Core.Host.Projects
@@ -28,8 +28,78 @@ namespace Apollo.Core.Host.Projects
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class DatasetProxyTest
+    public sealed class DatasetProxyTest : EqualityContractVerifierTest
     {
+        private sealed class DatasetProxyEqualityContractVerifier : EqualityContractVerifier<IProxyDataset>
+        {
+            private readonly IProxyDataset m_First = GenerateDataset(CreateProject());
+
+            private readonly IProxyDataset m_Second = GenerateDataset(CreateProject());
+
+            protected override IProxyDataset Copy(IProxyDataset original)
+            {
+                var proxyLayer = new Mock<IProxyCompositionLayer>();
+                Func<DatasetOnlineInformation, DatasetStorageProxy> func = d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object);
+                return DatasetProxy.CreateInstance(
+                    new HistoryId(), 
+                    new List<Tuple<byte, IStoreTimelineValues>>
+                        {
+                            new Tuple<byte, IStoreTimelineValues>(0, new ValueHistory<string>()),
+                            new Tuple<byte, IStoreTimelineValues>(1, new ValueHistory<string>()),
+                            new Tuple<byte, IStoreTimelineValues>(2, new ValueHistory<NetworkIdentifier>())
+                        },
+                    new DatasetConstructionParameters(), 
+                    func);
+            }
+
+            protected override IProxyDataset FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override IProxyDataset SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
+
+        private sealed class DatasetProxyHashcodeContractVerfier : HashcodeContractVerifier
+        {
+            private readonly IEnumerable<IProxyDataset> m_DistinctInstances
+                = new List<IProxyDataset> 
+                     {
+                        GenerateDataset(CreateProject()),
+                        GenerateDataset(CreateProject()),
+                        GenerateDataset(CreateProject()),
+                        GenerateDataset(CreateProject()),
+                        GenerateDataset(CreateProject()),
+                     };
+
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
         private static IStoreTimelineValues BuildStorage(ITimeline timeline, Type type)
         {
             if (typeof(IDictionaryTimelineStorage<DatasetId, DatasetProxy>).IsAssignableFrom(type))
@@ -79,7 +149,7 @@ namespace Apollo.Core.Host.Projects
                 (r, c) => new List<DistributionPlan> { plan };
             var proxyLayer = new Mock<IProxyCompositionLayer>();
             return new Project(
-                timeline, 
+                timeline,
                 distributor,
                 d => new DatasetStorageProxy(
                     d,
@@ -94,43 +164,25 @@ namespace Apollo.Core.Host.Projects
             return (DatasetProxy)project.BaseDataset();
         }
 
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<IProxyDataset>
-        {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                (new List<int> 
-                    {
-                        0,
-                        1,
-                        2,
-                        3,
-                        4,
-                        5,
-                        6,
-                        7,
-                        9,
-                    }).Select(o => (IProxyDataset)GenerateDataset(CreateProject())),
-        };
+        private readonly DatasetProxyHashcodeContractVerfier m_HashcodeVerifier = new DatasetProxyHashcodeContractVerfier();
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<DatasetProxy>
+        private readonly DatasetProxyEqualityContractVerifier m_EqualityVerifier = new DatasetProxyEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                { 
-                    GenerateDataset(CreateProject()),
-                    GenerateDataset(CreateProject()),
-                    GenerateDataset(CreateProject()),
-                    GenerateDataset(CreateProject()),
-                    GenerateDataset(CreateProject()),
-                },
-        };
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void GetDataset()

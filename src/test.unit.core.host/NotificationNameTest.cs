@@ -5,10 +5,11 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host
 {
@@ -18,90 +19,83 @@ namespace Apollo.Core.Host
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class NotificationNameTest
+    public sealed class NotificationNameTest : EqualityContractVerifierTest
     {
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<NotificationName>
+        private sealed class NotificationNameEqualityContractVerifier : EqualityContractVerifier<NotificationName>
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances = DataGenerators.Random.Strings(100, RandomStringStock.EnUSMaleNames).Select(o => new NotificationName(o)),
-        };
+            private readonly NotificationName m_First = new NotificationName("a");
 
-        [Test]
-        public void EqualsOperatorWithFirstObjectNull()
-        {
-            NotificationName first = null;
-            var second = new NotificationName("name");
+            private readonly NotificationName m_Second = new NotificationName("b");
 
-            Assert.IsFalse(first == second);
+            protected override NotificationName Copy(NotificationName original)
+            {
+                return original.Clone();
+            }
+
+            protected override NotificationName FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override NotificationName SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
         }
 
-        [Test]
-        public void EqualsOperatorWithSecondObjectNull()
+        private sealed class NotificationNameHashcodeContractVerfier : HashcodeContractVerifier
         {
-            var first = new NotificationName("name");
-            NotificationName second = null;
+            private readonly IEnumerable<NotificationName> m_DistinctInstances
+                = new List<NotificationName> 
+                     {
+                        new NotificationName("a"),
+                        new NotificationName("b"),
+                        new NotificationName("c"),
+                        new NotificationName("d"),
+                        new NotificationName("e"),
+                        new NotificationName("f"),
+                        new NotificationName("g"),
+                        new NotificationName("h"),
+                     };
 
-            Assert.IsFalse(first == second);
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
         }
 
-        [Test]
-        public void EqualsOperatorWithEqualObject()
-        {
-            var first = new NotificationName("name");
-            var second = first.Clone();
+        private readonly NotificationNameHashcodeContractVerfier m_HashcodeVerifier = new NotificationNameHashcodeContractVerfier();
 
-            Assert.IsTrue(first == second);
+        private readonly NotificationNameEqualityContractVerifier m_EqualityVerifier = new NotificationNameEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
+        {
+            get
+            {
+                return m_HashcodeVerifier;
+            }
         }
 
-        [Test]
-        public void EqualsOperatorWithNonequalObjects()
+        protected override IEqualityContractVerifier EqualityContract
         {
-            var first = new NotificationName("name1");
-            var second = new NotificationName("name2");
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithFirstObjectNull()
-        {
-            NotificationName first = null;
-            var second = new NotificationName("name");
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithSecondObjectNull()
-        {
-            var first = new NotificationName("name");
-            NotificationName second = null;
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var first = new NotificationName("name");
-            var second = first.Clone();
-
-            Assert.IsFalse(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var first = new NotificationName("name1");
-            var second = new NotificationName("name2");
-
-            Assert.IsTrue(first != second);
+            get
+            {
+                return m_EqualityVerifier;
+            }
         }
 
         [Test]

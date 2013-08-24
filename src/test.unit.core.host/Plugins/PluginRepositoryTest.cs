@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
-using MbUnit.Framework;
+using NUnit.Framework;
 using Test.Mocks;
 
 namespace Apollo.Core.Host.Plugins
@@ -281,13 +281,14 @@ namespace Apollo.Core.Host.Plugins
             var groupFileInfo = new PluginFileInfo("c", DateTimeOffset.Now);
             repository.AddGroup(groupDefinition, groupFileInfo);
 
-            Assert.AreElementsEqualIgnoringOrder(
-                new List<PluginFileInfo> 
+            Assert.That(
+                repository.KnownPluginFiles(),
+                Is.EquivalentTo(
+                    new List<PluginFileInfo> 
                     { 
                         partFileInfo,
                         groupFileInfo,
-                    },
-                repository.KnownPluginFiles());
+                    }));
 
             repository.RemovePlugins(
                 new List<string>
@@ -295,12 +296,13 @@ namespace Apollo.Core.Host.Plugins
                         partFileInfo.Path
                     });
 
-            Assert.AreElementsEqualIgnoringOrder(
-                new List<PluginFileInfo> 
+            Assert.That(
+                repository.KnownPluginFiles(),
+                Is.EquivalentTo(
+                    new List<PluginFileInfo> 
                     { 
                         groupFileInfo,
-                    },
-                repository.KnownPluginFiles());
+                    }));
             Assert.AreEqual(0, repository.Parts().Count());
             Assert.AreEqual(1, repository.Groups().Count());
             Assert.IsFalse(repository.ContainsDefinitionForType(typeof(ExportOnProperty).AssemblyQualifiedName));

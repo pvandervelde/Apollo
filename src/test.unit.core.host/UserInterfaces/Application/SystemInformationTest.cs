@@ -6,7 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host.UserInterfaces.Application
 {

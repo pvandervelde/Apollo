@@ -11,8 +11,8 @@ using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Host.Projects;
 using Apollo.Utilities;
 using Apollo.Utilities.Commands;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host.UserInterfaces.Projects
 {

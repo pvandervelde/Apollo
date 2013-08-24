@@ -5,21 +5,15 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class DuplicateGroupDefinitionExceptionTest
+    public sealed class DuplicateGroupDefinitionExceptionTest : ExceptionContractVerifier<DuplicateContractNameException>
     {
-        [VerifyContract]
-        public readonly IContract ExceptionTests = new ExceptionContract<DuplicateGroupDefinitionException>
-        {
-            ImplementsSerialization = true,
-            ImplementsStandardConstructors = true,
-        };
     }
 }

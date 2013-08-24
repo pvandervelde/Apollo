@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -14,10 +15,9 @@ using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Extensions.Scheduling;
 using Apollo.Utilities;
-using Gallio.Framework;
-using MbUnit.Framework;
 using Moq;
 using Nuclei;
+using NUnit.Framework;
 using Test.Mocks;
 
 namespace Apollo.Core.Host.Plugins
@@ -38,20 +38,22 @@ namespace Apollo.Core.Host.Plugins
                 return false;
             }
 
-            if (first is ExecutingActionVertex)
+            var executingActionVertex = first as ExecutingActionVertex;
+            if (executingActionVertex != null)
             {
-                return ((ExecutingActionVertex)first).ActionToExecute == ((ExecutingActionVertex)second).ActionToExecute;
+                return executingActionVertex.ActionToExecute == ((ExecutingActionVertex)second).ActionToExecute;
             }
 
-            if (first is SubScheduleVertex)
+            var subScheduleVertex = first as SubScheduleVertex;
+            if (subScheduleVertex != null)
             {
-                return ((SubScheduleVertex)first).ScheduleToExecute == ((SubScheduleVertex)second).ScheduleToExecute;
+                return subScheduleVertex.ScheduleToExecute == ((SubScheduleVertex)second).ScheduleToExecute;
             }
 
             return true;
         }
 
-        [FixtureSetUp]
+        [TestFixtureSetUp]
         public void Setup()
         {
             try
@@ -62,15 +64,15 @@ namespace Apollo.Core.Host.Plugins
                 var repository = new Mock<IPluginRepository>();
                 {
                     repository.Setup(r => r.ContainsDefinitionForType(It.IsAny<string>()))
-                        .Returns<string>(n => types.Where(t => t.Identity.AssemblyQualifiedName.Equals(n)).Any());
+                        .Returns<string>(n => types.Any(t => t.Identity.AssemblyQualifiedName.Equals(n)));
                     repository.Setup(r => r.ContainsDefinitionForType(It.IsAny<TypeIdentity>()))
-                        .Returns<TypeIdentity>(n => types.Where(t => t.Identity.Equals(n)).Any());
+                        .Returns<TypeIdentity>(n => types.Any(t => t.Identity.Equals(n)));
                     repository.Setup(r => r.IdentityByName(It.IsAny<string>()))
                         .Returns<string>(n => types.Where(t => t.Identity.AssemblyQualifiedName.Equals(n)).Select(t => t.Identity).First());
                     repository.Setup(r => r.Parts())
                         .Returns(parts);
                     repository.Setup(r => r.AddType(It.IsAny<TypeDefinition>()))
-                        .Callback<TypeDefinition>(t => types.Add(t));
+                        .Callback<TypeDefinition>(types.Add);
                     repository.Setup(r => r.AddPart(It.IsAny<PartDefinition>(), It.IsAny<PluginFileInfo>()))
                         .Callback<PartDefinition, PluginFileInfo>((p, f) => parts.Add(p));
                     repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>(), It.IsAny<PluginFileInfo>()))
@@ -98,7 +100,7 @@ namespace Apollo.Core.Host.Plugins
             }
             catch (Exception e)
             {
-                DiagnosticLog.WriteLine(
+                Trace.WriteLine(
                     string.Format(
                         "Exception in RemoteAssemblyScannerTest.Setup: {0}",
                         e));
@@ -694,16 +696,23 @@ namespace Apollo.Core.Host.Plugins
             Assert.AreEqual(new GroupRegistrationId(GroupExporter.GroupName1), group.GroupImports.First().ContainingGroup);
             Assert.IsNotNull(group.GroupImports.First().ScheduleInsertPosition);
             
-            Assert.AreElementsEqualIgnoringOrder(
-                new IScheduleVertex[] 
-                    { 
-                        group.Schedule.Schedule.Start, 
-                        new ExecutingActionVertex(2, group.Schedule.Actions.First().Key), 
-                        new InsertVertex(3),
-                        group.Schedule.Schedule.End 
-                    },
-                group.Schedule.Schedule.Vertices,
-                AreVerticesEqual);
+            Assert.AreEqual(4, group.Schedule.Schedule.Vertices.Count());
+            Assert.IsTrue(
+                AreVerticesEqual(
+                    group.Schedule.Schedule.Start,
+                    group.Schedule.Schedule.Vertices.ElementAt(0)));
+            Assert.IsTrue(
+                AreVerticesEqual(
+                    new ExecutingActionVertex(2, group.Schedule.Actions.First().Key),
+                    group.Schedule.Schedule.Vertices.ElementAt(1)));
+            Assert.IsTrue(
+                AreVerticesEqual(
+                    new InsertVertex(3),
+                    group.Schedule.Schedule.Vertices.ElementAt(2)));
+            Assert.IsTrue(
+                AreVerticesEqual(
+                    group.Schedule.Schedule.End,
+                    group.Schedule.Schedule.Vertices.ElementAt(3)));
 
             Assert.AreEqual(1, group.GroupImports.First().ImportsToMatch.Count());
         }

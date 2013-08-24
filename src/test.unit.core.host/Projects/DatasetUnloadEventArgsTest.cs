@@ -4,10 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Apollo.Core.Host.Projects
 {

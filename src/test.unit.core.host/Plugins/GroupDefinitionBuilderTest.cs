@@ -10,13 +10,11 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Primitives;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
-using Apollo.Core.Extensions.Scheduling;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 using Test.Mocks;
 
 namespace Apollo.Core.Host.Plugins
@@ -400,14 +398,15 @@ namespace Apollo.Core.Host.Plugins
             Assert.AreEqual(new GroupRegistrationId(groupName), groupInfo.GroupExport.ContainingGroup);
             Assert.AreEqual(groupExportName, groupInfo.GroupExport.ContractName);
 
-            Assert.AreElementsEqualIgnoringOrder(
-                new List<ExportRegistrationId> 
+            Assert.That(
+                groupInfo.GroupExport.ProvidedExports,
+                Is.EquivalentTo(
+                    new List<ExportRegistrationId> 
                     { 
                         firstInfo.RegisteredExports.First(),
                         thirdInfo.RegisteredExports.First(),
                         fourthInfo.RegisteredExports.First(),
-                    },
-                groupInfo.GroupExport.ProvidedExports);
+                    }));
         }
 
         [Test]
@@ -499,12 +498,13 @@ namespace Apollo.Core.Host.Plugins
             Assert.AreEqual(new GroupRegistrationId(groupName), groupInfo.GroupImports.First().ContainingGroup);
             Assert.IsNull(groupInfo.GroupImports.First().ScheduleInsertPosition);
 
-            Assert.AreElementsEqualIgnoringOrder(
-                new List<ImportRegistrationId> 
+            Assert.That(
+                groupInfo.GroupImports.First().ImportsToMatch,
+                Is.EquivalentTo(
+                    new List<ImportRegistrationId> 
                     { 
                         firstInfo.RegisteredImports.First(),
-                    },
-                groupInfo.GroupImports.First().ImportsToMatch);
+                    }));
         }
     }
 }
