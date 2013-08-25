@@ -8,15 +8,16 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Schedulers;
 using Apollo.Utilities;
-using MbUnit.Framework;
 using Moq;
 using Nuclei.Communication;
 using Nuclei.Configuration;
 using Nuclei.Diagnostics;
+using NUnit.Framework;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -176,10 +177,8 @@ namespace Apollo.Core.Base.Loaders
                 PreferredLocations = LoadingLocations.All,
             };
             var plans = distributor.ProposeDistributionFor(request, new CancellationToken());
-            Assert.AreElementsEqualIgnoringOrder(
-                new[] { plan },
-                plans,
-                (x, y) => ReferenceEquals(x.Proposal, y.Proposal));
+            Assert.AreEqual(1, plans.Count());
+            Assert.ReferenceEquals(plan, plans.First());
 
             loaderCommands.Verify(l => l.ProposeFor(It.IsAny<ExpectedDatasetLoad>()), Times.Once());
         }

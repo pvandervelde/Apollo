@@ -8,145 +8,116 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using System.Linq;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Base.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class TypeDefinitionTest
+    public sealed class TypeDefinitionTest : EqualityContractVerifierTest
     {
+        private sealed class EndpointIdEqualityContractVerifier : EqualityContractVerifier<TypeDefinition>
+        {
+            private readonly TypeDefinition m_First = TypeDefinition.CreateDefinition(typeof(string), TypeIdentity.CreateDefinition);
+
+            private readonly TypeDefinition m_Second = TypeDefinition.CreateDefinition(typeof(object), TypeIdentity.CreateDefinition);
+
+            protected override TypeDefinition Copy(TypeDefinition original)
+            {
+                if (original.Identity.Equals(typeof(string)))
+                {
+                    return TypeDefinition.CreateDefinition(typeof(string), TypeIdentity.CreateDefinition);
+                }
+
+                return TypeDefinition.CreateDefinition(typeof(object), TypeIdentity.CreateDefinition);
+            }
+
+            protected override TypeDefinition FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override TypeDefinition SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
+
+        private sealed class EndpointIdHashcodeContractVerfier : HashcodeContractVerifier
+        {
+            private readonly IEnumerable<TypeDefinition> m_DistinctInstances
+                = new List<TypeDefinition> 
+                     {
+                        TypeDefinition.CreateDefinition(typeof(string), TypeIdentity.CreateDefinition),
+                        TypeDefinition.CreateDefinition(typeof(object), TypeIdentity.CreateDefinition),
+                        TypeDefinition.CreateDefinition(typeof(int), TypeIdentity.CreateDefinition),
+                        TypeDefinition.CreateDefinition(typeof(IComparable), TypeIdentity.CreateDefinition),
+                        TypeDefinition.CreateDefinition(typeof(IComparable<>), TypeIdentity.CreateDefinition),
+                        TypeDefinition.CreateDefinition(typeof(List<int>), TypeIdentity.CreateDefinition),
+                        TypeDefinition.CreateDefinition(typeof(double), TypeIdentity.CreateDefinition),
+                        TypeDefinition.CreateDefinition(typeof(void), TypeIdentity.CreateDefinition),
+                     };
+
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly EndpointIdHashcodeContractVerfier m_HashcodeVerifier = new EndpointIdHashcodeContractVerfier();
+
+        private readonly EndpointIdEqualityContractVerifier m_EqualityVerifier = new EndpointIdEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
+        {
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
+
         public sealed class Nested<TKey, TValue>
         { 
         }
 
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<TypeDefinition>
-        {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<TypeDefinition> 
-                    {
-                        TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t)),
-                        TypeDefinition.CreateDefinition(typeof(object), t => TypeIdentity.CreateDefinition(t)),
-                        TypeDefinition.CreateDefinition(typeof(int), t => TypeIdentity.CreateDefinition(t)),
-                        TypeDefinition.CreateDefinition(typeof(IComparable), t => TypeIdentity.CreateDefinition(t)),
-                        TypeDefinition.CreateDefinition(typeof(IComparable<>), t => TypeIdentity.CreateDefinition(t)),
-                        TypeDefinition.CreateDefinition(typeof(List<int>), t => TypeIdentity.CreateDefinition(t)),
-                        TypeDefinition.CreateDefinition(typeof(double), t => TypeIdentity.CreateDefinition(t)),
-                        TypeDefinition.CreateDefinition(typeof(void), t => TypeIdentity.CreateDefinition(t)),
-                    },
-        };
-
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<TypeDefinition>
-        {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                { 
-                    TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t)),
-                    TypeDefinition.CreateDefinition(typeof(object), t => TypeIdentity.CreateDefinition(t)),
-                    TypeDefinition.CreateDefinition(typeof(int), t => TypeIdentity.CreateDefinition(t)),
-                    TypeDefinition.CreateDefinition(typeof(IComparable), t => TypeIdentity.CreateDefinition(t)),
-                    TypeDefinition.CreateDefinition(typeof(IComparable<>), t => TypeIdentity.CreateDefinition(t)),
-                    TypeDefinition.CreateDefinition(typeof(List<int>), t => TypeIdentity.CreateDefinition(t)),
-                    TypeDefinition.CreateDefinition(typeof(double), t => TypeIdentity.CreateDefinition(t)),
-                    TypeDefinition.CreateDefinition(typeof(void), t => TypeIdentity.CreateDefinition(t)),
-                },
-        };
-
         [Test]
         public void RoundTripSerialise()
         {
-            var original = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
-            var copy = Assert.BinarySerializeThenDeserialize(original);
+            var original = TypeDefinition.CreateDefinition(typeof(string), TypeIdentity.CreateDefinition);
+            var copy = AssertExtensions.RoundTripSerialize(original);
 
             Assert.AreEqual(original, copy);
         }
 
         [Test]
-        public void EqualsOperatorWithFirstObjectNull()
-        {
-            TypeDefinition first = null;
-            var second = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithSecondObjectNull()
-        {
-            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
-            TypeDefinition second = null;
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithEqualObject()
-        {
-            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
-            var second = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
-
-            Assert.IsTrue(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithNonequalObjects()
-        {
-            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
-            var second = TypeDefinition.CreateDefinition(typeof(object), t => TypeIdentity.CreateDefinition(t));
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithFirstObjectNull()
-        {
-            TypeDefinition first = null;
-            var second = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithSecondObjectNull()
-        {
-            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
-            TypeDefinition second = null;
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
-            var second = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
-
-            Assert.IsFalse(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
-            var second = TypeDefinition.CreateDefinition(typeof(object), t => TypeIdentity.CreateDefinition(t));
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
         public void CreateWithClass()
         {
-            var obj = TypeDefinition.CreateDefinition(typeof(List<int>), t => TypeIdentity.CreateDefinition(t));
+            var obj = TypeDefinition.CreateDefinition(typeof(List<int>), TypeIdentity.CreateDefinition);
 
             Assert.AreEqual(typeof(List<int>).FullName, obj.Identity.FullName);
             Assert.AreEqual(typeof(List<int>).IsClass, obj.IsClass);
@@ -165,14 +136,14 @@ namespace Apollo.Core.Base.Plugins
                     TypeIdentity.CreateDefinition(typeof(ICollection)),
                     TypeIdentity.CreateDefinition(typeof(IEnumerable)),
                 };
-            Assert.AreElementsEqualIgnoringOrder(interfaces, obj.BaseInterfaces);
+            Assert.That(obj.BaseInterfaces, Is.EquivalentTo(interfaces));
         }
 
         [Test]
         public void CreateWithNestedClass()
         {
             var type = typeof(Nested<,>);
-            var obj = TypeDefinition.CreateDefinition(type, t => TypeIdentity.CreateDefinition(t));
+            var obj = TypeDefinition.CreateDefinition(type, TypeIdentity.CreateDefinition);
 
             Assert.AreEqual(type.FullName, obj.Identity.FullName);
             Assert.AreEqual(type.IsClass, obj.IsClass);
@@ -184,49 +155,13 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void CreateWithInterface()
         {
-            var obj = TypeDefinition.CreateDefinition(typeof(IEnumerable<>), t => TypeIdentity.CreateDefinition(t));
+            var obj = TypeDefinition.CreateDefinition(typeof(IEnumerable<>), TypeIdentity.CreateDefinition);
 
             Assert.AreEqual(typeof(IEnumerable<>).FullName, obj.Identity.FullName);
             Assert.AreEqual(typeof(IEnumerable<>).IsClass, obj.IsClass);
             Assert.AreEqual(typeof(IEnumerable<>).IsInterface, obj.IsInterface);
             Assert.IsNull(obj.BaseType);
-            Assert.AreElementsEqual(new[] { TypeIdentity.CreateDefinition(typeof(IEnumerable)) }, obj.BaseInterfaces);
-        }
-
-        [Test]
-        public void EqualsWithNullObject()
-        {
-            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
-            object second = null;
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithEqualObjects()
-        {
-            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
-            object second = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
-
-            Assert.IsTrue(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjects()
-        {
-            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
-            object second = TypeDefinition.CreateDefinition(typeof(object), t => TypeIdentity.CreateDefinition(t));
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjectTypes()
-        {
-            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
-            var second = new object();
-
-            Assert.IsFalse(first.Equals(second));
+            Assert.That(obj.BaseInterfaces, Is.EquivalentTo(new[] { TypeIdentity.CreateDefinition(typeof(IEnumerable)) }));
         }
     }
 }

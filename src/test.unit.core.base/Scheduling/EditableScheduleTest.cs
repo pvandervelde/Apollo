@@ -7,7 +7,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Extensions.Scheduling;
-using MbUnit.Framework;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 using QuickGraph;
 
 namespace Apollo.Core.Base.Scheduling
@@ -33,7 +34,7 @@ namespace Apollo.Core.Base.Scheduling
 
             Assert.AreSame(start, schedule.Start);
             Assert.AreSame(end, schedule.End);
-            Assert.AreElementsSameIgnoringOrder(new IScheduleVertex[] { start, end }, schedule.Vertices);
+            Assert.That(schedule.Vertices, Is.EquivalentTo(new IScheduleVertex[] { start, end }));
             Assert.AreEqual(1, schedule.NumberOfOutboundConnections(start));
             Assert.AreEqual(1, schedule.NumberOfInboundConnections(end));
         }
@@ -41,7 +42,7 @@ namespace Apollo.Core.Base.Scheduling
         [Test]
         public void TraverseSchedulePartially()
         {
-            Schedule schedule = null;
+            Schedule schedule;
             {
                 var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
@@ -73,13 +74,13 @@ namespace Apollo.Core.Base.Scheduling
                     return vertex.Index != 3;
                 });
 
-            Assert.AreElementsEqual(new int[] { 1, 3 }, vertices);
+            Assert.That(vertices, Is.EquivalentTo(new[] { 1, 3 }));
         }
 
         [Test]
         public void TraverseScheduleCompletely()
         {
-            Schedule schedule = null;
+            Schedule schedule;
             {
                 var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
@@ -111,7 +112,7 @@ namespace Apollo.Core.Base.Scheduling
                     return true;
                 });
 
-            Assert.AreElementsEqual(new int[] { 1, 3, 4, 2 }, vertices);
+            Assert.That(vertices, Is.EquivalentTo(new[] { 1, 3, 4, 2 }));
         }
 
         [Test]
@@ -121,7 +122,7 @@ namespace Apollo.Core.Base.Scheduling
             // start -> node1 --> node2 -> end
             //            ^           |
             //            |-- node3 <-|
-            Schedule schedule = null;
+            Schedule schedule;
             {
                 var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
@@ -160,7 +161,7 @@ namespace Apollo.Core.Base.Scheduling
                     return true;
                 });
 
-            Assert.AreElementsEqual(new int[] { 1, 3, 4, 2, 5 }, vertices);
+            Assert.That(vertices, Is.EquivalentTo(new[] { 1, 3, 4, 2, 5 }));
         }
 
         [Test]
@@ -174,7 +175,7 @@ namespace Apollo.Core.Base.Scheduling
             //         node5--|  |->  node4
             //           ^              |
             //           |--------------|
-            Schedule schedule = null;
+            Schedule schedule;
             {
                 var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
@@ -223,7 +224,7 @@ namespace Apollo.Core.Base.Scheduling
                     return true;
                 });
 
-            Assert.AreElementsEqual(new int[] { 1, 3, 4, 2, 5, 6, 7 }, vertices);
+            Assert.That(vertices, Is.EquivalentTo(new[] { 1, 3, 4, 2, 5, 6, 7 }));
         }
 
         [Test]
@@ -237,7 +238,7 @@ namespace Apollo.Core.Base.Scheduling
             //         node5--|  |->  node4
             //           ^              |
             //           |--------------|
-            Schedule schedule = null;
+            Schedule schedule;
             {
                 var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
@@ -277,7 +278,7 @@ namespace Apollo.Core.Base.Scheduling
                 schedule = new Schedule(graph, start, end);
             }
 
-            var otherSchedule = Assert.BinarySerializeThenDeserialize(schedule);
+            var otherSchedule = AssertExtensions.RoundTripSerialize(schedule);
             var vertices = new List<int>();
             otherSchedule.TraverseAllScheduleVertices(
                 otherSchedule.Start,
@@ -287,7 +288,7 @@ namespace Apollo.Core.Base.Scheduling
                     return true;
                 });
 
-            Assert.AreElementsEqual(new int[] { 1, 3, 4, 2, 5, 6, 7 }, vertices);
+            Assert.That(vertices, Is.EquivalentTo(new[] { 1, 3, 4, 2, 5, 6, 7 }));
         }
     }
 }

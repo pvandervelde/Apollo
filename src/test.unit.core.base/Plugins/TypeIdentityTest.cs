@@ -8,32 +8,62 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Base.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class TypeIdentityTest
+    public sealed class TypeIdentityTest : EqualityContractVerifierTest
     {
-        public sealed class Nested<TKey, TValue>
+        private sealed class TypeIdentityEqualityContractVerifier : EqualityContractVerifier<TypeIdentity>
         {
+            private readonly TypeIdentity m_First = TypeIdentity.CreateDefinition(typeof(string));
+
+            private readonly TypeIdentity m_Second = TypeIdentity.CreateDefinition(typeof(object));
+
+            protected override TypeIdentity Copy(TypeIdentity original)
+            {
+                if (original.Equals(typeof(string)))
+                {
+                    return TypeIdentity.CreateDefinition(typeof(string));
+                }
+
+                return TypeIdentity.CreateDefinition(typeof(object));
+            }
+
+            protected override TypeIdentity FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override TypeIdentity SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
         }
 
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<TypeIdentity>
+        private sealed class TypeIdentityHashcodeContractVerfier : HashcodeContractVerifier
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<TypeIdentity> 
-                    {
+            private readonly IEnumerable<TypeIdentity> m_DistinctInstances
+                = new List<TypeIdentity> 
+                     {
                         TypeIdentity.CreateDefinition(typeof(string)),
                         TypeIdentity.CreateDefinition(typeof(object)),
                         TypeIdentity.CreateDefinition(typeof(int)),
@@ -44,107 +74,45 @@ namespace Apollo.Core.Base.Plugins
                         TypeIdentity.CreateDefinition(typeof(void)),
                         TypeIdentity.CreateDefinition(typeof(IEnumerable<>).GetGenericArguments().First()),
                         TypeIdentity.CreateDefinition(typeof(IComparable<>).GetGenericArguments().First()),
-                    },
-        };
+                     };
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<TypeIdentity>
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly TypeIdentityHashcodeContractVerfier m_HashcodeVerifier = new TypeIdentityHashcodeContractVerfier();
+
+        private readonly TypeIdentityEqualityContractVerifier m_EqualityVerifier = new TypeIdentityEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                { 
-                    TypeIdentity.CreateDefinition(typeof(string)),
-                    TypeIdentity.CreateDefinition(typeof(object)),
-                    TypeIdentity.CreateDefinition(typeof(int)),
-                    TypeIdentity.CreateDefinition(typeof(IComparable)),
-                    TypeIdentity.CreateDefinition(typeof(IComparable<>)),
-                    TypeIdentity.CreateDefinition(typeof(List<int>)),
-                    TypeIdentity.CreateDefinition(typeof(double)),
-                    TypeIdentity.CreateDefinition(typeof(void)),
-                    TypeIdentity.CreateDefinition(typeof(IEnumerable<>).GetGenericArguments().First()),
-                    TypeIdentity.CreateDefinition(typeof(IComparable<>).GetGenericArguments().First()),
-                },
-        };
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
+
+        public sealed class Nested<TKey, TValue>
+        {
+        }
 
         [Test]
         public void RoundTripSerialise()
         {
             var original = TypeIdentity.CreateDefinition(typeof(string));
-            var copy = Assert.BinarySerializeThenDeserialize(original);
+            var copy = AssertExtensions.RoundTripSerialize(original);
 
             Assert.AreEqual(original, copy);
-        }
-
-        [Test]
-        public void EqualsOperatorWithFirstObjectNull()
-        {
-            TypeIdentity first = null;
-            var second = TypeIdentity.CreateDefinition(typeof(string));
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithSecondObjectNull()
-        {
-            var first = TypeIdentity.CreateDefinition(typeof(string));
-            TypeIdentity second = null;
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithEqualObject()
-        {
-            var first = TypeIdentity.CreateDefinition(typeof(string));
-            var second = TypeIdentity.CreateDefinition(typeof(string));
-
-            Assert.IsTrue(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithNonequalObjects()
-        {
-            var first = TypeIdentity.CreateDefinition(typeof(string));
-            var second = TypeIdentity.CreateDefinition(typeof(object));
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithFirstObjectNull()
-        {
-            TypeIdentity first = null;
-            var second = TypeIdentity.CreateDefinition(typeof(string));
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithSecondObjectNull()
-        {
-            var first = TypeIdentity.CreateDefinition(typeof(string));
-            TypeIdentity second = null;
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var first = TypeIdentity.CreateDefinition(typeof(string));
-            var second = TypeIdentity.CreateDefinition(typeof(string));
-
-            Assert.IsFalse(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var first = TypeIdentity.CreateDefinition(typeof(string));
-            var second = TypeIdentity.CreateDefinition(typeof(object));
-
-            Assert.IsTrue(first != second);
         }
 
         [Test]

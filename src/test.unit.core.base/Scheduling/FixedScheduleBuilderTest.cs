@@ -9,8 +9,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Extensions.Scheduling;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.Core.Base.Scheduling
 {
@@ -84,10 +84,10 @@ namespace Apollo.Core.Base.Scheduling
             Assert.AreEqual(2, actionVertex.Index);
 
             var schedule = builder.Build();
-            Assert.AreElementsEqualIgnoringOrder(
-                new IScheduleVertex[] { schedule.Start, actionVertex, schedule.End }, 
-                schedule.Vertices,
-                AreVerticesEqual);
+            Assert.AreEqual(3, schedule.Vertices.Count());
+            Assert.IsTrue(AreVerticesEqual(schedule.Start, schedule.Vertices.ElementAt(0)));
+            Assert.IsTrue(AreVerticesEqual(actionVertex, schedule.Vertices.ElementAt(1)));
+            Assert.IsTrue(AreVerticesEqual(schedule.End, schedule.Vertices.ElementAt(2)));
         }
 
         [Test]
@@ -102,10 +102,10 @@ namespace Apollo.Core.Base.Scheduling
             Assert.AreEqual(2, subScheduleVertex.Index);
 
             var schedule = builder.Build();
-            Assert.AreElementsEqualIgnoringOrder(
-                new IScheduleVertex[] { schedule.Start, subScheduleVertex, schedule.End }, 
-                schedule.Vertices,
-                AreVerticesEqual);
+            Assert.AreEqual(3, schedule.Vertices.Count());
+            Assert.IsTrue(AreVerticesEqual(schedule.Start, schedule.Vertices.ElementAt(0)));
+            Assert.IsTrue(AreVerticesEqual(subScheduleVertex, schedule.Vertices.ElementAt(1)));
+            Assert.IsTrue(AreVerticesEqual(schedule.End, schedule.Vertices.ElementAt(2)));
         }
 
         [Test]
@@ -122,17 +122,17 @@ namespace Apollo.Core.Base.Scheduling
             var variable = new Mock<IScheduleVariable>();
 
             var builder = new FixedScheduleBuilder();
-            var synchronizationVertex = builder.AddSynchronizationStart(new IScheduleVariable[] { variable.Object });
+            var synchronizationVertex = builder.AddSynchronizationStart(new[] { variable.Object });
             builder.LinkFromStart(synchronizationVertex);
             builder.LinkToEnd(synchronizationVertex);
-            Assert.AreElementsEqual(new IScheduleVariable[] { variable.Object }, synchronizationVertex.VariablesToSynchronizeOn);
+            Assert.That(synchronizationVertex.VariablesToSynchronizeOn, Is.EquivalentTo(new[] { variable.Object }));
             Assert.AreEqual(2, synchronizationVertex.Index);
 
             var schedule = builder.Build();
-            Assert.AreElementsEqualIgnoringOrder(
-                new IScheduleVertex[] { schedule.Start, synchronizationVertex, schedule.End },
-                schedule.Vertices,
-                AreVerticesEqual);
+            Assert.AreEqual(3, schedule.Vertices.Count());
+            Assert.IsTrue(AreVerticesEqual(schedule.Start, schedule.Vertices.ElementAt(0)));
+            Assert.IsTrue(AreVerticesEqual(synchronizationVertex, schedule.Vertices.ElementAt(1)));
+            Assert.IsTrue(AreVerticesEqual(schedule.End, schedule.Vertices.ElementAt(2)));
         }
 
         [Test]
@@ -145,7 +145,7 @@ namespace Apollo.Core.Base.Scheduling
                 () => builder.AddSynchronizationEnd(
                     new SynchronizationStartVertex(
                         10, 
-                        new IScheduleVariable[] 
+                        new[] 
                             { 
                                 variable.Object 
                             })));
@@ -157,7 +157,7 @@ namespace Apollo.Core.Base.Scheduling
             var variable = new Mock<IScheduleVariable>();
 
             var builder = new FixedScheduleBuilder();
-            var synchronizationStartVertex = builder.AddSynchronizationStart(new IScheduleVariable[] { variable.Object });
+            var synchronizationStartVertex = builder.AddSynchronizationStart(new[] { variable.Object });
             builder.LinkFromStart(synchronizationStartVertex);
             
             var synchronizationEndVertex = builder.AddSynchronizationEnd(synchronizationStartVertex);
@@ -166,10 +166,11 @@ namespace Apollo.Core.Base.Scheduling
             Assert.AreEqual(3, synchronizationEndVertex.Index);
 
             var schedule = builder.Build();
-            Assert.AreElementsEqualIgnoringOrder(
-                new IScheduleVertex[] { schedule.Start, synchronizationStartVertex, synchronizationEndVertex, schedule.End },
-                schedule.Vertices,
-                AreVerticesEqual);
+            Assert.AreEqual(3, schedule.Vertices.Count());
+            Assert.IsTrue(AreVerticesEqual(schedule.Start, schedule.Vertices.ElementAt(0)));
+            Assert.IsTrue(AreVerticesEqual(synchronizationStartVertex, schedule.Vertices.ElementAt(1)));
+            Assert.IsTrue(AreVerticesEqual(synchronizationEndVertex, schedule.Vertices.ElementAt(1)));
+            Assert.IsTrue(AreVerticesEqual(schedule.End, schedule.Vertices.ElementAt(3)));
         }
 
         [Test]
@@ -182,10 +183,10 @@ namespace Apollo.Core.Base.Scheduling
             Assert.AreEqual(2, historyMarkingVertex.Index);
 
             var schedule = builder.Build();
-            Assert.AreElementsEqualIgnoringOrder(
-                new IScheduleVertex[] { schedule.Start, historyMarkingVertex, schedule.End },
-                schedule.Vertices,
-                AreVerticesEqual);
+            Assert.AreEqual(3, schedule.Vertices.Count());
+            Assert.IsTrue(AreVerticesEqual(schedule.Start, schedule.Vertices.ElementAt(0)));
+            Assert.IsTrue(AreVerticesEqual(historyMarkingVertex, schedule.Vertices.ElementAt(1)));
+            Assert.IsTrue(AreVerticesEqual(schedule.End, schedule.Vertices.ElementAt(2)));
         }
 
         [Test]
@@ -198,10 +199,10 @@ namespace Apollo.Core.Base.Scheduling
             Assert.AreEqual(2, insertVertex.Index);
 
             var schedule = builder.Build();
-            Assert.AreElementsEqualIgnoringOrder(
-                new IScheduleVertex[] { schedule.Start, insertVertex, schedule.End },
-                schedule.Vertices,
-                AreVerticesEqual);
+            Assert.AreEqual(3, schedule.Vertices.Count());
+            Assert.IsTrue(AreVerticesEqual(schedule.Start, schedule.Vertices.ElementAt(0)));
+            Assert.IsTrue(AreVerticesEqual(insertVertex, schedule.Vertices.ElementAt(1)));
+            Assert.IsTrue(AreVerticesEqual(schedule.End, schedule.Vertices.ElementAt(2)));
         }
 
         [Test]
@@ -223,10 +224,10 @@ namespace Apollo.Core.Base.Scheduling
             Assert.AreEqual(count, insertVertex.RemainingInserts);
 
             var schedule = builder.Build();
-            Assert.AreElementsEqualIgnoringOrder(
-                new IScheduleVertex[] { schedule.Start, insertVertex, schedule.End },
-                schedule.Vertices,
-                AreVerticesEqual);
+            Assert.AreEqual(3, schedule.Vertices.Count());
+            Assert.IsTrue(AreVerticesEqual(schedule.Start, schedule.Vertices.ElementAt(0)));
+            Assert.IsTrue(AreVerticesEqual(insertVertex, schedule.Vertices.ElementAt(1)));
+            Assert.IsTrue(AreVerticesEqual(schedule.End, schedule.Vertices.ElementAt(2)));
         }
 
         [Test]
@@ -253,8 +254,8 @@ namespace Apollo.Core.Base.Scheduling
         {
             var builder = new FixedScheduleBuilder();
             var insertVertex = builder.AddInsertPoint(1);
-            builder.LinkFromStart(insertVertex, null);
-            builder.LinkToEnd(insertVertex, null);
+            builder.LinkFromStart(insertVertex);
+            builder.LinkToEnd(insertVertex);
 
             var markHistoryVertex1 = new MarkHistoryVertex(10);
             var newInserts = builder.InsertIn(insertVertex, markHistoryVertex1);

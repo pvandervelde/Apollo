@@ -9,28 +9,78 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Extensions.Scheduling;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Base.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class GroupImportDefinitionTest
+    public sealed class GroupImportDefinitionTest : EqualityContractVerifierTest
     {
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<GroupImportDefinition>
+        private sealed class EndpointIdEqualityContractVerifier : EqualityContractVerifier<GroupImportDefinition>
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<GroupImportDefinition> 
-                    {
+            private readonly GroupImportDefinition m_First = GroupImportDefinition.CreateDefinition(
+                "a",
+                new GroupRegistrationId("b"),
+                null,
+                Enumerable.Empty<ImportRegistrationId>());
+
+            private readonly GroupImportDefinition m_Second = GroupImportDefinition.CreateDefinition(
+                "c",
+                new GroupRegistrationId("d"),
+                null,
+                Enumerable.Empty<ImportRegistrationId>());
+
+            protected override GroupImportDefinition Copy(GroupImportDefinition original)
+            {
+                if (original.ContractName.Equals("a"))
+                {
+                    return GroupImportDefinition.CreateDefinition(
+                        "a",
+                        new GroupRegistrationId("b"),
+                        null,
+                        Enumerable.Empty<ImportRegistrationId>());
+                }
+
+                return GroupImportDefinition.CreateDefinition(
+                    "c",
+                    new GroupRegistrationId("d"),
+                    null,
+                    Enumerable.Empty<ImportRegistrationId>());
+            }
+
+            protected override GroupImportDefinition FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override GroupImportDefinition SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
+
+        private sealed class EndpointIdHashcodeContractVerfier : HashcodeContractVerifier
+        {
+            private readonly IEnumerable<GroupImportDefinition> m_DistinctInstances
+                = new List<GroupImportDefinition> 
+                     {
                         GroupImportDefinition.CreateDefinition(
                             "a", 
                             new GroupRegistrationId("b"), 
@@ -51,37 +101,33 @@ namespace Apollo.Core.Base.Plugins
                             new GroupRegistrationId("h"), 
                             new InsertVertex(0, 1), 
                             Enumerable.Empty<ImportRegistrationId>()),
-                    },
-        };
+                     };
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<GroupImportDefinition>
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly EndpointIdHashcodeContractVerfier m_HashcodeVerifier = new EndpointIdHashcodeContractVerfier();
+
+        private readonly EndpointIdEqualityContractVerifier m_EqualityVerifier = new EndpointIdEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                { 
-                    GroupImportDefinition.CreateDefinition(
-                        "a", 
-                        new GroupRegistrationId("b"), 
-                        null, 
-                        Enumerable.Empty<ImportRegistrationId>()),
-                    GroupImportDefinition.CreateDefinition(
-                        "c", 
-                        new GroupRegistrationId("d"), 
-                        null, 
-                        Enumerable.Empty<ImportRegistrationId>()),
-                    GroupImportDefinition.CreateDefinition(
-                        "e", 
-                        new GroupRegistrationId("f"), 
-                        null, 
-                        Enumerable.Empty<ImportRegistrationId>()),
-                    GroupImportDefinition.CreateDefinition(
-                        "g", 
-                        new GroupRegistrationId("h"), 
-                        new InsertVertex(0, 1), 
-                        Enumerable.Empty<ImportRegistrationId>()),
-                },
-        };
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void RoundTripSerialise()
@@ -91,129 +137,9 @@ namespace Apollo.Core.Base.Plugins
                 new GroupRegistrationId("b"),
                 null,
                 new List<ImportRegistrationId> { new ImportRegistrationId(typeof(string), 0, "a") });
-            var copy = Assert.BinarySerializeThenDeserialize(original);
+            var copy = AssertExtensions.RoundTripSerialize(original);
 
             Assert.AreEqual(original, copy);
-        }
-
-        [Test]
-        public void EqualsOperatorWithFirstObjectNull()
-        {
-            GroupImportDefinition first = null;
-            var second = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithSecondObjectNull()
-        {
-            var first = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-            GroupImportDefinition second = null;
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithEqualObject()
-        {
-            var first = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-            var second = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-
-            Assert.IsTrue(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithNonequalObjects()
-        {
-            var first = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-            var second = GroupImportDefinition.CreateDefinition(
-                "c",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithFirstObjectNull()
-        {
-            GroupImportDefinition first = null;
-            var second = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithSecondObjectNull()
-        {
-            var first = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-            GroupImportDefinition second = null;
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var first = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-            var second = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-
-            Assert.IsFalse(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var first = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-            var second = GroupImportDefinition.CreateDefinition(
-                "c",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-
-            Assert.IsTrue(first != second);
         }
 
         [Test]
@@ -228,67 +154,7 @@ namespace Apollo.Core.Base.Plugins
             Assert.AreEqual(groupId, obj.ContainingGroup);
             Assert.AreEqual(contractName, obj.ContractName);
             Assert.AreEqual(vertex, obj.ScheduleInsertPosition);
-            Assert.AreElementsEqual(imports, obj.ImportsToMatch);
-        }
-
-        [Test]
-        public void EqualsWithNullObject()
-        {
-            var first = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-            object second = null;
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithEqualObjects()
-        {
-            var first = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-            object second = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-
-            Assert.IsTrue(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjects()
-        {
-            var first = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-            object second = GroupImportDefinition.CreateDefinition(
-                "c",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjectTypes()
-        {
-            var first = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-            var second = new object();
-
-            Assert.IsFalse(first.Equals(second));
+            Assert.That(obj.ImportsToMatch, Is.EquivalentTo(imports));
         }
     }
 }

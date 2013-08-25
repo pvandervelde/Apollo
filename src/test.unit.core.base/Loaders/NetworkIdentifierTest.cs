@@ -7,47 +7,58 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using System.Linq;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Base.Loaders
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
-    public sealed class NetworkIdentifierTest
+    public sealed class NetworkIdentifierTest : EqualityContractVerifierTest
     {
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<NetworkIdentifier>
+        private sealed class NetworkIdentifierEqualityContractVerifier : EqualityContractVerifier<NetworkIdentifier>
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<NetworkIdentifier> 
-                        {
-                            new NetworkIdentifier("a", "b"),
-                            new NetworkIdentifier("b", "b"),
-                            new NetworkIdentifier("c", "b"),
-                            new NetworkIdentifier("d", "b"),
-                            new NetworkIdentifier("e", "b"),
-                            new NetworkIdentifier("a", "c"),
-                            new NetworkIdentifier("a", "d"),
-                            new NetworkIdentifier("a", "e"),
-                            new NetworkIdentifier("a", "f"),
-                            new NetworkIdentifier("a", "g"),
-                        },
-        };
+            private readonly NetworkIdentifier m_First = new NetworkIdentifier("a", "b");
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<NetworkIdentifier>
+            private readonly NetworkIdentifier m_Second = new NetworkIdentifier("b", "b");
+
+            protected override NetworkIdentifier Copy(NetworkIdentifier original)
+            {
+                return new NetworkIdentifier(original.DomainName, original.Group);
+            }
+
+            protected override NetworkIdentifier FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override NetworkIdentifier SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
+
+        private sealed class NetworkIdentifierHashcodeContractVerfier : HashcodeContractVerifier
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                    { 
+            private readonly IEnumerable<NetworkIdentifier> m_DistinctInstances
+                = new List<NetworkIdentifier> 
+                     {
                         new NetworkIdentifier("a", "b"),
                         new NetworkIdentifier("b", "b"),
                         new NetworkIdentifier("c", "b"),
@@ -58,8 +69,33 @@ namespace Apollo.Core.Base.Loaders
                         new NetworkIdentifier("a", "e"),
                         new NetworkIdentifier("a", "f"),
                         new NetworkIdentifier("a", "g"),
-                    },
-        };
+                     };
+
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly NetworkIdentifierHashcodeContractVerfier m_HashcodeVerifier = new NetworkIdentifierHashcodeContractVerfier();
+
+        private readonly NetworkIdentifierEqualityContractVerifier m_EqualityVerifier = new NetworkIdentifierEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
+        {
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void Create()

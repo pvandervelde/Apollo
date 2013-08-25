@@ -9,39 +9,88 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Primitives;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reflection;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Base.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class PropertyBasedImportDefinitionTest
+    public sealed class PropertyBasedImportDefinitionTest : EqualityContractVerifierTest
     {
-        private static PropertyInfo GetPropertyForString()
+        private sealed class PropertyBasedImportDefinitionEqualityContractVerifier : EqualityContractVerifier<PropertyBasedImportDefinition>
         {
-            return typeof(string).GetProperty("Length");
+            private readonly PropertyBasedImportDefinition m_First = PropertyBasedImportDefinition.CreateDefinition(
+                "A",
+                TypeIdentity.CreateDefinition(typeof(int)),
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(string).GetProperty("Length"));
+
+            private readonly PropertyBasedImportDefinition m_Second = PropertyBasedImportDefinition.CreateDefinition(
+                "B",
+                TypeIdentity.CreateDefinition(typeof(int)),
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(Version).GetProperty("Build"));
+
+            protected override PropertyBasedImportDefinition Copy(PropertyBasedImportDefinition original)
+            {
+                if (original.ContractName.Equals("A"))
+                {
+                    return PropertyBasedImportDefinition.CreateDefinition(
+                        "A",
+                        TypeIdentity.CreateDefinition(typeof(int)),
+                        ImportCardinality.ExactlyOne,
+                        true,
+                        CreationPolicy.NonShared,
+                        typeof(string).GetProperty("Length"));
+                }
+
+                return PropertyBasedImportDefinition.CreateDefinition(
+                    "B",
+                    TypeIdentity.CreateDefinition(typeof(int)),
+                    ImportCardinality.ExactlyOne,
+                    true,
+                    CreationPolicy.NonShared,
+                    typeof(Version).GetProperty("Build"));
+            }
+
+            protected override PropertyBasedImportDefinition FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override PropertyBasedImportDefinition SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
         }
 
-        private static PropertyInfo GetPropertyForVersion()
+        private sealed class PropertyBasedImportDefinitionHashcodeContractVerfier : HashcodeContractVerifier
         {
-            return typeof(Version).GetProperty("Build");
-        }
-
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<PropertyBasedImportDefinition>
-        {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<PropertyBasedImportDefinition> 
-                    {
+            private readonly IEnumerable<PropertyBasedImportDefinition> m_DistinctInstances
+                = new List<PropertyBasedImportDefinition> 
+                     {
                         PropertyBasedImportDefinition.CreateDefinition(
                             "A", 
                             TypeIdentity.CreateDefinition(typeof(int)),
@@ -77,52 +126,40 @@ namespace Apollo.Core.Base.Plugins
                             true,
                             CreationPolicy.NonShared,
                             typeof(TimeZoneInfo).GetProperty("StandardName")),
-                    },
-        };
+                     };
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<SerializableImportDefinition>
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly PropertyBasedImportDefinitionHashcodeContractVerfier m_HashcodeVerifier 
+            = new PropertyBasedImportDefinitionHashcodeContractVerfier();
+
+        private readonly PropertyBasedImportDefinitionEqualityContractVerifier m_EqualityVerifier 
+            = new PropertyBasedImportDefinitionEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                { 
-                    PropertyBasedImportDefinition.CreateDefinition(
-                        "A", 
-                        TypeIdentity.CreateDefinition(typeof(int)),
-                        ImportCardinality.ExactlyOne,
-                        true,
-                        CreationPolicy.NonShared,
-                        typeof(string).GetProperty("Length")),
-                    PropertyBasedImportDefinition.CreateDefinition(
-                        "B", 
-                        TypeIdentity.CreateDefinition(typeof(int)),
-                        ImportCardinality.ExactlyOne,
-                        true,
-                        CreationPolicy.NonShared,
-                        typeof(Version).GetProperty("Build")),
-                    PropertyBasedImportDefinition.CreateDefinition(
-                        "C", 
-                        TypeIdentity.CreateDefinition(typeof(int)),
-                        ImportCardinality.ExactlyOne,
-                        true,
-                        CreationPolicy.NonShared,
-                        typeof(List<int>).GetProperty("Count")),
-                    PropertyBasedImportDefinition.CreateDefinition(
-                        "D", 
-                        TypeIdentity.CreateDefinition(typeof(string)),
-                        ImportCardinality.ExactlyOne,
-                        true,
-                        CreationPolicy.NonShared,
-                        typeof(TimeZone).GetProperty("StandardName")),
-                    PropertyBasedImportDefinition.CreateDefinition(
-                        "E", 
-                        TypeIdentity.CreateDefinition(typeof(string)),
-                        ImportCardinality.ExactlyOne,
-                        true,
-                        CreationPolicy.NonShared,
-                        typeof(TimeZoneInfo).GetProperty("StandardName")),
-                },
-        };
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
+
+        private static PropertyInfo GetPropertyForString()
+        {
+            return typeof(string).GetProperty("Length");
+        }
 
         [Test]
         public void RoundTripSerialise()
@@ -134,153 +171,9 @@ namespace Apollo.Core.Base.Plugins
                 true,
                 CreationPolicy.NonShared,
                 typeof(string).GetProperty("Length"));
-            var copy = Assert.BinarySerializeThenDeserialize(original);
+            var copy = AssertExtensions.RoundTripSerialize(original);
 
             Assert.AreEqual(original, copy);
-        }
-
-        [Test]
-        public void EqualsOperatorWithFirstObjectNull()
-        {
-            PropertyBasedImportDefinition first = null;
-            var second = PropertyBasedImportDefinition.CreateDefinition(
-                "A",
-                TypeIdentity.CreateDefinition(typeof(int)),
-                ImportCardinality.ExactlyOne,
-                true,
-                CreationPolicy.NonShared,
-                typeof(string).GetProperty("Length"));
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithSecondObjectNull()
-        {
-            var first = PropertyBasedImportDefinition.CreateDefinition(
-                "A",
-                TypeIdentity.CreateDefinition(typeof(int)),
-                ImportCardinality.ExactlyOne,
-                true,
-                CreationPolicy.NonShared,
-                typeof(string).GetProperty("Length"));
-            PropertyBasedImportDefinition second = null;
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithEqualObject()
-        {
-            var first = PropertyBasedImportDefinition.CreateDefinition(
-                "A",
-                TypeIdentity.CreateDefinition(typeof(int)),
-                ImportCardinality.ExactlyOne,
-                true,
-                CreationPolicy.NonShared,
-                typeof(string).GetProperty("Length"));
-            var second = PropertyBasedImportDefinition.CreateDefinition(
-                "A",
-                TypeIdentity.CreateDefinition(typeof(int)),
-                ImportCardinality.ExactlyOne,
-                true,
-                CreationPolicy.NonShared,
-                typeof(string).GetProperty("Length"));
-
-            Assert.IsTrue(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithNonequalObjects()
-        {
-            var first = PropertyBasedImportDefinition.CreateDefinition(
-                "A",
-                TypeIdentity.CreateDefinition(typeof(int)),
-                ImportCardinality.ExactlyOne,
-                true,
-                CreationPolicy.NonShared,
-                typeof(string).GetProperty("Length"));
-            var second = PropertyBasedImportDefinition.CreateDefinition(
-                "B",
-                TypeIdentity.CreateDefinition(typeof(int)),
-                ImportCardinality.ExactlyOne,
-                true,
-                CreationPolicy.NonShared,
-                typeof(Version).GetProperty("Build"));
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithFirstObjectNull()
-        {
-            PropertyBasedImportDefinition first = null;
-            var second = PropertyBasedImportDefinition.CreateDefinition(
-                "A",
-                TypeIdentity.CreateDefinition(typeof(int)),
-                ImportCardinality.ExactlyOne,
-                true,
-                CreationPolicy.NonShared,
-                typeof(string).GetProperty("Length"));
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithSecondObjectNull()
-        {
-            var first = PropertyBasedImportDefinition.CreateDefinition(
-                "A",
-                TypeIdentity.CreateDefinition(typeof(int)),
-                ImportCardinality.ExactlyOne,
-                true,
-                CreationPolicy.NonShared,
-                typeof(string).GetProperty("Length"));
-            PropertyBasedImportDefinition second = null;
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var first = PropertyBasedImportDefinition.CreateDefinition(
-                "A",
-                TypeIdentity.CreateDefinition(typeof(int)),
-                ImportCardinality.ExactlyOne,
-                true,
-                CreationPolicy.NonShared,
-                typeof(string).GetProperty("Length"));
-            var second = PropertyBasedImportDefinition.CreateDefinition(
-                "A",
-                TypeIdentity.CreateDefinition(typeof(int)),
-                ImportCardinality.ExactlyOne,
-                true,
-                CreationPolicy.NonShared,
-                typeof(string).GetProperty("Length"));
-
-            Assert.IsFalse(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var first = PropertyBasedImportDefinition.CreateDefinition(
-                "A",
-                TypeIdentity.CreateDefinition(typeof(int)),
-                ImportCardinality.ExactlyOne,
-                true,
-                CreationPolicy.NonShared,
-                typeof(string).GetProperty("Length"));
-            var second = PropertyBasedImportDefinition.CreateDefinition(
-                "B",
-                TypeIdentity.CreateDefinition(typeof(int)),
-                ImportCardinality.ExactlyOne,
-                true,
-                CreationPolicy.NonShared,
-                typeof(Version).GetProperty("Build"));
-
-            Assert.IsTrue(first != second);
         }
 
         [Test]
@@ -303,78 +196,6 @@ namespace Apollo.Core.Base.Plugins
             Assert.AreEqual(CreationPolicy.NonShared, obj.RequiredCreationPolicy);
             Assert.AreEqual(TypeIdentity.CreateDefinition(property.DeclaringType), obj.DeclaringType);
             Assert.AreEqual(PropertyDefinition.CreateDefinition(property), obj.Property);
-        }
-
-        [Test]
-        public void EqualsWithNullObject()
-        {
-            var first = PropertyBasedImportDefinition.CreateDefinition(
-                "A",
-                TypeIdentity.CreateDefinition(typeof(int)),
-                ImportCardinality.ExactlyOne,
-                true,
-                CreationPolicy.NonShared,
-                typeof(string).GetProperty("Length"));
-            object second = null;
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithEqualObjects()
-        {
-            var first = PropertyBasedImportDefinition.CreateDefinition(
-                "A",
-                TypeIdentity.CreateDefinition(typeof(int)),
-                ImportCardinality.ExactlyOne,
-                true,
-                CreationPolicy.NonShared,
-                typeof(string).GetProperty("Length"));
-            object second = PropertyBasedImportDefinition.CreateDefinition(
-                "A",
-                TypeIdentity.CreateDefinition(typeof(int)),
-                ImportCardinality.ExactlyOne,
-                true,
-                CreationPolicy.NonShared,
-                typeof(string).GetProperty("Length"));
-
-            Assert.IsTrue(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjects()
-        {
-            var first = PropertyBasedImportDefinition.CreateDefinition(
-                "A",
-                TypeIdentity.CreateDefinition(typeof(int)),
-                ImportCardinality.ExactlyOne,
-                true,
-                CreationPolicy.NonShared,
-                typeof(string).GetProperty("Length"));
-            object second = PropertyBasedImportDefinition.CreateDefinition(
-                "B",
-                TypeIdentity.CreateDefinition(typeof(int)),
-                ImportCardinality.ExactlyOne,
-                true,
-                CreationPolicy.NonShared,
-                typeof(Version).GetProperty("Build"));
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjectTypes()
-        {
-            var first = PropertyBasedImportDefinition.CreateDefinition(
-                "A",
-                TypeIdentity.CreateDefinition(typeof(int)),
-                ImportCardinality.ExactlyOne,
-                true,
-                CreationPolicy.NonShared,
-                typeof(string).GetProperty("Length"));
-            var second = new object();
-
-            Assert.IsFalse(first.Equals(second));
         }
     }
 }

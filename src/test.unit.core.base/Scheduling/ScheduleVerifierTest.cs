@@ -8,8 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Extensions.Scheduling;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 using QuickGraph;
 
 namespace Apollo.Core.Base.Scheduling
@@ -25,7 +25,7 @@ namespace Apollo.Core.Base.Scheduling
             var knownSchedules = new Mock<IStoreSchedules>();
             var verifier = new ScheduleVerifier(knownSchedules.Object);
 
-            Schedule schedule = null;
+            Schedule schedule;
             {
                 var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
@@ -68,7 +68,7 @@ namespace Apollo.Core.Base.Scheduling
             var knownSchedules = new Mock<IStoreSchedules>();
             var verifier = new ScheduleVerifier(knownSchedules.Object);
 
-            Schedule schedule = null;
+            Schedule schedule;
             {
                 var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
@@ -384,7 +384,7 @@ namespace Apollo.Core.Base.Scheduling
             var id = new ScheduleId();
 
             var subScheduleId = new ScheduleId();
-            ISchedule subSchedule = null;
+            ISchedule subSchedule;
             {
                 var subGraph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
                 var start = new StartVertex(1);
@@ -398,8 +398,8 @@ namespace Apollo.Core.Base.Scheduling
                 subSchedule = new Schedule(subGraph, start, end);
             }
 
-            IScheduleVertex errorVertex = null;
-            Schedule schedule = null;
+            IScheduleVertex errorVertex;
+            Schedule schedule;
             {
                 var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
                 var start = new StartVertex(1);
@@ -418,7 +418,7 @@ namespace Apollo.Core.Base.Scheduling
             var knownSchedules = new Mock<IStoreSchedules>();
             {
                 knownSchedules.Setup(s => s.Contains(It.IsAny<ScheduleId>()))
-                    .Returns<ScheduleId>(scheduleId => subScheduleId.Equals(scheduleId));
+                    .Returns<ScheduleId>(subScheduleId.Equals);
                 knownSchedules.Setup(s => s.Schedule(It.IsAny<ScheduleId>()))
                     .Returns<ScheduleId>(scheduleId => subSchedule);
             }
@@ -443,7 +443,7 @@ namespace Apollo.Core.Base.Scheduling
             var id = new ScheduleId();
 
             var subSubScheduleId = new ScheduleId();
-            ISchedule subSubSchedule = null;
+            ISchedule subSubSchedule;
             {
                 var subGraph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
                 var start = new StartVertex(1);
@@ -458,7 +458,7 @@ namespace Apollo.Core.Base.Scheduling
             }
 
             var subScheduleId = new ScheduleId();
-            ISchedule subSchedule = null;
+            ISchedule subSchedule;
             {
                 var subGraph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
                 var start = new StartVertex(1);
@@ -472,8 +472,8 @@ namespace Apollo.Core.Base.Scheduling
                 subSchedule = new Schedule(subGraph, start, end);
             }
 
-            IScheduleVertex errorVertex = null;
-            Schedule schedule = null;
+            IScheduleVertex errorVertex;
+            Schedule schedule;
             {
                 var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
                 var start = new StartVertex(1);

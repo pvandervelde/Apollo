@@ -9,38 +9,66 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Base.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class ParameterDefinitionTest
+    public sealed class ParameterDefinitionTest : EqualityContractVerifierTest
     {
-        private static ParameterInfo ParameterFromInt()
+        private sealed class ParameterDefinitionEqualityContractVerifier : EqualityContractVerifier<ParameterDefinition>
         {
-            return typeof(int).GetMethod("CompareTo", new[] { typeof(int) }).GetParameters().First();
+            private readonly ParameterDefinition m_First = ParameterDefinition.CreateDefinition(
+                typeof(string).GetMethod("Contains").GetParameters().First());
+
+            private readonly ParameterDefinition m_Second = ParameterDefinition.CreateDefinition(
+                typeof(int).GetMethod("CompareTo", new[] { typeof(int) }).GetParameters().First());
+
+            protected override ParameterDefinition Copy(ParameterDefinition original)
+            {
+                if (original.Identity.Equals(typeof(string)))
+                {
+                    return ParameterDefinition.CreateDefinition(
+                        typeof(string).GetMethod("Contains").GetParameters().First());
+                }
+
+                return ParameterDefinition.CreateDefinition(
+                    typeof(int).GetMethod("CompareTo", new[] { typeof(int) }).GetParameters().First());
+            }
+
+            protected override ParameterDefinition FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override ParameterDefinition SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
         }
 
-        private static ParameterInfo ParameterFromDouble()
+        private sealed class ParameterDefinitionHashcodeContractVerfier : HashcodeContractVerifier
         {
-            return typeof(double).GetMethod("CompareTo", new[] { typeof(double) }).GetParameters().First();
-        }
-
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<ParameterDefinition>
-        {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<ParameterDefinition> 
-                    {
+            private readonly IEnumerable<ParameterDefinition> m_DistinctInstances
+                = new List<ParameterDefinition> 
+                     {
                         ParameterDefinition.CreateDefinition(
                             typeof(string).GetMethod("Contains").GetParameters().First()),
                         ParameterDefinition.CreateDefinition(
@@ -51,107 +79,46 @@ namespace Apollo.Core.Base.Plugins
                             typeof(IComparable).GetMethod("CompareTo").GetParameters().First()),
                         ParameterDefinition.CreateDefinition(
                             typeof(IComparable<>).GetMethod("CompareTo").GetParameters().First()),
-                    },
-        };
+                     };
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<ParameterDefinition>
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly ParameterDefinitionHashcodeContractVerfier m_HashcodeVerifier = new ParameterDefinitionHashcodeContractVerfier();
+
+        private readonly ParameterDefinitionEqualityContractVerifier m_EqualityVerifier = new ParameterDefinitionEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                { 
-                    ParameterDefinition.CreateDefinition(
-                        typeof(string).GetMethod("Contains").GetParameters().First()),
-                    ParameterDefinition.CreateDefinition(
-                        typeof(int).GetMethod("CompareTo", new[] { typeof(int) }).GetParameters().First()),
-                    ParameterDefinition.CreateDefinition(
-                        typeof(double).GetMethod("CompareTo", new[] { typeof(double) }).GetParameters().First()),
-                    ParameterDefinition.CreateDefinition(
-                        typeof(IComparable).GetMethod("CompareTo").GetParameters().First()),
-                    ParameterDefinition.CreateDefinition(
-                        typeof(IComparable<>).GetMethod("CompareTo").GetParameters().First()),
-                },
-        };
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
+
+        private static ParameterInfo ParameterFromInt()
+        {
+            return typeof(int).GetMethod("CompareTo", new[] { typeof(int) }).GetParameters().First();
+        }
 
         [Test]
         public void RoundTripSerialise()
         {
             var original = ParameterDefinition.CreateDefinition(ParameterFromInt());
-            var copy = Assert.BinarySerializeThenDeserialize(original);
+            var copy = AssertExtensions.RoundTripSerialize(original);
 
             Assert.AreEqual(original, copy);
-        }
-
-        [Test]
-        public void EqualsOperatorWithFirstObjectNull()
-        {
-            ParameterDefinition first = null;
-            var second = ParameterDefinition.CreateDefinition(ParameterFromInt());
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithSecondObjectNull()
-        {
-            var first = ParameterDefinition.CreateDefinition(ParameterFromInt());
-            ParameterDefinition second = null;
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithEqualObject()
-        {
-            var first = ParameterDefinition.CreateDefinition(ParameterFromInt());
-            var second = ParameterDefinition.CreateDefinition(ParameterFromInt());
-
-            Assert.IsTrue(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithNonequalObjects()
-        {
-            var first = ParameterDefinition.CreateDefinition(ParameterFromInt());
-            var second = ParameterDefinition.CreateDefinition(ParameterFromDouble());
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithFirstObjectNull()
-        {
-            ParameterDefinition first = null;
-            var second = ParameterDefinition.CreateDefinition(ParameterFromInt());
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithSecondObjectNull()
-        {
-            var first = ParameterDefinition.CreateDefinition(ParameterFromInt());
-            ParameterDefinition second = null;
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var first = ParameterDefinition.CreateDefinition(ParameterFromInt());
-            var second = ParameterDefinition.CreateDefinition(ParameterFromInt());
-
-            Assert.IsFalse(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var first = ParameterDefinition.CreateDefinition(ParameterFromInt());
-            var second = ParameterDefinition.CreateDefinition(ParameterFromDouble());
-
-            Assert.IsTrue(first != second);
         }
 
         [Test]
@@ -162,42 +129,6 @@ namespace Apollo.Core.Base.Plugins
 
             Assert.AreEqual(parameter.Name, obj.Name);
             Assert.AreEqual(TypeIdentity.CreateDefinition(parameter.ParameterType), obj.Identity);
-        }
-
-        [Test]
-        public void EqualsWithNullObject()
-        {
-            var first = ParameterDefinition.CreateDefinition(ParameterFromInt());
-            object second = null;
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithEqualObjects()
-        {
-            var first = ParameterDefinition.CreateDefinition(ParameterFromInt());
-            object second = ParameterDefinition.CreateDefinition(ParameterFromInt());
-
-            Assert.IsTrue(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjects()
-        {
-            var first = ParameterDefinition.CreateDefinition(ParameterFromInt());
-            object second = ParameterDefinition.CreateDefinition(ParameterFromDouble());
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjectTypes()
-        {
-            var first = ParameterDefinition.CreateDefinition(ParameterFromInt());
-            var second = new object();
-
-            Assert.IsFalse(first.Equals(second));
         }
     }
 }

@@ -7,140 +7,111 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reflection;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Base.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class PropertyDefinitionTest
+    public sealed class PropertyDefinitionTest : EqualityContractVerifierTest
     {
-        private static PropertyInfo GetPropertyForString()
+        private sealed class PropertyDefinitionEqualityContractVerifier : EqualityContractVerifier<PropertyDefinition>
         {
-            return typeof(string).GetProperty("Length");
+            private readonly PropertyDefinition m_First
+                = PropertyDefinition.CreateDefinition(typeof(string).GetProperty("Length"));
+
+            private readonly PropertyDefinition m_Second
+                = PropertyDefinition.CreateDefinition(typeof(Version).GetProperty("Build"));
+
+            protected override PropertyDefinition Copy(PropertyDefinition original)
+            {
+                if (original.DeclaringType.Equals(typeof(string)))
+                {
+                    return PropertyDefinition.CreateDefinition(typeof(string).GetProperty("Length"));
+                }
+
+                return PropertyDefinition.CreateDefinition(typeof(Version).GetProperty("Build"));
+            }
+
+            protected override PropertyDefinition FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override PropertyDefinition SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
         }
 
-        private static PropertyInfo GetPropertyForVersion()
+        private sealed class PropertyDefinitionHashcodeContractVerfier : HashcodeContractVerifier
         {
-            return typeof(Version).GetProperty("Build");
-        }
-
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<PropertyDefinition>
-        {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<PropertyDefinition> 
-                    {
+            private readonly IEnumerable<PropertyDefinition> m_DistinctInstances
+                = new List<PropertyDefinition> 
+                     {
                         PropertyDefinition.CreateDefinition(typeof(string).GetProperty("Length")),
                         PropertyDefinition.CreateDefinition(typeof(Version).GetProperty("Build")),
                         PropertyDefinition.CreateDefinition(typeof(List<int>).GetProperty("Count")),
                         PropertyDefinition.CreateDefinition(typeof(TimeZone).GetProperty("StandardName")),
                         PropertyDefinition.CreateDefinition(typeof(TimeZoneInfo).GetProperty("StandardName")),
-                    },
-        };
+                     };
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<PropertyDefinition>
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly PropertyDefinitionHashcodeContractVerfier m_HashcodeVerifier = new PropertyDefinitionHashcodeContractVerfier();
+
+        private readonly PropertyDefinitionEqualityContractVerifier m_EqualityVerifier = new PropertyDefinitionEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                { 
-                    PropertyDefinition.CreateDefinition(typeof(string).GetProperty("Length")),
-                    PropertyDefinition.CreateDefinition(typeof(Version).GetProperty("Build")),
-                    PropertyDefinition.CreateDefinition(typeof(List<int>).GetProperty("Count")),
-                    PropertyDefinition.CreateDefinition(typeof(TimeZone).GetProperty("StandardName")),
-                    PropertyDefinition.CreateDefinition(typeof(TimeZoneInfo).GetProperty("StandardName")),
-                },
-        };
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
+
+        private static PropertyInfo GetPropertyForString()
+        {
+            return typeof(string).GetProperty("Length");
+        }
 
         [Test]
         public void RoundTripSerialise()
         {
             var original = PropertyDefinition.CreateDefinition(GetPropertyForString());
-            var copy = Assert.BinarySerializeThenDeserialize(original);
+            var copy = AssertExtensions.RoundTripSerialize(original);
 
             Assert.AreEqual(original, copy);
-        }
-
-        [Test]
-        public void EqualsOperatorWithFirstObjectNull()
-        {
-            PropertyDefinition first = null;
-            var second = PropertyDefinition.CreateDefinition(GetPropertyForString());
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithSecondObjectNull()
-        {
-            var first = PropertyDefinition.CreateDefinition(GetPropertyForString());
-            PropertyDefinition second = null;
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithEqualObject()
-        {
-            var first = PropertyDefinition.CreateDefinition(GetPropertyForString());
-            var second = PropertyDefinition.CreateDefinition(GetPropertyForString());
-
-            Assert.IsTrue(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithNonequalObjects()
-        {
-            var first = PropertyDefinition.CreateDefinition(GetPropertyForString());
-            var second = PropertyDefinition.CreateDefinition(GetPropertyForVersion());
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithFirstObjectNull()
-        {
-            PropertyDefinition first = null;
-            var second = PropertyDefinition.CreateDefinition(GetPropertyForString());
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithSecondObjectNull()
-        {
-            var first = PropertyDefinition.CreateDefinition(GetPropertyForString());
-            PropertyDefinition second = null;
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var first = PropertyDefinition.CreateDefinition(GetPropertyForString());
-            var second = PropertyDefinition.CreateDefinition(GetPropertyForString());
-
-            Assert.IsFalse(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var first = PropertyDefinition.CreateDefinition(GetPropertyForString());
-            var second = PropertyDefinition.CreateDefinition(GetPropertyForVersion());
-
-            Assert.IsTrue(first != second);
         }
 
         [Test]
@@ -152,42 +123,6 @@ namespace Apollo.Core.Base.Plugins
             Assert.AreEqual(property.Name, obj.PropertyName);
             Assert.AreEqual(TypeIdentity.CreateDefinition(property.PropertyType), obj.PropertyType);
             Assert.AreEqual(TypeIdentity.CreateDefinition(property.DeclaringType), obj.DeclaringType);
-        }
-
-        [Test]
-        public void EqualsWithNullObject()
-        {
-            var first = PropertyDefinition.CreateDefinition(GetPropertyForString());
-            object second = null;
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithEqualObjects()
-        {
-            var first = PropertyDefinition.CreateDefinition(GetPropertyForString());
-            object second = PropertyDefinition.CreateDefinition(GetPropertyForString());
-
-            Assert.IsTrue(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjects()
-        {
-            var first = PropertyDefinition.CreateDefinition(GetPropertyForString());
-            object second = PropertyDefinition.CreateDefinition(GetPropertyForVersion());
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjectTypes()
-        {
-            var first = PropertyDefinition.CreateDefinition(GetPropertyForString());
-            var second = new object();
-
-            Assert.IsFalse(first.Equals(second));
         }
     }
 }

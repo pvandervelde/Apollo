@@ -7,32 +7,63 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using System.Linq;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Base.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class TypeBasedExportDefinitionTest
+    public sealed class TypeBasedExportDefinitionTest : EqualityContractVerifierTest
     {
-        public sealed class Nested<TKey, TValue>
+        private sealed class TypeBasedExportDefinitionEqualityContractVerifier : EqualityContractVerifier<TypeBasedExportDefinition>
         {
+            private readonly TypeBasedExportDefinition m_First = TypeBasedExportDefinition.CreateDefinition("A", typeof(string));
+
+            private readonly TypeBasedExportDefinition m_Second = TypeBasedExportDefinition.CreateDefinition("B", typeof(object));
+
+            protected override TypeBasedExportDefinition Copy(TypeBasedExportDefinition original)
+            {
+                if (original.ContractName.Equals("A"))
+                {
+                    return TypeBasedExportDefinition.CreateDefinition("A", typeof(string));
+                }
+
+                return TypeBasedExportDefinition.CreateDefinition("B", typeof(object));
+            }
+
+            protected override TypeBasedExportDefinition FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override TypeBasedExportDefinition SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
         }
 
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<TypeBasedExportDefinition>
+        private sealed class TypeBasedExportDefinitionHashcodeContractVerfier : HashcodeContractVerifier
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<TypeBasedExportDefinition> 
-                    {
+            private readonly IEnumerable<TypeBasedExportDefinition> m_DistinctInstances
+                = new List<TypeBasedExportDefinition> 
+                     {
                         TypeBasedExportDefinition.CreateDefinition("A", typeof(string)),
                         TypeBasedExportDefinition.CreateDefinition("B", typeof(object)),
                         TypeBasedExportDefinition.CreateDefinition("C", typeof(int)),
@@ -41,105 +72,47 @@ namespace Apollo.Core.Base.Plugins
                         TypeBasedExportDefinition.CreateDefinition("F", typeof(List<int>)),
                         TypeBasedExportDefinition.CreateDefinition("G", typeof(double)),
                         TypeBasedExportDefinition.CreateDefinition("H", typeof(void)),
-                    },
-        };
+                     };
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<SerializableExportDefinition>
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly TypeBasedExportDefinitionHashcodeContractVerfier m_HashcodeVerifier 
+            = new TypeBasedExportDefinitionHashcodeContractVerfier();
+
+        private readonly TypeBasedExportDefinitionEqualityContractVerifier m_EqualityVerifier 
+            = new TypeBasedExportDefinitionEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                { 
-                    TypeBasedExportDefinition.CreateDefinition("A", typeof(string)),
-                    TypeBasedExportDefinition.CreateDefinition("B", typeof(object)),
-                    TypeBasedExportDefinition.CreateDefinition("C", typeof(int)),
-                    TypeBasedExportDefinition.CreateDefinition("D", typeof(IComparable)),
-                    TypeBasedExportDefinition.CreateDefinition("E", typeof(IComparable<>)),
-                    TypeBasedExportDefinition.CreateDefinition("F", typeof(List<int>)),
-                    TypeBasedExportDefinition.CreateDefinition("G", typeof(double)),
-                    TypeBasedExportDefinition.CreateDefinition("H", typeof(void)),
-                },
-        };
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
+
+        public sealed class Nested<TKey, TValue>
+        {
+        }
 
         [Test]
         public void RoundTripSerialise()
         {
             var original = TypeBasedExportDefinition.CreateDefinition("A", typeof(string));
-            var copy = Assert.BinarySerializeThenDeserialize(original);
+            var copy = AssertExtensions.RoundTripSerialize(original);
 
             Assert.AreEqual(original, copy);
-        }
-
-        [Test]
-        public void EqualsOperatorWithFirstObjectNull()
-        {
-            TypeBasedExportDefinition first = null;
-            var second = TypeBasedExportDefinition.CreateDefinition("A", typeof(string));
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithSecondObjectNull()
-        {
-            var first = TypeBasedExportDefinition.CreateDefinition("A", typeof(string));
-            TypeBasedExportDefinition second = null;
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithEqualObject()
-        {
-            var first = TypeBasedExportDefinition.CreateDefinition("A", typeof(string));
-            var second = TypeBasedExportDefinition.CreateDefinition("A", typeof(string));
-
-            Assert.IsTrue(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithNonequalObjects()
-        {
-            var first = TypeBasedExportDefinition.CreateDefinition("A", typeof(string));
-            var second = TypeBasedExportDefinition.CreateDefinition("B", typeof(object));
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithFirstObjectNull()
-        {
-            TypeBasedExportDefinition first = null;
-            var second = TypeBasedExportDefinition.CreateDefinition("A", typeof(string));
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithSecondObjectNull()
-        {
-            var first = TypeBasedExportDefinition.CreateDefinition("A", typeof(string));
-            TypeBasedExportDefinition second = null;
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var first = TypeBasedExportDefinition.CreateDefinition("A", typeof(string));
-            var second = TypeBasedExportDefinition.CreateDefinition("A", typeof(string));
-
-            Assert.IsFalse(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var first = TypeBasedExportDefinition.CreateDefinition("A", typeof(string));
-            var second = TypeBasedExportDefinition.CreateDefinition("B", typeof(object));
-
-            Assert.IsTrue(first != second);
         }
 
         [Test]
@@ -168,42 +141,6 @@ namespace Apollo.Core.Base.Plugins
 
             Assert.AreEqual("A", obj.ContractName);
             Assert.AreEqual(TypeIdentity.CreateDefinition(typeof(IEnumerable<>)), obj.DeclaringType);
-        }
-
-        [Test]
-        public void EqualsWithNullObject()
-        {
-            var first = TypeBasedExportDefinition.CreateDefinition("A", typeof(string));
-            object second = null;
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithEqualObjects()
-        {
-            var first = TypeBasedExportDefinition.CreateDefinition("A", typeof(string));
-            object second = TypeBasedExportDefinition.CreateDefinition("A", typeof(string));
-
-            Assert.IsTrue(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjects()
-        {
-            var first = TypeBasedExportDefinition.CreateDefinition("A", typeof(string));
-            object second = TypeBasedExportDefinition.CreateDefinition("B", typeof(object));
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjectTypes()
-        {
-            var first = TypeBasedExportDefinition.CreateDefinition("A", typeof(string));
-            var second = new object();
-
-            Assert.IsFalse(first.Equals(second));
         }
     }
 }

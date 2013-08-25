@@ -7,8 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using System.Linq;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Base
 {
@@ -18,62 +19,90 @@ namespace Apollo.Core.Base
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
-    public sealed class DatasetIdTest
+    public sealed class DatasetIdTest : EqualityContractVerifierTest
     {
-        private static DatasetId Create(int id)
+        private sealed class DatasetIdEqualityContractVerifier : EqualityContractVerifier<DatasetId>
         {
-            return (DatasetId)Mirror.ForType<DatasetId>().Constructor.Invoke(id);
+            private readonly DatasetId m_First = new DatasetId(1);
+
+            private readonly DatasetId m_Second = new DatasetId(2);
+
+            protected override DatasetId Copy(DatasetId original)
+            {
+                return original.Clone();
+            }
+
+            protected override DatasetId FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override DatasetId SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
         }
 
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<DatasetId>
-            {
-                // Note that the collision probability depends quite a lot on the number of 
-                // elements you test on. The fewer items you test on the larger the collision probability
-                // (if there is one obviously). So it's better to test for a large range of items
-                // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-                CollisionProbabilityLimit = CollisionProbability.VeryLow,
-                UniformDistributionQuality = UniformDistributionQuality.Excellent,
-                DistinctInstances =
-                    new List<DatasetId> 
-                        {
-                            Create(0),
-                            Create(1),
-                            Create(2),
-                            Create(3),
-                            Create(4),
-                            Create(5),
-                            Create(6),
-                            Create(7),
-                            Create(8),
-                            Create(9),
-                        },
-            };
+        private sealed class DatasetIdHashcodeContractVerfier : HashcodeContractVerifier
+        {
+            private readonly IEnumerable<DatasetId> m_DistinctInstances
+                = new List<DatasetId> 
+                     {
+                        new DatasetId(0),
+                        new DatasetId(1),
+                        new DatasetId(2),
+                        new DatasetId(3),
+                        new DatasetId(4),
+                        new DatasetId(5),
+                        new DatasetId(6),
+                        new DatasetId(7),
+                     };
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<DatasetId>
+            protected override IEnumerable<int> GetHashcodes()
             {
-                ImplementsOperatorOverloads = true,
-                EquivalenceClasses = new EquivalenceClassCollection
-                    { 
-                        Create(0),
-                        Create(1),
-                        Create(2),
-                        Create(3),
-                        Create(4),
-                        Create(5),
-                        Create(6),
-                        Create(7),
-                        Create(8),
-                        Create(9),
-                    },
-            };
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly DatasetIdHashcodeContractVerfier m_HashcodeVerifier = new DatasetIdHashcodeContractVerfier();
+
+        private readonly DatasetIdEqualityContractVerifier m_EqualityVerifier = new DatasetIdEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
+        {
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void LargerThanOperatorWithFirstObjectNull()
         {
             DatasetId first = null;
-            var second = Create(10);
+            var second = new DatasetId(10);
 
             Assert.IsFalse(first > second);
         }
@@ -81,7 +110,7 @@ namespace Apollo.Core.Base
         [Test]
         public void LargerThanOperatorWithSecondObjectNull()
         {
-            var first = Create(10);
+            var first = new DatasetId(10);
             DatasetId second = null;
 
             Assert.IsTrue(first > second);
@@ -99,8 +128,8 @@ namespace Apollo.Core.Base
         [Test]
         public void LargerThanOperatorWithEqualObjects()
         {
-            var first = Create(10);
-            var second = Create(10);
+            var first = new DatasetId(10);
+            var second = new DatasetId(10);
 
             Assert.IsFalse(first > second);
         }
@@ -108,8 +137,8 @@ namespace Apollo.Core.Base
         [Test]
         public void LargerThanOperatorWithFirstObjectLarger()
         {
-            var first = Create(11);
-            var second = Create(10);
+            var first = new DatasetId(11);
+            var second = new DatasetId(10);
 
             Assert.IsTrue(first > second);
         }
@@ -117,8 +146,8 @@ namespace Apollo.Core.Base
         [Test]
         public void LargerThanOperatorWithFirstObjectSmaller()
         {
-            var first = Create(9);
-            var second = Create(10);
+            var first = new DatasetId(9);
+            var second = new DatasetId(10);
 
             Assert.IsFalse(first > second);
         }
@@ -127,7 +156,7 @@ namespace Apollo.Core.Base
         public void SmallerThanOperatorWithFirstObjectNull()
         {
             DatasetId first = null;
-            var second = Create(10);
+            var second = new DatasetId(10);
 
             Assert.IsTrue(first < second);
         }
@@ -135,7 +164,7 @@ namespace Apollo.Core.Base
         [Test]
         public void SmallerThanOperatorWithSecondObjectNull()
         {
-            var first = Create(10);
+            var first = new DatasetId(10);
             DatasetId second = null;
 
             Assert.IsFalse(first < second);
@@ -153,8 +182,8 @@ namespace Apollo.Core.Base
         [Test]
         public void SmallerThanOperatorWithEqualObjects()
         {
-            var first = Create(10);
-            var second = Create(10);
+            var first = new DatasetId(10);
+            var second = new DatasetId(10);
 
             Assert.IsFalse(first < second);
         }
@@ -162,8 +191,8 @@ namespace Apollo.Core.Base
         [Test]
         public void SmallerThanOperatorWithFirstObjectLarger()
         {
-            var first = Create(11);
-            var second = Create(10);
+            var first = new DatasetId(11);
+            var second = new DatasetId(10);
 
             Assert.IsFalse(first < second);
         }
@@ -171,8 +200,8 @@ namespace Apollo.Core.Base
         [Test]
         public void SmallerThanOperatorWithFirstObjectSmaller()
         {
-            var first = Create(9);
-            var second = Create(10);
+            var first = new DatasetId(9);
+            var second = new DatasetId(10);
 
             Assert.IsTrue(first < second);
         }
@@ -180,7 +209,7 @@ namespace Apollo.Core.Base
         [Test]
         public void Clone()
         {
-            var first = Create(10);
+            var first = new DatasetId(10);
             var second = first.Clone();
 
             Assert.AreEqual(first, second);
@@ -189,7 +218,7 @@ namespace Apollo.Core.Base
         [Test]
         public void CompareToWithNullObject()
         {
-            var first = Create(10);
+            var first = new DatasetId(10);
             object second = null;
 
             Assert.AreEqual(1, first.CompareTo(second));
@@ -198,8 +227,8 @@ namespace Apollo.Core.Base
         [Test]
         public void CompareToOperatorWithEqualObjects()
         {
-            var first = Create(10);
-            object second = Create(10);
+            var first = new DatasetId(10);
+            object second = new DatasetId(10);
 
             Assert.AreEqual(0, first.CompareTo(second));
         }
@@ -207,8 +236,8 @@ namespace Apollo.Core.Base
         [Test]
         public void CompareToWithLargerFirstObject()
         {
-            var first = Create(11);
-            object second = Create(10);
+            var first = new DatasetId(11);
+            object second = new DatasetId(10);
 
             Assert.IsTrue(first.CompareTo(second) > 0);
         }
@@ -216,8 +245,8 @@ namespace Apollo.Core.Base
         [Test]
         public void CompareToWithSmallerFirstObject()
         {
-            var first = Create(10);
-            object second = Create(11);
+            var first = new DatasetId(10);
+            object second = new DatasetId(11);
 
             Assert.IsTrue(first.CompareTo(second) < 0);
         }
@@ -225,7 +254,7 @@ namespace Apollo.Core.Base
         [Test]
         public void CompareToWithUnequalObjectTypes()
         {
-            var first = Create(10);
+            var first = new DatasetId(10);
             object second = new object();
 
             Assert.Throws<ArgumentException>(() => first.CompareTo(second));

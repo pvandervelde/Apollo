@@ -9,38 +9,62 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Base.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class ConstructorDefinitionTest
+    public sealed class ConstructorDefinitionTest : EqualityContractVerifierTest
     {
-        private static ConstructorInfo GetConstructorForString()
+        private sealed class ConstructorDefinitionEqualityContractVerifier : EqualityContractVerifier<ConstructorDefinition>
         {
-            return typeof(string).GetConstructor(new[] { typeof(char[]) });
+            private readonly ConstructorDefinition m_First = ConstructorDefinition.CreateDefinition(typeof(object).GetConstructor(new Type[0]));
+
+            private readonly ConstructorDefinition m_Second = ConstructorDefinition.CreateDefinition(typeof(List<int>).GetConstructor(new Type[0]));
+
+            protected override ConstructorDefinition Copy(ConstructorDefinition original)
+            {
+                if (original.DeclaringType.Equals(typeof(object)))
+                {
+                    return ConstructorDefinition.CreateDefinition(typeof(object).GetConstructor(new Type[0]));
+                }
+
+                return ConstructorDefinition.CreateDefinition(typeof(List<int>).GetConstructor(new Type[0]));
+            }
+
+            protected override ConstructorDefinition FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override ConstructorDefinition SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
         }
 
-        private static ConstructorInfo GetConstructorForObject()
+        private sealed class ConstructorDefinitionHashcodeContractVerfier : HashcodeContractVerifier
         {
-            return typeof(object).GetConstructor(new Type[0]);
-        }
-
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<ConstructorDefinition>
-        {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<ConstructorDefinition> 
-                    {
+            private readonly IEnumerable<ConstructorDefinition> m_DistinctInstances
+                = new List<ConstructorDefinition> 
+                     {
                         ConstructorDefinition.CreateDefinition(
                             typeof(string).GetConstructor(new[] 
                                 { 
@@ -53,109 +77,46 @@ namespace Apollo.Core.Base.Plugins
                             {
                                 typeof(string)
                             })),
-                    },
-        };
+                     };
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<ConstructorDefinition>
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private static ConstructorInfo GetConstructorForString()
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                { 
-                    ConstructorDefinition.CreateDefinition(
-                        typeof(string).GetConstructor(new[] 
-                        { 
-                            typeof(char[])
-                        })),
-                    ConstructorDefinition.CreateDefinition(typeof(object).GetConstructor(new Type[0])),
-                    ConstructorDefinition.CreateDefinition(typeof(List<int>).GetConstructor(new Type[0])),
-                    ConstructorDefinition.CreateDefinition(
-                            typeof(Uri).GetConstructor(new[] 
-                            {
-                                typeof(string)
-                            })),
-                },
-        };
+            return typeof(string).GetConstructor(new[] { typeof(char[]) });
+        }
+
+        private readonly ConstructorDefinitionHashcodeContractVerfier m_HashcodeVerifier = new ConstructorDefinitionHashcodeContractVerfier();
+
+        private readonly ConstructorDefinitionEqualityContractVerifier m_EqualityVerifier = new ConstructorDefinitionEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
+        {
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void RoundTripSerialise()
         {
             var original = ConstructorDefinition.CreateDefinition(GetConstructorForString());
-            var copy = Assert.BinarySerializeThenDeserialize(original);
+            var copy = AssertExtensions.RoundTripSerialize(original);
 
             Assert.AreEqual(original, copy);
-        }
-
-        [Test]
-        public void EqualsOperatorWithFirstObjectNull()
-        {
-            ConstructorDefinition first = null;
-            var second = ConstructorDefinition.CreateDefinition(GetConstructorForString());
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithSecondObjectNull()
-        {
-            var first = ConstructorDefinition.CreateDefinition(GetConstructorForString());
-            ConstructorDefinition second = null;
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithEqualObject()
-        {
-            var first = ConstructorDefinition.CreateDefinition(GetConstructorForString());
-            var second = ConstructorDefinition.CreateDefinition(GetConstructorForString());
-
-            Assert.IsTrue(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithNonequalObjects()
-        {
-            var first = ConstructorDefinition.CreateDefinition(GetConstructorForString());
-            var second = ConstructorDefinition.CreateDefinition(GetConstructorForObject());
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithFirstObjectNull()
-        {
-            ConstructorDefinition first = null;
-            var second = ConstructorDefinition.CreateDefinition(GetConstructorForString());
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithSecondObjectNull()
-        {
-            var first = ConstructorDefinition.CreateDefinition(GetConstructorForString());
-            ConstructorDefinition second = null;
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var first = ConstructorDefinition.CreateDefinition(GetConstructorForString());
-            var second = ConstructorDefinition.CreateDefinition(GetConstructorForString());
-
-            Assert.IsFalse(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var first = ConstructorDefinition.CreateDefinition(GetConstructorForString());
-            var second = ConstructorDefinition.CreateDefinition(GetConstructorForObject());
-
-            Assert.IsTrue(first != second);
         }
 
         [Test]
@@ -164,46 +125,10 @@ namespace Apollo.Core.Base.Plugins
             var obj = ConstructorDefinition.CreateDefinition(GetConstructorForString());
             var constructor = GetConstructorForString();
 
-            Assert.AreElementsEqualIgnoringOrder(
-                constructor.GetParameters().Select(p => ParameterDefinition.CreateDefinition(p)), 
-                obj.Parameters);
+            Assert.That(
+                obj.Parameters,
+                Is.EquivalentTo(constructor.GetParameters().Select(p => ParameterDefinition.CreateDefinition(p))));
             Assert.AreEqual(TypeIdentity.CreateDefinition(constructor.DeclaringType), obj.DeclaringType);
-        }
-
-        [Test]
-        public void EqualsWithNullObject()
-        {
-            var first = ConstructorDefinition.CreateDefinition(GetConstructorForString());
-            object second = null;
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithEqualObjects()
-        {
-            var first = ConstructorDefinition.CreateDefinition(GetConstructorForString());
-            object second = ConstructorDefinition.CreateDefinition(GetConstructorForString());
-
-            Assert.IsTrue(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjects()
-        {
-            var first = ConstructorDefinition.CreateDefinition(GetConstructorForString());
-            object second = ConstructorDefinition.CreateDefinition(GetConstructorForObject());
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjectTypes()
-        {
-            var first = ConstructorDefinition.CreateDefinition(GetConstructorForString());
-            var second = new object();
-
-            Assert.IsFalse(first.Equals(second));
         }
     }
 }

@@ -6,11 +6,12 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Extensions.Scheduling;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 using QuickGraph;
 
 namespace Apollo.Core.Base.Plugins
@@ -18,34 +19,70 @@ namespace Apollo.Core.Base.Plugins
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class ScheduleDefinitionTest
+    public sealed class ScheduleDefinitionTest : EqualityContractVerifierTest
     {
-        private static ISchedule BuildSchedule()
+        private sealed class ScheduleDefinitionEqualityContractVerifier : EqualityContractVerifier<ScheduleDefinition>
         {
-            var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
+            private readonly ScheduleDefinition m_First = ScheduleDefinition.CreateDefinition(
+                new GroupRegistrationId("a"),
+                BuildSchedule(),
+                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
+                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
 
-            var start = new StartVertex(1);
-            graph.AddVertex(start);
+            private readonly ScheduleDefinition m_Second = ScheduleDefinition.CreateDefinition(
+                new GroupRegistrationId("b"),
+                BuildSchedule(),
+                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
+                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
 
-            var end = new EndVertex(2);
-            graph.AddVertex(end);
-            graph.AddEdge(new ScheduleEdge(start, end));
+            protected override ScheduleDefinition Copy(ScheduleDefinition original)
+            {
+                if (original.ContainingGroup.Equals(new GroupRegistrationId("a")))
+                {
+                    return ScheduleDefinition.CreateDefinition(
+                        new GroupRegistrationId("a"),
+                        BuildSchedule(),
+                        new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
+                        new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
+                }
 
-            return new Schedule(graph, start, end);
+                return ScheduleDefinition.CreateDefinition(
+                    new GroupRegistrationId("b"),
+                    BuildSchedule(),
+                    new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
+                    new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
+            }
+
+            protected override ScheduleDefinition FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override ScheduleDefinition SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
         }
 
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<ScheduleDefinition>
+        private sealed class ScheduleDefinitionHashcodeContractVerfier : HashcodeContractVerifier
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<ScheduleDefinition> 
-                    {
+            private readonly IEnumerable<ScheduleDefinition> m_DistinctInstances
+                = new List<ScheduleDefinition> 
+                     {
                         ScheduleDefinition.CreateDefinition(
                             new GroupRegistrationId("a"), 
                             BuildSchedule(),
@@ -66,37 +103,47 @@ namespace Apollo.Core.Base.Plugins
                             BuildSchedule(),
                             new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(), 
                             new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>()),
-                    },
-        };
+                     };
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<ScheduleDefinition>
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly ScheduleDefinitionHashcodeContractVerfier m_HashcodeVerifier = new ScheduleDefinitionHashcodeContractVerfier();
+
+        private readonly ScheduleDefinitionEqualityContractVerifier m_EqualityVerifier = new ScheduleDefinitionEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                { 
-                    ScheduleDefinition.CreateDefinition(
-                        new GroupRegistrationId("a"), 
-                        BuildSchedule(),
-                        new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(), 
-                        new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>()),
-                    ScheduleDefinition.CreateDefinition(
-                        new GroupRegistrationId("b"), 
-                        BuildSchedule(),
-                        new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(), 
-                        new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>()),
-                    ScheduleDefinition.CreateDefinition(
-                        new GroupRegistrationId("c"), 
-                        BuildSchedule(),
-                        new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(), 
-                        new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>()),
-                    ScheduleDefinition.CreateDefinition(
-                        new GroupRegistrationId("d"), 
-                        BuildSchedule(),
-                        new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(), 
-                        new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>()),
-                },
-        };
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
+
+        private static ISchedule BuildSchedule()
+        {
+            var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
+
+            var start = new StartVertex(1);
+            graph.AddVertex(start);
+
+            var end = new EndVertex(2);
+            graph.AddVertex(end);
+            graph.AddEdge(new ScheduleEdge(start, end));
+
+            return new Schedule(graph, start, end);
+        }
 
         [Test]
         public void RoundTripSerialise()
@@ -106,129 +153,9 @@ namespace Apollo.Core.Base.Plugins
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
-            var copy = Assert.BinarySerializeThenDeserialize(original);
+            var copy = AssertExtensions.RoundTripSerialize(original);
 
             Assert.AreEqual(original, copy);
-        }
-
-        [Test]
-        public void EqualsOperatorWithFirstObjectNull()
-        {
-            ScheduleDefinition first = null;
-            var second = ScheduleDefinition.CreateDefinition(
-                new GroupRegistrationId("a"),
-                BuildSchedule(),
-                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
-                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithSecondObjectNull()
-        {
-            var first = ScheduleDefinition.CreateDefinition(
-                new GroupRegistrationId("a"),
-                BuildSchedule(),
-                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
-                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
-            ScheduleDefinition second = null;
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithEqualObject()
-        {
-            var first = ScheduleDefinition.CreateDefinition(
-                new GroupRegistrationId("a"),
-                BuildSchedule(),
-                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
-                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
-            var second = ScheduleDefinition.CreateDefinition(
-                new GroupRegistrationId("a"),
-                BuildSchedule(),
-                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
-                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
-
-            Assert.IsTrue(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithNonequalObjects()
-        {
-            var first = ScheduleDefinition.CreateDefinition(
-                new GroupRegistrationId("a"),
-                BuildSchedule(),
-                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
-                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
-            var second = ScheduleDefinition.CreateDefinition(
-                new GroupRegistrationId("b"),
-                BuildSchedule(),
-                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
-                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithFirstObjectNull()
-        {
-            ScheduleDefinition first = null;
-            var second = ScheduleDefinition.CreateDefinition(
-                new GroupRegistrationId("a"),
-                BuildSchedule(),
-                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
-                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithSecondObjectNull()
-        {
-            var first = ScheduleDefinition.CreateDefinition(
-                new GroupRegistrationId("a"),
-                BuildSchedule(),
-                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
-                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
-            ScheduleDefinition second = null;
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var first = ScheduleDefinition.CreateDefinition(
-                new GroupRegistrationId("a"),
-                BuildSchedule(),
-                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
-                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
-            var second = ScheduleDefinition.CreateDefinition(
-                new GroupRegistrationId("a"),
-                BuildSchedule(),
-                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
-                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
-
-            Assert.IsFalse(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var first = ScheduleDefinition.CreateDefinition(
-                new GroupRegistrationId("a"),
-                BuildSchedule(),
-                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
-                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
-            var second = ScheduleDefinition.CreateDefinition(
-                new GroupRegistrationId("b"),
-                BuildSchedule(),
-                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
-                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
-
-            Assert.IsTrue(first != second);
         }
 
         [Test]
@@ -252,68 +179,8 @@ namespace Apollo.Core.Base.Plugins
 
             Assert.AreEqual(groupId, obj.ContainingGroup);
             Assert.AreEqual(schedule, obj.Schedule);
-            Assert.AreElementsEqual(actions, obj.Actions);
-            Assert.AreElementsEqual(conditions, obj.Conditions);
-        }
-
-        [Test]
-        public void EqualsWithNullObject()
-        {
-            var first = ScheduleDefinition.CreateDefinition(
-                new GroupRegistrationId("a"),
-                BuildSchedule(),
-                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
-                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
-            object second = null;
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithEqualObjects()
-        {
-            var first = ScheduleDefinition.CreateDefinition(
-                new GroupRegistrationId("a"),
-                BuildSchedule(),
-                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
-                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
-            object second = ScheduleDefinition.CreateDefinition(
-                new GroupRegistrationId("a"),
-                BuildSchedule(),
-                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
-                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
-
-            Assert.IsTrue(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjects()
-        {
-            var first = ScheduleDefinition.CreateDefinition(
-                new GroupRegistrationId("a"),
-                BuildSchedule(),
-                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
-                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
-            object second = ScheduleDefinition.CreateDefinition(
-                new GroupRegistrationId("b"),
-                BuildSchedule(),
-                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
-                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjectTypes()
-        {
-            var first = ScheduleDefinition.CreateDefinition(
-                new GroupRegistrationId("a"),
-                BuildSchedule(),
-                new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
-                new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
-            var second = new object();
-
-            Assert.IsFalse(first.Equals(second));
+            Assert.That(obj.Actions, Is.EquivalentTo(actions));
+            Assert.That(obj.Conditions, Is.EquivalentTo(conditions));
         }
     }
 }

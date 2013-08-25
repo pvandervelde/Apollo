@@ -9,16 +9,97 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Base.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class MethodDefinitionTest
+    public sealed class MethodDefinitionTest : EqualityContractVerifierTest
     {
+        private sealed class MethodDefinitionEqualityContractVerifier : EqualityContractVerifier<MethodDefinition>
+        {
+            private readonly MethodDefinition m_First 
+                = MethodDefinition.CreateDefinition(typeof(string).GetMethod("Contains"));
+
+            private readonly MethodDefinition m_Second 
+                = MethodDefinition.CreateDefinition(typeof(int).GetMethod("CompareTo", new[] { typeof(int) }));
+
+            protected override MethodDefinition Copy(MethodDefinition original)
+            {
+                if (original.DeclaringType.Equals(typeof(string)))
+                {
+                    return MethodDefinition.CreateDefinition(typeof(string).GetMethod("Contains"));
+                }
+
+                return MethodDefinition.CreateDefinition(typeof(int).GetMethod("CompareTo", new[] { typeof(int) }));
+            }
+
+            protected override MethodDefinition FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override MethodDefinition SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
+
+        private sealed class MethodDefinitionHashcodeContractVerfier : HashcodeContractVerifier
+        {
+            private readonly IEnumerable<MethodDefinition> m_DistinctInstances
+                = new List<MethodDefinition> 
+                     {
+                        MethodDefinition.CreateDefinition(typeof(string).GetMethod("Contains")),
+                        MethodDefinition.CreateDefinition(typeof(int).GetMethod("CompareTo", new[] { typeof(int) })),
+                        MethodDefinition.CreateDefinition(typeof(double).GetMethod("CompareTo", new[] { typeof(double) })),
+                        MethodDefinition.CreateDefinition(typeof(IComparable).GetMethod("CompareTo")),
+                        MethodDefinition.CreateDefinition(typeof(IComparable<>).GetMethod("CompareTo")),
+                     };
+
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly MethodDefinitionHashcodeContractVerfier m_HashcodeVerifier = new MethodDefinitionHashcodeContractVerfier();
+
+        private readonly MethodDefinitionEqualityContractVerifier m_EqualityVerifier = new MethodDefinitionEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
+        {
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
+
         private static MethodInfo GetMethodForInt()
         {
             return typeof(int).GetMethod("CompareTo", new[] { typeof(int) });
@@ -29,119 +110,13 @@ namespace Apollo.Core.Base.Plugins
             return typeof(double).GetMethod("CompareTo", new[] { typeof(double) });
         }
 
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<MethodDefinition>
-        {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<MethodDefinition> 
-                    {
-                        MethodDefinition.CreateDefinition(typeof(string).GetMethod("Contains")),
-                        MethodDefinition.CreateDefinition(typeof(int).GetMethod("CompareTo", new[] { typeof(int) })),
-                        MethodDefinition.CreateDefinition(typeof(double).GetMethod("CompareTo", new[] { typeof(double) })),
-                        MethodDefinition.CreateDefinition(typeof(IComparable).GetMethod("CompareTo")),
-                        MethodDefinition.CreateDefinition(typeof(IComparable<>).GetMethod("CompareTo")),
-                    },
-        };
-
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<MethodDefinition>
-        {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                { 
-                    MethodDefinition.CreateDefinition(typeof(string).GetMethod("Contains")),
-                    MethodDefinition.CreateDefinition(typeof(int).GetMethod("CompareTo", new[] { typeof(int) })),
-                    MethodDefinition.CreateDefinition(typeof(double).GetMethod("CompareTo", new[] { typeof(double) })),
-                    MethodDefinition.CreateDefinition(typeof(IComparable).GetMethod("CompareTo")),
-                    MethodDefinition.CreateDefinition(typeof(IComparable<>).GetMethod("CompareTo")),
-                },
-        };
-
         [Test]
         public void RoundTripSerialise()
         {
             var original = MethodDefinition.CreateDefinition(GetMethodForInt());
-            var copy = Assert.BinarySerializeThenDeserialize(original);
+            var copy = AssertExtensions.RoundTripSerialize(original);
 
             Assert.AreEqual(original, copy);
-        }
-
-        [Test]
-        public void EqualsOperatorWithFirstObjectNull()
-        {
-            MethodDefinition first = null;
-            var second = MethodDefinition.CreateDefinition(GetMethodForInt());
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithSecondObjectNull()
-        {
-            var first = MethodDefinition.CreateDefinition(GetMethodForInt());
-            MethodDefinition second = null;
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithEqualObject()
-        {
-            var first = MethodDefinition.CreateDefinition(GetMethodForInt());
-            var second = MethodDefinition.CreateDefinition(GetMethodForInt());
-
-            Assert.IsTrue(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithNonequalObjects()
-        {
-            var first = MethodDefinition.CreateDefinition(GetMethodForInt());
-            var second = MethodDefinition.CreateDefinition(GetMethodForDouble());
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithFirstObjectNull()
-        {
-            MethodDefinition first = null;
-            var second = MethodDefinition.CreateDefinition(GetMethodForInt());
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithSecondObjectNull()
-        {
-            var first = MethodDefinition.CreateDefinition(GetMethodForInt());
-            MethodDefinition second = null;
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var first = MethodDefinition.CreateDefinition(GetMethodForInt());
-            var second = MethodDefinition.CreateDefinition(GetMethodForInt());
-
-            Assert.IsFalse(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var first = MethodDefinition.CreateDefinition(GetMethodForInt());
-            var second = MethodDefinition.CreateDefinition(GetMethodForDouble());
-
-            Assert.IsTrue(first != second);
         }
 
         [Test]
@@ -152,46 +127,10 @@ namespace Apollo.Core.Base.Plugins
 
             Assert.AreEqual(method.Name, obj.MethodName);
             Assert.AreEqual(TypeIdentity.CreateDefinition(method.ReturnType), obj.ReturnType);
-            Assert.AreElementsEqualIgnoringOrder(
-                method.GetParameters().Select(p => ParameterDefinition.CreateDefinition(p)), 
-                obj.Parameters);
+            Assert.That(
+                obj.Parameters,
+                Is.EquivalentTo(method.GetParameters().Select(p => ParameterDefinition.CreateDefinition(p))));
             Assert.AreEqual(TypeIdentity.CreateDefinition(method.DeclaringType), obj.DeclaringType);
-        }
-
-        [Test]
-        public void EqualsWithNullObject()
-        {
-            var first = MethodDefinition.CreateDefinition(GetMethodForInt());
-            object second = null;
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithEqualObjects()
-        {
-            var first = MethodDefinition.CreateDefinition(GetMethodForInt());
-            object second = MethodDefinition.CreateDefinition(GetMethodForInt());
-
-            Assert.IsTrue(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjects()
-        {
-            var first = MethodDefinition.CreateDefinition(GetMethodForInt());
-            object second = MethodDefinition.CreateDefinition(GetMethodForDouble());
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjectTypes()
-        {
-            var first = MethodDefinition.CreateDefinition(GetMethodForInt());
-            var second = new object();
-
-            Assert.IsFalse(first.Equals(second));
         }
     }
 }

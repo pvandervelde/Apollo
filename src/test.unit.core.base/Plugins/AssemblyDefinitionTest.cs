@@ -7,131 +7,105 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Numerics;
 using System.Text;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Base.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class AssemblyDefinitionTest
+    public sealed class AssemblyDefinitionTest : EqualityContractVerifierTest
     {
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<AssemblyDefinition>
+        private sealed class AssemblyDefinitionEqualityContractVerifier : EqualityContractVerifier<AssemblyDefinition>
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<AssemblyDefinition> 
-                    {
+            private readonly AssemblyDefinition m_First = AssemblyDefinition.CreateDefinition(typeof(string).Assembly);
+
+            private readonly AssemblyDefinition m_Second = AssemblyDefinition.CreateDefinition(typeof(ExportAttribute).Assembly);
+
+            protected override AssemblyDefinition Copy(AssemblyDefinition original)
+            {
+                if (original.FullName.Equals(typeof(string).Assembly.FullName))
+                {
+                    return AssemblyDefinition.CreateDefinition(typeof(string).Assembly);
+                }
+
+                return AssemblyDefinition.CreateDefinition(typeof(ExportAttribute).Assembly);
+            }
+
+            protected override AssemblyDefinition FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override AssemblyDefinition SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
+
+        private sealed class AssemblyDefinitionHashcodeContractVerfier : HashcodeContractVerifier
+        {
+            private readonly IEnumerable<AssemblyDefinition> m_DistinctInstances
+                = new List<AssemblyDefinition> 
+                     {
                         AssemblyDefinition.CreateDefinition(typeof(string).Assembly),
                         AssemblyDefinition.CreateDefinition(typeof(ExportAttribute).Assembly),
                         AssemblyDefinition.CreateDefinition(typeof(TestFixtureAttribute).Assembly),
                         AssemblyDefinition.CreateDefinition(typeof(BigInteger).Assembly),
                         AssemblyDefinition.CreateDefinition(typeof(AssemblyDefinition).Assembly),
-                    },
-        };
+                     };
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<AssemblyDefinition>
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly AssemblyDefinitionHashcodeContractVerfier m_HashcodeVerifier = new AssemblyDefinitionHashcodeContractVerfier();
+
+        private readonly AssemblyDefinitionEqualityContractVerifier m_EqualityVerifier = new AssemblyDefinitionEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                { 
-                    AssemblyDefinition.CreateDefinition(typeof(string).Assembly),
-                    AssemblyDefinition.CreateDefinition(typeof(ExportAttribute).Assembly),
-                    AssemblyDefinition.CreateDefinition(typeof(TestFixtureAttribute).Assembly),
-                    AssemblyDefinition.CreateDefinition(typeof(BigInteger).Assembly),
-                    AssemblyDefinition.CreateDefinition(typeof(AssemblyDefinition).Assembly),
-                },
-        };
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void RoundTripSerialise()
         {
             var original = AssemblyDefinition.CreateDefinition(typeof(string).Assembly);
-            var copy = Assert.BinarySerializeThenDeserialize(original);
+            var copy = AssertExtensions.RoundTripSerialize(original);
 
             Assert.AreEqual(original, copy);
-        }
-
-        [Test]
-        public void EqualsOperatorWithFirstObjectNull()
-        {
-            AssemblyDefinition first = null;
-            var second = AssemblyDefinition.CreateDefinition(typeof(string).Assembly);
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithSecondObjectNull()
-        {
-            var first = AssemblyDefinition.CreateDefinition(typeof(string).Assembly);
-            AssemblyDefinition second = null;
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithEqualObject()
-        {
-            var first = AssemblyDefinition.CreateDefinition(typeof(string).Assembly);
-            var second = AssemblyDefinition.CreateDefinition(typeof(string).Assembly);
-
-            Assert.IsTrue(first == second);
-        }
-
-        [Test]
-        public void EqualsOperatorWithNonequalObjects()
-        {
-            var first = AssemblyDefinition.CreateDefinition(typeof(string).Assembly);
-            var second = AssemblyDefinition.CreateDefinition(typeof(ExportAttribute).Assembly);
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithFirstObjectNull()
-        {
-            AssemblyDefinition first = null;
-            var second = AssemblyDefinition.CreateDefinition(typeof(string).Assembly);
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithSecondObjectNull()
-        {
-            var first = AssemblyDefinition.CreateDefinition(typeof(string).Assembly);
-            AssemblyDefinition second = null;
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var first = AssemblyDefinition.CreateDefinition(typeof(string).Assembly);
-            var second = AssemblyDefinition.CreateDefinition(typeof(string).Assembly);
-
-            Assert.IsFalse(first != second);
-        }
-
-        [Test]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var first = AssemblyDefinition.CreateDefinition(typeof(string).Assembly);
-            var second = AssemblyDefinition.CreateDefinition(typeof(ExportAttribute).Assembly);
-
-            Assert.IsTrue(first != second);
         }
 
         [Test]
@@ -151,42 +125,6 @@ namespace Apollo.Core.Base.Plugins
             }
 
             Assert.AreEqual(token.ToString(), obj.PublicKeyToken);
-        }
-
-        [Test]
-        public void EqualsWithNullObject()
-        {
-            var first = AssemblyDefinition.CreateDefinition(typeof(string).Assembly);
-            object second = null;
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithEqualObjects()
-        {
-            var first = AssemblyDefinition.CreateDefinition(typeof(string).Assembly);
-            object second = AssemblyDefinition.CreateDefinition(typeof(string).Assembly);
-
-            Assert.IsTrue(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjects()
-        {
-            var first = AssemblyDefinition.CreateDefinition(typeof(string).Assembly);
-            object second = AssemblyDefinition.CreateDefinition(typeof(ExportAttribute).Assembly);
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        public void EqualsWithUnequalObjectTypes()
-        {
-            var first = AssemblyDefinition.CreateDefinition(typeof(string).Assembly);
-            var second = new object();
-
-            Assert.IsFalse(first.Equals(second));
         }
     }
 }

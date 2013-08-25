@@ -6,7 +6,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Extensions.Scheduling;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Apollo.Core.Base.Scheduling
 {
