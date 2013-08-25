@@ -6,8 +6,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Apollo.Core.Base;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Apollo.Core.Dataset
 {
@@ -48,11 +47,7 @@ namespace Apollo.Core.Dataset
             datasetLock.OnLockForWriting += (s, e) => { writeLockEventRaised = true; };
             var key1 = datasetLock.LockForReading();
 
-            var task = Task<DatasetLockKey>.Factory.StartNew(
-                () =>
-                {
-                    return datasetLock.LockForWriting();
-                });
+            var task = Task<DatasetLockKey>.Factory.StartNew(datasetLock.LockForWriting);
 
             Assert.IsTrue(readLockEventRaised);
             Assert.IsFalse(readUnlockEventRaised);
@@ -110,11 +105,7 @@ namespace Apollo.Core.Dataset
             datasetLock.OnLockForReading += (s, e) => { readLockEventRaised = true; };
             var key1 = datasetLock.LockForWriting();
 
-            var task = Task<DatasetLockKey>.Factory.StartNew(
-                () =>
-                {
-                    return datasetLock.LockForReading();
-                });
+            var task = Task<DatasetLockKey>.Factory.StartNew(datasetLock.LockForReading);
 
             Assert.IsTrue(writeLockEventRaised);
             Assert.IsFalse(writeUnlockEventRaised);

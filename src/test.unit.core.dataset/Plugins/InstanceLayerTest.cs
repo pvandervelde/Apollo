@@ -12,7 +12,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
-using MbUnit.Framework;
+using NUnit.Framework;
 using Test.Mocks;
 
 namespace Apollo.Core.Dataset.Plugins
@@ -1272,16 +1272,17 @@ namespace Apollo.Core.Dataset.Plugins
                     });
 
             Assert.AreEqual(1, changes.Count());
-            Assert.AreElementsEqualIgnoringOrder(
-                new List<InstanceUpdate>
+            Assert.That(
+                changes,
+                Is.EquivalentTo(
+                    new List<InstanceUpdate>
                     {
                         new InstanceUpdate 
                             {
                                 Instance = importingId,
                                 Change = InstanceChange.Reconstructed,
                             },
-                    },
-                changes);
+                    }));
 
             Assert.IsTrue(layer.HasInstanceFor(exportingId));
             Assert.IsTrue(layer.HasInstanceFor(importingId));
@@ -1332,16 +1333,17 @@ namespace Apollo.Core.Dataset.Plugins
                     });
 
             Assert.AreEqual(1, changes.Count());
-            Assert.AreElementsEqualIgnoringOrder(
-                new List<InstanceUpdate>
+            Assert.That(
+                changes,
+                Is.EquivalentTo(
+                    new List<InstanceUpdate>
                     {
                         new InstanceUpdate 
                             {
                                 Instance = importingId,
                                 Change = InstanceChange.Updated,
                             },
-                    },
-                changes);
+                    }));
 
             Assert.IsTrue(layer.HasInstanceFor(exportingId));
             Assert.IsTrue(layer.HasInstanceFor(importingId));
@@ -1377,8 +1379,10 @@ namespace Apollo.Core.Dataset.Plugins
             var changes = layer.Release(exportingId);
 
             Assert.AreEqual(2, changes.Count());
-            Assert.AreElementsEqualIgnoringOrder(
-                new List<InstanceUpdate>
+            Assert.That(
+                changes,
+                Is.EquivalentTo(
+                    new List<InstanceUpdate>
                     {
                         new InstanceUpdate 
                             {
@@ -1390,8 +1394,7 @@ namespace Apollo.Core.Dataset.Plugins
                                 Instance = importingId,
                                 Change = InstanceChange.Removed,
                             }
-                    },
-                changes);
+                    }));
 
             Assert.IsFalse(layer.HasInstanceFor(exportingId));
             Assert.IsFalse(layer.HasInstanceFor(importingId));
@@ -1426,8 +1429,10 @@ namespace Apollo.Core.Dataset.Plugins
             var changes = layer.Release(exportingId);
 
             Assert.AreEqual(2, changes.Count());
-            Assert.AreElementsEqualIgnoringOrder(
-                new List<InstanceUpdate>
+            Assert.That(
+                changes,
+                Is.EquivalentTo(
+                    new List<InstanceUpdate>
                     {
                         new InstanceUpdate 
                             {
@@ -1439,8 +1444,7 @@ namespace Apollo.Core.Dataset.Plugins
                                 Instance = importingId,
                                 Change = InstanceChange.Updated,
                             }
-                    },
-                changes);
+                    }));
 
             Assert.IsFalse(layer.HasInstanceFor(exportingId));
             Assert.IsTrue(layer.HasInstanceFor(importingId));

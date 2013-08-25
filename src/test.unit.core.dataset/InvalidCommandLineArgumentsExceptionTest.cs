@@ -5,21 +5,15 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Dataset
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class InvalidCommandLineArgumentsExceptionTest
+    public sealed class InvalidCommandLineArgumentsExceptionTest : ExceptionContractVerifier<InvalidCommandLineArgumentsException>
     {
-        [VerifyContract]
-        public readonly IContract ExceptionTests = new ExceptionContract<InvalidCommandLineArgumentsException>
-        {
-            ImplementsSerialization = true,
-            ImplementsStandardConstructors = true,
-        };
     }
 }

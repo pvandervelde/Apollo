@@ -8,10 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Dataset.Plugins
 {
@@ -21,49 +19,84 @@ namespace Apollo.Core.Dataset.Plugins
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class PartInstanceIdTest
+    public sealed class PartInstanceIdTest : EqualityContractVerifierTest
     {
-        private static PartInstanceId Create(Guid id)
+        private sealed class EndpointIdEqualityContractVerifier : EqualityContractVerifier<PartInstanceId>
         {
-            return (PartInstanceId)Mirror.ForType<PartInstanceId>().Constructor.Invoke(id);
+            private readonly PartInstanceId m_First = new PartInstanceId();
+
+            private readonly PartInstanceId m_Second = new PartInstanceId();
+
+            protected override PartInstanceId Copy(PartInstanceId original)
+            {
+                return original.Clone();
+            }
+
+            protected override PartInstanceId FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override PartInstanceId SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
         }
 
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<PartInstanceId>
+        private sealed class EndpointIdHashcodeContractVerfier : HashcodeContractVerifier
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<PartInstanceId> 
-                        {
-                            new PartInstanceId(),
-                            new PartInstanceId(),
-                            new PartInstanceId(),
-                            new PartInstanceId(),
-                            new PartInstanceId(),
-                            new PartInstanceId(),
-                            new PartInstanceId(),
-                            new PartInstanceId(),
-                        },
-        };
+            private readonly IEnumerable<PartInstanceId> m_DistinctInstances
+                = new List<PartInstanceId> 
+                     {
+                        new PartInstanceId(),
+                        new PartInstanceId(),
+                        new PartInstanceId(),
+                        new PartInstanceId(),
+                        new PartInstanceId(),
+                        new PartInstanceId(),
+                        new PartInstanceId(),
+                        new PartInstanceId(),
+                     };
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<PartInstanceId>
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly EndpointIdHashcodeContractVerfier m_HashcodeVerifier = new EndpointIdHashcodeContractVerfier();
+
+        private readonly EndpointIdEqualityContractVerifier m_EqualityVerifier = new EndpointIdEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                    { 
-                        Create(Guid.NewGuid()),
-                        Create(Guid.NewGuid()),
-                        Create(Guid.NewGuid()),
-                        Create(Guid.NewGuid()),
-                        Create(Guid.NewGuid()),
-                    },
-        };
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void LargerThanOperatorWithFirstObjectNull()
@@ -107,8 +140,8 @@ namespace Apollo.Core.Dataset.Plugins
             var firstGuid = Guid.NewGuid();
             var secondGuid = Guid.NewGuid();
 
-            var first = (firstGuid.CompareTo(secondGuid) > 0) ? Create(firstGuid) : Create(secondGuid);
-            var second = (firstGuid.CompareTo(secondGuid) < 0) ? Create(firstGuid) : Create(secondGuid);
+            var first = (firstGuid.CompareTo(secondGuid) > 0) ? new PartInstanceId(firstGuid) : new PartInstanceId(secondGuid);
+            var second = (firstGuid.CompareTo(secondGuid) < 0) ? new PartInstanceId(firstGuid) : new PartInstanceId(secondGuid);
 
             Assert.IsTrue(first > second);
         }
@@ -119,8 +152,8 @@ namespace Apollo.Core.Dataset.Plugins
             var firstGuid = Guid.NewGuid();
             var secondGuid = Guid.NewGuid();
 
-            var first = (firstGuid.CompareTo(secondGuid) < 0) ? Create(firstGuid) : Create(secondGuid);
-            var second = (firstGuid.CompareTo(secondGuid) > 0) ? Create(firstGuid) : Create(secondGuid);
+            var first = (firstGuid.CompareTo(secondGuid) < 0) ? new PartInstanceId(firstGuid) : new PartInstanceId(secondGuid);
+            var second = (firstGuid.CompareTo(secondGuid) > 0) ? new PartInstanceId(firstGuid) : new PartInstanceId(secondGuid);
 
             Assert.IsFalse(first > second);
         }
@@ -167,8 +200,8 @@ namespace Apollo.Core.Dataset.Plugins
             var firstGuid = Guid.NewGuid();
             var secondGuid = Guid.NewGuid();
 
-            var first = (firstGuid.CompareTo(secondGuid) > 0) ? Create(firstGuid) : Create(secondGuid);
-            var second = (firstGuid.CompareTo(secondGuid) < 0) ? Create(firstGuid) : Create(secondGuid);
+            var first = (firstGuid.CompareTo(secondGuid) > 0) ? new PartInstanceId(firstGuid) : new PartInstanceId(secondGuid);
+            var second = (firstGuid.CompareTo(secondGuid) < 0) ? new PartInstanceId(firstGuid) : new PartInstanceId(secondGuid);
 
             Assert.IsFalse(first < second);
         }
@@ -179,8 +212,8 @@ namespace Apollo.Core.Dataset.Plugins
             var firstGuid = Guid.NewGuid();
             var secondGuid = Guid.NewGuid();
 
-            var first = (firstGuid.CompareTo(secondGuid) < 0) ? Create(firstGuid) : Create(secondGuid);
-            var second = (firstGuid.CompareTo(secondGuid) > 0) ? Create(firstGuid) : Create(secondGuid);
+            var first = (firstGuid.CompareTo(secondGuid) < 0) ? new PartInstanceId(firstGuid) : new PartInstanceId(secondGuid);
+            var second = (firstGuid.CompareTo(secondGuid) > 0) ? new PartInstanceId(firstGuid) : new PartInstanceId(secondGuid);
 
             Assert.IsTrue(first < second);
         }
@@ -218,8 +251,8 @@ namespace Apollo.Core.Dataset.Plugins
             var firstGuid = Guid.NewGuid();
             var secondGuid = Guid.NewGuid();
 
-            var first = (firstGuid.CompareTo(secondGuid) > 0) ? Create(firstGuid) : Create(secondGuid);
-            var second = (firstGuid.CompareTo(secondGuid) < 0) ? Create(firstGuid) : Create(secondGuid);
+            var first = (firstGuid.CompareTo(secondGuid) > 0) ? new PartInstanceId(firstGuid) : new PartInstanceId(secondGuid);
+            var second = (firstGuid.CompareTo(secondGuid) < 0) ? new PartInstanceId(firstGuid) : new PartInstanceId(secondGuid);
 
             Assert.IsTrue(first.CompareTo(second) > 0);
         }
@@ -230,8 +263,8 @@ namespace Apollo.Core.Dataset.Plugins
             var firstGuid = Guid.NewGuid();
             var secondGuid = Guid.NewGuid();
 
-            var first = (firstGuid.CompareTo(secondGuid) < 0) ? Create(firstGuid) : Create(secondGuid);
-            var second = (firstGuid.CompareTo(secondGuid) > 0) ? Create(firstGuid) : Create(secondGuid);
+            var first = (firstGuid.CompareTo(secondGuid) < 0) ? new PartInstanceId(firstGuid) : new PartInstanceId(secondGuid);
+            var second = (firstGuid.CompareTo(secondGuid) > 0) ? new PartInstanceId(firstGuid) : new PartInstanceId(secondGuid);
 
             Assert.IsTrue(first.CompareTo(second) < 0);
         }

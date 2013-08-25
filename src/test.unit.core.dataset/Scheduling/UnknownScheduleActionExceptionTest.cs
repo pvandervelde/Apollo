@@ -5,21 +5,15 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Dataset.Scheduling
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class UnknownScheduleActionExceptionTest
+    public sealed class UnknownScheduleActionExceptionTest : ExceptionContractVerifier<UnknownScheduleActionException>
     {
-        [VerifyContract]
-        public readonly IContract ExceptionTests = new ExceptionContract<UnknownScheduleActionException>
-        {
-            ImplementsSerialization = true,
-            ImplementsStandardConstructors = true,
-        };
     }
 }

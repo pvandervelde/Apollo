@@ -4,53 +4,62 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Dataset.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class PartCompositionIdTest
+    public sealed class PartCompositionIdTest : EqualityContractVerifierTest
     {
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<PartCompositionId>
+        private sealed class EndpointIdEqualityContractVerifier : EqualityContractVerifier<PartCompositionId>
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<PartCompositionId> 
-                        {
-                            new PartCompositionId(new GroupCompositionId(), new PartRegistrationId("a", 0)),
-                            new PartCompositionId(new GroupCompositionId(), new PartRegistrationId("b", 1)),
-                            new PartCompositionId(new GroupCompositionId(), new PartRegistrationId("c", 2)),
-                            new PartCompositionId(new GroupCompositionId(), new PartRegistrationId("d", 3)),
-                            new PartCompositionId(new GroupCompositionId(), new PartRegistrationId("e", 4)),
-                            new PartCompositionId(new GroupCompositionId(), new PartRegistrationId("f", 5)),
-                            new PartCompositionId(new GroupCompositionId(), new PartRegistrationId("g", 6)),
-                            new PartCompositionId(new GroupCompositionId(), new PartRegistrationId("h", 7)),
-                        },
-        };
+            private readonly PartCompositionId m_First = new PartCompositionId(new GroupCompositionId(), new PartRegistrationId("a", 0));
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<PartCompositionId>
+            private readonly PartCompositionId m_Second = new PartCompositionId(new GroupCompositionId(), new PartRegistrationId("b", 1));
+
+            protected override PartCompositionId Copy(PartCompositionId original)
+            {
+                return new PartCompositionId(original.Group, original.Part);
+            }
+
+            protected override PartCompositionId FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override PartCompositionId SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
+        }
+
+        private sealed class EndpointIdHashcodeContractVerfier : HashcodeContractVerifier
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                    { 
+            private readonly IEnumerable<PartCompositionId> m_DistinctInstances
+                = new List<PartCompositionId> 
+                     {
                         new PartCompositionId(new GroupCompositionId(), new PartRegistrationId("a", 0)),
                         new PartCompositionId(new GroupCompositionId(), new PartRegistrationId("b", 1)),
                         new PartCompositionId(new GroupCompositionId(), new PartRegistrationId("c", 2)),
@@ -59,8 +68,33 @@ namespace Apollo.Core.Dataset.Plugins
                         new PartCompositionId(new GroupCompositionId(), new PartRegistrationId("f", 5)),
                         new PartCompositionId(new GroupCompositionId(), new PartRegistrationId("g", 6)),
                         new PartCompositionId(new GroupCompositionId(), new PartRegistrationId("h", 7)),
-                    },
-        };
+                     };
+
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly EndpointIdHashcodeContractVerfier m_HashcodeVerifier = new EndpointIdHashcodeContractVerfier();
+
+        private readonly EndpointIdEqualityContractVerifier m_EqualityVerifier = new EndpointIdEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
+        {
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void Create()

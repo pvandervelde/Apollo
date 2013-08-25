@@ -5,21 +5,15 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Dataset.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class UnableToLoadPluginTypeExceptionTest
+    public sealed class UnableToLoadPluginTypeExceptionTest : ExceptionContractVerifier<UnableToLoadPluginTypeException>
     {
-        [VerifyContract]
-        public readonly IContract ExceptionTests = new ExceptionContract<UnableToLoadPluginTypeException>
-        {
-            ImplementsSerialization = true,
-            ImplementsStandardConstructors = true,
-        };
     }
 }

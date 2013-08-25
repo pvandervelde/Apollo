@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Scheduling;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.Core.Dataset.Scheduling.Processors
 {

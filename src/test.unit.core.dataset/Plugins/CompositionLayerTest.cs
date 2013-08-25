@@ -10,12 +10,10 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Primitives;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 using Test.Mocks;
 
 namespace Apollo.Core.Dataset.Plugins
@@ -493,7 +491,7 @@ namespace Apollo.Core.Dataset.Plugins
             layer.Add(secondId, secondDefinition);
 
             Assert.IsFalse(layer.SatisfiedImports(secondId).Any());
-            Assert.AreElementsSameIgnoringOrder(secondDefinition.GroupImports, layer.UnsatisfiedImports(secondId));
+            Assert.That(layer.UnsatisfiedImports(secondId), Is.EquivalentTo(secondDefinition.GroupImports));
 
             layer.Connect(new GroupConnection(
                 secondId,
@@ -517,17 +515,18 @@ namespace Apollo.Core.Dataset.Plugins
                     }));
 
             Assert.IsFalse(layer.UnsatisfiedImports(secondId).Any());
-            Assert.AreElementsEqualIgnoringOrder(
-                new List<Tuple<GroupImportDefinition, GroupCompositionId>> 
-                    { 
-                        new Tuple<GroupImportDefinition, GroupCompositionId>(secondDefinition.GroupImports.First(), firstId)
-                    },
-                layer.SatisfiedImports(secondId));
+            Assert.That(
+                layer.SatisfiedImports(secondId),
+                Is.EquivalentTo(
+                    new List<Tuple<GroupImportDefinition, GroupCompositionId>> 
+                        { 
+                            new Tuple<GroupImportDefinition, GroupCompositionId>(secondDefinition.GroupImports.First(), firstId)
+                        }));
 
             layer.Remove(firstId);
 
             Assert.IsFalse(layer.SatisfiedImports(secondId).Any());
-            Assert.AreElementsSameIgnoringOrder(secondDefinition.GroupImports, layer.UnsatisfiedImports(secondId));
+            Assert.That(layer.UnsatisfiedImports(secondId), Is.EquivalentTo(secondDefinition.GroupImports));
             storage.Verify(s => s.Release(It.IsAny<PartInstanceId>()), Times.Exactly(6));
         }
 
@@ -613,7 +612,7 @@ namespace Apollo.Core.Dataset.Plugins
             layer.Add(secondId, secondDefinition);
 
             Assert.IsFalse(layer.SatisfiedImports(secondId).Any());
-            Assert.AreElementsSameIgnoringOrder(secondDefinition.GroupImports, layer.UnsatisfiedImports(secondId));
+            Assert.That(layer.UnsatisfiedImports(secondId), Is.EquivalentTo(secondDefinition.GroupImports));
 
             layer.Connect(new GroupConnection(
                 secondId,
@@ -637,12 +636,13 @@ namespace Apollo.Core.Dataset.Plugins
                     }));
 
             Assert.IsFalse(layer.UnsatisfiedImports(secondId).Any());
-            Assert.AreElementsEqualIgnoringOrder(
-                new List<Tuple<GroupImportDefinition, GroupCompositionId>> 
-                    { 
-                        new Tuple<GroupImportDefinition, GroupCompositionId>(secondDefinition.GroupImports.First(), firstId)
-                    },
-                layer.SatisfiedImports(secondId));
+            Assert.That(
+                layer.SatisfiedImports(secondId),
+                Is.EquivalentTo(
+                    new List<Tuple<GroupImportDefinition, GroupCompositionId>> 
+                        { 
+                            new Tuple<GroupImportDefinition, GroupCompositionId>(secondDefinition.GroupImports.First(), firstId)
+                        }));
 
             storage.Verify(
                 s => s.Construct(
@@ -705,7 +705,7 @@ namespace Apollo.Core.Dataset.Plugins
             layer.Add(secondId, secondDefinition);
 
             Assert.IsFalse(layer.SatisfiedImports(secondId).Any());
-            Assert.AreElementsSameIgnoringOrder(secondDefinition.GroupImports, layer.UnsatisfiedImports(secondId));
+            Assert.That(layer.UnsatisfiedImports(secondId), Is.EquivalentTo(secondDefinition.GroupImports));
 
             layer.Connect(new GroupConnection(
                 secondId,
@@ -729,17 +729,18 @@ namespace Apollo.Core.Dataset.Plugins
                     }));
 
             Assert.IsFalse(layer.UnsatisfiedImports(secondId).Any());
-            Assert.AreElementsEqualIgnoringOrder(
-                new List<Tuple<GroupImportDefinition, GroupCompositionId>> 
-                    { 
-                        new Tuple<GroupImportDefinition, GroupCompositionId>(secondDefinition.GroupImports.First(), firstId)
-                    },
-                layer.SatisfiedImports(secondId));
+            Assert.That(
+                layer.SatisfiedImports(secondId),
+                Is.EquivalentTo(
+                    new List<Tuple<GroupImportDefinition, GroupCompositionId>> 
+                        { 
+                            new Tuple<GroupImportDefinition, GroupCompositionId>(secondDefinition.GroupImports.First(), firstId)
+                        }));
 
             layer.Disconnect(secondId, firstId);
 
             Assert.IsFalse(layer.SatisfiedImports(secondId).Any());
-            Assert.AreElementsSameIgnoringOrder(secondDefinition.GroupImports, layer.UnsatisfiedImports(secondId));
+            Assert.That(layer.UnsatisfiedImports(secondId), Is.EquivalentTo(secondDefinition.GroupImports));
             storage.Verify(s => s.Release(It.IsAny<PartInstanceId>()), Times.Exactly(1));
         }
 
@@ -797,7 +798,7 @@ namespace Apollo.Core.Dataset.Plugins
             layer.Add(secondId, secondDefinition);
 
             Assert.IsFalse(layer.SatisfiedImports(secondId).Any());
-            Assert.AreElementsSameIgnoringOrder(secondDefinition.GroupImports, layer.UnsatisfiedImports(secondId));
+            Assert.That(layer.UnsatisfiedImports(secondId), Is.EquivalentTo(secondDefinition.GroupImports));
 
             layer.Connect(new GroupConnection(
                 secondId,
@@ -821,17 +822,18 @@ namespace Apollo.Core.Dataset.Plugins
                     }));
 
             Assert.IsFalse(layer.UnsatisfiedImports(secondId).Any());
-            Assert.AreElementsEqualIgnoringOrder(
-                new List<Tuple<GroupImportDefinition, GroupCompositionId>> 
-                    { 
-                        new Tuple<GroupImportDefinition, GroupCompositionId>(secondDefinition.GroupImports.First(), firstId)
-                    },
-                layer.SatisfiedImports(secondId));
+            Assert.That(
+                layer.SatisfiedImports(secondId),
+                Is.EquivalentTo(
+                    new List<Tuple<GroupImportDefinition, GroupCompositionId>> 
+                        { 
+                            new Tuple<GroupImportDefinition, GroupCompositionId>(secondDefinition.GroupImports.First(), firstId)
+                        }));
 
             layer.Disconnect(firstId);
 
             Assert.IsFalse(layer.SatisfiedImports(secondId).Any());
-            Assert.AreElementsSameIgnoringOrder(secondDefinition.GroupImports, layer.UnsatisfiedImports(secondId));
+            Assert.That(layer.UnsatisfiedImports(secondId), Is.EquivalentTo(secondDefinition.GroupImports));
             storage.Verify(s => s.Release(It.IsAny<PartInstanceId>()), Times.Exactly(1));
         }
     }

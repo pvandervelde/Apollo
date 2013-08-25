@@ -7,8 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using System.Linq;
+using Nuclei.Nunit.Extensions;
+using NUnit.Framework;
 
 namespace Apollo.Core.Dataset
 {
@@ -18,62 +19,90 @@ namespace Apollo.Core.Dataset
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
-    public sealed class DatasetLockKeyTest
+    public sealed class DatasetLockKeyTest : EqualityContractVerifierTest
     {
-        private static DatasetLockKey Create(int id)
+        private sealed class EndpointIdEqualityContractVerifier : EqualityContractVerifier<DatasetLockKey>
         {
-            return (DatasetLockKey)Mirror.ForType<DatasetLockKey>().Constructor.Invoke(id);
+            private readonly DatasetLockKey m_First = new DatasetLockKey(1);
+
+            private readonly DatasetLockKey m_Second = new DatasetLockKey(2);
+
+            protected override DatasetLockKey Copy(DatasetLockKey original)
+            {
+                return original.Clone();
+            }
+
+            protected override DatasetLockKey FirstInstance
+            {
+                get
+                {
+                    return m_First;
+                }
+            }
+
+            protected override DatasetLockKey SecondInstance
+            {
+                get
+                {
+                    return m_Second;
+                }
+            }
+
+            protected override bool HasOperatorOverloads
+            {
+                get
+                {
+                    return true;
+                }
+            }
         }
 
-        [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<DatasetLockKey>
+        private sealed class EndpointIdHashcodeContractVerfier : HashcodeContractVerifier
         {
-            // Note that the collision probability depends quite a lot on the number of 
-            // elements you test on. The fewer items you test on the larger the collision probability
-            // (if there is one obviously). So it's better to test for a large range of items
-            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
-            CollisionProbabilityLimit = CollisionProbability.VeryLow,
-            UniformDistributionQuality = UniformDistributionQuality.Excellent,
-            DistinctInstances =
-                new List<DatasetLockKey> 
-                        {
-                            Create(0),
-                            Create(1),
-                            Create(2),
-                            Create(3),
-                            Create(4),
-                            Create(5),
-                            Create(6),
-                            Create(7),
-                            Create(8),
-                            Create(9),
-                        },
-        };
+            private readonly IEnumerable<DatasetLockKey> m_DistinctInstances
+                = new List<DatasetLockKey> 
+                     {
+                        new DatasetLockKey(1),
+                        new DatasetLockKey(2),
+                        new DatasetLockKey(3),
+                        new DatasetLockKey(4),
+                        new DatasetLockKey(5),
+                        new DatasetLockKey(6),
+                        new DatasetLockKey(7),
+                        new DatasetLockKey(8),
+                     };
 
-        [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<DatasetLockKey>
+            protected override IEnumerable<int> GetHashcodes()
+            {
+                return m_DistinctInstances.Select(i => i.GetHashCode());
+            }
+        }
+
+        private readonly EndpointIdHashcodeContractVerfier m_HashcodeVerifier = new EndpointIdHashcodeContractVerfier();
+
+        private readonly EndpointIdEqualityContractVerifier m_EqualityVerifier = new EndpointIdEqualityContractVerifier();
+
+        protected override HashcodeContractVerifier HashContract
         {
-            ImplementsOperatorOverloads = true,
-            EquivalenceClasses = new EquivalenceClassCollection
-                    { 
-                        Create(0),
-                        Create(1),
-                        Create(2),
-                        Create(3),
-                        Create(4),
-                        Create(5),
-                        Create(6),
-                        Create(7),
-                        Create(8),
-                        Create(9),
-                    },
-        };
+            get
+            {
+                return m_HashcodeVerifier;
+            }
+        }
+
+        protected override IEqualityContractVerifier EqualityContract
+        {
+            get
+            {
+                return m_EqualityVerifier;
+            }
+        }
 
         [Test]
         public void LargerThanOperatorWithFirstObjectNull()
         {
             DatasetLockKey first = null;
-            var second = Create(10);
+            var second = new DatasetLockKey(10);
 
             Assert.IsFalse(first > second);
         }
@@ -81,7 +110,7 @@ namespace Apollo.Core.Dataset
         [Test]
         public void LargerThanOperatorWithSecondObjectNull()
         {
-            var first = Create(10);
+            var first = new DatasetLockKey(10);
             DatasetLockKey second = null;
 
             Assert.IsTrue(first > second);
@@ -99,8 +128,8 @@ namespace Apollo.Core.Dataset
         [Test]
         public void LargerThanOperatorWithEqualObjects()
         {
-            var first = Create(10);
-            var second = Create(10);
+            var first = new DatasetLockKey(10);
+            var second = new DatasetLockKey(10);
 
             Assert.IsFalse(first > second);
         }
@@ -108,8 +137,8 @@ namespace Apollo.Core.Dataset
         [Test]
         public void LargerThanOperatorWithFirstObjectLarger()
         {
-            var first = Create(11);
-            var second = Create(10);
+            var first = new DatasetLockKey(11);
+            var second = new DatasetLockKey(10);
 
             Assert.IsTrue(first > second);
         }
@@ -117,8 +146,8 @@ namespace Apollo.Core.Dataset
         [Test]
         public void LargerThanOperatorWithFirstObjectSmaller()
         {
-            var first = Create(9);
-            var second = Create(10);
+            var first = new DatasetLockKey(9);
+            var second = new DatasetLockKey(10);
 
             Assert.IsFalse(first > second);
         }
@@ -127,7 +156,7 @@ namespace Apollo.Core.Dataset
         public void SmallerThanOperatorWithFirstObjectNull()
         {
             DatasetLockKey first = null;
-            var second = Create(10);
+            var second = new DatasetLockKey(10);
 
             Assert.IsTrue(first < second);
         }
@@ -135,7 +164,7 @@ namespace Apollo.Core.Dataset
         [Test]
         public void SmallerThanOperatorWithSecondObjectNull()
         {
-            var first = Create(10);
+            var first = new DatasetLockKey(10);
             DatasetLockKey second = null;
 
             Assert.IsFalse(first < second);
@@ -153,8 +182,8 @@ namespace Apollo.Core.Dataset
         [Test]
         public void SmallerThanOperatorWithEqualObjects()
         {
-            var first = Create(10);
-            var second = Create(10);
+            var first = new DatasetLockKey(10);
+            var second = new DatasetLockKey(10);
 
             Assert.IsFalse(first < second);
         }
@@ -162,8 +191,8 @@ namespace Apollo.Core.Dataset
         [Test]
         public void SmallerThanOperatorWithFirstObjectLarger()
         {
-            var first = Create(11);
-            var second = Create(10);
+            var first = new DatasetLockKey(11);
+            var second = new DatasetLockKey(10);
 
             Assert.IsFalse(first < second);
         }
@@ -171,8 +200,8 @@ namespace Apollo.Core.Dataset
         [Test]
         public void SmallerThanOperatorWithFirstObjectSmaller()
         {
-            var first = Create(9);
-            var second = Create(10);
+            var first = new DatasetLockKey(9);
+            var second = new DatasetLockKey(10);
 
             Assert.IsTrue(first < second);
         }
@@ -180,7 +209,7 @@ namespace Apollo.Core.Dataset
         [Test]
         public void Clone()
         {
-            var first = Create(10);
+            var first = new DatasetLockKey(10);
             var second = first.Clone();
 
             Assert.AreEqual(first, second);
@@ -189,7 +218,7 @@ namespace Apollo.Core.Dataset
         [Test]
         public void CompareToWithNullObject()
         {
-            var first = Create(10);
+            var first = new DatasetLockKey(10);
             object second = null;
 
             Assert.AreEqual(1, first.CompareTo(second));
@@ -198,8 +227,8 @@ namespace Apollo.Core.Dataset
         [Test]
         public void CompareToOperatorWithEqualObjects()
         {
-            var first = Create(10);
-            object second = Create(10);
+            var first = new DatasetLockKey(10);
+            object second = new DatasetLockKey(10);
 
             Assert.AreEqual(0, first.CompareTo(second));
         }
@@ -207,8 +236,8 @@ namespace Apollo.Core.Dataset
         [Test]
         public void CompareToWithLargerFirstObject()
         {
-            var first = Create(11);
-            object second = Create(10);
+            var first = new DatasetLockKey(11);
+            object second = new DatasetLockKey(10);
 
             Assert.IsTrue(first.CompareTo(second) > 0);
         }
@@ -216,8 +245,8 @@ namespace Apollo.Core.Dataset
         [Test]
         public void CompareToWithSmallerFirstObject()
         {
-            var first = Create(10);
-            object second = Create(11);
+            var first = new DatasetLockKey(10);
+            object second = new DatasetLockKey(11);
 
             Assert.IsTrue(first.CompareTo(second) < 0);
         }
@@ -225,7 +254,7 @@ namespace Apollo.Core.Dataset
         [Test]
         public void CompareToWithUnequalObjectTypes()
         {
-            var first = Create(10);
+            var first = new DatasetLockKey(10);
             object second = new object();
 
             Assert.Throws<ArgumentException>(() => first.CompareTo(second));

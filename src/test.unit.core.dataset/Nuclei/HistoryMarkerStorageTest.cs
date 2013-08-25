@@ -7,7 +7,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Utilities.History;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace Apollo.Core.Dataset.Nuclei
 {
@@ -32,7 +32,7 @@ namespace Apollo.Core.Dataset.Nuclei
                 collection.Add(item);
             }
 
-            Assert.AreElementsEqual(baseline, collection);
+            Assert.That(collection, Is.EquivalentTo(baseline));
         }
     }
 }

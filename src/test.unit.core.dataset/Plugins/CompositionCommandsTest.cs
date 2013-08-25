@@ -10,8 +10,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
-using MbUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace Apollo.Core.Dataset.Plugins
 {
@@ -257,9 +257,10 @@ namespace Apollo.Core.Dataset.Plugins
             var commands = new CompositionCommands(datasetLock.Object, storage.Object);
             var task = commands.NonSatisfiedImports(false);
             var results = task.Result;
-            Assert.AreElementsEqualIgnoringOrder(
-                groups.SelectMany(p => p.Value.Select(v => new Tuple<GroupCompositionId, GroupImportDefinition>(p.Key, v))),
-                results);
+            Assert.That(
+                results,
+                Is.EquivalentTo(
+                    groups.SelectMany(p => p.Value.Select(v => new Tuple<GroupCompositionId, GroupImportDefinition>(p.Key, v)))));
 
             datasetLock.Verify(d => d.LockForReading(), Times.Once());
             datasetLock.Verify(d => d.RemoveReadLock(It.IsAny<DatasetLockKey>()), Times.Once());
@@ -319,17 +320,19 @@ namespace Apollo.Core.Dataset.Plugins
             var commands = new CompositionCommands(datasetLock.Object, storage.Object);
             var task = commands.CurrentState();
             var results = task.Result;
-            Assert.AreElementsEqualIgnoringOrder(
-                groups.Select(p => new Tuple<GroupCompositionId, GroupDefinition>(p.Key, p.Value.Item1)),
-                results.Groups);
+            Assert.That(
+                results.Groups,
+                Is.EquivalentTo(
+                    groups.Select(p => new Tuple<GroupCompositionId, GroupDefinition>(p.Key, p.Value.Item1))));
 
-            Assert.AreElementsEqualIgnoringOrder(
-                groups.Select(
-                    p => new Tuple<GroupCompositionId, GroupImportDefinition, GroupCompositionId>(
-                        p.Key,
-                        p.Value.Item2.Item1,
-                        p.Value.Item2.Item2)),
-                results.Connections);
+            Assert.That(
+                results.Connections,
+                Is.EquivalentTo(
+                    groups.Select(
+                        p => new Tuple<GroupCompositionId, GroupImportDefinition, GroupCompositionId>(
+                            p.Key,
+                            p.Value.Item2.Item1,
+                            p.Value.Item2.Item2))));
 
             datasetLock.Verify(d => d.LockForReading(), Times.Once());
             datasetLock.Verify(d => d.RemoveReadLock(It.IsAny<DatasetLockKey>()), Times.Once());
