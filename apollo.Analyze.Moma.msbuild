@@ -44,9 +44,9 @@
         </FindToolFromPackages>
         
         <ItemGroup>
-            <MomaFiles Include="$(DirBuildBin)\*.dll"
+            <MomaFiles Include="$(DirBuildBin)\Apollo.*.dll"
                        Exclude="$(DirBuildBin)\Test.*.dll" />
-            <MomaFiles Include="$(DirBuildBin)\*.exe"/>
+            <MomaFiles Include="$(DirBuildBin)\Apollo.*.exe"/>
         </ItemGroup>
         
         <Exec Command="$(PathMomaExe) --nogui --out &quot;$(MomaOutputFile)&quot; @(MomaFiles->'%22%(FullPath)%22', ' ')"
