@@ -89,11 +89,6 @@ namespace Apollo.Core.Base.Loaders
                 PercentageOfPhysicalMemory = 50,
             };
 
-            var plan = CreateNewDistributionPlan(
-                result,
-                offlineInfo,
-                systemDiagnostics);
-
             var loaderCommands = new Mock<IDatasetLoaderCommands>();
             {
                 loaderCommands.Setup(l => l.ProposeFor(It.IsAny<ExpectedDatasetLoad>()))
@@ -177,8 +172,13 @@ namespace Apollo.Core.Base.Loaders
                 PreferredLocations = LoadingLocations.All,
             };
             var plans = distributor.ProposeDistributionFor(request, new CancellationToken());
-            Assert.AreEqual(1, plans.Count());
-            Assert.ReferenceEquals(plan, plans.First());
+            var listPlans = plans.ToList();
+            Assert.AreEqual(1, listPlans.Count());
+
+            var plan = listPlans[0];
+            Assert.IsTrue(ReferenceEquals(offlineInfo, plan.DistributionFor));
+            Assert.AreEqual(new NetworkIdentifier(result.Endpoint.OriginatesOnMachine()), plan.MachineToDistributeTo);
+            Assert.IsTrue(ReferenceEquals(result, plan.Proposal));
 
             loaderCommands.Verify(l => l.ProposeFor(It.IsAny<ExpectedDatasetLoad>()), Times.Once());
         }

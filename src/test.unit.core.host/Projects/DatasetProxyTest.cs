@@ -30,13 +30,13 @@ namespace Apollo.Core.Host.Projects
             Justification = "Unit tests do not need documentation.")]
     public sealed class DatasetProxyTest : EqualityContractVerifierTest
     {
-        private sealed class DatasetProxyEqualityContractVerifier : EqualityContractVerifier<IProxyDataset>
+        private sealed class DatasetProxyEqualityContractVerifier : EqualityContractVerifier<DatasetProxy>
         {
-            private readonly IProxyDataset m_First = GenerateDataset(CreateProject());
+            private readonly DatasetProxy m_First = GenerateDataset(CreateProject());
 
-            private readonly IProxyDataset m_Second = GenerateDataset(CreateProject());
+            private readonly DatasetProxy m_Second = GenerateDataset(CreateProject());
 
-            protected override IProxyDataset Copy(IProxyDataset original)
+            protected override DatasetProxy Copy(DatasetProxy original)
             {
                 var proxyLayer = new Mock<IProxyCompositionLayer>();
                 Func<DatasetOnlineInformation, DatasetStorageProxy> func = d => new DatasetStorageProxy(
@@ -53,11 +53,22 @@ namespace Apollo.Core.Host.Projects
                             new Tuple<byte, IStoreTimelineValues>(1, new ValueHistory<string>()),
                             new Tuple<byte, IStoreTimelineValues>(2, new ValueHistory<NetworkIdentifier>())
                         },
-                    new DatasetConstructionParameters(), 
+                    new DatasetConstructionParameters
+                        {
+                            CanBeAdopted = false,
+                            CanBecomeParent = false,
+                            CanBeCopied = true,
+                            CanBeDeleted = true,
+                            CreatedOnRequestOf = DatasetCreator.User,
+                            DistributionPlanGenerator = null,
+                            Id = original.Id,
+                            IsRoot = true,
+                            LoadFrom = null,
+                        }, 
                     func);
             }
 
-            protected override IProxyDataset FirstInstance
+            protected override DatasetProxy FirstInstance
             {
                 get
                 {
@@ -65,7 +76,7 @@ namespace Apollo.Core.Host.Projects
                 }
             }
 
-            protected override IProxyDataset SecondInstance
+            protected override DatasetProxy SecondInstance
             {
                 get
                 {
@@ -84,8 +95,8 @@ namespace Apollo.Core.Host.Projects
 
         private sealed class DatasetProxyHashcodeContractVerfier : HashcodeContractVerifier
         {
-            private readonly IEnumerable<IProxyDataset> m_DistinctInstances
-                = new List<IProxyDataset> 
+            private readonly IEnumerable<DatasetProxy> m_DistinctInstances
+                = new List<DatasetProxy> 
                      {
                         GenerateDataset(CreateProject()),
                         GenerateDataset(CreateProject()),

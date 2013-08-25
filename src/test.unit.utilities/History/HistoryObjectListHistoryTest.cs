@@ -178,13 +178,13 @@ namespace Apollo.Utilities.History
                     new MockHistoryObject(5),
                 };
 
-            Assert.Throws<IndexOutOfRangeException>(
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () =>
                 {
                     var result = list[-1];
                 });
 
-            Assert.Throws<IndexOutOfRangeException>(
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () =>
                 {
                     var result = list[list.Count];
@@ -251,8 +251,8 @@ namespace Apollo.Utilities.History
                     new MockHistoryObject(5),
                 };
 
-            Assert.Throws<IndexOutOfRangeException>(() => list.Insert(-1, new MockHistoryObject(10)));
-            Assert.Throws<IndexOutOfRangeException>(() => list.Insert(list.Count, new MockHistoryObject(20)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.Insert(-1, new MockHistoryObject(10)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.Insert(list.Count + 1, new MockHistoryObject(20)));
         }
 
         [Test]
@@ -268,8 +268,8 @@ namespace Apollo.Utilities.History
                     new MockHistoryObject(5),
                 };
 
-            Assert.Throws<IndexOutOfRangeException>(() => list.RemoveAt(-1));
-            Assert.Throws<IndexOutOfRangeException>(() => list.RemoveAt(list.Count));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.RemoveAt(-1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.RemoveAt(list.Count));
         }
 
         [Test]

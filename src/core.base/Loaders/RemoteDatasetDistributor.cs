@@ -336,12 +336,17 @@ namespace Apollo.Core.Base.Loaders
             using (m_Diagnostics.Profiler.Measure("Generating remote proposal"))
             {
                 var proposals = RetrieveProposals(availableEndpoints, m_Configuration, request, token);
-                return from proposal in proposals
-                    select new DistributionPlan(
-                        ImplementPlan,
-                        request.DatasetToLoad,
-                        new NetworkIdentifier(proposal.Endpoint.OriginatesOnMachine()),
-                        proposal);
+                return proposals
+                    .Select(
+                        p =>
+                        {
+                            return new DistributionPlan(
+                                ImplementPlan,
+                                request.DatasetToLoad,
+                                new NetworkIdentifier(p.Endpoint.OriginatesOnMachine()),
+                                p);
+                        })
+                    .ToList();
             }
         }
 

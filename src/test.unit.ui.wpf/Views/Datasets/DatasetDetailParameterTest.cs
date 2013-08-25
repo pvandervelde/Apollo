@@ -51,7 +51,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
             {
                 get
                 {
-                    return true;
+                    return false;
                 }
             }
         }

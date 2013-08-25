@@ -22,7 +22,8 @@ namespace Apollo.UI.Wpf.Views.Feedback
     {
         private static ApplicationData ApplicationData()
         {
-            var assembly = Assembly.GetEntryAssembly();
+            // When running unit tests in nUnit, Assembly.GetEntryAssembly returns null, so in that case fake it.
+            var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
 
             var attributes = assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false);
             var name = (attributes.Length > 0 && attributes[0] is AssemblyProductAttribute)

@@ -172,7 +172,7 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
                 .Callback<CommandId, ICommandContext>(
                     (id, context) =>
                     {
-                        Assert.IsAssignableFrom<UnloadProjectContext>(context.GetType());
+                        Assert.IsAssignableFrom<UnloadProjectContext>(context);
                     })
                 .Verifiable();
 

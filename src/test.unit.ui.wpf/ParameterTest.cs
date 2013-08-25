@@ -78,7 +78,7 @@ namespace Apollo.UI.Wpf
             {
                 get
                 {
-                    return true;
+                    return false;
                 }
             }
         }

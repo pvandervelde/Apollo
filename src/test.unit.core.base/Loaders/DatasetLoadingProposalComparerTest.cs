@@ -56,7 +56,7 @@ namespace Apollo.Core.Base.Loaders
         public void CompareWithBothObjectsNull()
         {
             var comparer = new DatasetLoadingProposalComparer();
-            Assert.Throws<ArgumentException>(() => comparer.Compare(null, null));
+            Assert.Throws<ArgumentNullException>(() => comparer.Compare(null, null));
         }
 
         [Test]

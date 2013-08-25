@@ -28,13 +28,13 @@ namespace Apollo.Utilities.History
                     "f",
                 };
 
-            Assert.Throws<IndexOutOfRangeException>(
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () =>
                 {
                     var result = list[-1];
                 });
 
-            Assert.Throws<IndexOutOfRangeException>(
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () =>
                 {
                     var result = list[list.Count];
@@ -101,8 +101,8 @@ namespace Apollo.Utilities.History
                     "f",
                 };
 
-            Assert.Throws<IndexOutOfRangeException>(() => list.Insert(-1, "aa"));
-            Assert.Throws<IndexOutOfRangeException>(() => list.Insert(list.Count, "bb"));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.Insert(-1, "aa"));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.Insert(list.Count + 1, "bb"));
         }
 
         [Test]
@@ -118,8 +118,8 @@ namespace Apollo.Utilities.History
                     "f",
                 };
 
-            Assert.Throws<IndexOutOfRangeException>(() => list.RemoveAt(-1));
-            Assert.Throws<IndexOutOfRangeException>(() => list.RemoveAt(list.Count));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.RemoveAt(-1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.RemoveAt(list.Count));
         }
 
         [Test]

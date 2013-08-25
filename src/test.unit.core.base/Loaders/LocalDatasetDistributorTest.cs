@@ -85,7 +85,6 @@ namespace Apollo.Core.Base.Loaders
                     PercentageOfMaximumMemory = 50,
                     PercentageOfPhysicalMemory = 50,
                 };
-            var plan = CreateNewDistributionPlan(result, offlineInfo, systemDiagnostics);
 
             var localDistributor = new Mock<ICalculateDistributionParameters>();
             {
@@ -136,7 +135,11 @@ namespace Apollo.Core.Base.Loaders
                 };
             var plans = distributor.ProposeDistributionFor(request, new CancellationToken());
             Assert.AreEqual(1, plans.Count());
-            Assert.ReferenceEquals(plans.First(), plan);
+
+            var plan = plans.First();
+            Assert.IsTrue(ReferenceEquals(offlineInfo, plan.DistributionFor));
+            Assert.AreEqual(new NetworkIdentifier(result.Endpoint.OriginatesOnMachine()), plan.MachineToDistributeTo);
+            Assert.IsTrue(ReferenceEquals(result, plan.Proposal));
         }
 
         [Test]

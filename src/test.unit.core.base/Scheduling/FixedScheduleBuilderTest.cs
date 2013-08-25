@@ -166,10 +166,10 @@ namespace Apollo.Core.Base.Scheduling
             Assert.AreEqual(3, synchronizationEndVertex.Index);
 
             var schedule = builder.Build();
-            Assert.AreEqual(3, schedule.Vertices.Count());
+            Assert.AreEqual(4, schedule.Vertices.Count());
             Assert.IsTrue(AreVerticesEqual(schedule.Start, schedule.Vertices.ElementAt(0)));
             Assert.IsTrue(AreVerticesEqual(synchronizationStartVertex, schedule.Vertices.ElementAt(1)));
-            Assert.IsTrue(AreVerticesEqual(synchronizationEndVertex, schedule.Vertices.ElementAt(1)));
+            Assert.IsTrue(AreVerticesEqual(synchronizationEndVertex, schedule.Vertices.ElementAt(2)));
             Assert.IsTrue(AreVerticesEqual(schedule.End, schedule.Vertices.ElementAt(3)));
         }
 

@@ -25,7 +25,7 @@ namespace Apollo.UI.Wpf.Views.Scripting
                 = new ScriptDescriptionModel(new Mock<IContextAware>().Object, ScriptLanguage.IronPython);
 
             private readonly ScriptDescriptionModel m_Second 
-                = new ScriptDescriptionModel(new Mock<IContextAware>().Object, ScriptLanguage.IronPython);
+                = new ScriptDescriptionModel(new Mock<IContextAware>().Object, ScriptLanguage.IronRuby);
 
             protected override ScriptDescriptionModel Copy(ScriptDescriptionModel original)
             {
