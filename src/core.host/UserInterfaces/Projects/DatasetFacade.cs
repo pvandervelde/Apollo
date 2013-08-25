@@ -109,6 +109,17 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         }
 
         /// <summary>
+        /// Gets the dataset proxy for the current facade.
+        /// </summary>
+        internal IProxyDataset Proxy
+        {
+            get
+            {
+                return m_Dataset;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating the name of the dataset.
         /// </summary>
         public string Name

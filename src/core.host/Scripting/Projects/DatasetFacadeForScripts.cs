@@ -107,6 +107,17 @@ namespace Apollo.Core.Host.Scripting.Projects
         }
 
         /// <summary>
+        /// Gets the internal facade for the current object.
+        /// </summary>
+        internal DatasetFacade Facade
+        {
+            get
+            {
+                return m_Dataset;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating the name of the dataset.
         /// </summary>
         public string Name
