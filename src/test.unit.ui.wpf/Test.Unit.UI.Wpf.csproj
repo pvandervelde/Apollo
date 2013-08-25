@@ -122,7 +122,7 @@
       <HintPath>..\..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="ParallelExtensionsExtras">
-      <HintPath>..\..\packages\ParallelExtensionsExtras.1.2.3.2\lib\ParallelExtensionsExtras.dll</HintPath>
+      <HintPath>..\..\packages\ParallelExtensionsExtras.1.2.0.0\lib\net40\ParallelExtensionsExtras.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
