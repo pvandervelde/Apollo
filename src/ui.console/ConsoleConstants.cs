@@ -19,6 +19,6 @@ namespace Apollo.UI.Console
         /// <summary>
         /// The prefix used for each log message.
         /// </summary>
-        public const string LogPrefix = "Sherlock.Service.Executor";
+        public const string LogPrefix = "Apollo.UI.Console";
     }
 }
