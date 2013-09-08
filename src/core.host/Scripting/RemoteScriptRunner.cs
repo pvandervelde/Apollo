@@ -74,6 +74,7 @@ namespace Apollo.Core.Host.Scripting
             m_Engine = engine;
 
             // Should be able to do any kind of stream we like because we're not actually going to use it.
+            m_Engine.Runtime.IO.SetErrorOutput(new MemoryStream(), writer);
             m_Engine.Runtime.IO.SetOutput(new MemoryStream(), writer);
         }
 

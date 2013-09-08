@@ -18,23 +18,27 @@
         <!-- Nuget -->
         <!-- These should only be defined on the build server! -->
         <ShouldDeploy Condition=" '$(ShouldDeploy)' == ''">false</ShouldDeploy>
-        <NugetFeedService Condition=" '$(NugetFeedService)' == '' "></NugetFeedService>
+        <SymbolServerPath Condition=" '$(SymbolServerPath)' == '' "></SymbolServerPath>
     </PropertyGroup>
     
     <Target Name="Run" DependsOnTargets="_DisplayInfo;_DeployNugetPackage;" />
     
     <!-- Display info -->
     <Target Name="_DisplayInfo">
-        <Message Text="Pushing NuGet packages to the feed..." Condition=" '$(NugetFeedService)' != '' AND '$(ShouldDeploy)' == 'true'" />
+        <Message Text="Pushing NuGet packages to the feed..." Condition=" '$(SymbolServerPath)' != '' AND '$(ShouldDeploy)' == 'true'" />
         <Message Text="Not pushing NuGet packages to the feed." Condition="'$(ShouldDeploy)' != 'true'" />
-        <Message Text="No feed service defined!" Condition=" '$(NugetFeedService)' == ''" />
+        <Message Text="No symbol server path defined!" Condition=" '$(SymbolServerPath)' == ''" />
     </Target>
     
     <PropertyGroup>
-        <DirNuget>$(DirSrc)\.nuget</DirNuget>
+        
     </PropertyGroup>
-    <Target Name="_DeployNugetPackage" DependsOnTargets="_DisplayInfo;" Condition=" '$(NugetFeedService)' != '' AND '$(ShouldDeploy)' == 'true'">
-        <Exec Command="&quot;$(DirNuget)\nuget.exe&quot; push &quot;$(DirBuildDeploy)\*.symbols.nupkg&quot; -Source $(NugetFeedService)"
-              Condition=" '$(NugetFeedService)' != '' AND '$(ShouldDeploy)' == 'true'" />
+    <Target Name="_DeployNugetPackage" DependsOnTargets="_DisplayInfo;" Condition=" '$(SymbolServerPath)' != '' AND '$(ShouldDeploy)' == 'true'">
+        <ItemGroup>
+            <SymbolPackages Include="$(DirBuildDeploy)\*.symbols.nupkg" />
+        </ItemGroup>
+        
+        <Copy SourceFiles="@(SymbolPackages)" 
+              DestinationFolder="$(SymbolServerPath)\" />
     </Target>
 </Project>

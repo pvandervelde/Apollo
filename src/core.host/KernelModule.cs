@@ -45,7 +45,7 @@ namespace Apollo.Core.Host
                     a =>
                     {
                         var collection = a.Context.Resolve<ICommandCollection>();
-                        collection.Register(typeof(IDatasetApplicationCommands), a.Instance);
+                        collection.Register(typeof(IHostApplicationCommands), a.Instance);
                     })
                 .As<IHostApplicationCommands>()
                 .As<ICommandSet>()

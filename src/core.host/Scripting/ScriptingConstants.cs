@@ -14,16 +14,16 @@ namespace Apollo.Core.Host.Scripting
         /// <summary>
         /// Defines the file extension for Python script files.
         /// </summary>
-        public const string PythonFileExtension = "py";
+        public const string PythonFileExtension = ".py";
 
         /// <summary>
         /// Defines the file extension for Ruby script files.
         /// </summary>
-        public const string RubyFileExtension = "rb";
+        public const string RubyFileExtension = ".rb";
 
         /// <summary>
         /// Defines the file extension for PowerShell script files.
         /// </summary>
-        public const string PowerShellFileExtension = "ps1";
+        public const string PowerShellFileExtension = ".ps1";
     }
 }

@@ -509,7 +509,7 @@
     <value>Select a script file</value>
   </data>
   <data name="ScriptFileExtensionFileFilter" xml:space="preserve">
-    <value>{0} Files | *.{1}</value>
+    <value>{0} Files | *{1}</value>
   </data>
   <data name="ScriptView_CurrentScriptLanguage" xml:space="preserve">
     <value>Script language:</value>
