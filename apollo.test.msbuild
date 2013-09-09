@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0"
+         DefaultTargets="Run"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- Directories -->
+        <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
+    </PropertyGroup>
+
+    <Target Name="Run" DependsOnTargets="_PrepareWorkspace;ExecuteConsoleRegressionTests">
+        <!-- Do nothing here -->
+    </Target>
+    
+    <Target Name="_DisplayInfo">
+        <Message Text="Executing long running tests for Apollo ..." />
+    </Target>
+    
+    <PropertyGroup>
+        <MsBuildPrepareWorkspace>$(DirWorkspace)\apollo.Test.Prepare.msbuild</MsBuildPrepareWorkspace>
+    </PropertyGroup>
+    <Target Name="_PrepareWorkspace" DependsOnTargets="_DisplayInfo">
+        <MSBuild Projects="$(MsBuildPrepareWorkspace)" />
+    </Target>
+        
+    <PropertyGroup>
+        <MsBuildTestRegressionConsole>$(DirWorkspace)\apollo.Test.Regression.Console.msbuild</MsBuildTestRegressionConsole>
+    </PropertyGroup>
+    <Target Name="ExecuteConsoleRegressionTests" DependsOnTargets="_PrepareWorkspace">
+        <MSBuild Projects="$(MsBuildTestRegressionConsole)" />
+    </Target>
+</Project>
