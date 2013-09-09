@@ -7,13 +7,13 @@
 using System;
 using Nuclei.Communication;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
     /// Stores information about a proposal to load a given dataset onto a given machine.
     /// </summary>
     [Serializable]
-    public sealed class DatasetLoadingProposal
+    public sealed class DatasetActivationProposal
     {
         /// <summary>
         /// Gets or sets the ID number of the endpoint that made the proposal.
@@ -48,10 +48,9 @@ namespace Apollo.Core.Base.Loaders
         }
 
         /// <summary>
-        /// Gets or sets the estimated time necessary to load the dataset from the disk
-        /// into the dataset application.
+        /// Gets or sets the estimated time necessary to activate the dataset.
         /// </summary>
-        public TimeSpan LoadingTime
+        public TimeSpan ActivationTime
         {
             get;
             set;

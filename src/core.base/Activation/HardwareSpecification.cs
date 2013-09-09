@@ -10,7 +10,7 @@ using System.Management;
 using Apollo.Core.Base.Properties;
 using Lokad;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
     /// Defines the hardware specifications of a given machine.

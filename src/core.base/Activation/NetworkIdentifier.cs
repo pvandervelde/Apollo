@@ -6,15 +6,17 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using Apollo.Core.Base.Properties;
 using Lokad;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
-    /// Stores information about a machine.
+    /// Uniquely identifies a computer on a network.
     /// </summary>
     [Serializable]
-    public sealed class Machine : IEquatable<Machine>
+    public sealed class NetworkIdentifier : IEquatable<NetworkIdentifier>
     {
         /// <summary>
         /// Implements the operator ==.
@@ -22,7 +24,7 @@ namespace Apollo.Core.Base.Loaders
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator ==(Machine first, Machine second)
+        public static bool operator ==(NetworkIdentifier first, NetworkIdentifier second)
         {
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
@@ -49,7 +51,7 @@ namespace Apollo.Core.Base.Loaders
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator !=(Machine first, Machine second)
+        public static bool operator !=(NetworkIdentifier first, NetworkIdentifier second)
         {
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
@@ -71,75 +73,105 @@ namespace Apollo.Core.Base.Loaders
         }
 
         /// <summary>
-        /// Defines the location of the machine through the 
-        /// network address.
+        /// Returns the <see cref="NetworkIdentifier"/> for the local machine.
         /// </summary>
-        private readonly NetworkIdentifier m_Location;
-
-        /// <summary>
-        /// Defines the hardware specification for the given machine.
-        /// </summary>
-        private readonly HardwareSpecification m_Specification;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Machine"/> class for the local machine.
-        /// </summary>
-        public Machine()
-            : this(NetworkIdentifier.ForLocalMachine(), HardwareSpecification.ForLocalMachine())
-        { 
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Machine"/> class for the given machine.
-        /// </summary>
-        /// <param name="location">The network location for the given machine.</param>
-        /// <param name="specification">The hardware specification for the given machine.</param>
-        public Machine(
-            NetworkIdentifier location, 
-            HardwareSpecification specification)
-        {
-            {
-                Enforce.Argument(() => location);
-                Enforce.Argument(() => specification);
-            }
-
-            m_Location = location;
-            m_Specification = specification;
-        }
-
-        /// <summary>
-        /// Gets a value indicating the network location of the given machine.
-        /// </summary>
-        public NetworkIdentifier Location
-        {
-            get
-            {
-                return m_Location;
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating what the hardware specifications are for the
-        /// given machine.
-        /// </summary>
-        public HardwareSpecification Specification
-        {
-            get
-            {
-                return m_Specification;
-            }
-        }
-
-        /// <summary>
-        /// Determines whether the specified <see cref="Machine"/> is equal to this instance.
-        /// </summary>
-        /// <param name="other">The <see cref="Machine"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="Machine"/> is equal to this instance; otherwise, <see langword="false"/>.
+        /// The network identifier for the local machine.
+        /// </returns>
+        public static NetworkIdentifier ForLocalMachine()
+        {
+            return new NetworkIdentifier(Environment.MachineName);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NetworkIdentifier"/> class.
+        /// </summary>
+        /// <param name="domainName">The domain name of the machine.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="domainName"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="domainName"/> is an empty string or a string that only contains whitespace.
+        /// </exception>
+        public NetworkIdentifier(string domainName)
+            : this(domainName, string.Empty)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NetworkIdentifier"/> class.
+        /// </summary>
+        /// <param name="domainName">The domain name of the machine.</param>
+        /// <param name="groupName">The name of the group to which the machine belongs.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="domainName"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="domainName"/> is an empty string or a string that only contains whitespace.
+        /// </exception>
+        public NetworkIdentifier(string domainName, string groupName)
+        {
+            {
+                Enforce.Argument(() => domainName);
+                Enforce.With<ArgumentException>(
+                    !string.IsNullOrWhiteSpace(domainName),
+                    Resources.Exceptions_Messages_MachineDomainNameMustNotBeEmpty);
+            }
+
+            DomainName = domainName;
+            Group = groupName;
+        }
+
+        /// <summary>
+        /// Gets a value indicating the domain name for the given machine.
+        /// </summary>
+        public string DomainName
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the given machine belongs to a machine group.
+        /// </summary>
+        public bool IsPartOfGroup
+        {
+            get
+            {
+                return !string.IsNullOrWhiteSpace(Group);
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating the name of the group to which the machine belongs.
+        /// </summary>
+        public string Group
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the given machine is the local machine.
+        /// </summary>
+        public bool IsLocalMachine
+        {
+            get 
+            {
+                return string.Equals(DomainName, Environment.MachineName, StringComparison.Ordinal);
+            }
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="NetworkIdentifier"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="NetworkIdentifier"/> to compare with this instance.</param>
+        /// <returns>
+        ///     <see langword="true"/> if the specified <see cref="NetworkIdentifier"/> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public bool Equals(Machine other)
+        public bool Equals(NetworkIdentifier other)
         {
             if (ReferenceEquals(this, other))
             {
@@ -149,8 +181,9 @@ namespace Apollo.Core.Base.Loaders
             // Check if other is a null reference by using ReferenceEquals because
             // we overload the == operator. If other isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            return !ReferenceEquals(other, null)
-                && Location.Equals(other.Location);
+            return !ReferenceEquals(other, null) 
+                && string.Equals(DomainName, other.DomainName, StringComparison.OrdinalIgnoreCase) 
+                && string.Equals(Group, other.Group, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -172,7 +205,7 @@ namespace Apollo.Core.Base.Loaders
             // Check if other is a null reference by using ReferenceEquals because
             // we overload the == operator. If other isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            var id = obj as Machine;
+            var id = obj as NetworkIdentifier;
             return Equals(id);
         }
 
@@ -195,7 +228,8 @@ namespace Apollo.Core.Base.Loaders
                 int hash = 17;
 
                 // Mash the hash together with yet another random prime number
-                hash = (hash * 23) ^ Location.GetHashCode();
+                hash = (hash * 23) ^ DomainName.GetHashCode();
+                hash = (hash * 23) ^ Group.GetHashCode();
 
                 return hash;
             }
@@ -209,7 +243,14 @@ namespace Apollo.Core.Base.Loaders
         /// </returns>
         public override string ToString()
         {
-            return Location.ToString();
+            if (!string.IsNullOrWhiteSpace(Group))
+            {
+                return string.Format(CultureInfo.InvariantCulture, "{0} [{1}]", DomainName, Group);
+            }
+            else 
+            {
+                return string.Format(CultureInfo.InvariantCulture, "{0}", DomainName);
+            }
         }
     }
 }

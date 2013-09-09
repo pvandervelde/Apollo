@@ -7,13 +7,13 @@
 using System;
 using System.Collections.Generic;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
-    /// Defines a method for comparing <see cref="DatasetLoadingProposal"/> instances based
+    /// Defines a method for comparing <see cref="DatasetActivationProposal"/> instances based
     /// on the suitability of the proposal.
     /// </summary>
-    internal sealed class DatasetLoadingProposalComparer : IComparer<DatasetLoadingProposal>
+    internal sealed class DatasetActivationProposalComparer : IComparer<DatasetActivationProposal>
     {
         /// <summary>
         /// Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other.
@@ -26,7 +26,7 @@ namespace Apollo.Core.Base.Loaders
         /// Zero x equals y.
         /// Greater than zero x is greater than y.
         /// </returns>
-        public int Compare(DatasetLoadingProposal x, DatasetLoadingProposal y)
+        public int Compare(DatasetActivationProposal x, DatasetActivationProposal y)
         {
             if ((x == null) && (y == null))
             {

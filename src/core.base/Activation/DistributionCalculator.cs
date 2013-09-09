@@ -8,7 +8,7 @@ using System;
 using System.Linq;
 using Nuclei.Communication;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
     /// Generates dataset loading proposals for the local machine.
@@ -36,7 +36,7 @@ namespace Apollo.Core.Base.Loaders
         ///     A proposal that indicates if the machine can load the dataset and what the
         ///     expected loading performance will be like.
         /// </returns>
-        public DatasetLoadingProposal ProposeForLocalMachine(ExpectedDatasetLoad expectedLoad)
+        public DatasetActivationProposal ProposeForLocalMachine(ExpectedDatasetLoad expectedLoad)
         {
             // Grab the information about the local machine. Do this here so that we get
             // the most up to date information we can.
@@ -64,11 +64,11 @@ namespace Apollo.Core.Base.Loaders
             // And we can't get this one either because we don't know the speed of the connection we're going to use ...
             var transferTime = new TimeSpan(0, 1, 0);
 
-            return new DatasetLoadingProposal 
+            return new DatasetActivationProposal 
                 {
                     Endpoint = m_LocalEndpoint,
                     IsAvailable = false,
-                    LoadingTime = loadTime,
+                    ActivationTime = loadTime,
                     TransferTime = transferTime,
                     PercentageOfAvailableDisk = (int)Math.Ceiling(maximumDiskPercentage),
                     PercentageOfMaximumMemory = (int)Math.Ceiling(maximumVirtualMemoryPercentage),

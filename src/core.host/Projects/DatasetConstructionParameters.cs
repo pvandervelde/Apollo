@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Apollo.Utilities;
 
 namespace Apollo.Core.Host.Projects
@@ -42,7 +42,7 @@ namespace Apollo.Core.Host.Projects
         /// Gets or sets the function that is used to generate the distribution plans which indicate
         /// where a dataset can be loaded.
         /// </summary>
-        public Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> DistributionPlanGenerator
+        public Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> DistributionPlanGenerator
         {
             get;
             set;

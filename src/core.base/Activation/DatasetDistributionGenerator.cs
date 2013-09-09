@@ -7,10 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using Lokad;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
     /// Defines methods for the distribution of datasets.
@@ -42,7 +41,7 @@ namespace Apollo.Core.Base.Loaders
         /// Processes the dataset request and creates a distribution plan 
         /// which can then be accepted by the user.
         /// </summary>
-        /// <param name="request">
+        /// <param name="activationRequest">
         /// The request that describes the characteristics of the dataset that 
         /// should be loaded.
         /// </param>
@@ -52,12 +51,12 @@ namespace Apollo.Core.Base.Loaders
         /// the dataset and the currently available computing power.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="request"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="activationRequest"/> is <see langword="null" />.
         /// </exception>
-        public IEnumerable<DistributionPlan> ProposeDistributionFor(DatasetRequest request, CancellationToken token)
+        public IEnumerable<DistributionPlan> ProposeDistributionFor(DatasetActivationRequest activationRequest, CancellationToken token)
         {
             {
-                Enforce.Argument(() => request);
+                Enforce.Argument(() => activationRequest);
             }
 
             foreach (var distributor in m_Distributors)
@@ -67,7 +66,7 @@ namespace Apollo.Core.Base.Loaders
                     token.ThrowIfCancellationRequested();
                 }
 
-                var proposals = distributor.ProposeDistributionFor(request, token);
+                var proposals = distributor.ProposeDistributionFor(activationRequest, token);
                 foreach (var proposal in proposals)
                 {
                     yield return proposal;

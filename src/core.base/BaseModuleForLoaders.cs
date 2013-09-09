@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Apollo.Utilities;
 using Autofac;
 using Nuclei;
@@ -27,10 +27,10 @@ namespace Apollo.Core.Base
         {
             base.Load(builder);
 
-            builder.Register(c => new DatasetApplicationLoader(
+            builder.Register(c => new DatasetActivator(
                     c.Resolve<ApplicationConstants>(),
                     c.Resolve<SystemDiagnostics>()))
-                .As<IApplicationLoader>();
+                .As<IDatasetActivator>();
 
             builder.Register(c => new DatasetDistributionGenerator(
                     c.Resolve<IEnumerable<IGenerateDistributionProposals>>()))

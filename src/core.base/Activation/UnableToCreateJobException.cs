@@ -8,48 +8,48 @@ using System;
 using System.Runtime.Serialization;
 using Apollo.Core.Base.Properties;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
-    /// An exception thrown when a new job cannot be created by the
-    /// <see cref="DatasetTrackingJob"/>.
+    /// An exception thrown when the <see cref="DatasetTrackingJob"/> was unable to 
+    /// create the Win32 job object.
     /// </summary>
     [Serializable]
-    public sealed class UnableToSetJobException : Exception
+    public sealed class UnableToCreateJobException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnableToSetJobException"/> class.
+        /// Initializes a new instance of the <see cref="UnableToCreateJobException"/> class.
         /// </summary>
-        public UnableToSetJobException()
-            : this(Resources.Exceptions_Messages_UnableToSetJob)
+        public UnableToCreateJobException()
+            : this(Resources.Exceptions_Messages_UnableToCreateJob)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnableToSetJobException"/> class.
+        /// Initializes a new instance of the <see cref="UnableToCreateJobException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public UnableToSetJobException(string message) 
+        public UnableToCreateJobException(string message) 
             : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnableToSetJobException"/> class.
+        /// Initializes a new instance of the <see cref="UnableToCreateJobException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
-        public UnableToSetJobException(string message, Exception innerException)
+        public UnableToCreateJobException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnableToSetJobException"/> class.
+        /// Initializes a new instance of the <see cref="UnableToCreateJobException"/> class.
         /// </summary>
         /// <param name="info">
-        ///     The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object
-        ///     data about the exception being thrown.
+        ///     The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data
+        ///     about the exception being thrown.
         /// </param>
         /// <param name="context">
         ///     The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information
@@ -61,7 +61,7 @@ namespace Apollo.Core.Base.Loaders
         /// <exception cref="T:System.Runtime.Serialization.SerializationException">
         /// The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
         /// </exception>
-        private UnableToSetJobException(SerializationInfo info, StreamingContext context)
+        private UnableToCreateJobException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

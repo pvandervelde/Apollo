@@ -19,7 +19,7 @@ using Nuclei.Configuration;
 using Nuclei.Diagnostics;
 using NUnit.Framework;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
@@ -27,7 +27,7 @@ namespace Apollo.Core.Base.Loaders
     public sealed class RemoteDatasetDistributorTest
     {
         private static DistributionPlan CreateNewDistributionPlan(
-           DatasetLoadingProposal proposal,
+           DatasetActivationProposal proposal,
             IDatasetOfflineInformation offlineInfo,
             SystemDiagnostics systemDiagnostics)
         {
@@ -78,18 +78,18 @@ namespace Apollo.Core.Base.Loaders
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var offlineInfo = CreateOfflineInfo(new Mock<IPersistenceInformation>().Object);
-            var result = new DatasetLoadingProposal
+            var result = new DatasetActivationProposal
             {
                 Endpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
                 IsAvailable = true,
-                LoadingTime = new TimeSpan(0, 1, 0),
+                ActivationTime = new TimeSpan(0, 1, 0),
                 TransferTime = new TimeSpan(0, 1, 0),
                 PercentageOfAvailableDisk = 50,
                 PercentageOfMaximumMemory = 50,
                 PercentageOfPhysicalMemory = 50,
             };
 
-            var loaderCommands = new Mock<IDatasetLoaderCommands>();
+            var loaderCommands = new Mock<IDatasetActivationCommands>();
             {
                 loaderCommands.Setup(l => l.ProposeFor(It.IsAny<ExpectedDatasetLoad>()))
                     .Returns(
@@ -103,7 +103,7 @@ namespace Apollo.Core.Base.Loaders
 
             var commandHub = new Mock<ISendCommandsToRemoteEndpoints>();
             {
-                commandHub.Setup(h => h.CommandsFor<IDatasetLoaderCommands>(It.IsAny<EndpointId>()))
+                commandHub.Setup(h => h.CommandsFor<IDatasetActivationCommands>(It.IsAny<EndpointId>()))
                     .Returns(loaderCommands.Object);
             }
 
@@ -156,20 +156,20 @@ namespace Apollo.Core.Base.Loaders
                 h => h.OnEndpointSignedIn += null,
                 new CommandSetAvailabilityEventArgs(
                     forbiddenMachineId,
-                    new[] { typeof(IDatasetLoaderCommands) }));
+                    new[] { typeof(IDatasetActivationCommands) }));
 
             var legalMachineId = new EndpointId("myMachine:8080");
             commandHub.Raise(
                 h => h.OnEndpointSignedIn += null,
                 new CommandSetAvailabilityEventArgs(
                     legalMachineId,
-                    new[] { typeof(IDatasetLoaderCommands) }));
+                    new[] { typeof(IDatasetActivationCommands) }));
 
-            var request = new DatasetRequest
+            var request = new DatasetActivationRequest
             {
-                DatasetToLoad = offlineInfo,
+                DatasetToActivate = offlineInfo,
                 ExpectedLoadPerMachine = new ExpectedDatasetLoad(),
-                PreferredLocations = LoadingLocations.All,
+                PreferredLocations = DistributionLocations.All,
             };
             var plans = distributor.ProposeDistributionFor(request, new CancellationToken());
             var listPlans = plans.ToList();
@@ -189,11 +189,11 @@ namespace Apollo.Core.Base.Loaders
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var loaderEndpoint = new EndpointId("myMachine:8080");
-            var proposal = new DatasetLoadingProposal
+            var proposal = new DatasetActivationProposal
             {
                 Endpoint = loaderEndpoint,
                 IsAvailable = true,
-                LoadingTime = new TimeSpan(0, 1, 0),
+                ActivationTime = new TimeSpan(0, 1, 0),
                 TransferTime = new TimeSpan(0, 1, 0),
                 PercentageOfAvailableDisk = 50,
                 PercentageOfMaximumMemory = 50,
@@ -209,9 +209,9 @@ namespace Apollo.Core.Base.Loaders
 
             var plan = CreateNewDistributionPlan(proposal, CreateOfflineInfo(storage.Object), systemDiagnostics);
             var datasetEndpoint = new EndpointId("OtherMachine:5678");
-            var loaderCommands = new Mock<IDatasetLoaderCommands>();
+            var loaderCommands = new Mock<IDatasetActivationCommands>();
             {
-                loaderCommands.Setup(l => l.Load(It.IsAny<EndpointId>(), It.IsAny<ChannelType>(), It.IsAny<Uri>(), It.IsAny<DatasetId>()))
+                loaderCommands.Setup(l => l.Activate(It.IsAny<EndpointId>(), It.IsAny<ChannelType>(), It.IsAny<Uri>(), It.IsAny<DatasetId>()))
                     .Returns(
                         Task.Factory.StartNew(
                             () => datasetEndpoint,
@@ -235,7 +235,7 @@ namespace Apollo.Core.Base.Loaders
             {
                 commandHub.Setup(h => h.HasCommandsFor(It.IsAny<EndpointId>()))
                     .Returns(true);
-                commandHub.Setup(h => h.CommandsFor<IDatasetLoaderCommands>(It.IsAny<EndpointId>()))
+                commandHub.Setup(h => h.CommandsFor<IDatasetActivationCommands>(It.IsAny<EndpointId>()))
                     .Returns(loaderCommands.Object);
                 commandHub.Setup(h => h.CommandsFor<IDatasetApplicationCommands>(It.IsAny<EndpointId>()))
                     .Callback<EndpointId>(e => Assert.AreSame(datasetEndpoint, e))
@@ -292,7 +292,7 @@ namespace Apollo.Core.Base.Loaders
                 h => h.OnEndpointSignedIn += null,
                 new CommandSetAvailabilityEventArgs(
                     loaderEndpoint,
-                    new[] { typeof(IDatasetLoaderCommands) }));
+                    new[] { typeof(IDatasetActivationCommands) }));
 
             Action<int, string> progress = (p, m) => { };
             var result = distributor.ImplementPlan(plan, new CancellationToken(), progress);

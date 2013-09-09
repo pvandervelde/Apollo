@@ -11,7 +11,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Schedulers;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Moq;
 using Nuclei.Communication;
 using Nuclei.Diagnostics;

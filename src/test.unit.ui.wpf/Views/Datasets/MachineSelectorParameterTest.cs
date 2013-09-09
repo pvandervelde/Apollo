@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Apollo.Utilities;
 using Moq;
 using Nuclei.Communication;
@@ -85,7 +85,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
         }
 
         private static DistributionPlan CreateNewDistributionPlan(
-           DatasetLoadingProposal proposal,
+           DatasetActivationProposal proposal,
             IDatasetOfflineInformation offlineInfo,
             SystemDiagnostics systemDiagnostics)
         {
@@ -131,13 +131,13 @@ namespace Apollo.UI.Wpf.Views.Datasets
             var context = new Mock<IContextAware>();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var proposal = new DatasetLoadingProposal
+            var proposal = new DatasetActivationProposal
             {
                 PercentageOfAvailableDisk = 5 * rating,
                 PercentageOfMaximumMemory = 75,
                 PercentageOfPhysicalMemory = 90,
                 TransferTime = new TimeSpan(0, 0, rating, 0, 0),
-                LoadingTime = new TimeSpan(0, 0, 0, rating, 0),
+                ActivationTime = new TimeSpan(0, 0, 0, rating, 0),
             };
             var plan = CreateNewDistributionPlan(
                 proposal,
@@ -180,13 +180,13 @@ namespace Apollo.UI.Wpf.Views.Datasets
         {
             var context = new Mock<IContextAware>();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            var proposal = new DatasetLoadingProposal
+            var proposal = new DatasetActivationProposal
             {
                 PercentageOfAvailableDisk = 5,
                 PercentageOfMaximumMemory = 100,
                 PercentageOfPhysicalMemory = 75,
                 TransferTime = new TimeSpan(0, 0, 1, 0, 0),
-                LoadingTime = new TimeSpan(0, 0, 0, 1, 0),
+                ActivationTime = new TimeSpan(0, 0, 0, 1, 0),
             };
             var plan = CreateNewDistributionPlan(
                 proposal,

@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Apollo.Utilities;
 using Moq;
 using Nuclei.Communication;
@@ -24,7 +24,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
     public sealed class MachineSelectorModelTest
     {
         private static DistributionPlan CreateNewDistributionPlan(
-           DatasetLoadingProposal proposal,
+           DatasetActivationProposal proposal,
             IDatasetOfflineInformation offlineInfo,
             SystemDiagnostics systemDiagnostics)
         {
@@ -76,7 +76,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
 
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             var plan = CreateNewDistributionPlan(
-                new DatasetLoadingProposal(),
+                new DatasetActivationProposal(),
                 CreateOfflineInfo(new Mock<IPersistenceInformation>().Object),
                 systemDiagnostics);
 

@@ -8,21 +8,21 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
-    /// Defines the methods for loading a set of datasets onto a set of machines.
+    /// Defines the methods for activating a set of datasets on a set of machines.
     /// </summary>
-    internal interface ILoadDatasets
+    internal interface IActivateDatasets
     {
         /// <summary>
-        /// Takes the set of distribution plans and loads the given datasets onto the specified machines.
+        /// Takes the set of distribution plans and activates the given datasets on the specified machines.
         /// </summary>
         /// <param name="planToImplement">The distribution plan that should be implemented.</param>
         /// <param name="token">The token used to indicate cancellation of the task.</param>
         /// <param name="progressReporter">The action that handles the reporting of progress.</param>
         /// <returns>
-        /// A set of objects which allow act as proxies for the loaded datasets.
+        /// A set of objects which allow act as proxies for the activated datasets.
         /// </returns>
         Task<DatasetOnlineInformation> ImplementPlan(
             DistributionPlan planToImplement,

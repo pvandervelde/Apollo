@@ -10,7 +10,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Lokad;
 using Nuclei.Communication;
 using Nuclei.Diagnostics;

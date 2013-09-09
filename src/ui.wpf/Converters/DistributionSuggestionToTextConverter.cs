@@ -6,7 +6,7 @@
 
 using System;
 using System.Windows.Data;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Apollo.UI.Wpf.Properties;
 
 namespace Apollo.UI.Wpf.Converters

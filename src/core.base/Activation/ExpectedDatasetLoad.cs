@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
     /// Describes the expected load a dataset will put on a given machine.

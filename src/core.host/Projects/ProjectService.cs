@@ -6,7 +6,7 @@
 
 using System;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
 

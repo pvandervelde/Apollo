@@ -10,7 +10,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
@@ -44,9 +44,9 @@ namespace Apollo.Core.Host.Projects
 
         /// <summary>
         /// The function which returns a <c>DistributionPlan</c> for a given
-        /// <c>DatasetRequest</c>.
+        /// <c>DatasetActivationRequest</c>.
         /// </summary>
-        private readonly Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> m_DatasetDistributor;
+        private readonly Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> m_DatasetDistributor;
 
         /// <summary>
         /// The function which returns a storage proxy for a newly loaded dataset.
@@ -94,7 +94,7 @@ namespace Apollo.Core.Host.Projects
         /// <param name="timeline">The timeline for the current project.</param>
         /// <param name="distributor">
         /// The function which returns a <see cref="DistributionPlan"/> for a given
-        /// <see cref="DatasetRequest"/>.
+        /// <see cref="DatasetActivationRequest"/>.
         /// </param>
         /// <param name="dataStorageProxyBuilder">The function which returns a storage proxy for a newly loaded dataset.</param>
         /// <exception cref="ArgumentNullException">
@@ -105,7 +105,7 @@ namespace Apollo.Core.Host.Projects
         /// </exception>
         public Project(
             ITimeline timeline,
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor,
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor,
             Func<DatasetOnlineInformation, DatasetStorageProxy> dataStorageProxyBuilder)
             : this(timeline, distributor, dataStorageProxyBuilder, null)
         {
@@ -117,7 +117,7 @@ namespace Apollo.Core.Host.Projects
         /// <param name="timeline">The timeline for the current project.</param>
         /// <param name="distributor">
         /// The function which returns a <see cref="DistributionPlan"/> for a given
-        /// <see cref="DatasetRequest"/>.
+        /// <see cref="DatasetActivationRequest"/>.
         /// </param>
         /// <param name="dataStorageProxyBuilder">The function which returns a storage proxy for a newly loaded dataset.</param>
         /// <param name="persistenceInfo">
@@ -134,7 +134,7 @@ namespace Apollo.Core.Host.Projects
         /// </exception>
         public Project(
             ITimeline timeline,
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor,
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor,
             Func<DatasetOnlineInformation, DatasetStorageProxy> dataStorageProxyBuilder,
             IPersistenceInformation persistenceInfo)
         {

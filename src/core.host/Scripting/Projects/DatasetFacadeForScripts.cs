@@ -11,7 +11,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Core.Scripting.Projects;
@@ -324,7 +324,7 @@ namespace Apollo.Core.Host.Scripting.Projects
         /// plan that is better suited to the contents of the dataset.
         /// </remarks>
         public void LoadOntoMachine(
-            LoadingLocations preferredLocation,
+            DistributionLocations preferredLocation,
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
             CancellationToken token)
         {

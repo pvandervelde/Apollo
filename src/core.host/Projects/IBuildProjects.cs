@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
 
@@ -38,17 +38,17 @@ namespace Apollo.Core.Host.Projects
         IBuildProjects WithTimeline(ITimeline timeline);
 
         /// <summary>
-        /// Provides the function which handles <see cref="DatasetRequest"/> objects and generates the 
+        /// Provides the function which handles <see cref="DatasetActivationRequest"/> objects and generates the 
         /// <see cref="DistributionPlan"/> for the request.
         /// </summary>
         /// <param name="distributor">
-        /// The function which handles <c>DatasetRequest</c> objects and generates the <c>DistributionPlan</c>
+        /// The function which handles <c>DatasetActivationRequest</c> objects and generates the <c>DistributionPlan</c>
         /// for the request.
         /// </param>
         /// <returns>
         /// The current builder instance with the function stored.
         /// </returns>
-        IBuildProjects WithDatasetDistributor(Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor);
+        IBuildProjects WithDatasetDistributor(Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor);
 
         /// <summary>
         /// Provides the function which creates a <see cref="DatasetStorageProxy"/> for a newly loaded dataset.

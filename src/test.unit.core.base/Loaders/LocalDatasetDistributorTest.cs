@@ -17,7 +17,7 @@ using Nuclei.Communication;
 using Nuclei.Diagnostics;
 using NUnit.Framework;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
@@ -25,7 +25,7 @@ namespace Apollo.Core.Base.Loaders
     public sealed class LocalDatasetDistributorTest
     {
         private static DistributionPlan CreateNewDistributionPlan(
-            DatasetLoadingProposal proposal,
+            DatasetActivationProposal proposal,
             IDatasetOfflineInformation offlineInfo,
             SystemDiagnostics systemDiagnostics)
         {
@@ -75,11 +75,11 @@ namespace Apollo.Core.Base.Loaders
         {
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             var offlineInfo = CreateOfflineInfo(new Mock<IPersistenceInformation>().Object);
-            var result = new DatasetLoadingProposal
+            var result = new DatasetActivationProposal
                 {
                     Endpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
                     IsAvailable = true,
-                    LoadingTime = new TimeSpan(0, 1, 0),
+                    ActivationTime = new TimeSpan(0, 1, 0),
                     TransferTime = new TimeSpan(0, 1, 0),
                     PercentageOfAvailableDisk = 50,
                     PercentageOfMaximumMemory = 50,
@@ -102,7 +102,7 @@ namespace Apollo.Core.Base.Loaders
                             new Uri("net.pipe://localhost/pipe/data")));
             }
 
-            var loader = new Mock<IApplicationLoader>();
+            var loader = new Mock<IDatasetActivator>();
             var commandHub = new Mock<ISendCommandsToRemoteEndpoints>();
             var notificationHub = new Mock<INotifyOfRemoteEndpointEvents>();
             var uploads = new Mock<IStoreUploads>();
@@ -127,11 +127,11 @@ namespace Apollo.Core.Base.Loaders
                 systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 
-            var request = new DatasetRequest
+            var request = new DatasetActivationRequest
                 {
-                    DatasetToLoad = offlineInfo,
+                    DatasetToActivate = offlineInfo,
                     ExpectedLoadPerMachine = new ExpectedDatasetLoad(),
-                    PreferredLocations = LoadingLocations.All,
+                    PreferredLocations = DistributionLocations.All,
                 };
             var plans = distributor.ProposeDistributionFor(request, new CancellationToken());
             Assert.AreEqual(1, plans.Count());
@@ -155,13 +155,13 @@ namespace Apollo.Core.Base.Loaders
             }
 
             var offlineInfo = CreateOfflineInfo(storage.Object);
-            var plan = CreateNewDistributionPlan(new DatasetLoadingProposal(), offlineInfo, systemDiagnostics);
+            var plan = CreateNewDistributionPlan(new DatasetActivationProposal(), offlineInfo, systemDiagnostics);
             var localDistributor = new Mock<ICalculateDistributionParameters>();
 
             var datasetEndpoint = new EndpointId("OtherMachine:5678");
-            var loader = new Mock<IApplicationLoader>();
+            var loader = new Mock<IDatasetActivator>();
             {
-                loader.Setup(l => l.LoadDataset(It.IsAny<EndpointId>(), It.IsAny<ChannelType>(), It.IsAny<Uri>()))
+                loader.Setup(l => l.ActivateDataset(It.IsAny<EndpointId>(), It.IsAny<ChannelType>(), It.IsAny<Uri>()))
                     .Returns(datasetEndpoint);
             }
 

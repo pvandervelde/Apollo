@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Lokad;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
     /// Defines the plan for distributing a dataset across one or more machines.
@@ -20,14 +20,14 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// The function that is used to load the dataset on to the machine that proposed the current plan.
         /// </summary>
-        private readonly Func<DistributionPlan, CancellationToken, Action<int, string>, Task<DatasetOnlineInformation>> m_Loader;
+        private readonly Func<DistributionPlan, CancellationToken, Action<int, string>, Task<DatasetOnlineInformation>> m_Activator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DistributionPlan"/> class.
         /// </summary>
-        /// <param name="loader">
-        ///     The function that provides the ability to load the dataset onto the selected machine
-        ///     if the current distribution plan should be accepted.
+        /// <param name="activator">
+        ///     The function that provides the ability to activate the dataset if the current 
+        ///     distribution plan should be accepted.
         /// </param>
         /// <param name="dataset">The ID of the dataset that should be loaded.</param>
         /// <param name="machine">
@@ -38,7 +38,7 @@ namespace Apollo.Core.Base.Loaders
         ///     dataset onto the given machine.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="loader"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="activator"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="dataset"/> is <see langword="null" />.
@@ -52,19 +52,19 @@ namespace Apollo.Core.Base.Loaders
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "Loading a dataset is a time consuming task hence the return value of the function is a Task<T>.")]
         public DistributionPlan(
-            Func<DistributionPlan, CancellationToken, Action<int, string>, Task<DatasetOnlineInformation>> loader,
+            Func<DistributionPlan, CancellationToken, Action<int, string>, Task<DatasetOnlineInformation>> activator,
             IDatasetOfflineInformation dataset,
             NetworkIdentifier machine,
-            DatasetLoadingProposal proposal)
+            DatasetActivationProposal proposal)
         {
             {
-                Enforce.Argument(() => loader);
+                Enforce.Argument(() => activator);
                 Enforce.Argument(() => dataset);
                 Enforce.Argument(() => machine);
                 Enforce.Argument(() => proposal);
             }
 
-            m_Loader = loader;
+            m_Activator = activator;
             DistributionFor = dataset;
             MachineToDistributeTo = machine;
             Proposal = proposal;
@@ -94,7 +94,7 @@ namespace Apollo.Core.Base.Loaders
         /// Gets the proposal that provides the estimated performance of loading the
         /// dataset on the given machine.
         /// </summary>
-        public DatasetLoadingProposal Proposal
+        public DatasetActivationProposal Proposal
         {
             get;
             private set;
@@ -111,7 +111,7 @@ namespace Apollo.Core.Base.Loaders
         /// </returns>
         public Task<DatasetOnlineInformation> Accept(CancellationToken token, Action<int, string> progressReporter)
         {
-            return m_Loader(this, token, progressReporter);
+            return m_Activator(this, token, progressReporter);
         }
     }
 }

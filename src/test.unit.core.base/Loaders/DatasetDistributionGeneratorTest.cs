@@ -15,7 +15,7 @@ using Nuclei.Communication;
 using Nuclei.Diagnostics;
 using NUnit.Framework;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
@@ -23,7 +23,7 @@ namespace Apollo.Core.Base.Loaders
     public sealed class DatasetDistributionGeneratorTest
     {
         private static DistributionPlan CreateNewDistributionPlan(
-           DatasetLoadingProposal proposal,
+           DatasetActivationProposal proposal,
             IDatasetOfflineInformation offlineInfo,
             SystemDiagnostics systemDiagnostics)
         {
@@ -73,12 +73,12 @@ namespace Apollo.Core.Base.Loaders
 
             var first = new Mock<IGenerateDistributionProposals>();
             {
-                first.Setup(p => p.ProposeDistributionFor(It.IsAny<DatasetRequest>(), It.IsAny<CancellationToken>()))
+                first.Setup(p => p.ProposeDistributionFor(It.IsAny<DatasetActivationRequest>(), It.IsAny<CancellationToken>()))
                     .Returns(
                         new DistributionPlan[] 
                         {
                             CreateNewDistributionPlan(
-                                new DatasetLoadingProposal(),
+                                new DatasetActivationProposal(),
                                 CreateOfflineInfo(new Mock<IPersistenceInformation>().Object),
                                 systemDiagnostics)
                         })
@@ -87,12 +87,12 @@ namespace Apollo.Core.Base.Loaders
 
             var second = new Mock<IGenerateDistributionProposals>();
             {
-                second.Setup(p => p.ProposeDistributionFor(It.IsAny<DatasetRequest>(), It.IsAny<CancellationToken>()))
+                second.Setup(p => p.ProposeDistributionFor(It.IsAny<DatasetActivationRequest>(), It.IsAny<CancellationToken>()))
                     .Returns(
                         new DistributionPlan[] 
                         {
                             CreateNewDistributionPlan(
-                                new DatasetLoadingProposal(),
+                                new DatasetActivationProposal(),
                                 CreateOfflineInfo(new Mock<IPersistenceInformation>().Object),
                                 systemDiagnostics)
                         })
@@ -100,11 +100,11 @@ namespace Apollo.Core.Base.Loaders
             }
 
             var generator = new DatasetDistributionGenerator(new IGenerateDistributionProposals[] { first.Object, second.Object });
-            var results = generator.ProposeDistributionFor(new DatasetRequest(), new CancellationToken());
+            var results = generator.ProposeDistributionFor(new DatasetActivationRequest(), new CancellationToken());
             
             Assert.AreEqual(2, results.Count());
-            first.Verify(f => f.ProposeDistributionFor(It.IsAny<DatasetRequest>(), It.IsAny<CancellationToken>()), Times.Once());
-            second.Verify(s => s.ProposeDistributionFor(It.IsAny<DatasetRequest>(), It.IsAny<CancellationToken>()), Times.Once());
+            first.Verify(f => f.ProposeDistributionFor(It.IsAny<DatasetActivationRequest>(), It.IsAny<CancellationToken>()), Times.Once());
+            second.Verify(s => s.ProposeDistributionFor(It.IsAny<DatasetActivationRequest>(), It.IsAny<CancellationToken>()), Times.Once());
         }
     }
 }

@@ -13,7 +13,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
@@ -304,7 +304,7 @@ namespace Apollo.Core.Host.Projects
                         };
 
                     LoadOntoMachine(
-                        LoadingLocations.All,
+                        DistributionLocations.All,
                         selector,
                         new CancellationTokenSource().Token,
                         false);
@@ -594,13 +594,13 @@ namespace Apollo.Core.Host.Projects
         ///     Thrown when the project that owns this dataset has been closed.
         /// </exception>
         /// <exception cref="CannotLoadDatasetWithoutLoadingLocationException">
-        ///     Thrown when the <paramref name="preferredLocation"/> is <see cref="LoadingLocations.None"/>.
+        ///     Thrown when the <paramref name="preferredLocation"/> is <see cref="DistributionLocations.None"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="machineSelector"/> is <see langword="null" />.
         /// </exception>
         public void LoadOntoMachine(
-            LoadingLocations preferredLocation,
+            DistributionLocations preferredLocation,
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
             CancellationToken token)
         {
@@ -609,7 +609,7 @@ namespace Apollo.Core.Host.Projects
                     !Owner.IsClosed,
                     Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
                 Lokad.Enforce.With<CannotLoadDatasetWithoutLoadingLocationException>(
-                    preferredLocation != LoadingLocations.None,
+                    preferredLocation != DistributionLocations.None,
                     Resources.Exceptions_Messages_CannotLoadDatasetWithoutLoadingLocation);
                 Lokad.Enforce.Argument(() => machineSelector);
             }
@@ -618,14 +618,14 @@ namespace Apollo.Core.Host.Projects
         }
 
         private void LoadOntoMachine(
-            LoadingLocations preferredLocation,
+            DistributionLocations preferredLocation,
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
             CancellationToken token,
             bool storeLocation)
         {
             {
                 Debug.Assert(!Owner.IsClosed, "The owner should not be closed.");
-                Debug.Assert(preferredLocation != LoadingLocations.None, "A loading location should be specified.");
+                Debug.Assert(preferredLocation != DistributionLocations.None, "A loading location should be specified.");
             }
 
             if (IsLoaded)
@@ -641,9 +641,9 @@ namespace Apollo.Core.Host.Projects
             m_IsLoading = true;
             try
             {
-                var request = new DatasetRequest
+                var request = new DatasetActivationRequest
                 {
-                    DatasetToLoad = this,
+                    DatasetToActivate = this,
                     PreferredLocations = preferredLocation,
                     ExpectedLoadPerMachine = new ExpectedDatasetLoad
                     {

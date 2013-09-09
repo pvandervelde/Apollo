@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Apollo.Utilities;
 
 namespace Apollo.Core.Host.Projects
@@ -79,7 +79,7 @@ namespace Apollo.Core.Host.Projects
         /// plan that is better suited to the contents of the dataset.
         /// </remarks>
         void LoadOntoMachine(
-            LoadingLocations preferredLocation,
+            DistributionLocations preferredLocation,
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
             CancellationToken token);
 

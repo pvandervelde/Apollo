@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 
 namespace Apollo.Core.Scripting.Projects
 {

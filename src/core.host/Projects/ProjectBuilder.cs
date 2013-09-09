@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
@@ -28,9 +28,9 @@ namespace Apollo.Core.Host.Projects
 
         /// <summary>
         /// The function which returns a <c>DistributionPlan</c> for a given
-        /// <c>DatasetRequest</c>.
+        /// <c>DatasetActivationRequest</c>.
         /// </summary>
-        private Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> m_Distributor;
+        private Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> m_Distributor;
 
         /// <summary>
         /// The function which returns a storage proxy for a newly loaded dataset.
@@ -74,17 +74,17 @@ namespace Apollo.Core.Host.Projects
         }
 
         /// <summary>
-        /// Provides the function which handles <see cref="DatasetRequest"/> objects and generates the 
+        /// Provides the function which handles <see cref="DatasetActivationRequest"/> objects and generates the 
         /// <see cref="DistributionPlan"/> for the request.
         /// </summary>
         /// <param name="distributor">
-        /// The function which handles <c>DatasetRequest</c> objects and generates the <c>DistributionPlan</c>
+        /// The function which handles <c>DatasetActivationRequest</c> objects and generates the <c>DistributionPlan</c>
         /// for the request.
         /// </param>
         /// <returns>
         /// The current builder instance with the function stored.
         /// </returns>
-        public IBuildProjects WithDatasetDistributor(Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor)
+        public IBuildProjects WithDatasetDistributor(Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor)
         {
             {
                 Lokad.Enforce.Argument(() => distributor);

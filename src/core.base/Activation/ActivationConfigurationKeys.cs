@@ -7,12 +7,12 @@
 using System.Diagnostics.CodeAnalysis;
 using Nuclei.Configuration;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
-    /// Defines the <see cref="ConfigurationKey"/> objects for the dataset loaders.
+    /// Defines the <see cref="ConfigurationKey"/> objects for the dataset activators.
     /// </summary>
-    public static class LoaderConfigurationKeys
+    public static class ActivationConfigurationKeys
     {
         /// <summary>
         /// The <see cref="ConfigurationKey"/> that is used to retrieve the list of endpoints to which 

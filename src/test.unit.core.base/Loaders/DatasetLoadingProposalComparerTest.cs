@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using Nuclei.Communication;
 using NUnit.Framework;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
@@ -19,90 +19,90 @@ namespace Apollo.Core.Base.Loaders
         [Test]
         public void CompareWithFirstObjectNull()
         {
-            var proposal = new DatasetLoadingProposal 
+            var proposal = new DatasetActivationProposal 
                 {
                     Endpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
                     IsAvailable = true,
-                    LoadingTime = new TimeSpan(100),
+                    ActivationTime = new TimeSpan(100),
                     TransferTime = new TimeSpan(100),
                     PercentageOfAvailableDisk = 50,
                     PercentageOfMaximumMemory = 50,
                     PercentageOfPhysicalMemory = 50,
                 };
 
-            var comparer = new DatasetLoadingProposalComparer();
+            var comparer = new DatasetActivationProposalComparer();
             Assert.AreEqual(-1, comparer.Compare(null, proposal));
         }
 
         [Test]
         public void CompareWithSecondObjectNull()
         {
-            var proposal = new DatasetLoadingProposal
+            var proposal = new DatasetActivationProposal
             {
                 Endpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
                 IsAvailable = true,
-                LoadingTime = new TimeSpan(100),
+                ActivationTime = new TimeSpan(100),
                 TransferTime = new TimeSpan(100),
                 PercentageOfAvailableDisk = 50,
                 PercentageOfMaximumMemory = 50,
                 PercentageOfPhysicalMemory = 50,
             };
 
-            var comparer = new DatasetLoadingProposalComparer();
+            var comparer = new DatasetActivationProposalComparer();
             Assert.AreEqual(1, comparer.Compare(proposal, null));
         }
 
         [Test]
         public void CompareWithBothObjectsNull()
         {
-            var comparer = new DatasetLoadingProposalComparer();
+            var comparer = new DatasetActivationProposalComparer();
             Assert.Throws<ArgumentNullException>(() => comparer.Compare(null, null));
         }
 
         [Test]
         public void CompareWithEqualObjects()
         {
-            var proposal = new DatasetLoadingProposal
+            var proposal = new DatasetActivationProposal
             {
                 Endpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
                 IsAvailable = true,
-                LoadingTime = new TimeSpan(100),
+                ActivationTime = new TimeSpan(100),
                 TransferTime = new TimeSpan(100),
                 PercentageOfAvailableDisk = 50,
                 PercentageOfMaximumMemory = 50,
                 PercentageOfPhysicalMemory = 50,
             };
 
-            var comparer = new DatasetLoadingProposalComparer();
+            var comparer = new DatasetActivationProposalComparer();
             Assert.AreEqual(0, comparer.Compare(proposal, proposal));
         }
 
         [Test]
         public void CompareWithUnequalObjects()
         {
-            var proposal1 = new DatasetLoadingProposal
+            var proposal1 = new DatasetActivationProposal
             {
                 Endpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
                 IsAvailable = true,
-                LoadingTime = new TimeSpan(50),
+                ActivationTime = new TimeSpan(50),
                 TransferTime = new TimeSpan(50),
                 PercentageOfAvailableDisk = 50,
                 PercentageOfMaximumMemory = 50,
                 PercentageOfPhysicalMemory = 50,
             };
 
-            var proposal2 = new DatasetLoadingProposal 
+            var proposal2 = new DatasetActivationProposal 
                 {
                     Endpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
                     IsAvailable = true,
-                    LoadingTime = new TimeSpan(500),
+                    ActivationTime = new TimeSpan(500),
                     TransferTime = new TimeSpan(500),
                     PercentageOfAvailableDisk = 50,
                     PercentageOfMaximumMemory = 50,
                     PercentageOfPhysicalMemory = 50,
                 };
 
-            var comparer = new DatasetLoadingProposalComparer();
+            var comparer = new DatasetActivationProposalComparer();
             Assert.AreEqual(-1, comparer.Compare(proposal1, proposal2));
         }
     }

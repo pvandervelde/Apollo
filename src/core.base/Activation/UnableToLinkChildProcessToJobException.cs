@@ -8,7 +8,7 @@ using System;
 using System.Runtime.Serialization;
 using Apollo.Core.Base.Properties;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
     /// An exception thrown when the <see cref="DatasetTrackingJob"/> fails to link

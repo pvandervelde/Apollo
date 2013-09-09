@@ -16,12 +16,12 @@ using Nuclei.Communication;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Profiling;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
     /// Provide dataset loading proposals for the local machine.
     /// </summary>
-    internal sealed class LocalDatasetDistributor : IGenerateDistributionProposals, ILoadDatasets
+    internal sealed class LocalDatasetDistributor : IGenerateDistributionProposals, IActivateDatasets
     {
         /// <summary>
         /// The object that handles the distribution proposals for the local machine.
@@ -31,7 +31,7 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// The object that handles the actual starting of the dataset application.
         /// </summary>
-        private readonly IApplicationLoader m_Loader;
+        private readonly IDatasetActivator m_Loader;
 
         /// <summary>
         /// The object that sends commands to remote endpoints.
@@ -107,7 +107,7 @@ namespace Apollo.Core.Base.Loaders
         /// </exception>
         public LocalDatasetDistributor(
             ICalculateDistributionParameters localDistributor,
-            IApplicationLoader loader,
+            IDatasetActivator loader,
             ISendCommandsToRemoteEndpoints commandHub,
             INotifyOfRemoteEndpointEvents notificationHub,
             IStoreUploads uploads,
@@ -140,7 +140,7 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// Processes the dataset request and returns a collection of distribution plans.
         /// </summary>
-        /// <param name="request">
+        /// <param name="activationRequest">
         /// The request that describes the characteristics of the dataset that 
         /// should be loaded.
         /// </param>
@@ -148,14 +148,14 @@ namespace Apollo.Core.Base.Loaders
         /// <returns>
         /// The collection containing all the distribution plans.
         /// </returns>
-        public IEnumerable<DistributionPlan> ProposeDistributionFor(DatasetRequest request, CancellationToken token)
+        public IEnumerable<DistributionPlan> ProposeDistributionFor(DatasetActivationRequest activationRequest, CancellationToken token)
         {
             using (m_Diagnostics.Profiler.Measure("Generating local proposal"))
             {
-                var proposal = m_LocalDistributor.ProposeForLocalMachine(request.ExpectedLoadPerMachine);
+                var proposal = m_LocalDistributor.ProposeForLocalMachine(activationRequest.ExpectedLoadPerMachine);
                 var plan = new DistributionPlan(
                     ImplementPlan,
-                    request.DatasetToLoad,
+                    activationRequest.DatasetToActivate,
                     new NetworkIdentifier(proposal.Endpoint.OriginatesOnMachine()),
                     proposal);
                 return new[] { plan };
@@ -180,7 +180,7 @@ namespace Apollo.Core.Base.Loaders
                 () =>
                 {
                     var info = m_CommunicationLayer.LocalConnectionFor(ChannelType.NamedPipe);
-                    var endpoint = m_Loader.LoadDataset(info.Item1, ChannelType.NamedPipe, info.Item2);
+                    var endpoint = m_Loader.ActivateDataset(info.Item1, ChannelType.NamedPipe, info.Item2);
                     var resetEvent = new AutoResetEvent(false);
                     var commandAvailabilityNotifier = 
                         Observable.FromEventPattern<CommandSetAvailabilityEventArgs>(

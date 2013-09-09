@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
     /// Defines the interface for objects that calculate distribution parameters.
@@ -12,13 +12,13 @@ namespace Apollo.Core.Base.Loaders
     internal interface ICalculateDistributionParameters
     {
         /// <summary>
-        /// Returns a dataset loading proposal for the given expected load.
+        /// Returns a dataset activation proposal for the given expected load.
         /// </summary>
         /// <param name="expectedLoad">The load the dataset is expected to put on the machine.</param>
         /// <returns>
-        ///     A proposal that indicates if the machine can load the dataset and what the
-        ///     expected loading performance will be like.
+        ///     A proposal that indicates if the machine can activation the dataset and what the
+        ///     expected activation performance will be like.
         /// </returns>
-        DatasetLoadingProposal ProposeForLocalMachine(ExpectedDatasetLoad expectedLoad);
+        DatasetActivationProposal ProposeForLocalMachine(ExpectedDatasetLoad expectedLoad);
     }
 }

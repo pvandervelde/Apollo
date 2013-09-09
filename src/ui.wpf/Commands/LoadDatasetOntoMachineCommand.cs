@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Microsoft.Practices.Prism.Commands;
 
@@ -71,7 +71,7 @@ namespace Apollo.UI.Wpf.Commands
             {
                 var source = new CancellationTokenSource();
                 dataset.LoadOntoMachine(
-                    LoadingLocations.All,
+                    DistributionLocations.All,
                     selector,
                     source.Token);
                 projectFacade.ActiveProject().History.Mark();

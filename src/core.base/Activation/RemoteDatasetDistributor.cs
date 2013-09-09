@@ -17,31 +17,31 @@ using Nuclei.Configuration;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Profiling;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
     /// Provides methods to get dataset loading proposals from the known remote endpoints.
     /// </summary>
-    internal sealed class RemoteDatasetDistributor : IGenerateDistributionProposals, ILoadDatasets
+    internal sealed class RemoteDatasetDistributor : IGenerateDistributionProposals, IActivateDatasets
     {
-        private static IEnumerable<DatasetLoadingProposal> RetrieveProposals(
-            IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> availableEndpoints,
+        private static IEnumerable<DatasetActivationProposal> RetrieveProposals(
+            IEnumerable<Tuple<EndpointId, IDatasetActivationCommands>> availableEndpoints,
             IConfiguration configuration,
-            DatasetRequest request,
+            DatasetActivationRequest activationRequest,
             CancellationToken token)
         {
             var usableNodes = DetermineUsableEndpoints(availableEndpoints, configuration);
-            var orderedProposals = OrderProposals(request.ExpectedLoadPerMachine, request.PreferredLocations, usableNodes, token);
+            var orderedProposals = OrderProposals(activationRequest.ExpectedLoadPerMachine, activationRequest.PreferredLocations, usableNodes, token);
             return orderedProposals;
         }
 
-        private static IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> DetermineUsableEndpoints(
-            IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> availableEndpoints,
+        private static IEnumerable<Tuple<EndpointId, IDatasetActivationCommands>> DetermineUsableEndpoints(
+            IEnumerable<Tuple<EndpointId, IDatasetActivationCommands>> availableEndpoints,
             IConfiguration configuration)
         {
-            IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> usableNodes = availableEndpoints;
+            IEnumerable<Tuple<EndpointId, IDatasetActivationCommands>> usableNodes = availableEndpoints;
 
-            var key = LoaderConfigurationKeys.OffLimitsEndpoints;
+            var key = ActivationConfigurationKeys.OffLimitsEndpoints;
             if (configuration.HasValueFor(key))
             {
                 var offlimitEndpoints = configuration.Value<IDictionary<string, object>>(key);
@@ -58,13 +58,13 @@ namespace Apollo.Core.Base.Loaders
             return usableNodes;
         }
 
-        private static IEnumerable<DatasetLoadingProposal> OrderProposals(
+        private static IEnumerable<DatasetActivationProposal> OrderProposals(
             ExpectedDatasetLoad load,
-            LoadingLocations preferedLocations,
-            IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> usableNodes,
+            DistributionLocations preferedLocations,
+            IEnumerable<Tuple<EndpointId, IDatasetActivationCommands>> usableNodes,
             CancellationToken token)
         {
-            var loadingProposals = new Queue<Task<DatasetLoadingProposal>>();
+            var loadingProposals = new Queue<Task<DatasetActivationProposal>>();
 
             bool shouldLoad = ShouldLoadDistributed(preferedLocations);
             foreach (var pair in usableNodes)
@@ -136,10 +136,10 @@ namespace Apollo.Core.Base.Loaders
             }
         }
 
-        private static bool ShouldLoadDistributed(LoadingLocations preferedLocations)
+        private static bool ShouldLoadDistributed(DistributionLocations preferedLocations)
         {
-            return ((preferedLocations & LoadingLocations.DistributedOnCluster) == LoadingLocations.DistributedOnCluster)
-                || ((preferedLocations & LoadingLocations.DistributedOnPeerToPeer) == LoadingLocations.DistributedOnPeerToPeer);
+            return ((preferedLocations & DistributionLocations.DistributedOnCluster) == DistributionLocations.DistributedOnCluster)
+                || ((preferedLocations & DistributionLocations.DistributedOnPeerToPeer) == DistributionLocations.DistributedOnPeerToPeer);
         }
 
         /// <summary>
@@ -148,10 +148,10 @@ namespace Apollo.Core.Base.Loaders
         private readonly object m_Lock = new object();
 
         /// <summary>
-        /// The object that provides the commands to load datasets onto other machines.
+        /// The object that provides the commands to activate datasets onto other machines.
         /// </summary>
-        private readonly Dictionary<EndpointId, IDatasetLoaderCommands> m_LoaderCommands =
-            new Dictionary<EndpointId, IDatasetLoaderCommands>();
+        private readonly Dictionary<EndpointId, IDatasetActivationCommands> m_ActivatorCommands =
+            new Dictionary<EndpointId, IDatasetActivationCommands>();
 
         /// <summary>
         /// The object that manages the remote command proxies.
@@ -273,16 +273,16 @@ namespace Apollo.Core.Base.Loaders
 
         private void AddNewEndpoint(EndpointId endpoint, IEnumerable<Type> commandTypes)
         {
-            if (commandTypes.Contains(typeof(IDatasetLoaderCommands)))
+            if (commandTypes.Contains(typeof(IDatasetActivationCommands)))
             {
                 lock (m_Lock)
                 {
-                    if (!m_LoaderCommands.ContainsKey(endpoint))
+                    if (!m_ActivatorCommands.ContainsKey(endpoint))
                     {
-                        IDatasetLoaderCommands command = null;
+                        IDatasetActivationCommands command = null;
                         try
                         {
-                            command = m_CommandHub.CommandsFor<IDatasetLoaderCommands>(endpoint);
+                            command = m_CommandHub.CommandsFor<IDatasetActivationCommands>(endpoint);
                         }
                         catch (CommandNotSupportedException)
                         {
@@ -293,7 +293,7 @@ namespace Apollo.Core.Base.Loaders
 
                         if (command != null)
                         {
-                            m_LoaderCommands.Add(endpoint, command);
+                            m_ActivatorCommands.Add(endpoint, command);
                         }
                     }
                 }
@@ -304,9 +304,9 @@ namespace Apollo.Core.Base.Loaders
         {
             lock (m_Lock)
             {
-                if (m_LoaderCommands.ContainsKey(endpoint))
+                if (m_ActivatorCommands.ContainsKey(endpoint))
                 {
-                    m_LoaderCommands.Remove(endpoint);
+                    m_ActivatorCommands.Remove(endpoint);
                 }
             }
         }
@@ -314,7 +314,7 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// Processes the dataset request and returns a collection of distribution plans.
         /// </summary>
-        /// <param name="request">
+        /// <param name="activationRequest">
         /// The request that describes the characteristics of the dataset that 
         /// should be loaded.
         /// </param>
@@ -322,27 +322,27 @@ namespace Apollo.Core.Base.Loaders
         /// <returns>
         /// The collection containing all the distribution plans.
         /// </returns>
-        public IEnumerable<DistributionPlan> ProposeDistributionFor(DatasetRequest request, CancellationToken token)
+        public IEnumerable<DistributionPlan> ProposeDistributionFor(DatasetActivationRequest activationRequest, CancellationToken token)
         {
-            var availableEndpoints = new List<Tuple<EndpointId, IDatasetLoaderCommands>>();
+            var availableEndpoints = new List<Tuple<EndpointId, IDatasetActivationCommands>>();
             lock (m_Lock)
             {
-                foreach (var pair in m_LoaderCommands)
+                foreach (var pair in m_ActivatorCommands)
                 {
-                    availableEndpoints.Add(new Tuple<EndpointId, IDatasetLoaderCommands>(pair.Key, pair.Value));
+                    availableEndpoints.Add(new Tuple<EndpointId, IDatasetActivationCommands>(pair.Key, pair.Value));
                 }
             }
 
             using (m_Diagnostics.Profiler.Measure("Generating remote proposal"))
             {
-                var proposals = RetrieveProposals(availableEndpoints, m_Configuration, request, token);
+                var proposals = RetrieveProposals(availableEndpoints, m_Configuration, activationRequest, token);
                 return proposals
                     .Select(
                         p =>
                         {
                             return new DistributionPlan(
                                 ImplementPlan,
-                                request.DatasetToLoad,
+                                activationRequest.DatasetToActivate,
                                 new NetworkIdentifier(p.Endpoint.OriginatesOnMachine()),
                                 p);
                         })
@@ -367,21 +367,21 @@ namespace Apollo.Core.Base.Loaders
             Func<DatasetOnlineInformation> result =
                 () =>
                 {
-                    IDatasetLoaderCommands loaderCommands;
+                    IDatasetActivationCommands activationCommands;
                     lock (m_Lock)
                     {
-                        if (!m_LoaderCommands.ContainsKey(planToImplement.Proposal.Endpoint))
+                        if (!m_ActivatorCommands.ContainsKey(planToImplement.Proposal.Endpoint))
                         {
                             throw new EndpointNotContactableException(planToImplement.Proposal.Endpoint);
                         }
 
-                        loaderCommands = m_LoaderCommands[planToImplement.Proposal.Endpoint];
+                        activationCommands = m_ActivatorCommands[planToImplement.Proposal.Endpoint];
                     }
 
                     // We shouldn't have to load the TCP channel at this point because that channel would have
                     // been loaded when the loaders broadcast their message indicating that they exist.
                     var info = m_CommunicationLayer.LocalConnectionFor(ChannelType.TcpIP);
-                    var endpointTask = loaderCommands.Load(info.Item1, ChannelType.TcpIP, info.Item2, planToImplement.DistributionFor.Id);
+                    var endpointTask = activationCommands.Activate(info.Item1, ChannelType.TcpIP, info.Item2, planToImplement.DistributionFor.Id);
                     endpointTask.Wait();
 
                     var endpoint = endpointTask.Result;

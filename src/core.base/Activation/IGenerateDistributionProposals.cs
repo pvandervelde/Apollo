@@ -7,7 +7,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
     /// Defines the interface for objects that provide distribution proposals.
@@ -17,7 +17,7 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// Processes the dataset request and returns a collection of distribution plans.
         /// </summary>
-        /// <param name="request">
+        /// <param name="activationRequest">
         /// The request that describes the characteristics of the dataset that 
         /// should be loaded.
         /// </param>
@@ -25,6 +25,6 @@ namespace Apollo.Core.Base.Loaders
         /// <returns>
         /// The collection containing all the distribution plans.
         /// </returns>
-        IEnumerable<DistributionPlan> ProposeDistributionFor(DatasetRequest request, CancellationToken token);
+        IEnumerable<DistributionPlan> ProposeDistributionFor(DatasetActivationRequest activationRequest, CancellationToken token);
     }
 }

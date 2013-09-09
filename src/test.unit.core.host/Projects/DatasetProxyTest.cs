@@ -12,7 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Apollo.Core.Host.Plugins;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
@@ -155,8 +155,8 @@ namespace Apollo.Core.Host.Projects
                     t),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                new DatasetActivationProposal());
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
             var proxyLayer = new Mock<IProxyCompositionLayer>();
             return new Project(
@@ -217,8 +217,8 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                new DatasetActivationProposal());
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
             var proxyLayer = new Mock<IProxyCompositionLayer>();
             var project = new Project(
@@ -258,8 +258,8 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                new DatasetActivationProposal());
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
             var proxyLayer = new Mock<IProxyCompositionLayer>();
             var project = new Project(
@@ -307,8 +307,8 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                new DatasetActivationProposal());
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
             var proxyLayer = new Mock<IProxyCompositionLayer>();
             var project = new Project(
@@ -356,8 +356,8 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                new DatasetActivationProposal());
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
             var proxyLayer = new Mock<IProxyCompositionLayer>();
             var project = new Project(
@@ -375,7 +375,7 @@ namespace Apollo.Core.Host.Projects
 
             Assert.Throws<CannotLoadDatasetWithoutLoadingLocationException>(
                 () => dataset.LoadOntoMachine(
-                    LoadingLocations.None,
+                    DistributionLocations.None,
                     selector,
                     new CancellationToken()));
         }
@@ -413,9 +413,9 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
+                new DatasetActivationProposal());
 
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
 
             var proxyLayer = new Mock<IProxyCompositionLayer>();
@@ -432,13 +432,13 @@ namespace Apollo.Core.Host.Projects
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                 l => new SelectedProposal(plan);
 
-            dataset.LoadOntoMachine(LoadingLocations.All, selector, new CancellationToken());
+            dataset.LoadOntoMachine(DistributionLocations.All, selector, new CancellationToken());
 
             Assert.IsTrue(dataset.IsLoaded);
 
             bool wasLoaded = false;
             dataset.OnLoaded += (s, e) => wasLoaded = true;
-            dataset.LoadOntoMachine(LoadingLocations.All, selector, new CancellationToken());
+            dataset.LoadOntoMachine(DistributionLocations.All, selector, new CancellationToken());
 
             Assert.IsFalse(wasLoaded);
             Assert.IsTrue(dataset.IsLoaded);
@@ -466,9 +466,9 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
+                new DatasetActivationProposal());
 
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
 
             var proxyLayer = new Mock<IProxyCompositionLayer>();
@@ -491,7 +491,7 @@ namespace Apollo.Core.Host.Projects
             dataset.OnLoaded += (s, e) => wasLoaded = true;
 
             var source = new CancellationTokenSource();
-            dataset.LoadOntoMachine(LoadingLocations.All, selector, source.Token);
+            dataset.LoadOntoMachine(DistributionLocations.All, selector, source.Token);
 
             Assert.IsFalse(wasLoaded);
         }
@@ -533,9 +533,9 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
+                new DatasetActivationProposal());
 
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
 
             var proxyLayer = new Mock<IProxyCompositionLayer>();
@@ -557,7 +557,7 @@ namespace Apollo.Core.Host.Projects
 
             int progress = -1;
             dataset.OnProgressOfCurrentAction += (s, e) => progress = e.Progress;
-            dataset.LoadOntoMachine(LoadingLocations.All, selector, new CancellationToken());
+            dataset.LoadOntoMachine(DistributionLocations.All, selector, new CancellationToken());
 
             Assert.IsTrue(dataset.IsLoaded);
             Assert.IsTrue(wasLoaded);
@@ -609,9 +609,9 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
+                new DatasetActivationProposal());
 
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
 
             var proxyLayer = new Mock<IProxyCompositionLayer>();
@@ -628,7 +628,7 @@ namespace Apollo.Core.Host.Projects
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                 l => new SelectedProposal(plan);
 
-            dataset.LoadOntoMachine(LoadingLocations.All, selector, new CancellationToken());
+            dataset.LoadOntoMachine(DistributionLocations.All, selector, new CancellationToken());
 
             Assert.IsTrue(dataset.IsLoaded);
 
@@ -662,8 +662,8 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                new DatasetActivationProposal());
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
             var proxyLayer = new Mock<IProxyCompositionLayer>();
             var project = new Project(
@@ -715,8 +715,8 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                new DatasetActivationProposal());
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
             var proxyLayer = new Mock<IProxyCompositionLayer>();
             var project = new Project(
@@ -755,8 +755,8 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                new DatasetActivationProposal());
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
             var proxyLayer = new Mock<IProxyCompositionLayer>();
             var project = new Project(
@@ -803,8 +803,8 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                new DatasetActivationProposal());
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
             var proxyLayer = new Mock<IProxyCompositionLayer>();
             var project = new Project(
@@ -866,8 +866,8 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                new DatasetActivationProposal());
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
             var proxyLayer = new Mock<IProxyCompositionLayer>();
             var project = new Project(
@@ -906,8 +906,8 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                new DatasetActivationProposal());
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
             var proxyLayer = new Mock<IProxyCompositionLayer>();
             var project = new Project(
@@ -946,8 +946,8 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                new DatasetActivationProposal());
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
             var proxyLayer = new Mock<IProxyCompositionLayer>();
             var project = new Project(
@@ -1004,8 +1004,8 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                new DatasetActivationProposal());
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
             var proxyLayer = new Mock<IProxyCompositionLayer>();
             var project = new Project(
@@ -1057,8 +1057,8 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                new DatasetActivationProposal());
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
             var proxyLayer = new Mock<IProxyCompositionLayer>();
             var project = new Project(
@@ -1097,8 +1097,8 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                new DatasetActivationProposal());
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
             var proxyLayer = new Mock<IProxyCompositionLayer>();
             var project = new Project(
@@ -1161,8 +1161,8 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 offline.Object,
                 new NetworkIdentifier("mymachine"),
-                new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                new DatasetActivationProposal());
+            Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
 
             var proxyLayer = new Mock<IProxyCompositionLayer>();

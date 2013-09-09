@@ -4,26 +4,26 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
-    /// Stores the information that describes a loading request for a dataset.
+    /// Stores the information that describes an activation request for a dataset.
     /// </summary>
-    public sealed class DatasetRequest
+    public sealed class DatasetActivationRequest
     {
         /// <summary>
-        /// Gets or sets the dataset that should be loaded.
+        /// Gets or sets the dataset that should be activated.
         /// </summary>
-        public IDatasetOfflineInformation DatasetToLoad
+        public IDatasetOfflineInformation DatasetToActivate
         {
             get;
             set;
         }
 
         /// <summary>
-        /// Gets or sets the preferred loading locations.
+        /// Gets or sets the preferred distribution locations.
         /// </summary>
-        public LoadingLocations PreferredLocations
+        public DistributionLocations PreferredLocations
         {
             get;
             set;

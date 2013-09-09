@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Lokad;
 
 namespace Apollo.UI.Wpf.Views.Datasets

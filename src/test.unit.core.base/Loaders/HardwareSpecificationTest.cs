@@ -7,7 +7,7 @@
 using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

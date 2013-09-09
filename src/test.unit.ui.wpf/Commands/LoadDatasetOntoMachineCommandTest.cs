@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Utilities.History;
@@ -117,7 +117,7 @@ namespace Apollo.UI.Wpf.Commands
                     .Returns(true);
                 proxy.Setup(
                     p => p.LoadOntoMachine(
-                        It.IsAny<LoadingLocations>(), 
+                        It.IsAny<DistributionLocations>(), 
                         It.IsAny<Func<IEnumerable<DistributionSuggestion>, SelectedProposal>>(),
                         It.IsAny<CancellationToken>()))
                     .Verifiable();
@@ -133,7 +133,7 @@ namespace Apollo.UI.Wpf.Commands
 
             proxy.Verify(
                 p => p.LoadOntoMachine(
-                    It.IsAny<LoadingLocations>(),
+                    It.IsAny<DistributionLocations>(),
                     It.IsAny<Func<IEnumerable<DistributionSuggestion>, SelectedProposal>>(),
                     It.IsAny<CancellationToken>()),
                 Times.Once());

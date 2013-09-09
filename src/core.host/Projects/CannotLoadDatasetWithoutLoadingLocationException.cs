@@ -7,13 +7,13 @@
 using System;
 using System.Runtime.Serialization;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Apollo.Core.Host.Properties;
 
 namespace Apollo.Core.Host.Projects
 {
     /// <summary>
-    /// An exception thrown when the user tries to load a dataset without specifying a legal <see cref="LoadingLocations"/>.
+    /// An exception thrown when the user tries to load a dataset without specifying a legal <see cref="DistributionLocations"/>.
     /// </summary>
     [Serializable]
     public sealed class CannotLoadDatasetWithoutLoadingLocationException : Exception

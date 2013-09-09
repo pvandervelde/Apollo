@@ -6,12 +6,12 @@
 
 using System;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
-    /// Defines extension methods for the <see cref="DatasetLoadingProposal"/> class.
+    /// Defines extension methods for the <see cref="DatasetActivationProposal"/> class.
     /// </summary>
-    public static class DatasetLoadingProposalExtensions
+    public static class DatasetActivationProposalExtensions
     {
         /// <summary>
         /// Rates a proposal based on the amount of time necessary to transfer and load the
@@ -21,7 +21,7 @@ namespace Apollo.Core.Base.Loaders
         /// <returns>
         ///     A positive number that describes the 'usefulness' of the proposal. Lower numbers are better.
         /// </returns>
-        public static double Rate(this DatasetLoadingProposal proposal)
+        public static double Rate(this DatasetActivationProposal proposal)
         {
             if (proposal == null)
             {
@@ -46,7 +46,7 @@ namespace Apollo.Core.Base.Loaders
 
             // Turn the time into some floating point number, getting bigger as time gets bigger
             // but not linearly so that we can still handle large time spans.
-            var timeValue = TimeToNumber(proposal.TransferTime + proposal.LoadingTime);
+            var timeValue = TimeToNumber(proposal.TransferTime + proposal.ActivationTime);
             return timeValue * multiplier;
         }
 

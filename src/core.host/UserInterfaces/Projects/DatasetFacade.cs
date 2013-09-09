@@ -11,7 +11,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Loaders;
+using Apollo.Core.Base.Activation;
 using Apollo.Core.Host.Projects;
 using Apollo.Utilities;
 using Lokad;
@@ -328,7 +328,7 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "To select an appropriate machine we need a function which requires nested generics.")]
         public void LoadOntoMachine(
-            LoadingLocations preferredLocation,
+            DistributionLocations preferredLocation,
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
             CancellationToken token)
         {

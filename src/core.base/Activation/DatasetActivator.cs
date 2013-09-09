@@ -17,13 +17,13 @@ using Nuclei.Communication;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 
-namespace Apollo.Core.Base.Loaders
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
-    /// Loads datasets into an external application and provides enough information for the
+    /// Activates datasets into an external application and provides enough information for the
     /// requester to connect to that application via the communication system.
     /// </summary>
-    internal sealed class DatasetApplicationLoader : IApplicationLoader
+    internal sealed class DatasetActivator : IDatasetActivator
     {
         /// <summary>
         /// Defines the file name for the dataset application.
@@ -48,7 +48,7 @@ namespace Apollo.Core.Base.Loaders
         private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DatasetApplicationLoader"/> class.
+        /// Initializes a new instance of the <see cref="DatasetActivator"/> class.
         /// </summary>
         /// <param name="applicationConstants">The object that stores the application wide constants.</param>
         /// <param name="diagnostics">The object that provides the diagnostics methods for the system.</param>
@@ -58,7 +58,7 @@ namespace Apollo.Core.Base.Loaders
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
         /// </exception>
-        public DatasetApplicationLoader(ApplicationConstants applicationConstants, SystemDiagnostics diagnostics)
+        public DatasetActivator(ApplicationConstants applicationConstants, SystemDiagnostics diagnostics)
         {
             {
                 Lokad.Enforce.Argument(() => applicationConstants);
@@ -82,7 +82,7 @@ namespace Apollo.Core.Base.Loaders
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="address"/> is <see langword="null" />.
         /// </exception>
-        public EndpointId LoadDataset(EndpointId endpointId, ChannelType channelType, Uri address)
+        public EndpointId ActivateDataset(EndpointId endpointId, ChannelType channelType, Uri address)
         {
             {
                 Lokad.Enforce.Argument(() => endpointId);
