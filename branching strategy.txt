@@ -1,5 +1,0 @@
-- Using the version number based branching strategy. each version number will have it's own directory inside which the branches for that version number are stored. Each version number directory will always have an initial and a release directory.
-  - The initial directory will contain the intial resource for the specific release. Branched from trunk / main
-  - The release directory will contain the final release branch
-- The main directory will contain the current, stable state
-- The unstable directory will contain all the branches that have the unstable stuff
