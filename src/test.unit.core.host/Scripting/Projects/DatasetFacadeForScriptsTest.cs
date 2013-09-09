@@ -184,28 +184,28 @@ namespace Apollo.Core.Host.Scripting.Projects
         }
 
         [Test]
-        public void OnLoaded()
+        public void OnActivated()
         {
             var dataset = new Mock<IProxyDataset>();
             var facade = new DatasetFacadeForScripts(new DatasetFacade(dataset.Object));
 
             bool wasLoaded = false;
-            facade.OnLoaded += (s, e) => wasLoaded = true;
+            facade.OnActivated += (s, e) => wasLoaded = true;
 
-            dataset.Raise(d => d.OnLoaded += null, EventArgs.Empty);
+            dataset.Raise(d => d.OnActivated += null, EventArgs.Empty);
             Assert.IsTrue(wasLoaded);
         }
 
         [Test]
-        public void OnUnloaded()
+        public void OnDeactivated()
         {
             var dataset = new Mock<IProxyDataset>();
             var facade = new DatasetFacadeForScripts(new DatasetFacade(dataset.Object));
 
             bool wasUnloaded = false;
-            facade.OnUnloaded += (s, e) => wasUnloaded = true;
+            facade.OnDeactivated += (s, e) => wasUnloaded = true;
 
-            dataset.Raise(d => d.OnUnloaded += null, EventArgs.Empty);
+            dataset.Raise(d => d.OnDeactivated += null, EventArgs.Empty);
             Assert.IsTrue(wasUnloaded);
         }
 

@@ -57,7 +57,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
                     .Returns(summary);
                 proxy.Setup(p => p.IsEditMode)
                     .Returns(false);
-                proxy.Setup(p => p.IsLoaded)
+                proxy.Setup(p => p.IsActivated)
                     .Returns(true);
             }
 
@@ -69,7 +69,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
             Assert.AreEqual(summary, model.Summary);
 
             Assert.IsTrue(model.IsLocked);
-            Assert.IsTrue(model.IsLoaded);
+            Assert.IsTrue(model.IsActivated);
         }
 
         [Test]
@@ -228,7 +228,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
         }
 
         [Test]
-        public void OnUnload()
+        public void OnDeactivate()
         {
             var context = new Mock<IContextAware>();
             {
@@ -252,19 +252,19 @@ namespace Apollo.UI.Wpf.Views.Datasets
                     properties.Add(e.PropertyName);
                 };
             var onUnloadedWasRaised = false;
-            model.OnUnloaded += (s, e) =>
+            model.OnDeactivated += (s, e) =>
                 {
                     onUnloadedWasRaised = true;
                 };
 
-            proxy.Raise(p => p.OnUnloaded += null, EventArgs.Empty);
+            proxy.Raise(p => p.OnDeactivated += null, EventArgs.Empty);
             Assert.AreEqual(2, propertyChangedWasRaised);
             Assert.That(
                 properties,
                 Is.EquivalentTo(
                     new List<string>
                     {
-                        "IsLoaded",
+                        "IsActivated",
                         "Endpoint",
                     }));
             Assert.IsTrue(onUnloadedWasRaised);

@@ -245,13 +245,11 @@
     <Compile Include="Projects\CannotCreateProjectWithoutDatasetDistributorExceptionTest.cs" />
     <Compile Include="Projects\CannotCreateProjectWithoutTimelineExceptionTest.cs" />
     <Compile Include="Projects\CannotDeleteDatasetException.cs" />
-    <Compile Include="Projects\CannotLoadDatasetWithoutLoadingLocationExceptionTest.cs" />
+    <Compile Include="Projects\CannotActivateDatasetWithoutDistributionLocationExceptionTest.cs" />
     <Compile Include="Projects\CannotUseProjectAfterClosingItExceptionTest.cs" />
     <Compile Include="Projects\DatasetIdTest.cs" />
-    <Compile Include="Projects\DatasetLoadEventArgsTest.cs" />
-    <Compile Include="Projects\DatasetNotLoadedExceptionTest.cs" />
+    <Compile Include="Projects\DatasetNotActivatedExceptionTest.cs" />
     <Compile Include="Projects\DatasetProxyTest.cs" />
-    <Compile Include="Projects\DatasetUnloadEventArgsTest.cs" />
     <Compile Include="Projects\ProjectBuilderTest.cs" />
     <Compile Include="Projects\ProjectServiceTest.cs" />
     <Compile Include="Projects\ProjectTest.cs" />

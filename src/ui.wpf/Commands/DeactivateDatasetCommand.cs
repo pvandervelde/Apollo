@@ -5,30 +5,27 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using Apollo.Core.Base.Activation;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Microsoft.Practices.Prism.Commands;
 
 namespace Apollo.UI.Wpf.Commands
 {
     /// <summary>
-    /// Handles the loading of a dataset onto a machine.
+    /// Handles the deactivation of a dataset.
     /// </summary>
-    public sealed class LoadDatasetOntoMachineCommand : DelegateCommand<object>
+    public sealed class DeactivateDatasetCommand : DelegateCommand<object>
     {
         /// <summary>
-        /// Determines whether the dataset can be loaded onto a machine..
+        /// Determines whether the dataset can be deactivated.
         /// </summary>
         /// <param name="dataset">The dataset.</param>
         /// <returns>
-        ///     <see langword="true"/> if the dataset can be loaded onto a machine; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the dataset can be deactivated; otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        private static bool CanLoad(DatasetFacade dataset)
+        private static bool CanDeactivate(DatasetFacade dataset)
         {
             // If there is no application facade, then we're in 
             // designer mode, or something else silly.
@@ -37,23 +34,16 @@ namespace Apollo.UI.Wpf.Commands
                 return false;
             }
 
-            return !dataset.IsLoaded && dataset.CanLoad;
+            return dataset.IsActivated;
         }
 
         /// <summary>
-        /// Called when the dataset should be loaded.
+        /// Called when the dataset should be deactivated.
         /// </summary>
         /// <param name="projectFacade">The object that contains the methods that allow interaction with the project system.</param>
         /// <param name="dataset">The dataset.</param>
-        /// <param name="selector">
-        ///     The function that is used to select the most suitable machine to load the dataset onto.
-        /// </param>
         /// <param name="timer">The function that creates and stores timing intervals.</param>
-        private static void OnLoad(
-            ILinkToProjects projectFacade,
-            DatasetFacade dataset,
-            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector,
-            Func<string, IDisposable> timer)
+        private static void OnDeactivate(ILinkToProjects projectFacade, DatasetFacade dataset, Func<string, IDisposable> timer)
         {
             // If there is no application facade, then we're in 
             // designer mode, or something else silly.
@@ -62,39 +52,26 @@ namespace Apollo.UI.Wpf.Commands
                 return;
             }
 
-            if (dataset.IsLoaded || !dataset.CanLoad)
+            if (!dataset.IsActivated)
             {
                 return;
             }
 
-            using (timer("Loading dataset onto machine"))
+            using (timer("Unloading dataset"))
             {
-                var source = new CancellationTokenSource();
-                dataset.LoadOntoMachine(
-                    DistributionLocations.All,
-                    selector,
-                    source.Token);
+                dataset.Deactivate();
                 projectFacade.ActiveProject().History.Mark();
             }
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LoadDatasetOntoMachineCommand"/> class.
+        /// Initializes a new instance of the <see cref="DeactivateDatasetCommand"/> class.
         /// </summary>
         /// <param name="projectFacade">The object that contains the methods that allow interaction with the project system.</param>
         /// <param name="dataset">The dataset.</param>
-        /// <param name="selector">
-        ///     The function that is used to select the most suitable machine to load the dataset onto.
-        /// </param>
         /// <param name="timer">The function that creates and stores timing intervals.</param>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "To select an appropriate machine we need a function which requires nested generics.")]
-        public LoadDatasetOntoMachineCommand(
-            ILinkToProjects projectFacade, 
-            DatasetFacade dataset,
-            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector,
-            Func<string, IDisposable> timer)
-            : base(obj => OnLoad(projectFacade, dataset, selector, timer), obj => CanLoad(dataset))
+        public DeactivateDatasetCommand(ILinkToProjects projectFacade, DatasetFacade dataset, Func<string, IDisposable> timer)
+            : base(obj => OnDeactivate(projectFacade, dataset, timer), obj => CanDeactivate(dataset))
         {
         }
     }

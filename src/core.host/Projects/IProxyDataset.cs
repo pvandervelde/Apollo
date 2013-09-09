@@ -39,18 +39,17 @@ namespace Apollo.Core.Host.Projects
         void Delete();
 
         /// <summary>
-        /// Gets a value indicating whether the dataset is loaded on the local machine
-        /// or a remote machine.
+        /// Gets a value indicating whether the dataset is activated.
         /// </summary>
-        bool IsLoaded
+        bool IsActivated
         {
             get;
         }
 
         /// <summary>
-        /// Gets a value indicating whether the dataset can be loaded onto a machine.
+        /// Gets a value indicating whether the dataset can be activated.
         /// </summary>
-        bool CanLoad
+        bool CanActivate
         {
             get;
         }
@@ -64,29 +63,29 @@ namespace Apollo.Core.Host.Projects
         NetworkIdentifier RunsOn();
 
         /// <summary>
-        /// Loads the dataset onto a machine.
+        /// Activates the dataset.
         /// </summary>
         /// <param name="preferredLocation">
-        /// Indicates a preferred machine location for the dataset to be loaded onto.
+        /// Indicates a preferred machine location for the dataset to be activated onto.
         /// </param>
         /// <param name="machineSelector">
         ///     The function that selects the most suitable machine for the dataset to run on.
         /// </param>
-        /// <param name="token">The token that is used to cancel the loading.</param>
+        /// <param name="token">The token that is used to cancel the activation.</param>
         /// <remarks>
         /// Note that the <paramref name="preferredLocation"/> is
-        /// only a suggestion. The loader may decide to ignore the suggestion if there is a distribution
+        /// only a suggestion. The activator may decide to ignore the suggestion if there is a distribution
         /// plan that is better suited to the contents of the dataset.
         /// </remarks>
-        void LoadOntoMachine(
+        void Activate(
             DistributionLocations preferredLocation,
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
             CancellationToken token);
 
         /// <summary>
-        /// Unloads the dataset from the machine it is currently loaded onto.
+        /// Deactivates the dataset.
         /// </summary>
-        void UnloadFromMachine();
+        void Deactivate();
 
         /// <summary>
         /// Returns the collection of sub-datasets.
@@ -155,14 +154,14 @@ namespace Apollo.Core.Host.Projects
         event EventHandler<ProgressEventArgs> OnProgressOfCurrentAction;
 
         /// <summary>
-        /// An event raised when the dataset is loaded onto one or more machines.
+        /// An event raised when the dataset is activated.
         /// </summary>
-        event EventHandler<EventArgs> OnLoaded;
+        event EventHandler<EventArgs> OnActivated;
 
         /// <summary>
-        /// An event raised when the dataset is unloaded from the machines it was loaded onto.
+        /// An event raised when the dataset is deactivated.
         /// </summary>
-        event EventHandler<EventArgs> OnUnloaded;
+        event EventHandler<EventArgs> OnDeactivated;
 
         /// <summary>
         /// An event fired when the dataset is switched to edit mode.

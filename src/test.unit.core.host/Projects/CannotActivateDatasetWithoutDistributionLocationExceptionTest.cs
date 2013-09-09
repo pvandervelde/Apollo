@@ -13,8 +13,8 @@ namespace Apollo.Core.Host.Projects
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class CannotLoadDatasetWithoutLoadingLocationExceptionTest 
-        : ExceptionContractVerifier<CannotLoadDatasetWithoutLoadingLocationException>
+    public sealed class CannotActivateDatasetWithoutDistributionLocationExceptionTest 
+        : ExceptionContractVerifier<CannotActivateDatasetWithoutDistributionLocationException>
     {
     }
 }

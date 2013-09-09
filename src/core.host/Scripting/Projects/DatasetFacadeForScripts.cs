@@ -99,9 +99,9 @@ namespace Apollo.Core.Host.Scripting.Projects
 
             m_Dataset = facade;
             m_Dataset.OnInvalidate += (s, e) => RaiseOnInvalidate();
-            m_Dataset.OnProgressOfCurrentAction += (s, e) => RaiseOnLoadingProgress(e.Progress, e.Description);
-            m_Dataset.OnLoaded += (s, e) => RaiseOnLoaded();
-            m_Dataset.OnUnloaded += (s, e) => RaiseOnUnloaded();
+            m_Dataset.OnProgressOfCurrentAction += (s, e) => RaiseOnProgressOfCurrentAction(e.Progress, e.Description);
+            m_Dataset.OnActivated += (s, e) => RaiseOnActivated();
+            m_Dataset.OnDeactivated += (s, e) => RaiseOnDeactivated();
             m_Dataset.OnNameChanged += (s, e) => RaiseOnNameChanged();
             m_Dataset.OnSummaryChanged += (s, e) => RaiseOnSummaryChanged();
         }
@@ -275,25 +275,24 @@ namespace Apollo.Core.Host.Scripting.Projects
         }
 
         /// <summary>
-        /// Gets a value indicating whether the dataset is loaded on the local machine
-        /// or a remote machine.
+        /// Gets a value indicating whether the dataset is activated.
         /// </summary>
-        public bool IsLoaded
+        public bool IsActivated
         {
             get
             {
-                return m_Dataset.IsLoaded;
+                return m_Dataset.IsActivated;
             }
         }
 
         /// <summary>
-        /// Gets a value indicating whether the dataset can be loaded onto a machine.
+        /// Gets a value indicating whether the dataset can be activated.
         /// </summary>
-        public bool CanLoad
+        public bool CanActivate
         {
             get
             {
-                return m_Dataset.CanLoad;
+                return m_Dataset.CanActivate;
             }
         }
 
@@ -309,36 +308,37 @@ namespace Apollo.Core.Host.Scripting.Projects
         }
 
         /// <summary>
-        /// Loads the dataset onto a machine.
+        /// Activates the dataset.
         /// </summary>
         /// <param name="preferredLocation">
-        /// Indicates a preferred machine location for the dataset to be loaded onto.
+        /// Indicates a preferred machine location for the dataset to be distributed to.
         /// </param>
         /// <param name="machineSelector">
         ///     The function that selects the most suitable machine for the dataset to run on.
         /// </param>
-        /// <param name="token">The token that is used to cancel the loading.</param>
+        /// <param name="token">The token that is used to cancel the activation.</param>
         /// <remarks>
         /// Note that the <paramref name="preferredLocation"/> is
         /// only a suggestion. The loader may decide to ignore the suggestion if there is a distribution
         /// plan that is better suited to the contents of the dataset.
         /// </remarks>
-        public void LoadOntoMachine(
+        public void Activate(
             DistributionLocations preferredLocation,
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
             CancellationToken token)
         {
-            m_Dataset.LoadOntoMachine(preferredLocation, machineSelector, token);
+            m_Dataset.Activate(preferredLocation, machineSelector, token);
         }
 
         /// <summary>
-        /// An event raised when there is progress in the loading of the dataset.
+        /// An event raised when there is progress in the action that the dataset is
+        /// currently executing.
         /// </summary>
-        public event EventHandler<ProgressEventArgs> OnLoadingProgress;
+        public event EventHandler<ProgressEventArgs> OnProgressOfCurrentAction;
 
-        private void RaiseOnLoadingProgress(int progress, string mark)
+        private void RaiseOnProgressOfCurrentAction(int progress, string mark)
         {
-            var local = OnLoadingProgress;
+            var local = OnProgressOfCurrentAction;
             if (local != null)
             {
                 local(this, new ProgressEventArgs(progress, mark));
@@ -346,13 +346,13 @@ namespace Apollo.Core.Host.Scripting.Projects
         }
 
         /// <summary>
-        /// An event fired after the dataset has been distributed to one or more machines.
+        /// An event fired after the dataset has been activated.
         /// </summary>
-        public event EventHandler<EventArgs> OnLoaded;
+        public event EventHandler<EventArgs> OnActivated;
 
-        private void RaiseOnLoaded()
+        private void RaiseOnActivated()
         {
-            EventHandler<EventArgs> local = OnLoaded;
+            EventHandler<EventArgs> local = OnActivated;
             if (local != null)
             {
                 local(this, EventArgs.Empty);
@@ -360,13 +360,13 @@ namespace Apollo.Core.Host.Scripting.Projects
         }
 
         /// <summary>
-        /// An event fired after the dataset has been unloaded from the machines it was loaded onto.
+        /// An event fired after the dataset has been deactivated.
         /// </summary>
-        public event EventHandler<EventArgs> OnUnloaded;
+        public event EventHandler<EventArgs> OnDeactivated;
 
-        private void RaiseOnUnloaded()
+        private void RaiseOnDeactivated()
         {
-            EventHandler<EventArgs> local = OnUnloaded;
+            EventHandler<EventArgs> local = OnDeactivated;
             if (local != null)
             {
                 local(this, EventArgs.Empty);

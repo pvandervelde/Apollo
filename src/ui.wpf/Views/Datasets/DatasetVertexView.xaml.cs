@@ -30,9 +30,9 @@ namespace Apollo.UI.Wpf.Views.Datasets
         private static readonly RoutedCommand s_RemoveDatasetCommand = new RoutedCommand();
 
         /// <summary>
-        /// The routed command that is used to load and unload a dataset.
+        /// The routed command that is used to activate and deactivate a dataset.
         /// </summary>
-        private static readonly RoutedCommand s_LoadOrUnloadDatasetCommand = new RoutedCommand();
+        private static readonly RoutedCommand s_ActivateOrDeactivateDatasetCommand = new RoutedCommand();
 
         /// <summary>
         /// The routed command that is used to show the detail view.
@@ -65,11 +65,14 @@ namespace Apollo.UI.Wpf.Views.Datasets
                 deleteDatasetButton.Command = s_RemoveDatasetCommand;
             }
 
-            // Bind the load / unload command
+            // Bind the activate / deactivate command
             {
-                var cb = new CommandBinding(s_LoadOrUnloadDatasetCommand, CommandLoadUnloadDatasetExecuted, CommandLoadUnloadDatasetCanExecute);
+                var cb = new CommandBinding(
+                    s_ActivateOrDeactivateDatasetCommand, 
+                    CommandActivateDeactivateDatasetExecuted, 
+                    CommandActivateDeactivateDatasetCanExecute);
                 CommandBindings.Add(cb);
-                loadOrUnloadDatasetButton.Command = s_LoadOrUnloadDatasetCommand;
+                activateOrDeactivateDatasetButton.Command = s_ActivateOrDeactivateDatasetCommand;
             }
 
             // Bind the show detail view command
@@ -130,18 +133,18 @@ namespace Apollo.UI.Wpf.Views.Datasets
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
             Justification = "This is really a CanExecute event so we probably want to preserve the semantics.")]
-        private void CommandLoadUnloadDatasetCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        private void CommandActivateDeactivateDatasetCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.Handled = true;
             if (Model != null)
             {
-                if (!Model.IsLoaded)
+                if (!Model.IsActivated)
                 {
-                    e.CanExecute = Model.LoadDatasetCommand.CanExecute(null);
+                    e.CanExecute = Model.ActivateDatasetCommand.CanExecute(null);
                 }
                 else
                 {
-                    e.CanExecute = Model.UnloadDatasetCommand.CanExecute(null);
+                    e.CanExecute = Model.DeactivateDatasetCommand.CanExecute(null);
                 }
             }
             else
@@ -152,16 +155,16 @@ namespace Apollo.UI.Wpf.Views.Datasets
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
             Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
-        private void CommandLoadUnloadDatasetExecuted(object sender, ExecutedRoutedEventArgs e)
+        private void CommandActivateDeactivateDatasetExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
-            if (!Model.IsLoaded)
+            if (!Model.IsActivated)
             {
-                Model.LoadDatasetCommand.Execute(null);
+                Model.ActivateDatasetCommand.Execute(null);
             }
             else
             {
-                Model.UnloadDatasetCommand.Execute(null);
+                Model.DeactivateDatasetCommand.Execute(null);
             }
         }
 
@@ -172,7 +175,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
             e.Handled = true;
             if (Model != null)
             {
-                e.CanExecute = Model.IsLoaded && Model.ShowDetailViewCommand.CanExecute(null);
+                e.CanExecute = Model.IsActivated && Model.ShowDetailViewCommand.CanExecute(null);
             }
             else
             {
@@ -185,7 +188,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
         private void CommandShowDetailViewExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
-            if (Model.IsLoaded)
+            if (Model.IsActivated)
             {
                 Model.ShowDetailViewCommand.Execute(null);
             }

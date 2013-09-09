@@ -6,8 +6,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Activation;
+using Apollo.Utilities;
 
 namespace Apollo.Core.Scripting.Projects
 {
@@ -114,7 +116,15 @@ namespace Apollo.Core.Scripting.Projects
         /// Gets a value indicating whether the dataset is loaded on the local machine
         /// or a remote machine.
         /// </summary>
-        bool IsLoaded
+        bool IsActivated
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the dataset can be activated.
+        /// </summary>
+        bool CanActivate
         {
             get;
         }
@@ -128,14 +138,40 @@ namespace Apollo.Core.Scripting.Projects
         NetworkIdentifier RunsOn();
 
         /// <summary>
-        /// An event fired after the dataset has been distributed to one or more machines.
+        /// Activates the dataset.
         /// </summary>
-        event EventHandler<EventArgs> OnLoaded;
+        /// <param name="preferredLocation">
+        /// Indicates a preferred machine location for the dataset to be distributed to.
+        /// </param>
+        /// <param name="machineSelector">
+        ///     The function that selects the most suitable machine for the dataset to run on.
+        /// </param>
+        /// <param name="token">The token that is used to cancel the activation.</param>
+        /// <remarks>
+        /// Note that the <paramref name="preferredLocation"/> is
+        /// only a suggestion. The loader may decide to ignore the suggestion if there is a distribution
+        /// plan that is better suited to the contents of the dataset.
+        /// </remarks>
+        void Activate(
+            DistributionLocations preferredLocation,
+            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
+            CancellationToken token);
 
         /// <summary>
-        /// An event fired after the dataset has been unloaded from the machines it was loaded onto.
+        /// An event raised when there is progress in the action that the dataset is
+        /// currently executing.
         /// </summary>
-        event EventHandler<EventArgs> OnUnloaded;
+        event EventHandler<ProgressEventArgs> OnProgressOfCurrentAction;
+
+        /// <summary>
+        /// An event fired after the dataset has been activated.
+        /// </summary>
+        event EventHandler<EventArgs> OnActivated;
+
+        /// <summary>
+        /// An event fired after the dataset has been deactivated.
+        /// </summary>
+        event EventHandler<EventArgs> OnDeactivated;
 
         /// <summary>
         /// Gets a value indicating whether the current dataset is allowed to request the 

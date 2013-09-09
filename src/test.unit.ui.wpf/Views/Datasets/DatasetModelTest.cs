@@ -55,7 +55,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
                     .Returns(name);
                 proxy.Setup(p => p.Summary)
                     .Returns(summary);
-                proxy.Setup(p => p.IsLoaded)
+                proxy.Setup(p => p.IsActivated)
                     .Returns(true);
             }
 
@@ -65,7 +65,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
             Assert.AreEqual(name, model.Name);
             Assert.AreEqual(summary, model.Summary);
 
-            Assert.IsTrue(model.IsLoaded);
+            Assert.IsTrue(model.IsActivated);
         }
 
         [Test]
@@ -223,7 +223,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
         }
 
         [Test]
-        public void OnLoaded()
+        public void OnActivated()
         {
             var context = new Mock<IContextAware>();
             {
@@ -252,19 +252,19 @@ namespace Apollo.UI.Wpf.Views.Datasets
                 properties.Add(e.PropertyName);
             };
             var onLoadedWasRaised = false;
-            model.OnLoaded += (s, e) =>
+            model.OnActivated += (s, e) =>
             {
                 onLoadedWasRaised = true;
             };
 
-            proxy.Raise(p => p.OnLoaded += null, EventArgs.Empty);
+            proxy.Raise(p => p.OnActivated += null, EventArgs.Empty);
             Assert.AreEqual(4, propertyChangedWasRaised);
             Assert.That(
                 properties,
                 Is.EquivalentTo(
                     new List<string>
                     {
-                        "IsLoaded",
+                        "IsActivated",
                         "RunsOn",
                         "Progress",
                         "ProgressDescription",
@@ -274,7 +274,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
         }
 
         [Test]
-        public void OnUnloaded()
+        public void OnDeactivated()
         {
             var context = new Mock<IContextAware>();
             {
@@ -298,19 +298,19 @@ namespace Apollo.UI.Wpf.Views.Datasets
                 properties.Add(e.PropertyName);
             };
             var onUnloadedWasRaised = false;
-            model.OnUnloaded += (s, e) =>
+            model.OnDeactivated += (s, e) =>
             {
                 onUnloadedWasRaised = true;
             };
 
-            proxy.Raise(p => p.OnUnloaded += null, EventArgs.Empty);
+            proxy.Raise(p => p.OnDeactivated += null, EventArgs.Empty);
             Assert.AreEqual(2, propertyChangedWasRaised);
             Assert.That(
                 properties,
                 Is.EquivalentTo(
                     new List<string>
                     {
-                        "IsLoaded",
+                        "IsActivated",
                         "RunsOn",
                     }));
             Assert.IsTrue(onUnloadedWasRaised);

@@ -207,7 +207,7 @@
     <Compile Include="Commands\CreationOfNewScriptCanceledExceptionTest.cs" />
     <Compile Include="Commands\DeleteDatasetCommandTest.cs" />
     <Compile Include="Commands\ExitCommandTest.cs" />
-    <Compile Include="Commands\LoadDatasetOntoMachineCommandTest.cs" />
+    <Compile Include="Commands\ActivateDatasetCommandTest.cs" />
     <Compile Include="Commands\LoadingOfScriptCanceledExceptionTest.cs" />
     <Compile Include="Commands\NewProjectCommandTest.cs" />
     <Compile Include="Commands\NewScriptCommandTest.cs" />
@@ -220,7 +220,7 @@
     <Compile Include="Commands\SwitchDatasetToEditModeCommandTest.cs" />
     <Compile Include="Commands\SwitchDatasetToExecutingModeCommandTest.cs" />
     <Compile Include="Commands\UndoCommandTest.cs" />
-    <Compile Include="Commands\UnloadDatasetFromMachineCommandTest.cs" />
+    <Compile Include="Commands\DeactivateDatasetCommandTest.cs" />
     <Compile Include="Converters\CommandToToolTipTextConverterTest.cs" />
     <Compile Include="Converters\DistributionSuggestionToTextConverterTest.cs" />
     <Compile Include="Converters\FeedbackReportToTextConverterTest.cs" />

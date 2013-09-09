@@ -40,9 +40,9 @@ namespace Apollo.Core.Host.Projects
         private const byte SummaryIndex = 1;
 
         /// <summary>
-        /// The history index of the IsLoaded field.
+        /// The history index of the distribution location field.
         /// </summary>
-        private const byte LoadedLocationIndex = 2;
+        private const byte DistributionLocationIndex = 2;
 
         /// <summary>
         /// Implements the operator ==.
@@ -120,7 +120,7 @@ namespace Apollo.Core.Host.Projects
 
             IVariableTimeline<string> name = null;
             IVariableTimeline<string> summary = null;
-            IVariableTimeline<NetworkIdentifier> loadedLocation = null;
+            IVariableTimeline<NetworkIdentifier> distributionLocation = null;
             foreach (var member in members)
             {
                 if (member.Item1 == NameIndex)
@@ -135,9 +135,9 @@ namespace Apollo.Core.Host.Projects
                     continue;
                 }
 
-                if (member.Item1 == LoadedLocationIndex)
+                if (member.Item1 == DistributionLocationIndex)
                 {
-                    loadedLocation = member.Item2 as IVariableTimeline<NetworkIdentifier>;
+                    distributionLocation = member.Item2 as IVariableTimeline<NetworkIdentifier>;
                     continue;
                 }
 
@@ -150,7 +150,7 @@ namespace Apollo.Core.Host.Projects
                 historyId,
                 name,
                 summary,
-                loadedLocation);
+                distributionLocation);
         }
 
         /// <summary>
@@ -181,11 +181,11 @@ namespace Apollo.Core.Host.Projects
         private readonly IVariableTimeline<string> m_Summary;
 
         /// <summary>
-        /// The information that describes if the dataset is loaded at a given point on the
+        /// The information that describes if the dataset is activated at a given point on the
         /// timeline.
         /// </summary>
-        [FieldIndexForHistoryTracking(LoadedLocationIndex)]
-        private readonly IVariableTimeline<NetworkIdentifier> m_LoadedLocation;
+        [FieldIndexForHistoryTracking(DistributionLocationIndex)]
+        private readonly IVariableTimeline<NetworkIdentifier> m_DistributionLocation;
 
         /// <summary>
         /// The data that describes the online state of the dataset.
@@ -200,7 +200,7 @@ namespace Apollo.Core.Host.Projects
         /// <summary>
         /// Indicates if the dataset is currently loading.
         /// </summary>
-        private volatile bool m_IsLoading;
+        private volatile bool m_IsActivating;
 
         /// <summary>
         /// Indicates if the dataset has been deleted.
@@ -215,8 +215,8 @@ namespace Apollo.Core.Host.Projects
         /// <param name="historyId">The ID for use in the history system.</param>
         /// <param name="name">The data structure that stores the history information for the name of the dataset.</param>
         /// <param name="summary">The data structure that stores the history information for the summary of the dataset.</param>
-        /// <param name="loadedLocation">
-        /// The data structure that stores the history information indicating if the dataset is loaded at any point.
+        /// <param name="distributionLocation">
+        /// The data structure that stores the history information indicating if the dataset is activated at any point.
         /// </param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="constructorArgs"/> is <see langword="null" />.
@@ -234,7 +234,7 @@ namespace Apollo.Core.Host.Projects
         ///     Thrown if <paramref name="summary"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="loadedLocation"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="distributionLocation"/> is <see langword="null" />.
         /// </exception>
         private DatasetProxy(
             DatasetConstructionParameters constructorArgs,
@@ -242,7 +242,7 @@ namespace Apollo.Core.Host.Projects
             HistoryId historyId,
             IVariableTimeline<string> name,
             IVariableTimeline<string> summary,
-            IVariableTimeline<NetworkIdentifier> loadedLocation)
+            IVariableTimeline<NetworkIdentifier> distributionLocation)
         {
             {
                 Lokad.Enforce.Argument(() => constructorArgs);
@@ -250,7 +250,7 @@ namespace Apollo.Core.Host.Projects
                 Lokad.Enforce.Argument(() => historyId);
                 Lokad.Enforce.Argument(() => name);
                 Lokad.Enforce.Argument(() => summary);
-                Lokad.Enforce.Argument(() => loadedLocation);
+                Lokad.Enforce.Argument(() => distributionLocation);
             }
 
             m_ConstructorArgs = constructorArgs;
@@ -258,11 +258,11 @@ namespace Apollo.Core.Host.Projects
             m_HistoryId = historyId;
             m_Name = name;
             m_Summary = summary;
-            m_LoadedLocation = loadedLocation;
+            m_DistributionLocation = distributionLocation;
 
             m_Name.OnExternalValueUpdate += new EventHandler<EventArgs>(HandleOnNameUpdate);
             m_Summary.OnExternalValueUpdate += new EventHandler<EventArgs>(HandleOnSummaryUpdate);
-            m_LoadedLocation.OnExternalValueUpdate += new EventHandler<EventArgs>(HandleOnIsLoadedUpdate);
+            m_DistributionLocation.OnExternalValueUpdate += new EventHandler<EventArgs>(HandleOnIsActivatedUpdate);
         }
 
         private void HandleOnNameUpdate(object sender, EventArgs e)
@@ -275,18 +275,18 @@ namespace Apollo.Core.Host.Projects
             RaiseOnSummaryChanged(Summary);
         }
 
-        private void HandleOnIsLoadedUpdate(object sender, EventArgs e)
+        private void HandleOnIsActivatedUpdate(object sender, EventArgs e)
         {
             // See if the restored status still matches up with the online status of the dataset
             // If not make sure that it does
-            if (m_LoadedLocation.Current != null)
+            if (m_DistributionLocation.Current != null)
             {
                 if (m_Connection == null)
                 {
-                    // For now we go with the naive approach. Load on the same machine as last time
+                    // For now we go with the naive approach. Distribute onto the same machine as last time
                     // and if we can't find it then grab the first machine in the selection.
                     // At some point we should make this a whole lot smarter but for now it'll do.
-                    var original = m_LoadedLocation.Current;
+                    var original = m_DistributionLocation.Current;
                     Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                         c =>
                         {
@@ -303,7 +303,7 @@ namespace Apollo.Core.Host.Projects
                             return new SelectedProposal(plan);
                         };
 
-                    LoadOntoMachine(
+                    Activate(
                         DistributionLocations.All,
                         selector,
                         new CancellationTokenSource().Token,
@@ -314,7 +314,7 @@ namespace Apollo.Core.Host.Projects
             {
                 if (m_Connection != null)
                 {
-                    UnloadFromMachine(false);
+                    Deactivate(false);
                 }
             }
         }
@@ -339,9 +339,9 @@ namespace Apollo.Core.Host.Projects
             m_Name.OnExternalValueUpdate -= new EventHandler<EventArgs>(HandleOnNameUpdate);
             m_Summary.OnExternalValueUpdate -= new EventHandler<EventArgs>(HandleOnSummaryUpdate);
 
-            if (IsLoaded)
+            if (IsActivated)
             {
-                UnloadFromMachine();
+                Deactivate();
             }
 
             m_HasBeenDeleted = true;
@@ -537,7 +537,7 @@ namespace Apollo.Core.Host.Projects
         /// Gets a value indicating whether the dataset is loaded on the local machine
         /// or a remote machine.
         /// </summary>
-        public bool IsLoaded
+        public bool IsActivated
         {
             get
             {
@@ -548,11 +548,11 @@ namespace Apollo.Core.Host.Projects
         /// <summary>
         /// Gets a value indicating whether the dataset can be loaded onto a machine.
         /// </summary>
-        public bool CanLoad
+        public bool CanActivate
         {
             get
             {
-                return !m_ConstructorArgs.IsRoot && !m_IsLoading && !IsLoaded;
+                return !m_ConstructorArgs.IsRoot && !m_IsActivating && !IsActivated;
             }
         }
 
@@ -562,44 +562,44 @@ namespace Apollo.Core.Host.Projects
         /// <returns>
         /// The machine on which the dataset is running.
         /// </returns>
-        /// <exception cref="DatasetNotLoadedException">
+        /// <exception cref="DatasetNotActivatedException">
         ///     Thrown when the dataset is not loaded onto a machine.
         /// </exception>
         public NetworkIdentifier RunsOn()
         {
-            if (!IsLoaded)
+            if (!IsActivated)
             {
-                throw new DatasetNotLoadedException();
+                throw new DatasetNotActivatedException();
             }
 
             return m_Connection.RunsOn;
         }
 
         /// <summary>
-        /// Loads the dataset onto a machine.
+        /// Activates the dataset.
         /// </summary>
         /// <param name="preferredLocation">
-        /// Indicates a preferred machine location for the dataset to be loaded onto.
+        /// Indicates a preferred machine location for the dataset to be distributed to.
         /// </param>
         /// <param name="machineSelector">
         ///     The function that selects the most suitable machine for the dataset to run on.
         /// </param>
-        /// <param name="token">The token that is used to cancel the loading.</param>
+        /// <param name="token">The token that is used to cancel the activation.</param>
         /// <remarks>
         /// Note that the <paramref name="preferredLocation"/> is
-        /// only a suggestion. The loader may decide to ignore the suggestion if there is a distribution
+        /// only a suggestion. The activator may decide to ignore the suggestion if there is a distribution
         /// plan that is better suited to the contents of the dataset.
         /// </remarks>
         /// <exception cref="ArgumentException">
         ///     Thrown when the project that owns this dataset has been closed.
         /// </exception>
-        /// <exception cref="CannotLoadDatasetWithoutLoadingLocationException">
+        /// <exception cref="CannotActivateDatasetWithoutDistributionLocationException">
         ///     Thrown when the <paramref name="preferredLocation"/> is <see cref="DistributionLocations.None"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="machineSelector"/> is <see langword="null" />.
         /// </exception>
-        public void LoadOntoMachine(
+        public void Activate(
             DistributionLocations preferredLocation,
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
             CancellationToken token)
@@ -608,16 +608,16 @@ namespace Apollo.Core.Host.Projects
                 Lokad.Enforce.With<ArgumentException>(
                     !Owner.IsClosed,
                     Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
-                Lokad.Enforce.With<CannotLoadDatasetWithoutLoadingLocationException>(
+                Lokad.Enforce.With<CannotActivateDatasetWithoutDistributionLocationException>(
                     preferredLocation != DistributionLocations.None,
-                    Resources.Exceptions_Messages_CannotLoadDatasetWithoutLoadingLocation);
+                    Resources.Exceptions_Messages_CannotActivateDatasetWithoutDistributionLocation);
                 Lokad.Enforce.Argument(() => machineSelector);
             }
 
-            LoadOntoMachine(preferredLocation, machineSelector, token, true);
+            Activate(preferredLocation, machineSelector, token, true);
         }
 
-        private void LoadOntoMachine(
+        private void Activate(
             DistributionLocations preferredLocation,
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
             CancellationToken token,
@@ -625,20 +625,20 @@ namespace Apollo.Core.Host.Projects
         {
             {
                 Debug.Assert(!Owner.IsClosed, "The owner should not be closed.");
-                Debug.Assert(preferredLocation != DistributionLocations.None, "A loading location should be specified.");
+                Debug.Assert(preferredLocation != DistributionLocations.None, "A distribution location should be specified.");
             }
 
-            if (IsLoaded)
+            if (IsActivated)
             {
                 return;
             }
 
-            if (m_IsLoading)
+            if (m_IsActivating)
             {
                 return;
             }
 
-            m_IsLoading = true;
+            m_IsActivating = true;
             try
             {
                 var request = new DatasetActivationRequest
@@ -658,7 +658,7 @@ namespace Apollo.Core.Host.Projects
                 var selection = from plan in suggestedPlans
                                 select new DistributionSuggestion(plan);
 
-                // Ask the user where they would like their dataset loaded.
+                // Ask the user where they would like their dataset distributed to.
                 var selectedPlan = machineSelector(selection);
                 if (token.IsCancellationRequested)
                 {
@@ -670,7 +670,7 @@ namespace Apollo.Core.Host.Projects
                     return;
                 }
 
-                RaiseOnProgressOfCurrentAction(0, Resources.Progress_LoadingDataset);
+                RaiseOnProgressOfCurrentAction(0, Resources.Progress_ActivatingDataset);
                 var task = selectedPlan.Plan.Accept(token, RaiseOnProgressOfCurrentAction);
                 task.ContinueWith(
                     t =>
@@ -686,20 +686,20 @@ namespace Apollo.Core.Host.Projects
 
                             if (storeLocation)
                             {
-                                m_LoadedLocation.Current = selectedPlan.Plan.MachineToDistributeTo;
+                                m_DistributionLocation.Current = selectedPlan.Plan.MachineToDistributeTo;
                             }
 
-                            RaiseOnLoaded();
+                            RaiseOnActivated();
                         }
 
-                        m_IsLoading = false;
+                        m_IsActivating = false;
                     },
                     TaskContinuationOptions.ExecuteSynchronously);
             }
             catch (Exception)
             {
                 // Only clean this up if the whole thing falls over
-                m_IsLoading = false;
+                m_IsActivating = false;
                 throw;
             }
         }
@@ -717,14 +717,14 @@ namespace Apollo.Core.Host.Projects
         /// <summary>
         /// Unloads the dataset from the machine it is currently loaded onto.
         /// </summary>
-        public void UnloadFromMachine()
+        public void Deactivate()
         {
-            UnloadFromMachine(true);
+            Deactivate(true);
         }
 
-        private void UnloadFromMachine(bool storeUnloadData)
+        private void Deactivate(bool storeUnloadData)
         {
-            if (!IsLoaded)
+            if (!IsActivated)
             {
                 return;
             }
@@ -738,10 +738,10 @@ namespace Apollo.Core.Host.Projects
 
             if (storeUnloadData)
             {
-                m_LoadedLocation.Current = null;
+                m_DistributionLocation.Current = null;
             }
 
-            RaiseOnUnloaded();
+            RaiseOnDeactivated();
         }
 
         /// <summary>
@@ -838,7 +838,7 @@ namespace Apollo.Core.Host.Projects
         {
             get
             {
-                return IsLoaded && m_Connection.IsEditMode;
+                return IsActivated && m_Connection.IsEditMode;
             }
         }
 
@@ -847,7 +847,7 @@ namespace Apollo.Core.Host.Projects
         /// </summary>
         public void SwitchToEditMode()
         {
-            if (!IsLoaded)
+            if (!IsActivated)
             {
                 return;
             }
@@ -860,7 +860,7 @@ namespace Apollo.Core.Host.Projects
         /// </summary>
         public void SwitchToExecutingMode()
         {
-            if (!IsLoaded)
+            if (!IsActivated)
             {
                 return;
             }
@@ -911,7 +911,8 @@ namespace Apollo.Core.Host.Projects
         }
 
         /// <summary>
-        /// An event raised when there is progress in the loading of the dataset.
+        /// An event raised when there is progress in the current action which is being
+        /// executed by the dataset.
         /// </summary>
         public event EventHandler<ProgressEventArgs> OnProgressOfCurrentAction;
 
@@ -925,13 +926,13 @@ namespace Apollo.Core.Host.Projects
         }
 
         /// <summary>
-        /// An event raised when the dataset is loaded onto one or more machines.
+        /// An event raised when the dataset is activated.
         /// </summary>
-        public event EventHandler<EventArgs> OnLoaded;
+        public event EventHandler<EventArgs> OnActivated;
 
-        private void RaiseOnLoaded()
+        private void RaiseOnActivated()
         {
-            var local = OnLoaded;
+            var local = OnActivated;
             if (local != null)
             {
                 local(this, EventArgs.Empty);
@@ -939,13 +940,13 @@ namespace Apollo.Core.Host.Projects
         }
 
         /// <summary>
-        /// An event raised when the dataset is unloaded from the machines it was loaded onto.
+        /// An event raised when the dataset is deactivated.
         /// </summary>
-        public event EventHandler<EventArgs> OnUnloaded;
+        public event EventHandler<EventArgs> OnDeactivated;
 
-        private void RaiseOnUnloaded()
+        private void RaiseOnDeactivated()
         {
-            var local = OnUnloaded;
+            var local = OnDeactivated;
             if (local != null)
             {
                 local(this, EventArgs.Empty);

@@ -30,11 +30,11 @@ namespace Apollo.Core.Host.Projects
     /// described by the hierarchical set of datasets.
     /// </para>
     /// </remarks>
-    internal sealed partial class Project : IProject, ICanClose
+    internal sealed class Project : IProject, ICanClose
     {
         private static void CloseOnlineDataset(DatasetProxy info)
         {
-            info.UnloadFromMachine();
+            info.Deactivate();
         }
 
         /// <summary>
@@ -147,11 +147,11 @@ namespace Apollo.Core.Host.Projects
             m_Timeline = timeline;
             m_Timeline.ForgetAllHistory();
 
-            m_Timeline.OnRolledBack += new EventHandler<EventArgs>(OnTimelineRolledBack);
-            m_Timeline.OnRolledForward += new EventHandler<EventArgs>(OnTimelineRolledForward);
+            m_Timeline.OnRolledBack += OnTimelineRolledBack;
+            m_Timeline.OnRolledForward += OnTimelineRolledForward;
 
-            m_ProjectInformation = m_Timeline.AddToTimeline<ProjectHistoryStorage>(ProjectHistoryStorage.CreateInstance);
-            m_Datasets = m_Timeline.AddToTimeline<DatasetHistoryStorage>(DatasetHistoryStorage.CreateInstance);
+            m_ProjectInformation = m_Timeline.AddToTimeline(ProjectHistoryStorage.CreateInstance);
+            m_Datasets = m_Timeline.AddToTimeline(DatasetHistoryStorage.CreateInstance);
 
             m_DatasetDistributor = distributor;
             m_DataStorageProxyBuilder = dataStorageProxyBuilder;
@@ -492,7 +492,7 @@ namespace Apollo.Core.Host.Projects
                 foreach (var pair in m_Datasets.Datasets)
                 {
                     var dataset = pair.Value;
-                    if (dataset.IsLoaded)
+                    if (dataset.IsActivated)
                     {
                         CloseOnlineDataset(dataset);
                     }
@@ -566,7 +566,7 @@ namespace Apollo.Core.Host.Projects
                     OnRemoval = cleanupAction,
                 };
 
-            var newDataset = m_Timeline.AddToTimeline<DatasetProxy>(
+            var newDataset = m_Timeline.AddToTimeline(
                 DatasetProxy.CreateInstance,
                 parameters,
                 m_DataStorageProxyBuilder);
@@ -636,7 +636,7 @@ namespace Apollo.Core.Host.Projects
                 var datasetToDelete = datasetsToDelete.Pop();
 
                 var datasetObject = m_Datasets.Datasets[datasetToDelete];
-                if (datasetObject.IsLoaded)
+                if (datasetObject.IsActivated)
                 {
                     CloseOnlineDataset(datasetObject);
                 }

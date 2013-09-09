@@ -46,7 +46,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
             var projectLink = new Mock<ILinkToProjects>();
             var proxy = new Mock<IProxyDataset>();
             {
-                proxy.Setup(p => p.IsLoaded)
+                proxy.Setup(p => p.IsActivated)
                     .Returns(true);
             }
 

@@ -130,7 +130,7 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
                 dataset.Setup(d => d.CanBeDeleted)
                     .Returns(true);
 
-                dataset.Setup(d => d.IsLoaded)
+                dataset.Setup(d => d.IsActivated)
                     .Returns(true);
 
                 dataset.Setup(d => d.IsValid)
@@ -147,7 +147,7 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
             Assert.AreEqual(dataset.Object.CanBecomeParent, facade.CanBecomeParent);
             Assert.AreEqual(dataset.Object.CanBeCopied, facade.CanBeCopied);
             Assert.AreEqual(dataset.Object.CanBeDeleted, facade.CanBeDeleted);
-            Assert.AreEqual(dataset.Object.IsLoaded, facade.IsLoaded);
+            Assert.AreEqual(dataset.Object.IsActivated, facade.IsActivated);
             Assert.AreEqual(dataset.Object.CreatedBy, facade.CreatedBy);
         }
 
@@ -221,28 +221,28 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         }
 
         [Test]
-        public void OnLoaded()
+        public void OnActivated()
         {
             var dataset = new Mock<IProxyDataset>();
             var facade = new DatasetFacade(dataset.Object);
 
             bool wasLoaded = false;
-            facade.OnLoaded += (s, e) => wasLoaded = true;
+            facade.OnActivated += (s, e) => wasLoaded = true;
 
-            dataset.Raise(d => d.OnLoaded += null, EventArgs.Empty);
+            dataset.Raise(d => d.OnActivated += null, EventArgs.Empty);
             Assert.IsTrue(wasLoaded);
         }
 
         [Test]
-        public void OnUnloaded()
+        public void OnDeactivated()
         {
             var dataset = new Mock<IProxyDataset>();
             var facade = new DatasetFacade(dataset.Object);
 
             bool wasUnloaded = false;
-            facade.OnUnloaded += (s, e) => wasUnloaded = true;
+            facade.OnDeactivated += (s, e) => wasUnloaded = true;
 
-            dataset.Raise(d => d.OnUnloaded += null, EventArgs.Empty);
+            dataset.Raise(d => d.OnDeactivated += null, EventArgs.Empty);
             Assert.IsTrue(wasUnloaded);
         }
 

@@ -17,7 +17,7 @@ namespace Apollo.UI.Wpf.Commands
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class UnloadDatasetFromMachineCommandTest
+    public sealed class DeactivateDatasetCommandTest
     {
         private sealed class MockDisposable : IDisposable
         {
@@ -31,24 +31,24 @@ namespace Apollo.UI.Wpf.Commands
         }
 
         [Test]
-        public void CanUnloadWithNullDataset()
+        public void CanDeactivateWithNullDataset()
         {
             var project = new Mock<ILinkToProjects>();
 
             Func<string, IDisposable> timerFunc = s => new MockDisposable();
 
-            var command = new UnloadDatasetFromMachineCommand(project.Object, null, timerFunc);
+            var command = new DeactivateDatasetCommand(project.Object, null, timerFunc);
             Assert.IsFalse(command.CanExecute(null));
         }
 
         [Test]
-        public void CanUnloadWithNonLoadedDataset()
+        public void CanDeactivateWithDeactivatedDataset()
         {
             var project = new Mock<ILinkToProjects>();
 
             var proxy = new Mock<IProxyDataset>();
             {
-                proxy.Setup(p => p.IsLoaded)
+                proxy.Setup(p => p.IsActivated)
                     .Returns(false);
             }
 
@@ -56,12 +56,12 @@ namespace Apollo.UI.Wpf.Commands
 
             Func<string, IDisposable> timerFunc = s => new MockDisposable();
 
-            var command = new UnloadDatasetFromMachineCommand(project.Object, dataset, timerFunc);
+            var command = new DeactivateDatasetCommand(project.Object, dataset, timerFunc);
             Assert.IsFalse(command.CanExecute(null));
         }
 
         [Test]
-        public void UnloadDataset()
+        public void DeactivateDataset()
         {
             var history = new Mock<ITimeline>();
             {
@@ -84,9 +84,9 @@ namespace Apollo.UI.Wpf.Commands
 
             var proxy = new Mock<IProxyDataset>();
             {
-                proxy.Setup(p => p.IsLoaded)
+                proxy.Setup(p => p.IsActivated)
                     .Returns(true);
-                proxy.Setup(p => p.UnloadFromMachine())
+                proxy.Setup(p => p.Deactivate())
                     .Verifiable();
             }
 
@@ -94,10 +94,10 @@ namespace Apollo.UI.Wpf.Commands
 
             Func<string, IDisposable> timerFunc = s => new MockDisposable();
 
-            var command = new UnloadDatasetFromMachineCommand(projectLink.Object, dataset, timerFunc);
+            var command = new DeactivateDatasetCommand(projectLink.Object, dataset, timerFunc);
             command.Execute(null);
 
-            proxy.Verify(p => p.UnloadFromMachine(), Times.Once());
+            proxy.Verify(p => p.Deactivate(), Times.Once());
             history.Verify(h => h.Mark(), Times.Once());
         }
     }

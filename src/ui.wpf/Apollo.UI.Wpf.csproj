@@ -242,7 +242,7 @@
     <Compile Include="Commands\CloseViewCommand.cs" />
     <Compile Include="Commands\CreationOfNewScriptCanceledException.cs" />
     <Compile Include="Commands\ExitCommand.cs" />
-    <Compile Include="Commands\LoadDatasetOntoMachineCommand.cs" />
+    <Compile Include="Commands\ActivateDatasetCommand.cs" />
     <Compile Include="Commands\LoadingOfScriptCanceledException.cs" />
     <Compile Include="Commands\NewProjectCommand.cs" />
     <Compile Include="Commands\NewScriptCommand.cs" />
@@ -257,7 +257,7 @@
     <Compile Include="Commands\SwitchDatasetToEditModeCommand.cs" />
     <Compile Include="Commands\SwitchDatasetToExecutingModeCommand.cs" />
     <Compile Include="Commands\UndoCommand.cs" />
-    <Compile Include="Commands\UnloadDatasetFromMachineCommand.cs" />
+    <Compile Include="Commands\DeactivateDatasetCommand.cs" />
     <Compile Include="CommonRegionNames.cs" />
     <Compile Include="CommonUIModule.cs" />
     <Compile Include="Converters\CommandToToolTipTextConverter.cs" />

@@ -21,7 +21,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
     public sealed class DatasetViewVertexTest
     {
         [Test]
-        public void OnLoaded()
+        public void OnActivated()
         {
             var context = new Mock<IContextAware>();
             {
@@ -33,7 +33,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
             var projectLink = new Mock<ILinkToProjects>();
             var proxy = new Mock<IProxyDataset>();
             {
-                proxy.Setup(p => p.IsLoaded)
+                proxy.Setup(p => p.IsActivated)
                     .Returns(true);
             }
 
@@ -49,20 +49,20 @@ namespace Apollo.UI.Wpf.Views.Datasets
                 properties.Add(e.PropertyName);
             };
             
-            proxy.Raise(p => p.OnLoaded += null, EventArgs.Empty);
+            proxy.Raise(p => p.OnActivated += null, EventArgs.Empty);
             Assert.AreEqual(1, propertyChangedWasRaised);
             Assert.That(
                 properties,
                 Is.EquivalentTo(
                     new List<string>
                     {
-                        "IsDatasetLoaded",
+                        "IsDatasetActivated",
                     }));
-            Assert.IsTrue(vertex.IsDatasetLoaded);
+            Assert.IsTrue(vertex.IsDatasetActivated);
         }
 
         [Test]
-        public void OnUnloaded()
+        public void OnDeactivated()
         {
             var context = new Mock<IContextAware>();
             {
@@ -74,7 +74,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
             var projectLink = new Mock<ILinkToProjects>();
             var proxy = new Mock<IProxyDataset>();
             {
-                proxy.Setup(p => p.IsLoaded)
+                proxy.Setup(p => p.IsActivated)
                     .Returns(false);
             }
 
@@ -90,16 +90,16 @@ namespace Apollo.UI.Wpf.Views.Datasets
                 properties.Add(e.PropertyName);
             };
 
-            proxy.Raise(p => p.OnUnloaded += null, EventArgs.Empty);
+            proxy.Raise(p => p.OnDeactivated += null, EventArgs.Empty);
             Assert.AreEqual(1, propertyChangedWasRaised);
             Assert.That(
                 properties,
                 Is.EquivalentTo(
                     new List<string>
                     {
-                        "IsDatasetLoaded",
+                        "IsDatasetActivated",
                     }));
-            Assert.IsFalse(vertex.IsDatasetLoaded);
+            Assert.IsFalse(vertex.IsDatasetActivated);
         }
     }
 }

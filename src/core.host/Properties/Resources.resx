@@ -288,8 +288,8 @@
   <data name="Exceptions_Messages_ServicesIsNotFullyFunctional" xml:space="preserve">
     <value>The service tried to perform an action while it was not in a working state. The actual state was: {0}</value>
   </data>
-  <data name="Exceptions_Messages_CannotLoadDatasetOnNoMachines" xml:space="preserve">
-    <value>It is not possible to load a dataset on zero machines.</value>
+  <data name="Exceptions_Messages_CannotActivateDatasetWithoutTargetMachine" xml:space="preserve">
+    <value>It is not possible to activate a dataset without a target machine.</value>
   </data>
   <data name="Exceptions_Messages_CannotCreateProjectWithoutDatasetDistributor" xml:space="preserve">
     <value>Cannot create a project without a dataset distribution function.</value>
@@ -309,8 +309,8 @@
   <data name="Exceptions_Messages_MissingCreationInformation" xml:space="preserve">
     <value>Cannot create one or more dataset without creation information.</value>
   </data>
-  <data name="Exceptions_Messages_CannotLoadDatasetWithoutLoadingLocation" xml:space="preserve">
-    <value>A dataset cannot be loaded without a preferred loading location.</value>
+  <data name="Exceptions_Messages_CannotActivateDatasetWithoutDistributionLocation" xml:space="preserve">
+    <value>A dataset cannot be activated without a preferred distribution location.</value>
   </data>
   <data name="Exceptions_Messages_FailedToCreateProject" xml:space="preserve">
     <value>The creation of a new project failed.</value>
@@ -339,8 +339,8 @@
   <data name="Exceptions_Messages_CannotUseDatasetAfterItBecomesInvalid" xml:space="preserve">
     <value>A dataset cannot be used after it has become invalid.</value>
   </data>
-  <data name="Exceptions_Messages_DatasetNotLoaded" xml:space="preserve">
-    <value>Cannot access the online information for the given dataset because it is not loaded.</value>
+  <data name="Exceptions_Messages_DatasetNotActivated" xml:space="preserve">
+    <value>Cannot access the online information for the given dataset because it is not activated.</value>
   </data>
   <data name="Exceptions_Messages_CannotInteruptRunningScript" xml:space="preserve">
     <value>It is not possible to run multiple scripts at the same time. Please stop the currently executing script before trying to run another script.</value>
@@ -405,7 +405,7 @@
   <data name="Exceptions_Messages_DuplicateTypeDefinition" xml:space="preserve">
     <value>A type with the given type identity is already registered.</value>
   </data>
-  <data name="Progress_LoadingDataset" xml:space="preserve">
-    <value>Loading dataset ...</value>
+  <data name="Progress_ActivatingDataset" xml:space="preserve">
+    <value>Activating dataset ...</value>
   </data>
 </root>

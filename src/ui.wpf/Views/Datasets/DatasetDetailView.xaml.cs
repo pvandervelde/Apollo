@@ -56,7 +56,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
         private void CommandEditModeSwitchCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.Handled = true;
-            if ((Model != null) && Model.IsLoaded)
+            if ((Model != null) && Model.IsActivated)
             {
                 if (!Model.IsLocked)
                 {

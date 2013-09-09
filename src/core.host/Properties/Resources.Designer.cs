@@ -79,6 +79,24 @@ namespace Apollo.Core.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A dataset cannot be activated without a preferred distribution location..
+        /// </summary>
+        internal static string Exceptions_Messages_CannotActivateDatasetWithoutDistributionLocation {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CannotActivateDatasetWithoutDistributionLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It is not possible to activate a dataset without a target machine..
+        /// </summary>
+        internal static string Exceptions_Messages_CannotActivateDatasetWithoutTargetMachine {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CannotActivateDatasetWithoutTargetMachine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot compare these objects: {0} and {1}.
         /// </summary>
         internal static string Exceptions_Messages_CannotCompareUnequalTypes {
@@ -169,24 +187,6 @@ namespace Apollo.Core.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to It is not possible to load a dataset on zero machines..
-        /// </summary>
-        internal static string Exceptions_Messages_CannotLoadDatasetOnNoMachines {
-            get {
-                return ResourceManager.GetString("Exceptions_Messages_CannotLoadDatasetOnNoMachines", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to A dataset cannot be loaded without a preferred loading location..
-        /// </summary>
-        internal static string Exceptions_Messages_CannotLoadDatasetWithoutLoadingLocation {
-            get {
-                return ResourceManager.GetString("Exceptions_Messages_CannotLoadDatasetWithoutLoadingLocation", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The current state of the application does not allow the loading of an existing project..
         /// </summary>
         internal static string Exceptions_Messages_CannotLoadProject {
@@ -268,11 +268,11 @@ namespace Apollo.Core.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot access the online information for the given dataset because it is not loaded..
+        ///   Looks up a localized string similar to Cannot access the online information for the given dataset because it is not activated..
         /// </summary>
-        internal static string Exceptions_Messages_DatasetNotLoaded {
+        internal static string Exceptions_Messages_DatasetNotActivated {
             get {
-                return ResourceManager.GetString("Exceptions_Messages_DatasetNotLoaded", resourceCulture);
+                return ResourceManager.GetString("Exceptions_Messages_DatasetNotActivated", resourceCulture);
             }
         }
         
@@ -881,11 +881,11 @@ namespace Apollo.Core.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Loading dataset ....
+        ///   Looks up a localized string similar to Activating dataset ....
         /// </summary>
-        internal static string Progress_LoadingDataset {
+        internal static string Progress_ActivatingDataset {
             get {
-                return ResourceManager.GetString("Progress_LoadingDataset", resourceCulture);
+                return ResourceManager.GetString("Progress_ActivatingDataset", resourceCulture);
             }
         }
         

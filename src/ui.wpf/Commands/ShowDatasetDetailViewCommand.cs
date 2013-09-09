@@ -29,7 +29,7 @@ namespace Apollo.UI.Wpf.Commands
             Justification = "Documentation can start with a language keyword")]
         private static bool CanShow(DatasetFacade dataset)
         {
-            return dataset.IsLoaded;
+            return dataset.IsActivated;
         }
 
         /// <summary>

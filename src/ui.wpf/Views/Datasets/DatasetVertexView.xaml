@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:converters="clr-namespace:Apollo.UI.Wpf.Converters"
              xmlns:gi="clr-namespace:GreyableImage;assembly=GreyableImage"
              xmlns:lexEngine="clr-namespace:WPFLocalizeExtension.Engine;assembly=WPFLocalizeExtension"
              xmlns:lexProviders="clr-namespace:WPFLocalizeExtension.Providers;assembly=WPFLocalizeExtension"
@@ -152,7 +151,7 @@
             </ListBox>
         </Border>
 
-        <!-- IsLoaded + Loading location ==> a set of hyper links to the machine description? -->
+        <!-- IsActivated + Activate location ==> a set of hyper links to the machine description? -->
         <Label Grid.Row="4" 
                 Grid.Column="0"
                 Margin="5, 5, 5, 0"
@@ -177,7 +176,7 @@
                        Background="SeaShell"
                        Text="{Binding Path=RunsOn}" />
             
-            <Button x:Name="loadOrUnloadDatasetButton"
+            <Button x:Name="activateOrDeactivateDatasetButton"
                     x:FieldModifier="private"
                     Grid.Row="0"
                     Grid.Column="1"
@@ -189,7 +188,7 @@
                             <Setter Property="Source" 
                                     Value="{lex:BLoc Img_Upload_48}" />
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding Path=IsLoaded}" 
+                                <DataTrigger Binding="{Binding Path=IsActivated}" 
                                                 Value="True">
                                     <Setter Property="Source" 
                                             Value="{lex:BLoc Img_Delete_48}" />

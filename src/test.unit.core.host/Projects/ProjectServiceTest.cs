@@ -99,7 +99,9 @@ namespace Apollo.Core.Host.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
-                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>>>()))
+                builder.Setup(
+                        b => b.WithDatasetDistributor(
+                            It.IsAny<Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>>>()))
                     .Returns(builder.Object)
                     .Verifiable();
 
@@ -155,7 +157,9 @@ namespace Apollo.Core.Host.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
-                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>>>()))
+                builder.Setup(
+                        b => b.WithDatasetDistributor(
+                            It.IsAny<Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>>>()))
                     .Returns(builder.Object)
                     .Verifiable();
 
@@ -229,7 +233,9 @@ namespace Apollo.Core.Host.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
-                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>>>()))
+                builder.Setup(
+                        b => b.WithDatasetDistributor(
+                            It.IsAny<Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>>>()))
                     .Returns(builder.Object)
                     .Verifiable();
 
@@ -291,7 +297,9 @@ namespace Apollo.Core.Host.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
-                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>>>()))
+                builder.Setup(
+                        b => b.WithDatasetDistributor(
+                            It.IsAny<Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>>>()))
                     .Returns(builder.Object);
 
                 builder.Setup(b => b.WithDataStorageBuilder(It.IsAny<Func<DatasetOnlineInformation, DatasetStorageProxy>>()))

@@ -12,40 +12,40 @@ namespace Apollo.Core.Host.Projects
 {
     /// <summary>
     /// An exception thrown when a user tries to access loading information about a dataset
-    /// that is not loaded.
+    /// that is not activated.
     /// </summary>
     [Serializable]
-    public sealed class DatasetNotLoadedException : Exception
+    public sealed class DatasetNotActivatedException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DatasetNotLoadedException"/> class.
+        /// Initializes a new instance of the <see cref="DatasetNotActivatedException"/> class.
         /// </summary>
-        public DatasetNotLoadedException()
-            : this(Resources.Exceptions_Messages_DatasetNotLoaded)
+        public DatasetNotActivatedException()
+            : this(Resources.Exceptions_Messages_DatasetNotActivated)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DatasetNotLoadedException"/> class.
+        /// Initializes a new instance of the <see cref="DatasetNotActivatedException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public DatasetNotLoadedException(string message) 
+        public DatasetNotActivatedException(string message) 
             : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DatasetNotLoadedException"/> class.
+        /// Initializes a new instance of the <see cref="DatasetNotActivatedException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
-        public DatasetNotLoadedException(string message, Exception innerException)
+        public DatasetNotActivatedException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DatasetNotLoadedException"/> class.
+        /// Initializes a new instance of the <see cref="DatasetNotActivatedException"/> class.
         /// </summary>
         /// <param name="info">
         ///     The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data
@@ -61,7 +61,7 @@ namespace Apollo.Core.Host.Projects
         /// <exception cref="T:System.Runtime.Serialization.SerializationException">
         /// The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
         /// </exception>
-        private DatasetNotLoadedException(SerializationInfo info, StreamingContext context)
+        private DatasetNotActivatedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

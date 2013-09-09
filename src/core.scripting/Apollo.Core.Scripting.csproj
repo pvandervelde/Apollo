@@ -88,6 +88,10 @@
       <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>
       <Name>SolutionLevel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\utilities\Apollo.Utilities.csproj">
+      <Project>{81f4563d-eaac-4c2b-96a6-a79c9ea692cf}</Project>
+      <Name>Apollo.Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -529,8 +529,8 @@
   <data name="ScriptView_Command_RunScript_Text" xml:space="preserve">
     <value>Run</value>
   </data>
-  <data name="DatasetModel_DatasetIsNotLoaded" xml:space="preserve">
-    <value>Dataset is not loaded</value>
+  <data name="DatasetModel_DatasetIsNotActivated" xml:space="preserve">
+    <value>Dataset is not activated</value>
   </data>
   <data name="Img_Download_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Download_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -599,7 +599,7 @@
     <value>Unknown network resource ...</value>
   </data>
   <data name="MachineSelectorView_PleaseWait" xml:space="preserve">
-    <value>Retrieving dataset loading proposals.
+    <value>Retrieving dataset distribution proposals.
 Please wait ...</value>
   </data>
   <data name="ErrorReportIconView_Cancel" xml:space="preserve">

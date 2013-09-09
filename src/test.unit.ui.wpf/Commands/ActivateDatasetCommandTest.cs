@@ -20,7 +20,7 @@ namespace Apollo.UI.Wpf.Commands
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class LoadDatasetOntoMachineCommandTest
+    public sealed class ActivateDatasetCommandTest
     {
         private sealed class MockDisposable : IDisposable
         {
@@ -34,25 +34,25 @@ namespace Apollo.UI.Wpf.Commands
         }
 
         [Test]
-        public void CanLoadWithNullDataset()
+        public void CanActivateWithNullDataset()
         {
             var project = new Mock<ILinkToProjects>();
 
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selectionFunc = suggestions => null;
             Func<string, IDisposable> timerFunc = s => new MockDisposable();
 
-            var command = new LoadDatasetOntoMachineCommand(project.Object, null, selectionFunc, timerFunc);
+            var command = new ActivateDatasetCommand(project.Object, null, selectionFunc, timerFunc);
             Assert.IsFalse(command.CanExecute(null));
         }
 
         [Test]
-        public void CanLoadWithLoadedDataset()
+        public void CanActivateWithActivatedDataset()
         {
             var project = new Mock<ILinkToProjects>();
 
             var proxy = new Mock<IProxyDataset>();
             {
-                proxy.Setup(p => p.IsLoaded)
+                proxy.Setup(p => p.IsActivated)
                     .Returns(true);
             }
 
@@ -61,20 +61,20 @@ namespace Apollo.UI.Wpf.Commands
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selectionFunc = suggestions => null;
             Func<string, IDisposable> timerFunc = s => new MockDisposable();
 
-            var command = new LoadDatasetOntoMachineCommand(project.Object, dataset, selectionFunc, timerFunc);
+            var command = new ActivateDatasetCommand(project.Object, dataset, selectionFunc, timerFunc);
             Assert.IsFalse(command.CanExecute(null));
         }
 
         [Test]
-        public void CanLoadWithUnloadableDataset()
+        public void CanActivateWithNonActivatableDataset()
         {
             var project = new Mock<ILinkToProjects>();
 
             var proxy = new Mock<IProxyDataset>();
             {
-                proxy.Setup(p => p.IsLoaded)
+                proxy.Setup(p => p.IsActivated)
                     .Returns(false);
-                proxy.Setup(p => p.CanLoad)
+                proxy.Setup(p => p.CanActivate)
                     .Returns(false);
             }
 
@@ -83,12 +83,12 @@ namespace Apollo.UI.Wpf.Commands
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selectionFunc = suggestions => null;
             Func<string, IDisposable> timerFunc = s => new MockDisposable();
 
-            var command = new LoadDatasetOntoMachineCommand(project.Object, dataset, selectionFunc, timerFunc);
+            var command = new ActivateDatasetCommand(project.Object, dataset, selectionFunc, timerFunc);
             Assert.IsFalse(command.CanExecute(null));
         }
 
         [Test]
-        public void LoadDataset()
+        public void ActivateDataset()
         {
             var history = new Mock<ITimeline>();
             {
@@ -111,12 +111,12 @@ namespace Apollo.UI.Wpf.Commands
 
             var proxy = new Mock<IProxyDataset>();
             {
-                proxy.Setup(p => p.IsLoaded)
+                proxy.Setup(p => p.IsActivated)
                     .Returns(false);
-                proxy.Setup(p => p.CanLoad)
+                proxy.Setup(p => p.CanActivate)
                     .Returns(true);
                 proxy.Setup(
-                    p => p.LoadOntoMachine(
+                    p => p.Activate(
                         It.IsAny<DistributionLocations>(), 
                         It.IsAny<Func<IEnumerable<DistributionSuggestion>, SelectedProposal>>(),
                         It.IsAny<CancellationToken>()))
@@ -128,11 +128,11 @@ namespace Apollo.UI.Wpf.Commands
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selectionFunc = suggestions => null;
             Func<string, IDisposable> timerFunc = s => new MockDisposable();
 
-            var command = new LoadDatasetOntoMachineCommand(projectLink.Object, dataset, selectionFunc, timerFunc);
+            var command = new ActivateDatasetCommand(projectLink.Object, dataset, selectionFunc, timerFunc);
             command.Execute(null);
 
             proxy.Verify(
-                p => p.LoadOntoMachine(
+                p => p.Activate(
                     It.IsAny<DistributionLocations>(),
                     It.IsAny<Func<IEnumerable<DistributionSuggestion>, SelectedProposal>>(),
                     It.IsAny<CancellationToken>()),

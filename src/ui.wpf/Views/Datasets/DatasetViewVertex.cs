@@ -39,8 +39,8 @@ namespace Apollo.UI.Wpf.Views.Datasets
             }
 
             m_Dataset = model;
-            m_Dataset.OnLoaded += (s, e) => Notify(() => IsDatasetLoaded);
-            m_Dataset.OnUnloaded += (s, e) => Notify(() => IsDatasetLoaded);
+            m_Dataset.OnActivated += (s, e) => Notify(() => IsDatasetActivated);
+            m_Dataset.OnDeactivated += (s, e) => Notify(() => IsDatasetActivated);
         }
 
         /// <summary>
@@ -67,13 +67,13 @@ namespace Apollo.UI.Wpf.Views.Datasets
         }
 
         /// <summary>
-        /// Gets a value indicating whether the dataset is loaded.
+        /// Gets a value indicating whether the dataset is activated.
         /// </summary>
-        public bool IsDatasetLoaded
+        public bool IsDatasetActivated
         {
             get
             {
-                return m_Dataset.IsLoaded;
+                return m_Dataset.IsActivated;
             }
         }
     }

@@ -78,12 +78,12 @@ namespace Apollo.UI.Wpf.Views.Datasets
             m_Dataset.OnNameChanged += (s, e) => Notify(() => Name);
             m_Dataset.OnSummaryChanged += (s, e) => Notify(() => Summary);
             m_Dataset.OnProgressOfCurrentAction += HandleDatasetProgress;
-            m_Dataset.OnLoaded += HandleDatasetOnLoad;
-            m_Dataset.OnUnloaded += (s, e) =>
+            m_Dataset.OnActivated += HandleDatasetOnActivated;
+            m_Dataset.OnDeactivated += (s, e) =>
                 { 
-                    Notify(() => IsLoaded);
+                    Notify(() => IsActivated);
                     Notify(() => RunsOn);
-                    RaiseOnUnloaded();
+                    RaiseOnDeactivated();
                 };
         }
 
@@ -104,16 +104,16 @@ namespace Apollo.UI.Wpf.Views.Datasets
             }
         }
 
-        private void HandleDatasetOnLoad(object sender, EventArgs e)
+        private void HandleDatasetOnActivated(object sender, EventArgs e)
         {
-            Notify(() => IsLoaded);
+            Notify(() => IsActivated);
             Notify(() => RunsOn);
 
             Progress = 0.0;
             ProgressDescription = string.Empty;
             m_ProgressTracker.StopTracking();
 
-            RaiseOnLoaded();
+            RaiseOnActivated();
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
         /// <summary>
         /// Gets or sets the load dataset command.
         /// </summary>
-        public ICommand LoadDatasetCommand
+        public ICommand ActivateDatasetCommand
         {
             get;
             set;
@@ -146,7 +146,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
         /// <summary>
         /// Gets or sets the unload dataset command.
         /// </summary>
-        public ICommand UnloadDatasetCommand
+        public ICommand DeactivateDatasetCommand
         {
             get;
             set;
@@ -244,13 +244,13 @@ namespace Apollo.UI.Wpf.Views.Datasets
         }
 
         /// <summary>
-        /// An event fired after the dataset has been distributed to one or more machines.
+        /// An event fired after the dataset has been activated.
         /// </summary>
-        public event EventHandler<EventArgs> OnLoaded;
+        public event EventHandler<EventArgs> OnActivated;
 
-        private void RaiseOnLoaded()
+        private void RaiseOnActivated()
         {
-            EventHandler<EventArgs> local = OnLoaded;
+            EventHandler<EventArgs> local = OnActivated;
             if (local != null)
             {
                 local(this, EventArgs.Empty);
@@ -258,13 +258,13 @@ namespace Apollo.UI.Wpf.Views.Datasets
         }
 
         /// <summary>
-        /// An event fired after the dataset has been unloaded from the machines it was loaded onto.
+        /// An event fired after the dataset has been deactivated.
         /// </summary>
-        public event EventHandler<EventArgs> OnUnloaded;
+        public event EventHandler<EventArgs> OnDeactivated;
 
-        private void RaiseOnUnloaded()
+        private void RaiseOnDeactivated()
         {
-            EventHandler<EventArgs> local = OnUnloaded;
+            EventHandler<EventArgs> local = OnDeactivated;
             if (local != null)
             {
                 local(this, EventArgs.Empty);
@@ -275,22 +275,22 @@ namespace Apollo.UI.Wpf.Views.Datasets
         /// Gets a value indicating whether the dataset is loaded on the local machine
         /// or a remote machine.
         /// </summary>
-        public bool IsLoaded
+        public bool IsActivated
         {
             get
             {
-                return m_Dataset.IsLoaded;
+                return m_Dataset.IsActivated;
             }
         }
 
         /// <summary>
         /// Gets a value indicating whether the dataset can be loaded onto a machine.
         /// </summary>
-        public bool CanLoad
+        public bool CanActivate
         {
             get
             {
-                return m_Dataset.CanLoad;
+                return m_Dataset.CanActivate;
             }
         }
 
@@ -301,7 +301,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
         {
             get
             {
-                return IsLoaded ? m_Dataset.RunsOn().ToString() : Resources.DatasetModel_DatasetIsNotLoaded;
+                return IsActivated ? m_Dataset.RunsOn().ToString() : Resources.DatasetModel_DatasetIsNotActivated;
             }
         }
 

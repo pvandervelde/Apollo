@@ -198,11 +198,11 @@
     <Compile Include="Projects\CannotCreateProjectWithoutDatasetDistributorException.cs" />
     <Compile Include="Projects\CannotCreateProjectWithoutTimelineException.cs" />
     <Compile Include="Projects\CannotDeleteDatasetException.cs" />
-    <Compile Include="Projects\CannotLoadDatasetWithoutLoadingLocationException.cs" />
+    <Compile Include="Projects\CannotActivateDatasetWithoutDistributionLocationException.cs" />
     <Compile Include="Projects\CannotUseProjectAfterClosingItException.cs" />
     <Compile Include="Projects\DatasetHistoryStorage.cs" />
     <Compile Include="Projects\DatasetConstructionParameters.cs" />
-    <Compile Include="Projects\DatasetNotLoadedException.cs" />
+    <Compile Include="Projects\DatasetNotActivatedException.cs" />
     <Compile Include="Projects\DatasetProxy.cs" />
     <Compile Include="Projects\IAmProxyForDataset.cs" />
     <Compile Include="Projects\IDatasetOwner.cs" />
@@ -243,8 +243,6 @@
     <Compile Include="UserInterfaces\Projects\SceneFacade.cs" />
     <Compile Include="UtilitiesModule.cs" />
     <Compile Include="ValueChangedEventArgs.cs" />
-    <Compile Include="Projects\DatasetLoadEventArgs.cs" />
-    <Compile Include="Projects\DatasetUnloadEventArgs.cs" />
     <Compile Include="Projects\IBuildProjects.cs" />
     <Compile Include="Projects\IProject.cs" />
     <Compile Include="Projects\IProxyDataset.cs" />

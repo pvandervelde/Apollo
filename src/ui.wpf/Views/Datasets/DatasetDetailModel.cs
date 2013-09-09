@@ -82,11 +82,11 @@ namespace Apollo.UI.Wpf.Views.Datasets
                 };
             m_Dataset.OnSummaryChanged += (s, e) => Notify(() => Summary);
             m_Dataset.OnProgressOfCurrentAction += HandleDatasetProgress;
-            m_Dataset.OnUnloaded += (s, e) =>
+            m_Dataset.OnDeactivated += (s, e) =>
                 { 
-                    Notify(() => IsLoaded);
+                    Notify(() => IsActivated);
                     Notify(() => Endpoint);
-                    RaiseOnUnloaded();
+                    RaiseOnDeactivated();
                 };
         }
 
@@ -183,13 +183,13 @@ namespace Apollo.UI.Wpf.Views.Datasets
         }
 
         /// <summary>
-        /// An event fired after the dataset has been unloaded from the machines it was loaded onto.
+        /// An event fired after the dataset has been deactivated.
         /// </summary>
-        public event EventHandler<EventArgs> OnUnloaded;
+        public event EventHandler<EventArgs> OnDeactivated;
 
-        private void RaiseOnUnloaded()
+        private void RaiseOnDeactivated()
         {
-            EventHandler<EventArgs> local = OnUnloaded;
+            EventHandler<EventArgs> local = OnDeactivated;
             if (local != null)
             {
                 local(this, EventArgs.Empty);
@@ -197,25 +197,24 @@ namespace Apollo.UI.Wpf.Views.Datasets
         }
 
         /// <summary>
-        /// Gets a value indicating whether the dataset is loaded on the local machine
-        /// or a remote machine.
+        /// Gets a value indicating whether the dataset is activated.
         /// </summary>
-        public bool IsLoaded
+        public bool IsActivated
         {
             get
             {
-                return m_Dataset.IsLoaded;
+                return m_Dataset.IsActivated;
             }
         }
 
         /// <summary>
-        /// Gets the name of the machine on which the dataset is loaded.
+        /// Gets the name of the machine on which the dataset is running.
         /// </summary>
         public string Endpoint
         {
             get
             {
-                return IsLoaded ? m_Dataset.RunsOn().ToString() : Resources.DatasetModel_DatasetIsNotLoaded;
+                return IsActivated ? m_Dataset.RunsOn().ToString() : Resources.DatasetModel_DatasetIsNotActivated;
             }
         }
 

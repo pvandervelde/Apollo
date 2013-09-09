@@ -335,7 +335,7 @@ namespace Apollo.Core.Host.Projects
         }
 
         [Test]
-        public void LoadOntoMachineWithIllegalLoadingLocation()
+        public void ActivateWithIllegalDistributionLocation()
         {
             ITimeline timeline = null;
             timeline = new Timeline(t => BuildStorage(timeline, t));
@@ -373,15 +373,15 @@ namespace Apollo.Core.Host.Projects
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                 l => new SelectedProposal(plan);
 
-            Assert.Throws<CannotLoadDatasetWithoutLoadingLocationException>(
-                () => dataset.LoadOntoMachine(
+            Assert.Throws<CannotActivateDatasetWithoutDistributionLocationException>(
+                () => dataset.Activate(
                     DistributionLocations.None,
                     selector,
                     new CancellationToken()));
         }
 
         [Test]
-        public void LoadOntoMachineWhenAlreadyLoaded()
+        public void ActivateWhenAlreadyActivated()
         {
             ITimeline timeline = null;
             timeline = new Timeline(t => BuildStorage(timeline, t));
@@ -432,20 +432,20 @@ namespace Apollo.Core.Host.Projects
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                 l => new SelectedProposal(plan);
 
-            dataset.LoadOntoMachine(DistributionLocations.All, selector, new CancellationToken());
+            dataset.Activate(DistributionLocations.All, selector, new CancellationToken());
 
-            Assert.IsTrue(dataset.IsLoaded);
+            Assert.IsTrue(dataset.IsActivated);
 
             bool wasLoaded = false;
-            dataset.OnLoaded += (s, e) => wasLoaded = true;
-            dataset.LoadOntoMachine(DistributionLocations.All, selector, new CancellationToken());
+            dataset.OnActivated += (s, e) => wasLoaded = true;
+            dataset.Activate(DistributionLocations.All, selector, new CancellationToken());
 
             Assert.IsFalse(wasLoaded);
-            Assert.IsTrue(dataset.IsLoaded);
+            Assert.IsTrue(dataset.IsActivated);
         }
 
         [Test]
-        public void LoadOntoMachineWithSelectionCancellation()
+        public void ActivateWithSelectionCancellation()
         {
             ITimeline timeline = null;
             timeline = new Timeline(t => BuildStorage(timeline, t));
@@ -488,16 +488,16 @@ namespace Apollo.Core.Host.Projects
                 l => new SelectedProposal();
 
             bool wasLoaded = false;
-            dataset.OnLoaded += (s, e) => wasLoaded = true;
+            dataset.OnActivated += (s, e) => wasLoaded = true;
 
             var source = new CancellationTokenSource();
-            dataset.LoadOntoMachine(DistributionLocations.All, selector, source.Token);
+            dataset.Activate(DistributionLocations.All, selector, source.Token);
 
             Assert.IsFalse(wasLoaded);
         }
 
         [Test]
-        public void LoadOntoMachine()
+        public void Activate()
         {
             ITimeline timeline = null;
             timeline = new Timeline(t => BuildStorage(timeline, t));
@@ -553,19 +553,19 @@ namespace Apollo.Core.Host.Projects
                 l => new SelectedProposal(plan);
 
             bool wasLoaded = false;
-            dataset.OnLoaded += (s, e) => wasLoaded = true;
+            dataset.OnActivated += (s, e) => wasLoaded = true;
 
             int progress = -1;
             dataset.OnProgressOfCurrentAction += (s, e) => progress = e.Progress;
-            dataset.LoadOntoMachine(DistributionLocations.All, selector, new CancellationToken());
+            dataset.Activate(DistributionLocations.All, selector, new CancellationToken());
 
-            Assert.IsTrue(dataset.IsLoaded);
+            Assert.IsTrue(dataset.IsActivated);
             Assert.IsTrue(wasLoaded);
             Assert.AreEqual(100, progress);
         }
 
         [Test]
-        public void UnloadFromMachine()
+        public void Deactivate()
         {
             ITimeline timeline = null;
             timeline = new Timeline(t => BuildStorage(timeline, t));
@@ -628,15 +628,15 @@ namespace Apollo.Core.Host.Projects
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                 l => new SelectedProposal(plan);
 
-            dataset.LoadOntoMachine(DistributionLocations.All, selector, new CancellationToken());
+            dataset.Activate(DistributionLocations.All, selector, new CancellationToken());
 
-            Assert.IsTrue(dataset.IsLoaded);
+            Assert.IsTrue(dataset.IsActivated);
 
             bool wasUnloaded = false;
-            dataset.OnUnloaded += (s, e) => wasUnloaded = true;
-            dataset.UnloadFromMachine();
+            dataset.OnDeactivated += (s, e) => wasUnloaded = true;
+            dataset.Deactivate();
 
-            Assert.IsFalse(dataset.IsLoaded);
+            Assert.IsFalse(dataset.IsActivated);
             Assert.IsTrue(wasUnloaded);
         }
 
@@ -835,7 +835,7 @@ namespace Apollo.Core.Host.Projects
             Assert.AreNotEqual(dataset.Id, child.Id);
             Assert.AreEqual(creationInformation.CreatedOnRequestOf, child.CreatedBy);
             Assert.AreEqual(creationInformation.LoadFrom, child.StoredAt);
-            Assert.IsFalse(child.IsLoaded);
+            Assert.IsFalse(child.IsActivated);
             Assert.IsFalse(child.CanBecomeParent);
             Assert.IsFalse(child.CanBeAdopted);
             Assert.IsFalse(child.CanBeCopied);
