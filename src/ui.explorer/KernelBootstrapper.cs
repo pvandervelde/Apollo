@@ -78,7 +78,7 @@ namespace Apollo.UI.Explorer
                                 CommunicationSubjects.Dataset,
                             }, 
                         true),
-                    new BaseModuleForLoaders(),
+                    new BaseModuleForActivators(),
                 };
         }
 

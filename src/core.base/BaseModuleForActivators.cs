@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using Apollo.Core.Base.Activation;
 using Apollo.Utilities;
 using Autofac;
-using Nuclei;
 using Nuclei.Diagnostics;
 
 namespace Apollo.Core.Base
@@ -17,7 +16,7 @@ namespace Apollo.Core.Base
     /// Handles the component registrations for the loader components that
     /// are used by applications that start dataset applications.
     /// </summary>
-    public sealed class BaseModuleForLoaders : Module
+    public sealed class BaseModuleForActivators : Module
     {
         /// <summary>
         /// Override to add registrations to the container.
