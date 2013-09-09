@@ -41,44 +41,12 @@
         <Optimize>false</Optimize>
         <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
-    </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
         <DebugType>pdbonly</DebugType>
         <Optimize>true</Optimize>
         <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
-    </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Deploy|AnyCPU' ">
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <DefineConstants>TRACE</DefineConstants>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Deploy|x86' ">
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <DefineConstants>TRACE</DefineConstants>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Deploy|x64' ">
         <DebugType>pdbonly</DebugType>
         <Optimize>true</Optimize>
         <DefineConstants>TRACE</DefineConstants>
@@ -95,25 +63,4 @@
     <PropertyGroup>
         <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
     </PropertyGroup>
-    
-    <Import Project="$(MsBuildExtensionsPath)\NugetRestore.msbuild"
-            Condition="Exists('$(MsBuildExtensionsPath)\NugetRestore.msbuild')"/>
-    
-    <!-- Use NuGet to load packages -->
-    <!-- 
-        Put this at the end of the file so that it gets put in at the start of the build sequence,
-        given that we're inserting before all the other parts.
-    -->
-    <PropertyGroup>
-        <PackagesConfig Condition=" '$(PackagesConfig)' == ''">$([System.IO.Path]::Combine($(ProjectDir), "packages.config"))</PackagesConfig>
-
-        <!-- Make the build depend on restore packages -->
-        <BuildDependsOn>
-            RestorePackages;
-            $(BuildDependsOn);
-        </BuildDependsOn>
-    </PropertyGroup>
-    <Target Name="RestorePackages" Condition="Exists('$(PackagesConfig)')">
-        <NugetRestore NugetPath="nuget" PackageFile="$(PackagesConfig)" PackageDirectory="$(DirPackages)" />
-    </Target>
 </Project>
