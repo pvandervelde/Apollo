@@ -201,6 +201,10 @@
     <Reference Include="PresentationFramework">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="WPFExtensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\WpfExtensions.1.0.12.4\lib\WPFExtensions.dll</HintPath>
+    </Reference>
     <Reference Include="WPFLocalizeExtension, Version=2.1.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\WpfLocalizeExtension.2.1.4\lib\net35\WPFLocalizeExtension.dll</HintPath>
@@ -287,7 +291,6 @@
     <Compile Include="Models\MostRecentlyUsedCollection.cs" />
     <Compile Include="Models\MostRecentlyUsedCollectionConverter.cs" />
     <Compile Include="Models\MostRecentlyUsedConverter.cs" />
-    <Compile Include="Mono.Options\Options.cs" />
     <Compile Include="Observable.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="Presenter.cs" />

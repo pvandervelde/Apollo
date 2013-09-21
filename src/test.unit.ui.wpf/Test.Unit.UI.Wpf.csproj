@@ -114,6 +114,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Nuclei.Diagnostics.0.6.4.0\lib\net45\Nuclei.Diagnostics.dll</HintPath>
     </Reference>
+    <Reference Include="Nuclei.Nunit.Extensions, Version=0.6.4.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Nuclei.Nunit.Extensions.0.6.4.0\lib\net45\Nuclei.Nunit.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -226,7 +230,6 @@
     <Compile Include="Feedback\FeedbackReportTransmitterTest.cs" />
     <Compile Include="Models\MostRecentlyUsedCollectionTest.cs" />
     <Compile Include="Models\MostRecentlyUsedTest.cs" />
-    <Compile Include="Mono.Options\Options.cs" />
     <Compile Include="ParameterTest.cs" />
     <Compile Include="Profiling\TimingReportCollectionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
