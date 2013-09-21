@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension">
 
     <?include includes.wxi ?>
     <?include $(var.SolutionDir)..\build\temp\Dependencies.wxi ?>
@@ -25,6 +26,10 @@
                               IconIndex="0"
                               WorkingDirectory="INSTALLLOCATION"
                               Advertise="yes" />
+                    <fire:FirewallException Id="Firewall.Apollo.UI.Explorer.exe" 
+                                            Name="Apollo Explorer"
+                                            Profile="private"
+                                            Scope="any"/>
                 </File>
             </Component>
 
