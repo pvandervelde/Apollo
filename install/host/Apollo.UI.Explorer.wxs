@@ -56,8 +56,8 @@
         <Feature Id="F.Apollo.UI.Explorer.Exe"
                  Title="Project explorer"
                  Description="The Project explorer executable"
-                 Absent="allow"
-                 Level="10">
+                 Absent="disallow"
+                 Level="1">
             <ComponentRef Id="C.Apollo.UI.Explorer.Exe" />
             <ComponentRef Id="C.Apollo.UI.Explorer.Exe.Config" />
         </Feature>
@@ -66,8 +66,8 @@
         <Feature Id="F.Apollo.UI.Explorer"
                  Title="Project Explorer"
                  Description="The binaries for the Project Explorer User Interface."
-                 Absent="allow"
-                 Level="10">
+                 Absent="disallow"
+                 Level="1">
             <FeatureRef Id="F.Apollo.UI.Explorer.Exe" />
             <ComponentGroupRef Id="CGroup.Apollo.Ui" />
             <ComponentGroupRef Id="CGroup.Apollo.Ui.Wpf" />

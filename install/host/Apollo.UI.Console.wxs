@@ -56,8 +56,8 @@
         <Feature Id="F.Apollo.UI.Console.Exe"
                  Title="Script runner"
                  Description="The script runner executable"
-                 Absent="allow"
-                 Level="10">
+                 Absent="disallow"
+                 Level="1">
             <ComponentRef Id="C.Apollo.UI.Console.Exe" />
             <ComponentRef Id="C.Apollo.UI.Console.Exe.Config" />
         </Feature>
@@ -66,8 +66,8 @@
         <Feature Id="F.Apollo.UI.Console"
                  Title="Script runner"
                  Description="The binaries for the script User Interface."
-                 Absent="allow"
-                 Level="10">
+                 Absent="disallow"
+                 Level="1">
             <FeatureRef Id="F.Apollo.UI.Console.Exe" />
             <ComponentGroupRef Id="CGroup.Apollo.Ui" />
         </Feature>
