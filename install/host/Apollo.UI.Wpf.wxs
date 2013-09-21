@@ -100,6 +100,16 @@
                       KeyPath="yes" />
             </Component>
 
+            <!-- PixelLab.Core.dll -->
+            <Component Id="C.PixelLab.Core.dll"
+                       Guid="{F2B57CE2-6BC7-443D-B06B-A59683C624E3}">
+                <File Id="File.PixelLab.Core.dll"
+                      Name="PixelLab.Core.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\PixelLab.Core.dll"
+                      KeyPath="yes" />
+            </Component>
+
             <!-- PixelLab.Wpf.dll -->
             <Component Id="C.PixelLab.Wpf.dll"
                        Guid="{ECB64C28-50FA-4A47-8D38-97D6A93B862C}">
@@ -152,8 +162,9 @@
             <ComponentRef Id="C.Microsoft.Practices.Prism.dll" />
             <ComponentRef Id="C.Microsoft.Practices.Prism.Interactivity.dll" />
             <ComponentRef Id="C.Microsoft.Practices.ServiceLocation.dll" />
-            
+
             <ComponentRef Id="C.PixelLab.Common.dll" />
+            <ComponentRef Id="C.PixelLab.Core.dll" />
             <ComponentRef Id="C.PixelLab.Wpf.dll" />
             <ComponentRef Id="C.WPFExtensions.dll" />
             <ComponentRef Id="C.WPFLocalizeExtension.dll" />
