@@ -10,6 +10,16 @@
             reflected in a change to the value of the INSTALLLOCATION directory.
         -->
         <DirectoryRef Id="INSTALLLOCATION">
+            <!-- NSarrac.Framework.dll -->
+            <Component Id="C.NSarrac.Framework.dll"
+                       Guid="{02A106DD-4691-4B30-BE9F-2380FAE518E9}">
+                <File Id="File.NSarrac.Framework.dll"
+                      Name="NSarrac.Framework.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\NSarrac.Framework.dll"
+                      KeyPath="yes" />
+            </Component>
+
             <!-- Microsoft.Dynamic.dll -->
             <Component Id="C.Microsoft.Dynamic.dll"
                        Guid="{3B32CCAB-BF89-4027-AD01-EB5374AAC557}">
@@ -22,6 +32,7 @@
         </DirectoryRef>
 
         <ComponentGroup Id="CGroup.Apollo.Ui">
+            <ComponentRef Id="C.NSarrac.Framework.dll" />
             <ComponentRef Id="C.Microsoft.Dynamic.dll" />
 
             <ComponentGroupRef Id="CGroup.Apollo.Base" />
