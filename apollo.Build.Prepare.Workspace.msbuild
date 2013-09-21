@@ -30,8 +30,6 @@
     
     <Import Project="$(MsBuildExtensionsPath)\NugetRestore.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\NugetRestore.msbuild')"/>    
-    <Import Project="$(MsBuildExtensionsPath)\TemplateFile.msbuild"
-            Condition="Exists('$(MsBuildExtensionsPath)\TemplateFile.msbuild')"/>
             
     <Import Project="$(DirWorkspace)\version.xml"
             Condition="Exists('$(DirWorkspace)\version.xml')"/>
