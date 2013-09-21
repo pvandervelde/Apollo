@@ -12,14 +12,12 @@
     <EmbeddedResource Include="SolutionLevel.readme" />
   </ItemGroup>
   <PropertyGroup>
-    <BuildConfiguration Condition=" '$(BuildConfiguration)' == ''">Debug</BuildConfiguration>
-    <BuildPlatform Condition=" '$(BuildPlatform)' == ''">Any CPU</BuildPlatform>
-    <BuildPlatformTranslated>$(BuildPlatform.Replace(" ",""))</BuildPlatformTranslated>
+    <PlatformTranslated>$(Platform.Replace(" ",""))</PlatformTranslated>
     
     <DirWorkspace>$(SolutionDir)\..</DirWorkspace>
     <DirTemplates>$(DirWorkspace)\templates</DirTemplates>
     <DirBuild>$(DirWorkspace)\build</DirBuild>
-    <DirBuildBin>$(DirBuild)\bin\$(BuildPlatformTranslated)\$(BuildConfiguration)</DirBuildBin>
+    <DirBuildBin>$(DirBuild)\bin\$(PlatformTranslated)\$(Configuration)</DirBuildBin>
     <DirBuildTemp>$(DirBuild)\temp</DirBuildTemp>
     <DirResource>$(DirWorkspace)\resource</DirResource>
     
