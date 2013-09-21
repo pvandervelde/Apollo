@@ -73,7 +73,7 @@
                  steporder="2" 
                  environment="Client" 
                  onfailure="Continue">
-            <exe><![CDATA[${FileApolloConsoleExe}]]></exe>
+            <exe><![CDATA[${DirInstallApollo}\Apollo.UI.Console.exe]]></exe>
             <params>
                 <param><![CDATA[-script "${DirRemoteTestFiles}\scripts\project_new-save-load.py"]]></param>
             </params>
@@ -83,7 +83,7 @@
                  steporder="3" 
                  environment="Client" 
                  onfailure="Continue">
-            <exe><![CDATA[${FileApolloConsoleExe}]]></exe>
+            <exe><![CDATA[${DirInstallApollo}\Apollo.UI.Console.exe]]></exe>
             <params>
                 <param><![CDATA[-script "${DirRemoteTestFiles}\scripts\dataset_new-save-load.py"]]></param>
             </params>

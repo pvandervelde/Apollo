@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0"
+         DefaultTargets="Run"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- Directories -->
+        <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
+        <DirTools>$(DirWorkspace)\tools</DirTools>
+        <DirBuild>$(DirWorkspace)\build</DirBuild>
+        <DirBuildLogs>$(DirBuild)\logs</DirBuildLogs>
+        <DirBuildLogsTests>$(DirBuildLogs)\tests</DirBuildLogsTests>
+        <DirBuildTemp>$(DirBuild)\temp</DirBuildTemp>
+        <DirBuildTempTests>$(DirBuildTemp)\tests</DirBuildTempTests>
+        
+        <DirTestReports Condition=" '$(DirTestReports)' == '' ">$(DirBuildTempTests)\reports</DirTestReports>
+        <DirReportDumps Condition=" '$(DirReportDumps)' == '' ">$(DirTestReports)\apollo\regression</DirReportDumps>
+        
+        <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
+    </PropertyGroup>
+    
+    <Import Project="$(MsBuildExtensionsPath)\WaitForFiles.msbuild"
+            Condition="Exists('$(MsBuildExtensionsPath)\WaitForFiles.msbuild')"/>
+    <Import Project="$(MsBuildExtensionsPath)\SherlockHasTestPassed.msbuild"
+            Condition="Exists('$(MsBuildExtensionsPath)\SherlockHasTestPassed.msbuild')"/>
+            
+    <Target Name="Run" DependsOnTargets="_DisplayInfo;_WaitForResults;_CopyReports;_ProcessReport">
+        <!-- Do nothing here -->
+    </Target>
+    
+    <Target Name="_DisplayInfo">
+        <Message Text="Gathering results of long running tests ..." />
+    </Target>
+    
+    <PropertyGroup>
+        <FileSherlockReportPaths>$(DirBuildTempTests)\reportpaths.sherlock.txt</FileSherlockReportPaths>
+    </PropertyGroup>
+    <Target Name="_ExtractReportPaths">
+        <ReadLinesFromFile File="$(FileSherlockReportPaths)">
+            <Output TaskParameter="Lines" ItemName="SherlockReportDirectories"/>
+        </ReadLinesFromFile>
+    </Target>
+    
+    <Target Name="_WaitForResults" DependsOnTargets="_DisplayInfo;_ExtractReportPaths">
+        <Message Text="Waiting for test reports to become available ..." />
+        
+        <ItemGroup>
+            <SherlockXmlReportFiles Include="%(SherlockReportDirectories.Identity)\sherlock.report.xml" />
+        </ItemGroup>
+        
+        <!-- Wait for the report files to be produced. Wait for a maximum of an hour. -->
+        <WaitForFiles Files="@(SherlockXmlReportFiles)"
+                      MaximumWaitTimeInSeconds="3600" />
+    </Target>
+    
+    <Target Name="_CopyReports">
+        <ItemGroup>
+            <SherlockReportFiles Include="$(DirReportDumps)\**\*.*" />
+        </ItemGroup>
+        
+        <Copy SourceFiles="@(SherlockReportFiles)" 
+              DestinationFolder="$(DirBuildLogsTests)\%(RecursiveDir)" />
+    </Target>
+    
+    <Target Name="_ProcessReport" DependsOnTargets="_DisplayInfo;_WaitForResults">
+        <SherlockHasTestPassed ReportFile="%(SherlockXmlReportFiles.Identity)" />
+    </Target>
+</Project>

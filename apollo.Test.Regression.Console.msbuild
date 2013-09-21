@@ -13,18 +13,37 @@
         <DirPackages>$(DirWorkspace)\packages</DirPackages>
         <DirTools>$(DirWorkspace)\tools</DirTools>
         <DirBuild>$(DirWorkspace)\build</DirBuild>
-        <DirBuildBin>$(DirBuild)\bin\$(PlatformTranslated)\$(Configuration)</DirBuildBin>
+        <DirBuildDeploy>$(DirBuild)\deploy</DirBuildDeploy>
         <DirBuildLogs>$(DirBuild)\logs</DirBuildLogs>
         <DirBuildTemp>$(DirBuild)\temp</DirBuildTemp>
+        <DirBuildTempTests>$(DirBuildTemp)\tests</DirBuildTempTests>
+        
+        <DirTests>$(DirWorkspace)\tests</DirTests>
+        <DirTestRegression>$(DirTests)\regression</DirTestRegression>
+        <DirTestRegressionConsole>$(DirTestRegression)\console</DirTestRegressionConsole>
+        
+        <DirTestReports Condition=" '$(DirTestReports)' == '' ">$(DirBuildTempTests)\reports</DirTestReports>
+        <DirReportDumps Condition=" '$(DirReportDumps)' == '' ">$(DirTestReports)\apollo\regression</DirReportDumps>
+        
+        <!-- Version number -->
+        <VersionMajor>0</VersionMajor>
+        <VersionMinor>0</VersionMinor>
+        <VersionBuild>0</VersionBuild>
+        <VersionRevision>0</VersionRevision>
         
         <!-- Tools -->
         <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
     </PropertyGroup>
     
     <Import Project="$(MsBuildExtensionsPath)\TemplateFile.msbuild"
-            Condition="Exists('$(MsBuildExtensionsPath)\TemplateFile.msbuild')"/> 
+            Condition="Exists('$(MsBuildExtensionsPath)\TemplateFile.msbuild')"/>
+    <Import Project="$(MsBuildExtensionsPath)\SherlockRegisterTest.msbuild"
+            Condition="Exists('$(MsBuildExtensionsPath)\SherlockRegisterTest.msbuild')"/>
+    
+    <Import Project="$(DirWorkspace)\version.xml"
+            Condition="Exists('$(DirWorkspace)\version.xml')"/>
 
-    <Target Name="Run" DependsOnTargets="_ExecuteRegressionTest">
+    <Target Name="Run" DependsOnTargets="_ExecuteRegressionTest;_WriteReportPath">
         <!-- Do nothing here -->
     </Target>
     
@@ -33,7 +52,75 @@
         <Message Text="Running regression tests for Apollo.UI.Console ..." />
     </Target>
     
+    <PropertyGroup>
+        <DirSherlockReport>$(DirReportDumps)\console\$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</DirSherlockReport>
+        <DirLocalTestFiles>$(DirBuildTempTests)\testfiles</DirLocalTestFiles>
+        
+        <FileTemplateSherlockConfiguration>$(DirTestRegressionConsole)\test.integration.console.xml</FileTemplateSherlockConfiguration>
+        <FileSherlockConfiguration>$(DirBuildTempTests)\apollo.console.sherlock.xml</FileSherlockConfiguration>
+        
+        <!-- Remote testing directories -->
+        <DirRemoteTest>c:\temp</DirRemoteTest>
+        <DirRemoteTestFiles>$(DirRemoteTest)\testfiles</DirRemoteTestFiles>
+    </PropertyGroup>
     <Target Name="_ExecuteRegressionTest" DependsOnTargets="_DisplayInfo">
-
+        <MakeDir Directories="$(DirReportDumps)" Condition="!Exists('$(DirReportDumps)')" />
+        <MakeDir Directories="$(DirSherlockReport)" Condition="!Exists('$(DirSherlockReport)')" />
+        <MakeDir Directories="$(DirLocalTestFiles)" Condition="!Exists('$(DirLocalTestFiles)')" />
+        
+        <ItemGroup>
+            <ScriptFiles Include="$(DirTestRegressionConsole)\Scripts\*.*" />
+        </ItemGroup>
+        <Copy SourceFiles="@(ScriptFiles)" 
+              DestinationFolder="$(DirLocalTestFiles)" />
+        
+        <!-- Generate the Sherlock file -->
+        <ItemGroup>
+            <SherlockTokens Include="ProductName">
+                <ReplacementValue>Apollo</ReplacementValue>
+            </SherlockTokens>
+            <SherlockTokens Include="ProductVersion">
+                <ReplacementValue>$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</ReplacementValue>
+            </SherlockTokens>
+            
+            <SherlockTokens Include="FileApolloInstaller">
+                <ReplacementValue>$(DirBuildDeploy)\x64\Apollo.msi</ReplacementValue>
+            </SherlockTokens>
+            
+            <SherlockTokens Include="DirRemoteTestFiles">
+                <ReplacementValue>$(DirRemoteTestFiles)</ReplacementValue>
+            </SherlockTokens>
+            <SherlockTokens Include="DirLocalTestFiles">
+                <ReplacementValue>$(DirLocalTestFiles)</ReplacementValue>
+            </SherlockTokens>
+            
+            <SherlockTokens Include="DirInstallApollo">
+                <ReplacementValue>c:\Program Files\MyCompany\Apollo\$(VersionMajor).$(VersionMinor)</ReplacementValue>
+            </SherlockTokens>
+            
+            <SherlockTokens Include="DirSherlockLog">
+                <ReplacementValue>$(DirSherlockReport)</ReplacementValue>
+            </SherlockTokens>
+        </ItemGroup>
+        <TemplateFile Template="$(FileTemplateSherlockConfiguration)" OutputFileName="$(FileSherlockConfiguration)" Tokens="@(SherlockTokens)" />
+        
+        <!--
+        <SherlockRegisterTest InstallDir="$(DirSherlock)"
+                              Configuration="$(FileSherlockConfiguration)" />
+                              -->
+    </Target>
+    
+    <PropertyGroup>
+        <FileReportPaths>$(DirBuildTempTests)\reportpaths.sherlock.txt</FileReportPaths>
+    </PropertyGroup>
+    <Target Name="_WriteReportPath" DependsOnTargets="_DisplayInfo;_ExecuteRegressionTest">
+        <ItemGroup>
+            <FileLines Include="$(DirSherlockReport)" />
+        </ItemGroup>
+        
+        <WriteLinesToFile File="$(FileReportPaths)"
+                          Lines="@(FileLines)"
+                          Overwrite="false"
+                          Encoding="Unicode" />
     </Target>
  </Project>
