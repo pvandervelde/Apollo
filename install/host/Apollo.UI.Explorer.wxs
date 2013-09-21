@@ -25,7 +25,7 @@
                               Icon="Icon.Apollo.ico"
                               IconIndex="0"
                               WorkingDirectory="INSTALLLOCATION"
-                              Advertise="yes" />
+                              Advertise="no" />
                     <fire:FirewallException Id="Firewall.Apollo.UI.Explorer.exe" 
                                             Name="Apollo Explorer"
                                             Profile="private"
@@ -64,8 +64,8 @@
 
         <!-- The feature for the main program. -->
         <Feature Id="F.Apollo.UI.Explorer"
-                 Title="Project explorer support"
-                 Description="The support binaries for the Project explorer User Interface."
+                 Title="Project Explorer"
+                 Description="The binaries for the Project Explorer User Interface."
                  Absent="allow"
                  Level="10">
             <FeatureRef Id="F.Apollo.UI.Explorer.Exe" />

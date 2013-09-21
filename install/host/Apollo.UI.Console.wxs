@@ -25,7 +25,7 @@
                               Icon="Icon.Apollo.ico"
                               IconIndex="0"
                               WorkingDirectory="INSTALLLOCATION"
-                              Advertise="yes" />
+                              Advertise="no" />
                     <fire:FirewallException Id="Firewall.Apollo.UI.Console.exe"
                                             Name="Apollo Console"
                                             Profile="private"
@@ -64,8 +64,8 @@
 
         <!-- The feature for the main program. -->
         <Feature Id="F.Apollo.UI.Console"
-                 Title="Console support"
-                 Description="The support binaries for the console User Interface."
+                 Title="Script runner"
+                 Description="The binaries for the script User Interface."
                  Absent="allow"
                  Level="10">
             <FeatureRef Id="F.Apollo.UI.Console.Exe" />
