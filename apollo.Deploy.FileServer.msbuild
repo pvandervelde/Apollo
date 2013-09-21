@@ -17,7 +17,7 @@
         <!-- File server -->
         <!-- These should only be defined on the build server! -->
         <ShouldDeploy Condition=" '$(ShouldDeploy)' == ''">false</ShouldDeploy>
-        <PathFileServer Condition=" '$(PathFileServer)' == '' "></PathFileServer>
+        <ServerDeployPath Condition=" '$(ServerDeployPath)' == '' "></ServerDeployPath>
         
         <!-- Version number -->
         <VersionMajor>0</VersionMajor>
@@ -33,17 +33,17 @@
     
     <!-- Display info -->
     <Target Name="_DisplayInfo">
-        <Message Text="Copying binaries to the remote file location..." Condition=" '$(PathFileServer)' != '' AND '$(ShouldDeploy)' == 'true'" />
+        <Message Text="Copying binaries to the remote file location..." Condition=" '$(ServerDeployPath)' != '' AND '$(ShouldDeploy)' == 'true'" />
         <Message Text="Not copying binaries to the remote file location" Condition="'$(ShouldDeploy)' != 'true'" />
-        <Message Text="No remote file location defined!" Condition=" '$(PathFileServer)' == ''" />
+        <Message Text="No remote file location defined!" Condition=" '$(ServerDeployPath)' == ''" />
     </Target>
     
     <PropertyGroup>
-        <PathRemoteDeploy>$(PathFileServer)\$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</PathRemoteDeploy>
+        <PathRemoteDeploy>$(ServerDeployPath)\apollo\$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</PathRemoteDeploy>
         <PathRemoteDeployX86>$(PathRemoteDeploy)\x86</PathRemoteDeployX86>
         <PathRemoteDeployX64>$(PathRemoteDeploy)\x64</PathRemoteDeployX64>
     </PropertyGroup>
-    <Target Name="_DeployToFileServer" DependsOnTargets="_DisplayInfo;" Condition=" '$(PathFileServer)' != '' AND '$(ShouldDeploy)' == 'true'">
+    <Target Name="_DeployToFileServer" DependsOnTargets="_DisplayInfo;" Condition=" '$(ServerDeployPath)' != '' AND '$(ShouldDeploy)' == 'true'">
         <ItemGroup>
             <X86MsiFiles Include="$(DirBuildDeployBin)\x86\*.msi" />
         </ItemGroup>

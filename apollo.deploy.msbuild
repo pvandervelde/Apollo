@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0"
+         DefaultTargets="Run"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- Directories -->
+        <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
+    </PropertyGroup>
+
+    <Target Name="Run" DependsOnTargets="_DeployNuget;_DeployMsi;_SwitchIssuesToRelease">
+        <!-- Do nothing here -->
+    </Target>
+    
+    <Target Name="_DisplayInfo">
+        <Message Text="Deploying Apollo ..." />
+    </Target>
+    
+    <PropertyGroup>
+        <MsBuildDeployNuGet>$(DirWorkspace)\apollo.Deploy.NuGet.msbuild</MsBuildDeployNuGet>
+    </PropertyGroup>
+    <Target Name="_DeployNuget" DependsOnTargets="_DisplayInfo">
+        <MSBuild Projects="$(MsBuildDeployNuGet)" Properties="Configuration=Deploy" />
+    </Target>
+    
+    <PropertyGroup>
+        <MsBuildDeployMsi>$(DirWorkspace)\apollo.Deploy.FileServer.msbuild</MsBuildDeployMsi>
+    </PropertyGroup>
+    <Target Name="_DeployMsi" DependsOnTargets="_DisplayInfo">
+        <MSBuild Projects="$(MsBuildDeployMsi)" Properties="Configuration=Deploy" />
+    </Target>
+    
+    <PropertyGroup>
+        <MsBuildDeploySwitchIssuesToRelease>$(DirWorkspace)\apollo.Deploy.SwitchIssuesToRelease.msbuild</MsBuildDeploySwitchIssuesToRelease>
+    </PropertyGroup>
+    <Target Name="_SwitchIssuesToRelease" >
+        <MSBuild Projects="$(MsBuildDeploySwitchIssuesToRelease)" />
+    </Target>
+</Project>
