@@ -179,12 +179,12 @@
                   Value="INSTALLLOCATION" />
 
         <!-- The banner bitmap. Needs to be 500 x 63 pixels -->
-        <!-- <WixVariable Id="WixUIBannerBmp"
-                     Value="Wix_ApolloBanner.bmp" /> -->
+        <WixVariable Id="WixUIBannerBmp"
+                     Value="$(var.SolutionDir)\..\resource\img\InstallerBanner.bmp" />
 
         <!-- The sidebar bitmap. Only used on the first page. Should be 164 x 314 pixels -->
-        <!-- <WixVariable Id="WixUIDialogBmp"
-                     Value="Wix_ApolloSidebar.bmp" /> -->
+        <WixVariable Id="WixUIDialogBmp"
+                     Value="$(var.SolutionDir)\..\resource\img\InstallerSidebar.bmp" />
 
         <!-- EULA -->
         <WixVariable Id="WixUILicenseRtf" Value="$(var.SolutionDir)\..\resource\License.rtf" />
