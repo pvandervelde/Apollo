@@ -90,6 +90,16 @@
                       Source="$(var.Apollo_BinFolder)\Nuclei.dll"
                       KeyPath="yes" />
             </Component>
+
+            <!-- Nuclei.Build.dll -->
+            <Component Id="C.Nuclei.Build.dll"
+                       Guid="{DF49CC45-62AE-4331-A699-88513BFC692B}">
+                <File Id="File.Nuclei.Build.dll"
+                      Name="Nuclei.Build.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Nuclei.Build.dll"
+                      KeyPath="yes" />
+            </Component>
             
             <!-- Nuclei.Diagnostics.dll -->
             <Component Id="C.Nuclei.Diagnostics.dll"
@@ -118,16 +128,6 @@
                       Name="Nuclei.Communication.dll"
                       DiskId="1"
                       Source="$(var.Apollo_BinFolder)\Nuclei.Communication.dll"
-                      KeyPath="yes" />
-            </Component>
-
-            <!-- NSarrac.dll -->
-            <Component Id="C.NSarrac.Framework.dll"
-                       Guid="{8E63D197-4675-4C72-8EEF-8D112541EAAA}">
-                <File Id="File.NSarrac.Framework.dll"
-                      Name="NSarrac.Framework.dll"
-                      DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\NSarrac.Framework.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -212,10 +212,10 @@
             <ComponentRef Id="C.Lokad.Shared.dll" />
             <ComponentRef Id="C.NLog.dll" />
             <ComponentRef Id="C.Nuclei.dll" />
-            <ComponentRef Id="C.Nuclei.Diagnostics.dll" />
+            <ComponentRef Id="C.Nuclei.Build.dll" />
             <ComponentRef Id="C.Nuclei.Communication.dll" />
             <ComponentRef Id="C.Nuclei.Configuration.dll" />
-            <ComponentRef Id="C.NSarrac.Framework.dll" />
+            <ComponentRef Id="C.Nuclei.Diagnostics.dll" />
             <ComponentRef Id="C.QuickGraph.dll" />
             <ComponentRef Id="C.System.IO.Abstractions.dll" />
             <ComponentRef Id="C.System.Reactive.Core.dll" />
