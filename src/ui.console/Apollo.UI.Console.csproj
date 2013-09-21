@@ -8,6 +8,9 @@
     <AssemblyName>Apollo.UI.Console</AssemblyName>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Apollo.ico</ApplicationIcon>
+  </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
     <Reference Include="Args">
@@ -247,6 +250,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Apollo.ico" />
     <Content Include="README.txt" />
   </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
