@@ -20,10 +20,10 @@
     <Reference Include="EasyHttp">
       <HintPath>..\..\packages\EasyHttp.1.4.7.0\lib\net40\EasyHttp.dll</HintPath>
     </Reference>
-    <Reference Include="GraphSharp, Version=1.0.2.0, Culture=neutral, PublicKeyToken=f9c24778325a6b82, processorArchitecture=MSIL">
+    <Reference Include="GraphSharp">
       <HintPath>..\..\packages\GraphSharp.1.1.0.0\lib\net40\GraphSharp.dll</HintPath>
     </Reference>
-    <Reference Include="GraphSharp.Controls, Version=1.1.0.0, Culture=neutral, PublicKeyToken=f9c24778325a6b82, processorArchitecture=MSIL">
+    <Reference Include="GraphSharp.Controls">
       <HintPath>..\..\packages\GraphSharp.1.1.0.0\lib\net40\GraphSharp.Controls.dll</HintPath>
     </Reference>
     <Reference Include="GreyableImage">
@@ -201,9 +201,8 @@
     <Reference Include="PresentationFramework">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="WPFExtensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\WpfExtensions.1.0.12.4\lib\WPFExtensions.dll</HintPath>
+    <Reference Include="WPFExtensions">
+      <HintPath>..\..\packages\WPFExtensions.1.0.0\lib\WPFExtensions.dll</HintPath>
     </Reference>
     <Reference Include="WPFLocalizeExtension, Version=2.1.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
