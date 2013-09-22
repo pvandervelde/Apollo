@@ -10,6 +10,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
@@ -186,7 +187,9 @@ namespace Apollo.Core.Dataset.Nuclei
                     .As<FileConstants>();
 
                 builder.Register(c => new XmlConfiguration(
-                        CommunicationConfigurationKeys.ToCollection(), 
+                        CommunicationConfigurationKeys.ToCollection()
+                            .Append(DiagnosticsConfigurationKeys.ToCollection())
+                            .ToList(), 
                         DatasetApplicationConstants.ConfigurationSectionApplicationSettings))
                     .As<IConfiguration>();
 

@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using Apollo.UI.Explorer.Nuclei.AppDomains;
@@ -228,7 +229,9 @@ namespace Apollo.UI.Explorer.Nuclei
                     .As<ExceptionHandler>();
 
                 builder.Register(c => new XmlConfiguration(
-                        CommunicationConfigurationKeys.ToCollection(),
+                        CommunicationConfigurationKeys.ToCollection()
+                            .Append(DiagnosticsConfigurationKeys.ToCollection())
+                            .ToList(),
                         ExplorerConstants.ConfigurationSectionApplicationSettings))
                     .As<IConfiguration>();
 
