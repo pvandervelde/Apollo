@@ -197,9 +197,9 @@ namespace Apollo.Core.Base.Activation
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoteDatasetDistributor"/> class.
         /// </summary>
+        /// <param name="configuration">The application specific configuration.</param>
         /// <param name="commandHub">The object that manages the remote command proxies.</param>
         /// <param name="notificationHub">The object that receives notifications from remote endpoints.</param>
-        /// <param name="configuration">The application specific configuration.</param>
         /// <param name="uploads">The object that stores all the uploads waiting to be started.</param>
         /// <param name="datasetInformationBuilder">The function that builds <see cref="DatasetOnlineInformation"/> objects.</param>
         /// <param name="communicationLayer">The object that handles the communication for the application.</param>
@@ -227,13 +227,13 @@ namespace Apollo.Core.Base.Activation
         ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         public RemoteDatasetDistributor(
-            ISendCommandsToRemoteEndpoints commandHub,
-            INotifyOfRemoteEndpointEvents notificationHub,
-            IConfiguration configuration,
-            IStoreUploads uploads,
-            Func<DatasetId, EndpointId, NetworkIdentifier, DatasetOnlineInformation> datasetInformationBuilder,
-            ICommunicationLayer communicationLayer,
-            SystemDiagnostics systemDiagnostics,
+            IConfiguration configuration, 
+            ISendCommandsToRemoteEndpoints commandHub, 
+            INotifyOfRemoteEndpointEvents notificationHub, 
+            IStoreUploads uploads, 
+            Func<DatasetId, EndpointId, NetworkIdentifier, DatasetOnlineInformation> datasetInformationBuilder, 
+            ICommunicationLayer communicationLayer, 
+            SystemDiagnostics systemDiagnostics, 
             TaskScheduler scheduler = null)
         {
             {

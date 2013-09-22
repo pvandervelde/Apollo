@@ -132,22 +132,19 @@ namespace Apollo.Core.Base.Activation
             }
 
             var distributor = new RemoteDatasetDistributor(
+                config.Object,
                 commandHub.Object,
                 notificationHub.Object,
-                config.Object,
                 new Mock<IStoreUploads>().Object,
-                (d, e, n) =>
-                {
-                    return new DatasetOnlineInformation(
-                        d,
-                        e,
-                        n,
-                        commandHub.Object,
-                        notificationHub.Object,
-                        systemDiagnostics);
-                },
-                communicationLayer.Object,
-                systemDiagnostics,
+                (d, e, n) => new DatasetOnlineInformation(
+                    d,
+                    e,
+                    n,
+                    commandHub.Object,
+                    notificationHub.Object,
+                    systemDiagnostics),
+                communicationLayer.Object, 
+                systemDiagnostics, 
                 new CurrentThreadTaskScheduler());
 
             // Add the remote endpoints
@@ -269,22 +266,19 @@ namespace Apollo.Core.Base.Activation
             }
 
             var distributor = new RemoteDatasetDistributor(
+                config.Object,
                 commandHub.Object,
                 notificationHub.Object,
-                config.Object,
                 new Mock<IStoreUploads>().Object,
-                (d, e, n) =>
-                {
-                    return new DatasetOnlineInformation(
-                        d,
-                        e,
-                        n,
-                        commandHub.Object,
-                        notificationHub.Object,
-                        systemDiagnostics);
-                },
-                communicationLayer.Object,
-                systemDiagnostics,
+                (d, e, n) => new DatasetOnlineInformation(
+                    d,
+                    e,
+                    n,
+                    commandHub.Object,
+                    notificationHub.Object,
+                    systemDiagnostics),
+                communicationLayer.Object, 
+                systemDiagnostics, 
                 new CurrentThreadTaskScheduler());
 
             // Add the remote endpoints
