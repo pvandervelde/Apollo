@@ -61,7 +61,7 @@ namespace Apollo.Core.Base.Plugins
         /// <returns>
         /// A task that will return the collection of unsatisfied imports.
         /// </returns>
-        Task<IEnumerable<Tuple<GroupCompositionId, GroupImportDefinition>>> NonSatisfiedImports(bool includeOptionalImports);
+        Task<List<Tuple<GroupCompositionId, GroupImportDefinition>>> NonSatisfiedImports(bool includeOptionalImports);
 
         /// <summary>
         /// Returns an object containing the current state of the composition graph.
