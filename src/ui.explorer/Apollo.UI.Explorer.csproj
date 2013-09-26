@@ -188,6 +188,7 @@
     <Compile Include="Commands\ShowWelcomeViewTabCommand.cs" />
     <Compile Include="Converters\ModelCollectionToTabItemsConverter.cs" />
     <Compile Include="ExplorerConstants.cs" />
+    <Compile Include="ExplorerModule.cs" />
     <Compile Include="Nuclei\AppDomains\AppDomainBuilder.cs">
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
     </Compile>
@@ -290,7 +291,6 @@
     <Compile Include="Commands\ShowAboutWindowCommand.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="Nuclei\ExceptionHandling\SrcOnlyExceptionHandlingUtilities.cs" />
-    <Compile Include="Nuclei\NucleiModule.cs" />
     <Compile Include="Views\About\AboutModel.cs" />
     <Compile Include="Views\About\AboutParameter.cs" />
     <Compile Include="Views\About\AboutPresenter.cs" />
@@ -300,7 +300,7 @@
     <Compile Include="Views\About\IAboutView.cs" />
     <Compile Include="Views\Shell\IShellView.cs" />
     <Compile Include="KernelBootstrapper.cs" />
-    <Compile Include="ExplorerModule.cs" />
+    <Compile Include="ExplorerUserInterfaceModule.cs" />
     <Compile Include="Views\Shell\ShellModel.cs" />
     <Compile Include="UserInterfaceBootstrapper.cs" />
     <Compile Include="Views\Menu\IMenuView.cs" />

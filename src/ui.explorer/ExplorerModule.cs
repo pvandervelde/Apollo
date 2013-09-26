@@ -5,333 +5,262 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
-using System.Threading;
-using System.Windows;
-using Apollo.Core.Host;
-using Apollo.Core.Host.UserInterfaces.Application;
-using Apollo.Core.Host.UserInterfaces.Projects;
-using Apollo.UI.Explorer.Nuclei;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Security.Cryptography;
+using Apollo.UI.Explorer.Nuclei.AppDomains;
 using Apollo.UI.Explorer.Nuclei.ExceptionHandling;
-using Apollo.UI.Explorer.Properties;
-using Apollo.UI.Explorer.Views.Menu;
-using Apollo.UI.Explorer.Views.Shell;
-using Apollo.UI.Explorer.Views.StatusBar;
-using Apollo.UI.Explorer.Views.Welcome;
-using Apollo.UI.Wpf;
-using Apollo.UI.Wpf.Events;
-using Apollo.UI.Wpf.Events.Listeners;
-using Apollo.UI.Wpf.Views.Datasets;
-using Apollo.UI.Wpf.Views.Feedback;
-using Apollo.UI.Wpf.Views.Notification;
-using Apollo.UI.Wpf.Views.Profiling;
-using Apollo.UI.Wpf.Views.Progress;
-using Apollo.UI.Wpf.Views.Projects;
-using Apollo.UI.Wpf.Views.Scripting;
+using Apollo.Utilities;
+using Apollo.Utilities.History;
 using Autofac;
-using Microsoft.Practices.Prism.Events;
-using Microsoft.Practices.Prism.Modularity;
+using NLog;
 using NSarrac.Framework;
+using Nuclei;
+using Nuclei.Communication;
 using Nuclei.Configuration;
+using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Logging;
+using Nuclei.Diagnostics.Profiling;
+using Nuclei.Diagnostics.Profiling.Reporting;
 
 namespace Apollo.UI.Explorer
 {
     /// <summary>
-    /// Defines a <see cref="IModule"/> which handles the registrations for 
-    /// the UI portion of the Explorer application.
+    /// Handles the component registrations for the explorer application.
     /// </summary>
-    /// <remarks>
-    /// Note that this module only contains the UI controls and UI related classes,
-    /// e.g. ViewModels etc.. All core related elements need to be injected via 
-    /// the <see cref="KernelBootstrapper"/>.
-    /// </remarks>
-    internal sealed class ExplorerModule : IModule
+    internal sealed class ExplorerModule : Autofac.Module
     {
         /// <summary>
-        /// The IOC container that holds the references.
+        /// The default name for the error log.
         /// </summary>
-        private readonly IContainer m_Container;
+        private const string DefaultInfoFileName = "explorer.info.log";
 
         /// <summary>
-        /// The reset event that is used to signal the application that it is safe to shut down.
+        /// The default name for the profiler log.
         /// </summary>
-        private readonly AutoResetEvent m_ResetEvent;
+        private const string DefaultProfilerFileName = "explorer.profile";
 
         /// <summary>
-        /// A flag that indicates if the application is profiling itself.
+        /// The name for the plugins directory.
         /// </summary>
-        private readonly bool m_IsProfiling;
+        private const string PluginsDirectoryName = "plugins";
 
-        /// <summary>
-        /// A flag that indicates if the application should show the welcome page on start-up.
-        /// </summary>
-        private readonly bool m_ShowWelcomePage;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ExplorerModule"/> class.
-        /// </summary>
-        /// <param name="container">The IOC container that will hold the references.</param>
-        /// <param name="resetEvent">The reset event that is used to signal the application that it is safe to shut down.</param>
-        public ExplorerModule(IContainer container, AutoResetEvent resetEvent)
+        private static AppDomainResolutionPaths AppDomainResolutionPathsFor(FileConstants fileConstants, AppDomainPaths paths)
         {
+            List<string> filePaths = new List<string>();
+            List<string> directoryPaths = new List<string>();
+            if ((paths & AppDomainPaths.Core) == AppDomainPaths.Core)
             {
-                Debug.Assert(container != null, "The container should exist.");
-                Debug.Assert(resetEvent != null, "The reset event should exist.");
+                directoryPaths.Add(Assembly.GetExecutingAssembly().LocalDirectoryPath());
             }
 
-            m_Container = container;
-            m_ResetEvent = resetEvent;
-            m_IsProfiling = ConfigurationHelpers.ShouldBeProfiling();
-            m_ShowWelcomePage = Settings.Default.ShowWelcomePageOnStartup;
-        }
-
-        /// <summary>
-        /// Notifies the module that it has be initialized.
-        /// </summary>
-        public void Initialize()
-        {
-            UpdateContainer();
-
-            InitializeModels();
-
-            RegisterNotifications();
-
-            ActivateRegions();
-        }
-
-        /// <summary>
-        /// Updates the existing container with the additional UI references.
-        /// </summary>
-        /// <remarks>
-        /// Note that this method only adds references to UI controls and UI
-        /// related classes / interfaces. Additional references for the 
-        /// core needs to be added via a different path.
-        /// </remarks>
-        /// <seealso cref="UserInterfaceBootstrapper"/>
-        /// <seealso cref="KernelBootstrapper"/>
-        private void UpdateContainer()
-        {
-            var builder = new ContainerBuilder();
+            // @Todo: Note that the Apollo.Core.Host.Plugins.PluginService needs these paths ...
+            if ((paths & AppDomainPaths.Plugins) == AppDomainPaths.Plugins)
             {
-                // Register the utilities elements. These are 'shared' with the core
-                builder.RegisterModule(new NucleiModule());
-                builder.RegisterModule(new CommonUIModule());
-
-                // Get all the registrations from Apollo.UI.Wpf
-                var commonUiAssembly = typeof(Observable).Assembly;
-                builder.RegisterAssemblyTypes(commonUiAssembly)
-                   .Where(t => t.FullName.EndsWith("Presenter", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
-                   .InstancePerDependency()
-                   .PropertiesAutowired();
-                builder.RegisterAssemblyTypes(commonUiAssembly)
-                    .Where(
-                        t => (t.FullName.EndsWith("View", StringComparison.Ordinal) || t.FullName.EndsWith("Window", StringComparison.Ordinal))
-                            && t.IsClass
-                            && !t.IsAbstract)
-                    .InstancePerDependency()
-                    .AsImplementedInterfaces();
-                builder.RegisterAssemblyTypes(commonUiAssembly)
-                    .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
-                    .InstancePerDependency();
-                builder.RegisterAssemblyTypes(commonUiAssembly)
-                    .Where(t => t.FullName.EndsWith("EventListener", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
-                    .SingleInstance();
-                builder.RegisterAssemblyTypes(commonUiAssembly)
-                    .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
-                    .InstancePerDependency();
-
-                // Get the registrations from the current assembly
-                var localAssembly = GetType().Assembly;
-                builder.RegisterAssemblyTypes(localAssembly)
-                    .Where(t => t.FullName.EndsWith("Presenter", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
-                    .InstancePerDependency()
-                    .PropertiesAutowired();
-                builder.RegisterAssemblyTypes(localAssembly)
-                    .Where(
-                        t => (t.FullName.EndsWith("View", StringComparison.Ordinal) || t.FullName.EndsWith("Window", StringComparison.Ordinal))
-                            && t.IsClass
-                            && !t.IsAbstract)
-                    .InstancePerDependency()
-                    .AsImplementedInterfaces();
-                builder.RegisterAssemblyTypes(localAssembly)
-                    .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
-                    .InstancePerDependency();
-
-                builder.Register(c => new DispatcherContextWrapper(Application.Current.Dispatcher))
-                    .As<IContextAware>();
-
-                var key = SrcOnlyExceptionHandlingUtilities.ReportingPublicKey();
-                builder.RegisterModule(new FeedbackReportingModule(() => key));
+                // Plugins can be found in:
+                // - The plugins directory in the main app directory (i.e. <INSTALL_DIRECTORY>\plugins)
+                // - In the machine location for plugins (i.e. <COMMON_APPLICATION_DATA>\<COMPANY>\plugins)
+                // - In the user location for plugins (i.e. <LOCAL_APPLICATION_DATA>\<COMPANY>\plugins)
+                directoryPaths.Add(Path.Combine(Assembly.GetExecutingAssembly().LocalDirectoryPath(), PluginsDirectoryName));
+                directoryPaths.Add(Path.Combine(fileConstants.CompanyCommonPath(), PluginsDirectoryName));
+                directoryPaths.Add(Path.Combine(fileConstants.CompanyUserPath(), PluginsDirectoryName));
             }
 
-            builder.Update(m_Container);
+            return AppDomainResolutionPaths.WithFilesAndDirectories(
+                Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath),
+                filePaths,
+                directoryPaths);
         }
 
-        private void InitializeModels()
+        private static void RegisterAppDomainBuilder(ContainerBuilder builder)
         {
-            SelectScriptLanguageModel.StoreKnownLanguages(m_Container.Resolve<IContextAware>());
-        }
-
-        private void RegisterNotifications()
-        {
-            // Set the shutdown action
-            var notificationNames = m_Container.Resolve<INotificationNameConstants>();
-            var applicationFacade = m_Container.Resolve<IAbstractApplications>();
-            {
-                applicationFacade.RegisterNotification(
-                    notificationNames.SystemShuttingDown,
-                    obj =>
+            builder.Register(
+                c =>
+                {
+                    // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
+                    // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
+                    var ctx = c.Resolve<IComponentContext>();
+                    Func<string, AppDomainPaths, AppDomain> result = (name, paths) =>
                     {
-                        // Shut down is rather yucky. It turns out that
-                        // app.Shutdown() is async (the documentation doesn't tell you that)
-                        // so we have to find a way to wait for it to be done. Enter yuckiness.
-                        var app = (App)Application.Current;
-                        Action action =
-                            () =>
+                        return AppDomainBuilder.Assemble(
+                            name,
+                            AppDomainResolutionPathsFor(ctx.Resolve<FileConstants>(), paths));
+                    };
+
+                    return result;
+                })
+                .As<Func<string, AppDomainPaths, AppDomain>>()
+                .SingleInstance();
+        }
+
+        private static void RegisterDiagnostics(ContainerBuilder builder)
+        {
+            builder.Register(
+                c =>
+                {
+                    var loggers = c.Resolve<IEnumerable<ILogger>>();
+                    Action<LevelToLog, string> action = (p, s) =>
+                    {
+                        var msg = new LogMessage(p, s);
+                        foreach (var logger in loggers)
+                        {
+                            try
                             {
-                                // First nuke all the UI stuff
-                                m_Container.Dispose();
+                                logger.Log(msg);
+                            }
+                            catch (NLogRuntimeException)
+                            {
+                                // Ignore it and move on to the next logger.
+                            }
+                        }
+                    };
 
-                                // Now wait for the kernel to shut down.
-                                m_ResetEvent.WaitOne();
+                    Profiler profiler = null;
+                    if (c.IsRegistered<Profiler>())
+                    {
+                        profiler = c.Resolve<Profiler>();
+                    }
 
-                                // And then kill the app.
-                                app.Shutdown();
-                            };
+                    return new SystemDiagnostics(action, profiler);
+                })
+                .As<SystemDiagnostics>()
+                .SingleInstance();
+        }
 
-                        app.Dispatcher.BeginInvoke(action);
-                    });
+        private static void RegisterLoggers(ContainerBuilder builder)
+        {
+            builder.Register(c => LoggerBuilder.ForFile(
+                    Path.Combine(c.Resolve<FileConstants>().LogPath(), DefaultInfoFileName),
+                    new DebugLogTemplate(
+                        c.Resolve<IConfiguration>(),
+                        () => DateTimeOffset.Now)))
+                .As<ILogger>()
+                .SingleInstance();
+
+            builder.Register(c => LoggerBuilder.ForEventLog(
+                    Assembly.GetExecutingAssembly().GetName().Name,
+                    new DebugLogTemplate(
+                        c.Resolve<IConfiguration>(),
+                        () => DateTimeOffset.Now)))
+                .As<ILogger>()
+                .SingleInstance();
+        }
+
+        private static void RegisterProfiler(ContainerBuilder builder)
+        {
+            if (ConfigurationHelpers.ShouldBeProfiling())
+            {
+                builder.Register((c, p) => new TextReporter(p.TypedAs<Func<Stream>>()))
+                        .As<TextReporter>()
+                        .As<ITransformReports>();
+
+                builder.Register(c => new TimingStorage())
+                    .OnRelease(
+                        storage =>
+                        {
+                            // Write all the profiling results out to disk. Do this the ugly way 
+                            // because we don't know if any of the other items in the container have
+                            // been removed yet.
+                            Func<Stream> factory =
+                                () => new FileStream(
+                                    Path.Combine(new FileConstants(new ApplicationConstants()).LogPath(), DefaultProfilerFileName),
+                                    FileMode.Append,
+                                    FileAccess.Write,
+                                    FileShare.Read);
+                            var reporter = new TextReporter(factory);
+                            reporter.Transform(storage.FromStartTillEnd());
+                        })
+                    .As<IStoreIntervals>()
+                    .As<IGenerateTimingReports>()
+                    .SingleInstance();
+
+                builder.Register(c => new Profiler(
+                        c.Resolve<IStoreIntervals>()))
+                    .SingleInstance();
             }
         }
 
-        private void ActivateRegions()
+        private static void RegisterTimeline(ContainerBuilder builder)
         {
-            m_Container.Resolve<ShowViewEventListener>().Start();
-            m_Container.Resolve<CloseViewEventListener>().Start();
+            // Apparently we can do this by registering the most generic class
+            // first and the least generic (i.e. the most limited) class last
+            // But then we also need a way to provide the correct parameters
+            // and that is a bit more tricky with a RegisterGeneric method call.
+            builder.RegisterSource(new DictionaryTimelineRegistrationSource());
+            builder.RegisterSource(new ListTimelineRegistrationSource());
+            builder.RegisterSource(new ValueTimelineRegistrationSource());
 
-            // Get the aggregator and the show view event once so that
-            // we don't keep hitting the container over and over.
-            var aggregator = m_Container.Resolve<IEventAggregator>();
-            var showViewEvent = aggregator.GetEvent<ShowViewEvent>();
-            showViewEvent.Publish(
-                new ShowViewRequest(
-                    typeof(ShellPresenter),
-                    RegionNames.Shell,
-                    new ShellParameter(m_Container.Resolve<IContextAware>())));
-
-            showViewEvent.Publish(
-                new ShowViewRequest(
-                    typeof(MenuPresenter),
-                    RegionNames.MainMenu,
-                    new MenuParameter(m_Container.Resolve<IContextAware>())));
-
-            showViewEvent.Publish(
-                new ShowViewRequest(
-                    typeof(StatusBarPresenter),
-                    RegionNames.StatusBar,
-                    new StatusBarParameter(m_Container.Resolve<IContextAware>())));
-
-            showViewEvent.Publish(
-                new ShowViewRequest(
-                    typeof(ErrorReportsPresenter),
-                    CommonRegionNames.StatusBarErrorReport,
-                    new ErrorReportsParameter(m_Container.Resolve<IContextAware>())));
-
-            showViewEvent.Publish(
-                new ShowViewRequest(
-                    typeof(FeedbackPresenter),
-                    CommonRegionNames.StatusBarFeedback,
-                    new FeedbackParameter(m_Container.Resolve<IContextAware>())));
-
-            showViewEvent.Publish(
-                new ShowViewRequest(
-                    typeof(NotificationPresenter),
-                    CommonRegionNames.StatusBarStatusText,
-                    new NotificationParameter(m_Container.Resolve<IContextAware>())));
-
-            showViewEvent.Publish(
-                new ShowViewRequest(
-                    typeof(ProgressPresenter),
-                    CommonRegionNames.StatusBarProgressReport,
-                    new ProgressParameter(m_Container.Resolve<IContextAware>())));
-
-            // Only add the necessary controls if we are actually profiling. If we are not
-            // profiling then we don't add any controls and anything that we did allocate
-            // just goes the way of the dodo
-            if (m_IsProfiling)
-            {
-                showViewEvent.Publish(
-                    new ShowViewRequest(
-                        typeof(ProfilePresenter),
-                        CommonRegionNames.StatusBarProfilerReport,
-                        new ProfileParameter(m_Container.Resolve<IContextAware>())));
-            }
-
-            if (m_ShowWelcomePage)
-            {
-                showViewEvent.Publish(
-                    new ShowViewRequest(
-                        typeof(WelcomePresenter),
-                        CommonRegionNames.Content,
-                        new WelcomeParameter(m_Container.Resolve<IContextAware>())));
-            }
-
-            ActivateProjectRegions();
+            builder.Register(
+                    c =>
+                    {
+                        var ctx = c.Resolve<IComponentContext>();
+                        return new Timeline(t => { return ctx.Resolve(t) as IStoreTimelineValues; });
+                    })
+                .As<ITimeline>()
+                .SingleInstance();
         }
 
-        private void ActivateProjectRegions()
+        /// <summary>
+        /// Override to add registrations to the container.
+        /// </summary>
+        /// <param name="builder">The builder through which components can be registered.</param>
+        /// <remarks>
+        /// Note that the ContainerBuilder parameter is not the same one
+        /// that the module is being registered by (i.e. it can have its own defaults).
+        /// </remarks>
+        protected override void Load(ContainerBuilder builder)
         {
-            var context = m_Container.Resolve<IContextAware>();
-            var projectFacade = m_Container.Resolve<ILinkToProjects>();
-            projectFacade.OnNewProjectLoaded +=
-                (s, e) =>
-                {
-                    // Get the aggregator and the show view event once so that
-                    // we don't keep hitting the container over and over.
-                    var aggregator = m_Container.Resolve<IEventAggregator>();
-                    var showViewEvent = aggregator.GetEvent<ShowViewEvent>();
-                    showViewEvent.Publish(
-                        new ShowViewRequest(
-                            typeof(ProjectPresenter),
-                            CommonRegionNames.Content,
-                            new ProjectParameter(context)));
+            base.Load(builder);
 
-                    showViewEvent.Publish(
-                        new ShowViewRequest(
-                            typeof(ProjectDescriptionPresenter),
-                            CommonRegionNames.ProjectViewTopPane,
-                            new ProjectDescriptionParameter(context)));
+            // Register the global application objects
+            {
+                // Utilities
+                builder.Register(c => new ApplicationConstants())
+                   .As<ApplicationConstants>();
 
-                    showViewEvent.Publish(
-                        new ShowViewRequest(
-                            typeof(DatasetGraphPresenter),
-                            CommonRegionNames.ProjectViewContent,
-                            new DatasetGraphParameter(context)));
-                };
+                builder.Register(c => new FileConstants(c.Resolve<ApplicationConstants>()))
+                    .As<FileConstants>();
 
-            projectFacade.OnProjectUnloaded +=
-                (s, e) =>
-                {
-                    // Get the aggregator and the close view event once so that
-                    // we don't keep hitting the container over and over.
-                    var aggregator = m_Container.Resolve<IEventAggregator>();
-                    var closeViewEvent = aggregator.GetEvent<CloseViewEvent>();
+                builder.Register((c, p) => new ExceptionHandler(
+                        p.TypedAs<ExceptionProcessor[]>()))
+                    .As<ExceptionHandler>();
 
-                    closeViewEvent.Publish(
-                        new CloseViewRequest(
-                            CommonRegionNames.ProjectViewTopPane,
-                            new ProjectDescriptionParameter(context)));
+                builder.Register(c => new XmlConfiguration(
+                        CommunicationConfigurationKeys.ToCollection()
+                            .Append(DiagnosticsConfigurationKeys.ToCollection())
+                            .ToList(),
+                        ExplorerConstants.ConfigurationSectionApplicationSettings))
+                    .As<IConfiguration>();
 
-                    closeViewEvent.Publish(
-                        new CloseViewRequest(
-                            CommonRegionNames.ProjectViewContent,
-                            new DatasetGraphParameter(context)));
+                builder.Register(c => new NotificationReportingHub())
+                    .As<ICollectNotifications>()
+                    .SingleInstance();
 
-                    closeViewEvent.Publish(
-                        new CloseViewRequest(
-                            CommonRegionNames.Content,
-                            new ProjectParameter(context)));
-                };
+                builder.Register(c => new ProgressReportingHub())
+                    .As<ICollectProgressReports>()
+                    .SingleInstance();
+
+                builder.Register(c => new StepBasedProgressTracker())
+                    .OnActivated(
+                        a =>
+                        {
+                            var hub = a.Context.Resolve<ICollectProgressReports>();
+                            hub.AddReporter(a.Instance);
+                        })
+                    .As<ITrackSteppingProgress>()
+                    .As<ITrackProgress>();
+
+                RSAParameters rsaParameters = SrcOnlyExceptionHandlingUtilities.ReportingPublicKey();
+                builder.RegisterModule(new FeedbackReportingModule(() => rsaParameters));
+
+                RegisterLoggers(builder);
+                RegisterProfiler(builder);
+                RegisterDiagnostics(builder);
+                RegisterAppDomainBuilder(builder);
+                RegisterTimeline(builder);
+            }
         }
     }
 }

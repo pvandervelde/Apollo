@@ -59,7 +59,7 @@ namespace Apollo.UI.Explorer
         ///     Thrown if <paramref name="resetEvent"/> is <see langword="null" />.
         /// </exception>
         public UserInterfaceBootstrapper(IContainer container, AutoResetEvent resetEvent)
-            : base(new AutofacContainerAdapter(container), new ModuleCatalog().AddModule(typeof(ExplorerModule)))
+            : base(new AutofacContainerAdapter(container), new ModuleCatalog().AddModule(typeof(ExplorerUserInterfaceModule)))
         {
             {
                 Enforce.Argument(() => container);
@@ -106,7 +106,7 @@ namespace Apollo.UI.Explorer
                     .ExternallyOwned();
 
                 // Note that this 'module' is a Prism module, not an Autofac one!
-                builder.RegisterType<ExplorerModule>();
+                builder.RegisterType<ExplorerUserInterfaceModule>();
             }
             
             builder.Update(m_ShellIocContainer);
