@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Apollo.Core.Base;
 using Apollo.Core.Host;
-using Apollo.UI.Explorer.Nuclei;
 using Autofac.Core;
 using Lokad;
 using Nuclei.Communication;
@@ -76,7 +75,12 @@ namespace Apollo.UI.Explorer
                         new List<CommunicationSubject>
                             {
                                 CommunicationSubjects.Dataset,
-                            }, 
+                            },
+                        new[]
+                            {
+                                ChannelType.NamedPipe,
+                                ChannelType.TcpIP, 
+                            },
                         true),
                     new BaseModuleForActivators(),
                 };

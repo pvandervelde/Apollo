@@ -377,6 +377,10 @@ namespace Apollo.Core.Dataset
                             {
                                 CommunicationSubjects.Dataset,
                             },
+                        new[]
+                            {
+                                ChannelType.NamedPipe,
+                            }, 
                         false));
                 
                 RegisterCommands(
