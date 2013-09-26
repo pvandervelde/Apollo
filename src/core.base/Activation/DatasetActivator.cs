@@ -11,6 +11,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using Apollo.Utilities;
 using Nuclei;
 using Nuclei.Communication;
@@ -31,11 +32,23 @@ namespace Apollo.Core.Base.Activation
         private const string DatasetApplicationFileName = @"Apollo.Core.Dataset.exe";
 
         /// <summary>
+        /// Defines the file name for the configuration file of the dataset application.
+        /// </summary>
+        private const string DatasetApplicationConfigFileName = DatasetApplicationFileName + @".config";
+
+        /// <summary>
         /// The object that links the dataset processes to the current process so that they
         /// all die at the same time.
         /// </summary>
         private static readonly DatasetTrackingJob s_ProcessTrackingJob
             = new DatasetTrackingJob();
+
+        /// <summary>
+        /// The collection that contains the file paths for all the local assemblies on which 
+        /// the dataset application depends.
+        /// </summary>
+        private readonly List<string> m_DatasetApplicationDependencies
+            = new List<string>();
 
         /// <summary>
         /// The object that stores the application wide constants.
@@ -67,6 +80,41 @@ namespace Apollo.Core.Base.Activation
 
             m_ApplicationConstants = applicationConstants;
             m_Diagnostics = diagnostics;
+
+            LoadDatasetDependencies();
+        }
+
+        /// <summary>
+        /// Extracts the full paths of the assemblies referenced by the dataset application and stores them locally.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// In order to always have the correct set of references we load them from a pre-build XML file. Given that
+        /// we cannot change any of the dependencies or their locations while the application is running we can
+        /// pre-load the list.
+        /// </para>
+        /// <para>
+        /// We could have done this through reflection but that would mean that we would have to load all the assemblies
+        /// into the current AppDomain (which requires multiple file loads). This seems an excessive amount of file
+        /// loading and on top of that we can't unload those assemblies anymore, so getting them from a pre-build 
+        /// file seems wiser.
+        /// </para>
+        /// </remarks>
+        private void LoadDatasetDependencies()
+        {
+            var localPath = Assembly.GetExecutingAssembly().LocalDirectoryPath();
+            var dependencyFile = Path.Combine(localPath, Path.GetFileNameWithoutExtension(DatasetApplicationFileName) + ".references.xml");
+            var doc = XDocument.Load(dependencyFile);
+            foreach (var reference in doc.Element("references").Elements("reference"))
+            {
+                var text = reference.Value;
+                var assemblyName = new AssemblyName(text);
+                var assemblyFile = Path.Combine(localPath, assemblyName.Name + ".dll");
+                if (File.Exists(assemblyFile))
+                {
+                    m_DatasetApplicationDependencies.Add(assemblyFile);
+                }
+            }
         }
 
         /// <summary>
@@ -166,81 +214,53 @@ namespace Apollo.Core.Base.Activation
             Directory.CreateDirectory(deployPath);
             return deployPath;
         }
-
+        
+        /// <summary>
+        /// Copy the dataset application to a temporary directory so that it can have it's own set of plugins and those
+        /// plugins won't collide with other plugins of the same name but a different version.
+        /// </summary>
+        /// <param name="deployDirectory">The directory to which the application should be deployed.</param>
         private void DeployApplication(string deployDirectory)
         {
-            const string exeFileExtension = "exe";
-            const string configFileExtension = "exe.config";
-            const string assemblyFileExtension = "dll";
-
-            var executables = new List<string>
-                {
-                    "Apollo.Core.Dataset",
-                };
-
-            var assemblies = new List<string>
-                {
-                    "Apollo.Core.Base",
-                    "Apollo.Core.Extensions",
-                    "Apollo.Utilities",
-                    "Autofac",
-                    "Castle.Core",
-                    "Lokad.Shared",
-                    "Mono.Options",
-                    "NLog",
-                    "NManto",
-                    "NSarrac.Framework",
-                    "QuickGraph",
-                    "System.Reactive",
-                };
-
             var localPath = Assembly.GetExecutingAssembly().LocalDirectoryPath();
 
             // copy all the application executables and assemblies
-            var assemblyFiles = from assemblyFile in assemblies
-                                select string.Format(CultureInfo.InvariantCulture, "{0}.{1}", assemblyFile, assemblyFileExtension);
-
-            var exeFiles = from exeFile in executables
-                           from file in new[] 
+            var exeFiles = new[] 
                             {
-                                string.Format(CultureInfo.InvariantCulture, "{0}.{1}", exeFile, exeFileExtension),
-                                string.Format(CultureInfo.InvariantCulture, "{0}.{1}", exeFile, configFileExtension),
-                            }
-                           select file;
+                                Path.Combine(localPath, DatasetApplicationFileName),
+                                Path.Combine(localPath, DatasetApplicationConfigFileName),
+                            };
 
-            var filesToDeploy = assemblyFiles.Append(exeFiles);
+            var filesToDeploy = m_DatasetApplicationDependencies.Append(exeFiles);
             foreach (var file in filesToDeploy)
             {
-                var localFile = Path.Combine(localPath, file);
-                var deployedFile = Path.Combine(deployDirectory, file);
+                var localFile = Path.Combine(localPath, Path.GetFileName(file));
+                var deployedFile = Path.Combine(deployDirectory, Path.GetFileName(file));
 
                 m_Diagnostics.Log(
                     LevelToLog.Debug,
                     BaseConstants.LogPrefix,
-                    string.Format(CultureInfo.InvariantCulture, "Deploying {1} to: {0}", file, deployedFile));
+                    string.Format(CultureInfo.InvariantCulture, "Deploying {0} to: {1}", file, deployedFile));
                 File.Copy(localFile, deployedFile);
-            }
 
 #if DEBUG
-            // Copy the PDB files if we're in DEBUG mode
-            const string debugFileExtension = "pdb";
+                // Copy the PDB files if we're in DEBUG mode
+                const string debugFileExtension = ".pdb";
 
-            var debugFiles = from file in assemblies.Append(executables)
-                             select string.Format(CultureInfo.InvariantCulture, "{0}.{1}", file, debugFileExtension);
-            foreach (var file in debugFiles)
-            {
-                var localFile = Path.Combine(localPath, file);
-                var deployedFile = Path.Combine(deployDirectory, file);
-                if (File.Exists(localFile))
+                var localDebugFile = Path.Combine(
+                    localPath,
+                    Path.GetFileNameWithoutExtension(file) + debugFileExtension);
+                if (File.Exists(localDebugFile))
                 {
+                    var deployedDebugFile = Path.Combine(deployDirectory, Path.GetFileNameWithoutExtension(localFile) + debugFileExtension);
                     m_Diagnostics.Log(
                         LevelToLog.Debug,
                         BaseConstants.LogPrefix,
-                        string.Format(CultureInfo.InvariantCulture, "Deploying {1} to: {0}", file, deployedFile));
-                    File.Copy(localFile, deployedFile);
+                        string.Format(CultureInfo.InvariantCulture, "Deploying {0} to: {1}", localDebugFile, deployedDebugFile));
+                    File.Copy(localDebugFile, deployedDebugFile);
                 }
-            }
 #endif
+            }
         }
     }
 }
