@@ -89,7 +89,7 @@ namespace Apollo.Core.Dataset.Plugins
             params object[] constructorArguments)
         {
             {
-                Debug.Assert(members.Count() == 3, "There should be 3 members.");
+                Debug.Assert(members.Count() == 6, "There should be 6 members.");
             }
 
             IDictionaryTimelineStorage<GroupRegistrationId, GroupDefinition> definitions = null;

@@ -75,9 +75,9 @@ namespace Apollo.Core.Dataset
             Justification = "We're catching the exception and then exiting the application.")]
         private static int RunApplication(string[] arguments, ApplicationContext context)
         {
-            string hostId = null;
-            string channelType = null;
-            string channelUri = null;
+            string hostIdText = null;
+            string channelTypeText = null;
+            string channelUriText = null;
 
             // Parse the command line options
             var options = new OptionSet 
@@ -85,24 +85,24 @@ namespace Apollo.Core.Dataset
                     { 
                         "h=|host=", 
                         "The {ENDPOINTID} of the host application that requested the start of this application.", 
-                        v => hostId = v
+                        v => hostIdText = v
                     },
                     {
                         "t=|channeltype=",
                         "The {TYPE} of the channel over which the connection should be made.",
-                        v => channelType = v
+                        v => channelTypeText = v
                     },
                     {
                         "u=|channeluri=",
                         "The {URI} of the connection that can be used to connect to the host application.",
-                        v => channelUri = v
+                        v => channelUriText = v
                     },
                 };
 
             options.Parse(arguments);
-            if (string.IsNullOrWhiteSpace(hostId) ||
-                string.IsNullOrWhiteSpace(channelType) ||
-                string.IsNullOrWhiteSpace(channelUri))
+            if (string.IsNullOrWhiteSpace(hostIdText) ||
+                string.IsNullOrWhiteSpace(channelTypeText) ||
+                string.IsNullOrWhiteSpace(channelUriText))
             {
                 throw new InvalidCommandLineArgumentsException();
             }
@@ -115,18 +115,21 @@ namespace Apollo.Core.Dataset
             // when we exit the main message loop.
             var container = DependencyInjection.Load(context);
 
+            var hostId = EndpointIdExtensions.Deserialize(hostIdText);
+            var channelType = (ChannelType)Enum.Parse(typeof(ChannelType), channelTypeText);
+
             // Notify the host app that we're alive, after which the 
             // rest of the app should pick up the loading of the dataset etc.
             // Note that this call to the container also registers all global commands and initializes the
             // communication channels etc.
-            var resolver = container.Resolve<Action<string, string, string>>();
-            resolver(hostId, channelType, channelUri);
+            var resolver = container.Resolve<ManualEndpointConnection>();
+            resolver(hostId, channelType, channelUriText);
 
             // Connect to the assembly resolve event so that we can intercept assembly loads for plugins etc.
             var assemblyResolver = container.Resolve<PluginLoadingAssemblyResolver>(
                 new TypedParameter(
                     typeof(EndpointId), 
-                    EndpointIdExtensions.Deserialize(hostId)));
+                    EndpointIdExtensions.Deserialize(hostIdText)));
             AppDomain.CurrentDomain.AssemblyResolve += assemblyResolver.LocatePluginAssembly;
 
             // Start with the message processing loop and then we 

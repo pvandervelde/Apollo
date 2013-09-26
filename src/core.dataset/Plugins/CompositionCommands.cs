@@ -182,9 +182,9 @@ namespace Apollo.Core.Dataset.Plugins
         /// <returns>
         /// A task that will return the collection of unsatisfied imports.
         /// </returns>
-        public Task<IEnumerable<Tuple<GroupCompositionId, GroupImportDefinition>>> NonSatisfiedImports(bool includeOptionalImports)
+        public Task<List<Tuple<GroupCompositionId, GroupImportDefinition>>> NonSatisfiedImports(bool includeOptionalImports)
         {
-            var globalTask = Task<IEnumerable<Tuple<GroupCompositionId, GroupImportDefinition>>>.Factory.StartNew(
+            var globalTask = Task<List<Tuple<GroupCompositionId, GroupImportDefinition>>>.Factory.StartNew(
                 () =>
                 {
                     var key = m_DatasetLock.LockForReading();

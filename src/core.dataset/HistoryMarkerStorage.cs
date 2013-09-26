@@ -9,7 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Apollo.Utilities.History;
 
-namespace Apollo.Core.Dataset.Nuclei
+namespace Apollo.Core.Dataset
 {
     /// <summary>
     /// Stores history markers for the dataset.

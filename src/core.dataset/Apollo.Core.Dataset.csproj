@@ -197,9 +197,8 @@
     <Compile Include="Scheduling\ScheduleStorage.cs" />
     <Compile Include="Scheduling\UnknownScheduleActionException.cs" />
     <Compile Include="Scheduling\UnknownScheduleConditionException.cs" />
-    <Compile Include="Nuclei\HistoryMarkerStorage.cs" />
-    <Compile Include="Nuclei\IStoreHistoryMarkers.cs" />
-    <Compile Include="Nuclei\NucleiModule.cs" />
+    <Compile Include="HistoryMarkerStorage.cs" />
+    <Compile Include="IStoreHistoryMarkers.cs" />
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
@@ -257,11 +256,26 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <PropertyGroup>
+    <DirWorkspace>$(SolutionDir)\..</DirWorkspace>
+    <DirTools>$(DirWorkspace)\tools</DirTools>
+    <DirPackages>$(DirWorkspace)\packages</DirPackages>
+    <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
+  </PropertyGroup>
+  <Import Project="$(MsBuildExtensionsPath)\FindToolFromPackages.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\FindToolFromPackages.msbuild')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
   -->
+  <PropertyGroup>
+    <FileNRefsExe>nrefs.console.exe</FileNRefsExe>
+    <FileGeneratedReferences>$(OutputPath)\apollo.core.dataset.references.xml</FileGeneratedReferences>
+  </PropertyGroup>
+  <Target Name="AfterBuild">
+    <FindToolFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileNRefsExe)">
+      <Output TaskParameter="Path" PropertyName="PathNRefsExe" />
+    </FindToolFromPackages>
+    <Exec Command="&quot;$(PathNRefsExe)&quot; -a &quot;$(OutputPath)\Apollo.Core.Dataset.exe&quot; -o &quot;$(FileGeneratedReferences)&quot;" />
+  </Target>
 </Project>
