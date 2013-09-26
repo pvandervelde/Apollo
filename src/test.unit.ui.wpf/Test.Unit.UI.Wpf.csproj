@@ -102,6 +102,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Nuclei.Build.0.6.5.0\lib\net45\Nuclei.Build.dll</HintPath>
     </Reference>
+    <Reference Include="Nuclei.Communication, Version=0.6.5.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Nuclei.Communication.0.6.5.0\lib\net45\Nuclei.Communication.dll</HintPath>
+    </Reference>
     <Reference Include="Nuclei.Configuration, Version=0.6.5.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Nuclei.Configuration.0.6.5.0\lib\net45\Nuclei.Configuration.dll</HintPath>
