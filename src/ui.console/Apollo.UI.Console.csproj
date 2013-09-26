@@ -137,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleConstants.cs" />
+    <Compile Include="ConsoleModule.cs" />
     <Compile Include="KernelBootstrapper.cs" />
     <Compile Include="Mono.Options\Options.cs">
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
@@ -195,7 +196,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Nuclei\ExceptionHandling\SrcOnlyExceptionHandlingUtilities.cs" />
-    <Compile Include="Nuclei\NucleiModule.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

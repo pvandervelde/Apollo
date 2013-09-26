@@ -325,7 +325,7 @@ namespace Apollo.UI.Console
                     var builder = new ContainerBuilder();
                     {
                         builder.RegisterModule(module);
-                        builder.RegisterModule(new NucleiModule());
+                        builder.RegisterModule(new ConsoleModule());
                     }
 
                     s_UiContainer = builder.Build();

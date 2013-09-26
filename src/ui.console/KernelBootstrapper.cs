@@ -71,7 +71,7 @@ namespace Apollo.UI.Console
         {
             return new List<IModule> 
                 { 
-                    new NucleiModule(),
+                    new ConsoleModule(),
                     new CommunicationModule(
                         new List<CommunicationSubject>
                             {

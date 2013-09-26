@@ -25,13 +25,12 @@ using Nuclei.Diagnostics.Logging;
 using Nuclei.Diagnostics.Profiling;
 using Nuclei.Diagnostics.Profiling.Reporting;
 
-namespace Apollo.UI.Console.Nuclei
+namespace Apollo.UI.Console
 {
     /// <summary>
-    /// Handles the component registrations for the utilities part 
-    /// of the core.
+    /// Handles the component registrations for the console application.
     /// </summary>
-    internal sealed class NucleiModule : Autofac.Module
+    internal sealed class ConsoleModule : Autofac.Module
     {
         /// <summary>
         /// The default name for the error log.
@@ -83,7 +82,7 @@ namespace Apollo.UI.Console.Nuclei
                     // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
                     // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
                     var ctx = c.Resolve<IComponentContext>();
-                    Func<string, AppDomainPaths, AppDomain> result = 
+                    Func<string, AppDomainPaths, AppDomain> result =
                         (name, paths) => AppDomainBuilder.Assemble(
                             name,
                             AppDomainResolutionPathsFor(ctx.Resolve<FileConstants>(), paths));
@@ -97,7 +96,7 @@ namespace Apollo.UI.Console.Nuclei
         private static void RegisterDiagnostics(ContainerBuilder builder)
         {
             builder.Register(
-                c => 
+                c =>
                 {
                     var loggers = c.Resolve<IEnumerable<ILogger>>();
                     Action<LevelToLog, string> action = (p, s) =>
@@ -157,7 +156,7 @@ namespace Apollo.UI.Console.Nuclei
 
                 builder.Register(c => new TimingStorage())
                     .OnRelease(
-                        storage => 
+                        storage =>
                         {
                             // Write all the profiling results out to disk. Do this the ugly way 
                             // because we don't know if any of the other items in the container have
@@ -215,18 +214,18 @@ namespace Apollo.UI.Console.Nuclei
 
             // Register the global application objects
             {
-                // Utilities
-                builder.Register(c => new ApplicationConstants())
-                   .As<ApplicationConstants>();
-
-                builder.Register(c => new FileConstants(c.Resolve<ApplicationConstants>()))
-                    .As<FileConstants>();
-
                 builder.Register((c, p) => new ExceptionHandler(
                         p.TypedAs<ExceptionProcessor[]>()))
                     .As<ExceptionHandler>();
 
-                builder.Register(c => new XmlConfiguration(
+                builder.Register(c => new ApplicationConstants())
+                    .As<ApplicationConstants>();
+
+                builder.Register(c => new FileConstants(c.Resolve<ApplicationConstants>()))
+                    .As<FileConstants>();
+
+                builder.Register(
+                    c => new XmlConfiguration(
                         CommunicationConfigurationKeys.ToCollection()
                             .Append(DiagnosticsConfigurationKeys.ToCollection())
                             .ToList(),
