@@ -125,7 +125,7 @@ namespace Apollo.Core.Base.Activation
         /// </summary>
         public DatasetTrackingJob()
         {
-            m_Handle = CreateJobObject(IntPtr.Zero, null);
+            m_Handle = CreateJobObject(IntPtr.Zero, "Apollo");
             if (m_Handle == null)
             {
                 throw new UnableToCreateJobException();
