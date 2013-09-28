@@ -26,15 +26,15 @@
    <Directory>C:/Program Files/Microsoft Silverlight/5.1.20513.0/</Directory>
    <Directory>$(ProjectDir)/packages/Microsoft.Net.Http.2.0.20710.0/lib/net40/</Directory>
   </AssemblyReferenceDirectories>
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Base.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Dataset.exe" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Extensions.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Host.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Core.Scripting.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.UI.Console.exe" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.UI.Explorer.exe" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.UI.Wpf.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Release/Apollo.Utilities.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/x64/Release/Apollo.Core.Base.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/x64/Release/Apollo.Core.Dataset.exe" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/x64/Release/Apollo.Core.Extensions.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/x64/Release/Apollo.Core.Host.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/x64/Release/Apollo.Core.Scripting.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/x64/Release/Apollo.UI.Console.exe" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/x64/Release/Apollo.UI.Explorer.exe" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/x64/Release/Apollo.UI.Wpf.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/x64/Release/Apollo.Utilities.dll" Analyze="True" AnalyzeAllChildren="True" />
  </Targets>
  <Rules>
   <RuleFiles>

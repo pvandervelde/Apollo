@@ -5,7 +5,7 @@
     <PropertyGroup>
         <!-- Build configuration -->
         <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
-        <Platform Condition=" '$(Platform)' == ''">Any CPU</Platform>
+        <Platform Condition=" '$(Platform)' == ''">x64</Platform>
         <PlatformTranslated>$(Platform.Replace(" ",""))</PlatformTranslated>
     
         <!-- Directories -->
@@ -40,18 +40,9 @@
     
     <PropertyGroup>
         <PathRemoteDeploy>$(ServerDeployPath)\apollo\$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</PathRemoteDeploy>
-        <PathRemoteDeployX86>$(PathRemoteDeploy)\x86</PathRemoteDeployX86>
         <PathRemoteDeployX64>$(PathRemoteDeploy)\x64</PathRemoteDeployX64>
     </PropertyGroup>
     <Target Name="_DeployToFileServer" DependsOnTargets="_DisplayInfo;" Condition=" '$(ServerDeployPath)' != '' AND '$(ShouldDeploy)' == 'true'">
-        <ItemGroup>
-            <X86MsiFiles Include="$(DirBuildDeployBin)\x86\*.msi" />
-        </ItemGroup>
-        <MakeDir Directories="$(PathRemoteDeployX86)" 
-                 Condition="!Exists('$(PathRemoteDeployX86)')" />
-        <Copy SourceFiles="@(X86MsiFiles)" 
-              DestinationFolder="$(PathRemoteDeploy)" />
-
         <ItemGroup>
             <X64MsiFiles Include="$(DirBuildDeployBin)\x64\*.msi" />
         </ItemGroup>

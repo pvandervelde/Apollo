@@ -5,7 +5,7 @@
     <PropertyGroup>
         <!-- Build configuration -->
         <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
-        <Platform Condition=" '$(Platform)' == ''">Any CPU</Platform>
+        <Platform Condition=" '$(Platform)' == ''">x64</Platform>
         <PlatformTranslated>$(Platform.Replace(" ",""))</PlatformTranslated>
     
         <!-- Directories -->
