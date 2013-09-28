@@ -9,7 +9,7 @@
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Apollo.ico</ApplicationIcon>
+    <ApplicationIcon>..\..\resource\icons\Apollo.ico</ApplicationIcon>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
