@@ -118,7 +118,7 @@ namespace Apollo.Core.Base.Activation
         /// <summary>
         /// The flag that indicates if the object has been disposed or not.
         /// </summary>
-        private volatile bool m_IsDisposed = false;
+        private volatile bool m_IsDisposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetTrackingJob"/> class.
@@ -126,16 +126,25 @@ namespace Apollo.Core.Base.Activation
         public DatasetTrackingJob()
         {
             m_Handle = CreateJobObject(IntPtr.Zero, "Apollo");
-            if (m_Handle == null)
+            if (m_Handle == IntPtr.Zero)
             {
-                throw new UnableToCreateJobException();
+                var error = Marshal.GetLastWin32Error();
+                throw new UnableToCreateJobException(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Unable to create job object.  Error: {0}",
+                        error));
             }
 
-            var info = new JobObjectBasicLimitInformation();
-            info.LimitFlags = JobObjectLimitKillOnJobClose;
+            var info = new JobObjectBasicLimitInformation
+                {
+                    LimitFlags = JobObjectLimitKillOnJobClose
+                };
 
-            var extendedInfo = new JobObjectExtendedLimitInformation();
-            extendedInfo.BasicLimitInformation = info;
+            var extendedInfo = new JobObjectExtendedLimitInformation
+                {
+                    BasicLimitInformation = info
+                };
 
             int length = Marshal.SizeOf(typeof(JobObjectExtendedLimitInformation));
             var extendedInfoPtr = Marshal.AllocHGlobal(length);
@@ -188,9 +197,12 @@ namespace Apollo.Core.Base.Activation
         /// <summary>
         /// Closes the job.
         /// </summary>
-        public void Close()
+        private void Close()
         {
-            CloseHandle(m_Handle);
+            if (!CloseHandle(m_Handle))
+            {
+            }
+
             m_Handle = IntPtr.Zero;
         }
 
@@ -202,7 +214,12 @@ namespace Apollo.Core.Base.Activation
         {
             if (!AssignProcessToJobObject(m_Handle, processToAdd.Handle))
             {
-                throw new UnableToLinkChildProcessToJobException();
+                var error = Marshal.GetLastWin32Error();
+                throw new UnableToLinkChildProcessToJobException(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Unable to link child process to Job. Error: {0}",
+                        error));
             }
         }
     }
