@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">$(MSBuildProjectDirectory)\..</SolutionDir>
+    <ProjectGuid>{b8de1df9-52c3-4ea2-af76-f45b35befebc}</ProjectGuid>
+    <OutputName>Apollo</OutputName>
+    <OutputType>Package</OutputType>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\WixBaseConfiguration.targets" />
+  <ItemGroup>
+    <Compile Include="..\wix.shared\Apollo.Base.wxs">
+      <Link>Apollo.Base.wxs</Link>
+    </Compile>
+    <Compile Include="..\wix.shared\Apollo.Dataset.wxs">
+      <Link>Apollo.Dataset.wxs</Link>
+    </Compile>
+    <Compile Include="Apollo.UI.Wpf.wxs" />
+    <Compile Include="Apollo.UI.Console.wxs" />
+    <Compile Include="Apollo.UI.Explorer.wxs" />
+    <Compile Include="Apollo.Core.wxs" />
+    <Compile Include="Apollo.UI.wxs" />
+    <Compile Include="Product.wxs" />
+    <Compile Include="Product.Generated.wxs">
+      <DependentUpon>Product.wxs</DependentUpon>
+      <GenerateComponentGroups>True</GenerateComponentGroups>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\templates\CompanyIncludes.wxi">
+      <Link>CompanyIncludes.wxi</Link>
+    </Content>
+    <Content Include="..\..\build\temp\Dependencies.wxi">
+      <Link>Dependencies.wxi</Link>
+    </Content>
+    <Content Include="..\..\build\temp\VersionNumber.wxi">
+      <Link>VersionNumber.wxi</Link>
+    </Content>
+    <Content Include="Includes.wxi" />
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixFirewallExtension">
+      <HintPath>$(WixExtDir)\WixFirewallExtension.dll</HintPath>
+      <Name>WixFirewallExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
+      <Name>WixUtilExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixNetFxExtension">
+      <HintPath>$(WixExtDir)\WixNetFxExtension.dll</HintPath>
+      <Name>WixNetFxExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
+      <Name>Apollo.Core.Base</Name>
+      <Project>{5125e82c-2e8a-4ce4-8fa8-39ab82c9b856}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\core.dataset\Apollo.Core.Dataset.csproj">
+      <Name>Apollo.Core.Dataset</Name>
+      <Project>{8aca6aaa-889d-4358-ab8e-bee23015d66f}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\core.extensions\Apollo.Core.Extensions.csproj">
+      <Name>Apollo.Core.Extensions</Name>
+      <Project>{ee14fafe-8e78-11e1-b5d3-6df7bbe59b18}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\core.host\Apollo.Core.Host.csproj">
+      <Name>Apollo.Core.Host</Name>
+      <Project>{befcb7fa-8cdf-44d5-bc36-b4c6a03d9ddd}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\core.scripting\Apollo.Core.Scripting.csproj">
+      <Name>Apollo.Core.Scripting</Name>
+      <Project>{626db086-d3e7-47a6-92b5-2afc58e8e18e}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
+      <Name>SolutionLevel</Name>
+      <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\ui.console\Apollo.UI.Console.csproj">
+      <Name>Apollo.UI.Console</Name>
+      <Project>{be673894-4b95-4f22-8e9a-9f1d7c20cf84}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\ui.explorer\Apollo.UI.Explorer.csproj">
+      <Name>Apollo.UI.Explorer</Name>
+      <Project>{60f9649b-6c4b-43d4-ae8c-d68f04e2c3df}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\ui.wpf\Apollo.UI.Wpf.csproj">
+      <Name>Apollo.UI.Wpf</Name>
+      <Project>{acd26d23-36ba-4035-84ca-6e462a03b033}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\utilities\Apollo.Utilities.csproj">
+      <Name>Apollo.Utilities</Name>
+      <Project>{81f4563d-eaac-4c2b-96a6-a79c9ea692cf}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+  </ItemGroup>
+  <!--
+	To modify your build process, add your task inside one of the targets below and uncomment it.
+	Other similar extension points exist, see Wix.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+</Project>

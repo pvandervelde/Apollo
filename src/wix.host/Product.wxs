@@ -19,7 +19,7 @@
         Include the company include file. This contains some general information
         regarding the manufacturer that is needed for the installer.
    -->
-    <?include $(var.SolutionDir)CompanyIncludes.wxi ?>
+    <?include $(var.SolutionDir)..\templates\CompanyIncludes.wxi ?>
 
     <!--
         Include the include file. This contains some general information

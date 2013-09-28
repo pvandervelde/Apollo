@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension "
-     xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension"
-     xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension">
+     xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
 
     <?include $(var.SolutionDir)..\build\temp\Dependencies.wxi ?>
 
@@ -14,6 +13,13 @@
         -->
         <DirectoryRef Id="INSTALLLOCATION">
             <!-- Apollo.Core.Dataset.exe -->
+            <!--
+                Note that the dataset does not need a firewall exception because we don't actually
+                deploy it from the installed location. We copy it over to a temporary location
+                and then run it from there. If all is well then the dataset
+                never activates a TCP/IP connection (only named pipe) so it won't 
+                need a firewall exception anyway.
+            -->
             <Component Id="C.Apollo.Core.Dataset.Exe"
                        Guid="{BCB6762B-3F74-41A7-A45F-7C664E9ED425}">
                 <File Id="File.Apollo.Core.Dataset.Exe"
@@ -21,10 +27,6 @@
                       DiskId="1"
                       Source="$(var.Apollo_BinFolder)\Apollo.Core.Dataset.exe"
                       KeyPath="yes">
-                    <fire:FirewallException Id="Firewall.Apollo.Core.Dataset.Exe"
-                                            Name="Apollo Dataset"
-                                            Profile="private"
-                                            Scope="any"/>
                 </File>
             </Component>
 
@@ -38,12 +40,23 @@
                       KeyPath="yes" />
             </Component>
             
+            <!-- apollo.core.dataset.references.xml -->
+            <Component Id="C.Apollo.Core.Dataset.References.Xml"
+                       Guid="{09F71B3C-B99C-41E1-8EC7-B4961F9CD9F2}">
+                <File Id="File.Apollo.Core.Dataset.References.Xml"
+                      Name="apollo.core.dataset.references.xml"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\apollo.core.dataset.references.xml"
+                      KeyPath="yes" />
+            </Component>
+            
         </DirectoryRef>
 
         <!-- The feature for the main program. -->
         <ComponentGroup Id="CGroup.Apollo.Core.Dataset">
             <ComponentRef Id="C.Apollo.Core.Dataset.Exe" />
             <ComponentRef Id="C.Apollo.Core.Dataset.Exe.Config" />
+            <ComponentRef Id="C.Apollo.Core.Dataset.References.Xml" />
 
             <ComponentGroupRef Id="CGroup.Apollo.Base" />
         </ComponentGroup>
