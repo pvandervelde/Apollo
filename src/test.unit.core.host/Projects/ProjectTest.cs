@@ -85,7 +85,8 @@ namespace Apollo.Core.Host.Projects
                     new GroupSelector(
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
-                    proxyLayer.Object));
+                    proxyLayer.Object),
+                new Mock<ICollectNotifications>().Object);
 
             Assert.IsNotNull(project);
             Assert.IsNotNull(project.BaseDataset());
@@ -129,7 +130,8 @@ namespace Apollo.Core.Host.Projects
                     new GroupSelector(
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
-                    proxyLayer.Object));
+                    proxyLayer.Object),
+                new Mock<ICollectNotifications>().Object);
 
             Assert.Throws<ArgumentNullException>(() => project.Save(null));
         }
@@ -168,7 +170,8 @@ namespace Apollo.Core.Host.Projects
                     new GroupSelector(
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
-                    proxyLayer.Object));
+                    proxyLayer.Object),
+                new Mock<ICollectNotifications>().Object);
             project.Close();
 
             Assert.Throws<CannotUseProjectAfterClosingItException>(() => project.Save(new Mock<IPersistenceInformation>().Object));
@@ -214,7 +217,8 @@ namespace Apollo.Core.Host.Projects
                     new GroupSelector(
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
-                    proxyLayer.Object));
+                    proxyLayer.Object),
+                new Mock<ICollectNotifications>().Object);
 
             Assert.Throws<ArgumentNullException>(() => project.Export(null, false, new Mock<IPersistenceInformation>().Object));
         }
@@ -253,7 +257,8 @@ namespace Apollo.Core.Host.Projects
                     new GroupSelector(
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
-                    proxyLayer.Object));
+                    proxyLayer.Object),
+                new Mock<ICollectNotifications>().Object);
 
             Assert.Throws<UnknownDatasetException>(() => project.Export(new DatasetId(), false, new Mock<IPersistenceInformation>().Object));
         }
@@ -292,7 +297,8 @@ namespace Apollo.Core.Host.Projects
                     new GroupSelector(
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
-                    proxyLayer.Object));
+                    proxyLayer.Object),
+                new Mock<ICollectNotifications>().Object);
             var dataset = project.BaseDataset();
 
             Assert.Throws<ArgumentNullException>(() => project.Export(dataset.Id, false, null));
@@ -332,7 +338,8 @@ namespace Apollo.Core.Host.Projects
                     new GroupSelector(
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
-                    proxyLayer.Object));
+                    proxyLayer.Object),
+                new Mock<ICollectNotifications>().Object);
             var dataset = project.BaseDataset();
             project.Close();
 
@@ -386,7 +393,8 @@ namespace Apollo.Core.Host.Projects
                     new GroupSelector(
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
-                    proxyLayer.Object));
+                    proxyLayer.Object),
+                new Mock<ICollectNotifications>().Object);
 
             var name = string.Empty;
             project.OnNameChanged += (s, e) => { name = e.Value; };
@@ -434,7 +442,8 @@ namespace Apollo.Core.Host.Projects
                     new GroupSelector(
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
-                    proxyLayer.Object));
+                    proxyLayer.Object),
+                new Mock<ICollectNotifications>().Object);
 
             var summary = string.Empty;
             project.OnSummaryChanged += (s, e) => { summary = e.Value; };
@@ -482,7 +491,8 @@ namespace Apollo.Core.Host.Projects
                     new GroupSelector(
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
-                    proxyLayer.Object));
+                    proxyLayer.Object),
+                new Mock<ICollectNotifications>().Object);
 
             var marks = new List<TimeMarker>();
             marks.Add(TimeMarker.TheBeginOfTime);
@@ -592,7 +602,8 @@ namespace Apollo.Core.Host.Projects
                     new GroupSelector(
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
-                    proxyLayer.Object));
+                    proxyLayer.Object),
+                new Mock<ICollectNotifications>().Object);
 
             var marks = new List<TimeMarker>();
             marks.Add(TimeMarker.TheBeginOfTime);
@@ -704,7 +715,8 @@ namespace Apollo.Core.Host.Projects
                     new GroupSelector(
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
-                    proxyLayer.Object));
+                    proxyLayer.Object),
+                new Mock<ICollectNotifications>().Object);
 
             // Create a 'binary' tree of datasets. This should create the following tree:
             //                            X
@@ -810,7 +822,8 @@ namespace Apollo.Core.Host.Projects
                     new GroupSelector(
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
-                    proxyLayer.Object));
+                    proxyLayer.Object),
+                new Mock<ICollectNotifications>().Object);
 
             // Create a 'binary' tree of datasets. This should create the following tree:
             //                            X

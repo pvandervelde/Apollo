@@ -408,4 +408,7 @@
   <data name="Progress_ActivatingDataset" xml:space="preserve">
     <value>Activating dataset ...</value>
   </data>
+  <data name="Notifications_FailedToActivateDataset" xml:space="preserve">
+    <value>Dataset activation failed</value>
+  </data>
 </root>

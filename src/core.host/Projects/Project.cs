@@ -14,7 +14,6 @@ using Apollo.Core.Base.Activation;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
-using Lokad;
 using QuickGraph;
 
 namespace Apollo.Core.Host.Projects
@@ -69,6 +68,11 @@ namespace Apollo.Core.Host.Projects
         private readonly ITimeline m_Timeline;
 
         /// <summary>
+        /// The object that collects the notifications for the user interface.
+        /// </summary>
+        private readonly ICollectNotifications m_Notifications;
+
+        /// <summary>
         /// The ID number of the root dataset.
         /// </summary>
         private DatasetId m_RootDataset;
@@ -97,17 +101,22 @@ namespace Apollo.Core.Host.Projects
         /// <see cref="DatasetActivationRequest"/>.
         /// </param>
         /// <param name="dataStorageProxyBuilder">The function which returns a storage proxy for a newly loaded dataset.</param>
+        /// <param name="notifications">The object that stores the notifications for the user interface.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="distributor"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="dataStorageProxyBuilder"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="notifications"/> is <see langword="null" />.
+        /// </exception>
         public Project(
             ITimeline timeline,
             Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor,
-            Func<DatasetOnlineInformation, DatasetStorageProxy> dataStorageProxyBuilder)
-            : this(timeline, distributor, dataStorageProxyBuilder, null)
+            Func<DatasetOnlineInformation, DatasetStorageProxy> dataStorageProxyBuilder,
+            ICollectNotifications notifications)
+            : this(timeline, distributor, dataStorageProxyBuilder, notifications, null)
         {
         }
 
@@ -120,6 +129,7 @@ namespace Apollo.Core.Host.Projects
         /// <see cref="DatasetActivationRequest"/>.
         /// </param>
         /// <param name="dataStorageProxyBuilder">The function which returns a storage proxy for a newly loaded dataset.</param>
+        /// <param name="notifications">The object that stores the notifications for the user interface.</param>
         /// <param name="persistenceInfo">
         /// The object that describes how the project was persisted.
         /// </param>
@@ -132,16 +142,21 @@ namespace Apollo.Core.Host.Projects
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="dataStorageProxyBuilder"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="notifications"/> is <see langword="null" />.
+        /// </exception>
         public Project(
             ITimeline timeline,
             Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor,
             Func<DatasetOnlineInformation, DatasetStorageProxy> dataStorageProxyBuilder,
+            ICollectNotifications notifications,
             IPersistenceInformation persistenceInfo)
         {
             {
-                Enforce.Argument(() => timeline);
-                Enforce.Argument(() => distributor);
-                Enforce.Argument(() => dataStorageProxyBuilder);
+                Lokad.Enforce.Argument(() => timeline);
+                Lokad.Enforce.Argument(() => distributor);
+                Lokad.Enforce.Argument(() => dataStorageProxyBuilder);
+                Lokad.Enforce.Argument(() => notifications);
             }
 
             m_Timeline = timeline;
@@ -155,6 +170,8 @@ namespace Apollo.Core.Host.Projects
 
             m_DatasetDistributor = distributor;
             m_DataStorageProxyBuilder = dataStorageProxyBuilder;
+
+            m_Notifications = notifications;
 
             if (persistenceInfo != null)
             {
@@ -382,7 +399,7 @@ namespace Apollo.Core.Host.Projects
         public IProxyDataset BaseDataset()
         {
             {
-                Enforce.With<CannotUseProjectAfterClosingItException>(
+                Lokad.Enforce.With<CannotUseProjectAfterClosingItException>(
                     !IsClosed,
                     Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
             }
@@ -419,10 +436,10 @@ namespace Apollo.Core.Host.Projects
         public void Save(IPersistenceInformation persistenceInfo)
         {
             {
-                Enforce.With<CannotUseProjectAfterClosingItException>(
+                Lokad.Enforce.With<CannotUseProjectAfterClosingItException>(
                     !IsClosed,
                     Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
-                Enforce.Argument(() => persistenceInfo);
+                Lokad.Enforce.Argument(() => persistenceInfo);
             }
 
             // Do we need to have a save flag that we can set to prevent closing from happening
@@ -450,15 +467,15 @@ namespace Apollo.Core.Host.Projects
         public void Export(DatasetId datasetToExport, bool shouldIncludeChildren, IPersistenceInformation persistenceInfo)
         {
             {
-                Enforce.With<CannotUseProjectAfterClosingItException>(
+                Lokad.Enforce.With<CannotUseProjectAfterClosingItException>(
                     !IsClosed,
                     Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
-                Enforce.Argument(() => datasetToExport);
-                Enforce.With<UnknownDatasetException>(
+                Lokad.Enforce.Argument(() => datasetToExport);
+                Lokad.Enforce.With<UnknownDatasetException>(
                     m_Datasets.Datasets.ContainsKey(datasetToExport),
                     Resources.Exceptions_Messages_UnknownDataset_WithId,
                     datasetToExport);
-                Enforce.Argument(() => persistenceInfo);
+                Lokad.Enforce.Argument(() => persistenceInfo);
             }
 
             // Do we need to have a save flag that we can set to prevent closing from happening
@@ -569,7 +586,8 @@ namespace Apollo.Core.Host.Projects
             var newDataset = m_Timeline.AddToTimeline(
                 DatasetProxy.CreateInstance,
                 parameters,
-                m_DataStorageProxyBuilder);
+                m_DataStorageProxyBuilder,
+                m_Notifications);
 
             return newDataset;
         }

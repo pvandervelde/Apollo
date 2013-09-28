@@ -60,6 +60,15 @@ namespace Apollo.Core.Host.Projects
         IBuildProjects WithDataStorageBuilder(Func<DatasetOnlineInformation, DatasetStorageProxy> storageBuilder);
 
         /// <summary>
+        /// Provides the object that will store the notifications for use by the user interface.
+        /// </summary>
+        /// <param name="notifications">The object that stores the notifications for the user interface.</param>
+        /// <returns>
+        /// The current builder instance with the notification object stored.
+        /// </returns>
+        IBuildProjects WithNotifications(ICollectNotifications notifications);
+
+        /// <summary>
         /// Provides the <see cref="Stream"/> from which the project must be loaded.
         /// </summary>
         /// <param name="persistenceInfo">

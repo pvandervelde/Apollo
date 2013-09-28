@@ -115,7 +115,7 @@ namespace Apollo.Core.Host.Projects
         {
             {
                 Debug.Assert(members.Count() == 3, "There should only be three members.");
-                Debug.Assert(constructorArguments.Length == 2, "There should be only two constructor arguments.");
+                Debug.Assert(constructorArguments.Length == 3, "There should be only three constructor arguments.");
             }
 
             IVariableTimeline<string> name = null;
@@ -147,6 +147,7 @@ namespace Apollo.Core.Host.Projects
             return new DatasetProxy(
                 constructorArguments[0] as DatasetConstructionParameters,
                 constructorArguments[1] as Func<DatasetOnlineInformation, DatasetStorageProxy>,
+                constructorArguments[2] as ICollectNotifications,
                 historyId,
                 name,
                 summary,
@@ -162,6 +163,11 @@ namespace Apollo.Core.Host.Projects
         /// The function that is used to create the proxy for the data inside the dataset.
         /// </summary>
         private readonly Func<DatasetOnlineInformation, DatasetStorageProxy> m_ProxyBuilder;
+
+        /// <summary>
+        /// The object that collects the notifications for the user interface.
+        /// </summary>
+        private readonly ICollectNotifications m_Notifications;
 
         /// <summary>
         /// The ID used by the timeline to uniquely identify the current object.
@@ -212,6 +218,7 @@ namespace Apollo.Core.Host.Projects
         /// </summary>
         /// <param name="constructorArgs">The object that holds all the constructor arguments that do not belong to the timeline.</param>
         /// <param name="proxyBuilder">The function that is used to create the proxy for the data inside the dataset.</param>
+        /// <param name="notifications">The object that stores the notifications for the user interface.</param>
         /// <param name="historyId">The ID for use in the history system.</param>
         /// <param name="name">The data structure that stores the history information for the name of the dataset.</param>
         /// <param name="summary">The data structure that stores the history information for the summary of the dataset.</param>
@@ -223,6 +230,9 @@ namespace Apollo.Core.Host.Projects
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="proxyBuilder"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="notifications"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="historyId"/> is <see langword="null" />.
@@ -239,6 +249,7 @@ namespace Apollo.Core.Host.Projects
         private DatasetProxy(
             DatasetConstructionParameters constructorArgs,
             Func<DatasetOnlineInformation, DatasetStorageProxy> proxyBuilder,
+            ICollectNotifications notifications,
             HistoryId historyId,
             IVariableTimeline<string> name,
             IVariableTimeline<string> summary,
@@ -247,6 +258,7 @@ namespace Apollo.Core.Host.Projects
             {
                 Lokad.Enforce.Argument(() => constructorArgs);
                 Lokad.Enforce.Argument(() => proxyBuilder);
+                Lokad.Enforce.Argument(() => notifications);
                 Lokad.Enforce.Argument(() => historyId);
                 Lokad.Enforce.Argument(() => name);
                 Lokad.Enforce.Argument(() => summary);
@@ -255,14 +267,15 @@ namespace Apollo.Core.Host.Projects
 
             m_ConstructorArgs = constructorArgs;
             m_ProxyBuilder = proxyBuilder;
+            m_Notifications = notifications;
             m_HistoryId = historyId;
             m_Name = name;
             m_Summary = summary;
             m_DistributionLocation = distributionLocation;
 
-            m_Name.OnExternalValueUpdate += new EventHandler<EventArgs>(HandleOnNameUpdate);
-            m_Summary.OnExternalValueUpdate += new EventHandler<EventArgs>(HandleOnSummaryUpdate);
-            m_DistributionLocation.OnExternalValueUpdate += new EventHandler<EventArgs>(HandleOnIsActivatedUpdate);
+            m_Name.OnExternalValueUpdate += HandleOnNameUpdate;
+            m_Summary.OnExternalValueUpdate += HandleOnSummaryUpdate;
+            m_DistributionLocation.OnExternalValueUpdate += HandleOnIsActivatedUpdate;
         }
 
         private void HandleOnNameUpdate(object sender, EventArgs e)
@@ -306,6 +319,7 @@ namespace Apollo.Core.Host.Projects
                     Activate(
                         DistributionLocations.All,
                         selector,
+                        m_Notifications,
                         new CancellationTokenSource().Token,
                         false);
                 }
@@ -614,12 +628,13 @@ namespace Apollo.Core.Host.Projects
                 Lokad.Enforce.Argument(() => machineSelector);
             }
 
-            Activate(preferredLocation, machineSelector, token, true);
+            Activate(preferredLocation, machineSelector, m_Notifications, token, true);
         }
 
         private void Activate(
             DistributionLocations preferredLocation,
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
+            ICollectNotifications notifications,
             CancellationToken token,
             bool storeLocation)
         {
@@ -662,7 +677,7 @@ namespace Apollo.Core.Host.Projects
                 var selectedPlan = machineSelector(selection);
                 if (token.IsCancellationRequested)
                 {
-                    token.ThrowIfCancellationRequested();
+                    return;
                 }
 
                 if (selectedPlan.WasSelectionCanceled)
@@ -675,8 +690,18 @@ namespace Apollo.Core.Host.Projects
                 task.ContinueWith(
                     t =>
                     {
-                        if (t.Exception == null)
+                        try
                         {
+                            if (t.Exception != null)
+                            {
+                                // Obviously not activated so ...
+                                RaiseOnProgressOfCurrentAction(100, string.Empty);
+                                RaiseOnDeactivated();
+
+                                notifications.StoreNotification(Resources.Notifications_FailedToActivateDataset);
+                                return;
+                            }
+
                             var online = t.Result;
                             m_Connection = online;
                             m_Connection.OnSwitchToEditMode += HandleOnSwitchToEditMode;
@@ -691,8 +716,10 @@ namespace Apollo.Core.Host.Projects
 
                             RaiseOnActivated();
                         }
-
-                        m_IsActivating = false;
+                        finally
+                        {
+                            m_IsActivating = false;
+                        }
                     },
                     TaskContinuationOptions.ExecuteSynchronously);
             }

@@ -827,6 +827,15 @@ namespace Apollo.Core.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dataset activation failed.
+        /// </summary>
+        internal static string Notifications_FailedToActivateDataset {
+            get {
+                return ResourceManager.GetString("Notifications_FailedToActivateDataset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Plugin location process completed..
         /// </summary>
         internal static string Plugins_LogMessage_Detector_FileScanCompleted {

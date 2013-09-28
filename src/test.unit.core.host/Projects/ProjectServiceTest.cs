@@ -66,6 +66,7 @@ namespace Apollo.Core.Host.Projects
                         proxyLayer.Object),
                     proxyLayer.Object),
                 distributor.Object,
+                new Mock<ICollectNotifications>().Object,
                 builder.Object);
 
             service.Start();
@@ -109,6 +110,10 @@ namespace Apollo.Core.Host.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
+                builder.Setup(b => b.WithNotifications(It.IsAny<ICollectNotifications>()))
+                    .Returns(builder.Object)
+                    .Verifiable();
+
                 builder.Setup(b => b.Build())
                     .Returns(project.Object)
                     .Verifiable();
@@ -124,6 +129,7 @@ namespace Apollo.Core.Host.Projects
                         proxyLayer.Object),
                     proxyLayer.Object),
                 distributor.Object,
+                new Mock<ICollectNotifications>().Object,
                 builder.Object);
 
             service.Start();
@@ -167,6 +173,10 @@ namespace Apollo.Core.Host.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
+                builder.Setup(b => b.WithNotifications(It.IsAny<ICollectNotifications>()))
+                    .Returns(builder.Object)
+                    .Verifiable();
+
                 builder.Setup(b => b.Build())
                     .Returns(project.Object)
                     .Verifiable();
@@ -182,6 +192,7 @@ namespace Apollo.Core.Host.Projects
                         proxyLayer.Object),
                     proxyLayer.Object),
                 distributor.Object,
+                new Mock<ICollectNotifications>().Object,
                 builder.Object);
 
             service.CreateNewProject();
@@ -210,6 +221,7 @@ namespace Apollo.Core.Host.Projects
                         proxyLayer.Object),
                     proxyLayer.Object),
                 distributor.Object,
+                new Mock<ICollectNotifications>().Object,
                 builder.Object);
 
             Assert.Throws<ArgumentNullException>(() => service.LoadProject(null));
@@ -247,6 +259,10 @@ namespace Apollo.Core.Host.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
+                builder.Setup(b => b.WithNotifications(It.IsAny<ICollectNotifications>()))
+                    .Returns(builder.Object)
+                    .Verifiable();
+
                 builder.Setup(b => b.Build())
                     .Returns(project.Object)
                     .Verifiable();
@@ -262,6 +278,7 @@ namespace Apollo.Core.Host.Projects
                         proxyLayer.Object),
                     proxyLayer.Object),
                 distributor.Object,
+                new Mock<ICollectNotifications>().Object,
                 builder.Object);
 
             service.LoadProject(new Mock<IPersistenceInformation>().Object);
@@ -306,6 +323,10 @@ namespace Apollo.Core.Host.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
+                builder.Setup(b => b.WithNotifications(It.IsAny<ICollectNotifications>()))
+                    .Returns(builder.Object)
+                    .Verifiable();
+
                 builder.Setup(b => b.Build())
                     .Returns(project.Object);
             }
@@ -320,6 +341,7 @@ namespace Apollo.Core.Host.Projects
                         proxyLayer.Object),
                     proxyLayer.Object),
                 distributor.Object,
+                new Mock<ICollectNotifications>().Object,
                 builder.Object);
 
             service.CreateNewProject();

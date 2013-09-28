@@ -12,6 +12,7 @@ using Apollo.Core.Base.Activation;
 using Apollo.Core.Host.Plugins;
 using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces.Projects;
+using Apollo.Utilities;
 using Apollo.Utilities.Commands;
 using Apollo.Utilities.History;
 using Autofac.Core;
@@ -192,6 +193,7 @@ namespace Apollo.Core.Host.UserInterfaces
                         proxyLayer.Object),
                     proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
+                new Mock<ICollectNotifications>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
             service.Start();
@@ -255,6 +257,7 @@ namespace Apollo.Core.Host.UserInterfaces
                         proxyLayer.Object),
                     proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
+                new Mock<ICollectNotifications>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
             service.Start();
@@ -316,6 +319,7 @@ namespace Apollo.Core.Host.UserInterfaces
                         proxyLayer.Object),
                     proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
+                new Mock<ICollectNotifications>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
             Assert.IsTrue(service.IsConnectedToAllDependencies);
@@ -403,6 +407,7 @@ namespace Apollo.Core.Host.UserInterfaces
                         proxyLayer.Object),
                     proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
+                new Mock<ICollectNotifications>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
 
@@ -442,6 +447,7 @@ namespace Apollo.Core.Host.UserInterfaces
                         proxyLayer.Object),
                     proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
+                new Mock<ICollectNotifications>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
 
@@ -482,6 +488,7 @@ namespace Apollo.Core.Host.UserInterfaces
                         proxyLayer.Object),
                     proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
+                new Mock<ICollectNotifications>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
 
@@ -526,6 +533,7 @@ namespace Apollo.Core.Host.UserInterfaces
                         proxyLayer.Object),
                     proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
+                new Mock<ICollectNotifications>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
 

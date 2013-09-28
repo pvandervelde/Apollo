@@ -8,6 +8,7 @@ using Apollo.Core.Base;
 using Apollo.Core.Base.Activation;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Host.Plugins;
+using Apollo.Utilities;
 using Apollo.Utilities.History;
 using Autofac;
 using QuickGraph;
@@ -35,9 +36,10 @@ namespace Apollo.Core.Host.Projects
                         // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
                         var ctx = c.Resolve<IComponentContext>();
                         return new ProjectService(
-                            () => ctx.Resolve<ITimeline>(),
+                            ctx.Resolve<ITimeline>,
                             d => ctx.Resolve<DatasetStorageProxy>(new TypedParameter(typeof(DatasetOnlineInformation), d)),
                             c.Resolve<IHelpDistributingDatasets>(),
+                            c.Resolve<ICollectNotifications>(),
                             c.Resolve<IBuildProjects>());
                     })
                 .As<ProjectService>();

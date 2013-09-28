@@ -38,6 +38,11 @@ namespace Apollo.Core.Host.Projects
         private Func<DatasetOnlineInformation, DatasetStorageProxy> m_StorageBuilder;
 
         /// <summary>
+        /// The object that collects the notifications for the user interface.
+        /// </summary>
+        private ICollectNotifications m_Notifications;
+
+        /// <summary>
         /// The object describes how the project was persisted.
         /// </summary>
         private IPersistenceInformation m_ProjectStorage;
@@ -112,6 +117,23 @@ namespace Apollo.Core.Host.Projects
         }
 
         /// <summary>
+        /// Provides the object that will store the notifications for use by the user interface.
+        /// </summary>
+        /// <param name="notifications">The object that stores the notifications for the user interface.</param>
+        /// <returns>
+        /// The current builder instance with the notification object stored.
+        /// </returns>
+        public IBuildProjects WithNotifications(ICollectNotifications notifications)
+        {
+            {
+                Lokad.Enforce.Argument(() => notifications);
+            }
+
+            m_Notifications = notifications;
+            return this;
+        }
+
+        /// <summary>
         /// Provides the <see cref="Stream"/> from which the project must be loaded.
         /// </summary>
         /// <param name="persistenceInfo">
@@ -148,7 +170,7 @@ namespace Apollo.Core.Host.Projects
                     Resources.Exceptions_Messages_CannotCreateProjectWithoutDatasetDistributor);
             }
 
-            return new Project(m_Timeline, m_Distributor, m_StorageBuilder, m_ProjectStorage);
+            return new Project(m_Timeline, m_Distributor, m_StorageBuilder, m_Notifications, m_ProjectStorage);
         }
     }
 }
