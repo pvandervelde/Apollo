@@ -685,7 +685,7 @@ namespace Apollo.Core.Host.Projects
                     return;
                 }
 
-                RaiseOnProgressOfCurrentAction(0, Resources.Progress_ActivatingDataset);
+                RaiseOnProgressOfCurrentAction(0, Resources.Progress_ActivatingDataset, false);
                 var task = selectedPlan.Plan.Accept(token, RaiseOnProgressOfCurrentAction);
                 task.ContinueWith(
                     t =>
@@ -695,7 +695,7 @@ namespace Apollo.Core.Host.Projects
                             if (t.Exception != null)
                             {
                                 // Obviously not activated so ...
-                                RaiseOnProgressOfCurrentAction(100, string.Empty);
+                                RaiseOnProgressOfCurrentAction(100, string.Empty, false);
                                 RaiseOnDeactivated();
 
                                 notifications.StoreNotification(Resources.Notifications_FailedToActivateDataset);
@@ -943,12 +943,12 @@ namespace Apollo.Core.Host.Projects
         /// </summary>
         public event EventHandler<ProgressEventArgs> OnProgressOfCurrentAction;
 
-        private void RaiseOnProgressOfCurrentAction(int progress, string mark)
+        private void RaiseOnProgressOfCurrentAction(int progress, string mark, bool hasErrors)
         {
             var local = OnProgressOfCurrentAction;
             if (local != null)
             {
-                local(this, new ProgressEventArgs(progress, mark));
+                local(this, new ProgressEventArgs(progress, mark, hasErrors));
             }
         }
 

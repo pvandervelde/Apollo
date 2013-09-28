@@ -36,12 +36,13 @@ namespace Apollo.Core.Host
         /// </summary>
         /// <param name="progress">The progress percentage which ranges between 0 and 100.</param>
         /// <param name="currentAction">The current action which is being processed.</param>
-        protected void RaiseOnStartupProgress(int progress, string currentAction)
+        /// <param name="hasErrors">A flag that indicates if there are any errors in the current action.</param>
+        protected void RaiseOnStartupProgress(int progress, string currentAction, bool hasErrors)
         {
             EventHandler<ProgressEventArgs> local = OnStartupProgress;
             if (local != null)
             {
-                local(this, new ProgressEventArgs(progress, currentAction));
+                local(this, new ProgressEventArgs(progress, currentAction, hasErrors));
             }
         }
 

@@ -229,7 +229,7 @@ namespace Apollo.Core.Base.Activation
                 systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 
-            Action<int, string> progress = (p, m) => { };
+            Action<int, string, bool> progress = (p, m, e) => { };
             var result = distributor.ImplementPlan(plan, new CancellationToken(), progress);
             result.Wait();
 

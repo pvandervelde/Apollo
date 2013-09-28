@@ -422,16 +422,16 @@ namespace Apollo.Core.Dataset
         {
             // For now we fake this out by pretending it takes time to load.
             var progressAction = container.Resolve<IDatasetApplicationNotificationInvoker>();
-            progressAction.RaiseOnProgress(0, "Starting dataset load ...");
+            progressAction.RaiseOnProgress(0, "Starting dataset load ...", false);
 
             Thread.Sleep(1000);
-            progressAction.RaiseOnProgress(33, "Loading ...");
+            progressAction.RaiseOnProgress(33, "Loading ...", false);
 
             Thread.Sleep(1000);
-            progressAction.RaiseOnProgress(66, "Loading ...");
+            progressAction.RaiseOnProgress(66, "Loading ...", false);
 
             Thread.Sleep(1000);
-            progressAction.RaiseOnProgress(100, "Load complete");
+            progressAction.RaiseOnProgress(100, "Load complete", false);
         }
     }
 }

@@ -96,7 +96,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
                 m_ProgressTracker.StartTracking();
             }
 
-            m_ProgressTracker.UpdateProgress(e.Progress, e.Description);
+            m_ProgressTracker.UpdateProgress(e.Progress, e.Description, e.HasErrors);
 
             if (e.Progress >= 100)
             {

@@ -10,22 +10,22 @@
         </Grid.ColumnDefinitions>
 
         <Label x:Name="progressItemLabel"
-                x:FieldModifier="private"
-                Grid.Row="0"
-                Grid.Column="0"
-                HorizontalAlignment="Stretch">
+               x:FieldModifier="private"
+               Grid.Row="0"
+               Grid.Column="0"
+               HorizontalAlignment="Stretch">
             <TextBlock TextTrimming="CharacterEllipsis"
-                        Text="{Binding Description, Mode=OneWay}" />
+                       Text="{Binding Description, Mode=OneWay}" />
         </Label>
 
         <ProgressBar x:Name="progressItemBar"
-                        x:FieldModifier="private"
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        Minimum="0"
-                        Maximum="1"
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Stretch"
-                        Value="{Binding Progress, Mode=OneWay}" />
+                     x:FieldModifier="private"
+                     Grid.Row="0"
+                     Grid.Column="1"
+                     Minimum="0"
+                     Maximum="1"
+                     Orientation="Horizontal"
+                     HorizontalAlignment="Stretch"
+                     Value="{Binding Progress, Mode=OneWay}"/>
     </Grid>
 </UserControl>

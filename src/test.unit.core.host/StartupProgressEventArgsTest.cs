@@ -21,9 +21,10 @@ namespace Apollo.Core.Host
             int progress = 10;
             var text = "a";
 
-            var args = new ProgressEventArgs(progress, text);
+            var args = new ProgressEventArgs(progress, text, true);
             Assert.AreEqual(progress, args.Progress);
             Assert.AreEqual(text, args.Description);
+            Assert.IsTrue(args.HasErrors);
         }
     }
 }

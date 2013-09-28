@@ -27,6 +27,6 @@ namespace Apollo.Core.Base.Activation
         Task<DatasetOnlineInformation> ImplementPlan(
             DistributionPlan planToImplement,
             CancellationToken token,
-            Action<int, string> progressReporter);
+            Action<int, string, bool> progressReporter);
     }
 }

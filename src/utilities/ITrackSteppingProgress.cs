@@ -16,6 +16,7 @@ namespace Apollo.Utilities
         /// </summary>
         /// <param name="progress">The progress percentage, ranging from 0 to 100.</param>
         /// <param name="mark">The action that is currently being processed.</param>
-        void UpdateProgress(int progress, string mark);
+        /// <param name="hasErrors">A flag that indicates if there were any errors while processing the current action.</param>
+        void UpdateProgress(int progress, string mark, bool hasErrors);
     }
 }

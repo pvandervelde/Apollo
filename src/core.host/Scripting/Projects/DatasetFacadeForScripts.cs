@@ -99,7 +99,7 @@ namespace Apollo.Core.Host.Scripting.Projects
 
             m_Dataset = facade;
             m_Dataset.OnInvalidate += (s, e) => RaiseOnInvalidate();
-            m_Dataset.OnProgressOfCurrentAction += (s, e) => RaiseOnProgressOfCurrentAction(e.Progress, e.Description);
+            m_Dataset.OnProgressOfCurrentAction += (s, e) => RaiseOnProgressOfCurrentAction(e.Progress, e.Description, e.HasErrors);
             m_Dataset.OnActivated += (s, e) => RaiseOnActivated();
             m_Dataset.OnDeactivated += (s, e) => RaiseOnDeactivated();
             m_Dataset.OnNameChanged += (s, e) => RaiseOnNameChanged();
@@ -336,12 +336,12 @@ namespace Apollo.Core.Host.Scripting.Projects
         /// </summary>
         public event EventHandler<ProgressEventArgs> OnProgressOfCurrentAction;
 
-        private void RaiseOnProgressOfCurrentAction(int progress, string mark)
+        private void RaiseOnProgressOfCurrentAction(int progress, string mark, bool hasErrors)
         {
             var local = OnProgressOfCurrentAction;
             if (local != null)
             {
-                local(this, new ProgressEventArgs(progress, mark));
+                local(this, new ProgressEventArgs(progress, mark, hasErrors));
             }
         }
 

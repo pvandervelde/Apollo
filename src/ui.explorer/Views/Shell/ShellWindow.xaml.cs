@@ -64,16 +64,16 @@ namespace Apollo.UI.Explorer.Views.Shell
 
             // Handle the progress event.
             {
-                Action<int> action =
-                    (progress) =>
+                Action<int, bool> action =
+                    (progress, hasErrors) =>
                     {
-                        taskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
+                        taskbarItemInfo.ProgressState = hasErrors ? TaskbarItemProgressState.Error : TaskbarItemProgressState.Normal;
                         taskbarItemInfo.ProgressValue = progress / 100.0;
                     };
                 progressReporter.OnProgress +=
                     (s, e) =>
                     {
-                        Dispatcher.Invoke(action, e.Progress);
+                        Dispatcher.Invoke(action, e.Progress, e.HasErrors);
                     };
             }
 

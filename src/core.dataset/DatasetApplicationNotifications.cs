@@ -26,12 +26,13 @@ namespace Apollo.Core.Dataset
         /// </summary>
         /// <param name="progress">The progress percentage, ranging from 0 to 100.</param>
         /// <param name="currentlyProcessing">The action that is currently being processed.</param>
-        public void RaiseOnProgress(int progress, string currentlyProcessing)
+        /// <param name="hasErrors">A flag that indicates if there are any errors in the current action.</param>
+        public void RaiseOnProgress(int progress, string currentlyProcessing, bool hasErrors)
         {
             var local = OnProgress;
             if (local != null)
             {
-                local(this, new ProgressEventArgs(progress, currentlyProcessing));
+                local(this, new ProgressEventArgs(progress, currentlyProcessing, hasErrors));
             }
         }
 

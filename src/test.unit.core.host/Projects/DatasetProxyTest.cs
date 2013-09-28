@@ -531,7 +531,7 @@ namespace Apollo.Core.Host.Projects
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () =>
                     {
-                        r(100, "a");
+                        r(100, "a", false);
                         return new DatasetOnlineInformation(
                             new DatasetId(),
                             endpoint,

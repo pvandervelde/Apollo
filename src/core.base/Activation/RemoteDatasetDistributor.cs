@@ -362,7 +362,7 @@ namespace Apollo.Core.Base.Activation
         public Task<DatasetOnlineInformation> ImplementPlan(
             DistributionPlan planToImplement, 
             CancellationToken token,
-            Action<int, string> progressReporter)
+            Action<int, string, bool> progressReporter)
         {
             Func<DatasetOnlineInformation> result =
                 () =>
@@ -407,7 +407,7 @@ namespace Apollo.Core.Base.Activation
                     }
 
                     EventHandler<ProgressEventArgs> progressHandler = 
-                        (s, e) => progressReporter(e.Progress, e.Description);
+                        (s, e) => progressReporter(e.Progress, e.Description, e.HasErrors);
                     var notifications = m_NotificationHub.NotificationsFor<IDatasetApplicationNotifications>(endpoint);
                     notifications.OnProgress += progressHandler;
                     try

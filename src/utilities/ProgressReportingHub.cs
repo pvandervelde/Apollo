@@ -24,8 +24,8 @@ namespace Apollo.Utilities
         /// <summary>
         /// The collection that holds the progress reporters and their associated progress and progress descriptions.
         /// </summary>
-        private readonly Dictionary<ITrackProgress, Tuple<int, string>> m_ReporterToProgressMap
-            = new Dictionary<ITrackProgress, Tuple<int, string>>();
+        private readonly Dictionary<ITrackProgress, Tuple<int, string, bool>> m_ReporterToProgressMap
+            = new Dictionary<ITrackProgress, Tuple<int, string, bool>>();
 
         /// <summary>
         /// Adds a progress reporter to the collection of reporters that
@@ -44,7 +44,7 @@ namespace Apollo.Utilities
                 reporterToAdd.OnStartProgress += ProcessStartProgress;
                 reporterToAdd.OnProgress += ProcessNewProgress;
                 reporterToAdd.OnStopProgress += ProcessStopProgress;
-                m_ReporterToProgressMap.Add(reporterToAdd, new Tuple<int, string>(-1, string.Empty));
+                m_ReporterToProgressMap.Add(reporterToAdd, new Tuple<int, string, bool>(-1, string.Empty, false));
             }
         }
 
@@ -68,7 +68,7 @@ namespace Apollo.Utilities
                            where pair.Value.Item1 > -1
                            select pair.Value).Any();
 
-                m_ReporterToProgressMap[reporter] = new Tuple<int, string>(0, string.Empty);
+                m_ReporterToProgressMap[reporter] = new Tuple<int, string, bool>(0, string.Empty, false);
             }
 
             if (notify)
@@ -86,6 +86,7 @@ namespace Apollo.Utilities
             }
 
             double average;
+            bool hasErrors = false;
             lock (m_Lock)
             {
                 if (!m_ReporterToProgressMap.ContainsKey(reporter))
@@ -93,16 +94,20 @@ namespace Apollo.Utilities
                     return;
                 }
 
-                m_ReporterToProgressMap[reporter] = new Tuple<int, string>(e.Progress, e.Description);
+                m_ReporterToProgressMap[reporter] = new Tuple<int, string, bool>(e.Progress, e.Description, e.HasErrors);
                 average = (from pair in m_ReporterToProgressMap
                            where pair.Value.Item1 > -1
                            select pair.Value.Item1).Average();
+
+                hasErrors = m_ReporterToProgressMap
+                    .Where(p => p.Value.Item1 > -1)
+                    .Any(p => p.Value.Item3);
             }
 
             int progress = (int)Math.Round(average);
             progress = (progress <= 100) ? progress : 100;
 
-            RaiseOnProgress(progress, string.Empty);
+            RaiseOnProgress(progress, string.Empty, hasErrors);
         }
 
         private void ProcessStopProgress(object s, EventArgs e)
@@ -121,7 +126,7 @@ namespace Apollo.Utilities
                     return;
                 }
 
-                m_ReporterToProgressMap[reporter] = new Tuple<int, string>(-1, string.Empty);
+                m_ReporterToProgressMap[reporter] = new Tuple<int, string, bool>(-1, string.Empty, false);
 
                 // If there aren't any items with a progress value over -1
                 // then we just reset the last one.
@@ -177,12 +182,12 @@ namespace Apollo.Utilities
         /// </summary>
         public event EventHandler<ProgressEventArgs> OnProgress;
 
-        private void RaiseOnProgress(int progress, string currentMark)
+        private void RaiseOnProgress(int progress, string currentMark, bool hasErrors)
         {
             var local = OnProgress;
             if (local != null)
             {
-                local(this, new ProgressEventArgs(progress, currentMark));
+                local(this, new ProgressEventArgs(progress, currentMark, hasErrors));
             }
         }
 

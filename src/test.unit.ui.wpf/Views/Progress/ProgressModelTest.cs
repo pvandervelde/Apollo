@@ -72,7 +72,7 @@ namespace Apollo.UI.Wpf.Views.Progress
             };
 
             var progress = 50;
-            collector.Raise(c => c.OnProgress += null, new ProgressEventArgs(progress, "a"));
+            collector.Raise(c => c.OnProgress += null, new ProgressEventArgs(progress, "a", false));
 
             Assert.AreEqual(progress / 100.0, model.Progress);
             Assert.AreEqual(1, propertyChangedWasRaised);

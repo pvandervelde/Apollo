@@ -288,7 +288,7 @@ namespace Apollo.Core.Base.Activation
                     loaderEndpoint,
                     new[] { typeof(IDatasetActivationCommands) }));
 
-            Action<int, string> progress = (p, m) => { };
+            Action<int, string, bool> progress = (p, m, e) => { };
             var result = distributor.ImplementPlan(plan, new CancellationToken(), progress);
             result.Wait();
 

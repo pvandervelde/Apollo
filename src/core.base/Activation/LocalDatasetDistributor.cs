@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using Apollo.Utilities;
 using Lokad;
 using Nuclei.Communication;
 using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Logging;
 using Nuclei.Diagnostics.Profiling;
 
 namespace Apollo.Core.Base.Activation
@@ -174,13 +176,31 @@ namespace Apollo.Core.Base.Activation
         public Task<DatasetOnlineInformation> ImplementPlan(
             DistributionPlan planToImplement, 
             CancellationToken token,
-            Action<int, string> progressReporter)
+            Action<int, string, bool> progressReporter)
         {
             Func<DatasetOnlineInformation> result =
                 () =>
                 {
+                    m_Diagnostics.Log(LevelToLog.Info, BaseConstants.LogPrefix, "Activating dataset");
+
                     var info = m_CommunicationLayer.LocalConnectionFor(ChannelType.NamedPipe);
-                    var endpoint = m_Loader.ActivateDataset(info.Item1, ChannelType.NamedPipe, info.Item2);
+                    EndpointId endpoint;
+                    try
+                    {
+                        endpoint = m_Loader.ActivateDataset(info.Item1, ChannelType.NamedPipe, info.Item2);
+                    }
+                    catch (Exception e)
+                    {
+                        m_Diagnostics.Log(
+                            LevelToLog.Error, 
+                            BaseConstants.LogPrefix,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Failed to activate the dataset. Error was: {0}",
+                                e));
+                        throw;
+                    }
+
                     var resetEvent = new AutoResetEvent(false);
                     var commandAvailabilityNotifier = 
                         Observable.FromEventPattern<CommandSetAvailabilityEventArgs>(
@@ -209,13 +229,33 @@ namespace Apollo.Core.Base.Activation
                     {
                         if (!m_CommandHub.HasCommandsFor(endpoint) || !m_NotificationHub.HasNotificationsFor(endpoint))
                         {
+                            m_Diagnostics.Log(LevelToLog.Trace, BaseConstants.LogPrefix, "Waiting for dataset to connect.");
+
                             resetEvent.WaitOne();
                         }
                     }
 
-                    EventHandler<ProgressEventArgs> progressHandler = 
-                        (s, e) => progressReporter(e.Progress, e.Description);
-                    var notifications = m_NotificationHub.NotificationsFor<IDatasetApplicationNotifications>(endpoint);
+                    m_Diagnostics.Log(LevelToLog.Trace, "Received commands and notifications from dataset.");
+
+                    IDatasetApplicationNotifications notifications;
+                    try
+                    {
+                        notifications = m_NotificationHub.NotificationsFor<IDatasetApplicationNotifications>(endpoint);
+                    }
+                    catch (Exception e)
+                    {
+                        m_Diagnostics.Log(
+                            LevelToLog.Error,
+                            BaseConstants.LogPrefix,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Failed to get the notifications. Error was: {0}",
+                                e));
+                        throw;
+                    }
+
+                    EventHandler<ProgressEventArgs> progressHandler =
+                        (s, e) => progressReporter(e.Progress, e.Description, e.HasErrors);
                     notifications.OnProgress += progressHandler;
                     try
                     {

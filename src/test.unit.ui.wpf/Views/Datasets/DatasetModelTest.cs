@@ -326,7 +326,7 @@ namespace Apollo.UI.Wpf.Views.Datasets
                     .Verifiable();
                 progressTracker.Setup(p => p.StopTracking())
                     .Verifiable();
-                progressTracker.Setup(p => p.UpdateProgress(It.IsAny<int>(), It.IsAny<string>()))
+                progressTracker.Setup(p => p.UpdateProgress(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
                     .Verifiable();
             }
 
@@ -337,19 +337,19 @@ namespace Apollo.UI.Wpf.Views.Datasets
             var dataset = new DatasetFacade(proxy.Object);
             var model = new DatasetModel(context.Object, progressTracker.Object, projectLink.Object, dataset);
 
-            proxy.Raise(p => p.OnProgressOfCurrentAction += null, new ProgressEventArgs(0, "a"));
+            proxy.Raise(p => p.OnProgressOfCurrentAction += null, new ProgressEventArgs(0, "a", false));
             progressTracker.Verify(p => p.StartTracking(), Times.Once());
-            progressTracker.Verify(p => p.UpdateProgress(It.IsAny<int>(), It.IsAny<string>()), Times.Once());
+            progressTracker.Verify(p => p.UpdateProgress(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()), Times.Once());
             progressTracker.Verify(p => p.StopTracking(), Times.Never());
 
-            proxy.Raise(p => p.OnProgressOfCurrentAction += null, new ProgressEventArgs(50, "b"));
+            proxy.Raise(p => p.OnProgressOfCurrentAction += null, new ProgressEventArgs(50, "b", false));
             progressTracker.Verify(p => p.StartTracking(), Times.Once());
-            progressTracker.Verify(p => p.UpdateProgress(It.IsAny<int>(), It.IsAny<string>()), Times.Exactly(2));
+            progressTracker.Verify(p => p.UpdateProgress(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()), Times.Exactly(2));
             progressTracker.Verify(p => p.StopTracking(), Times.Never());
 
-            proxy.Raise(p => p.OnProgressOfCurrentAction += null, new ProgressEventArgs(100, "c"));
+            proxy.Raise(p => p.OnProgressOfCurrentAction += null, new ProgressEventArgs(100, "c", false));
             progressTracker.Verify(p => p.StartTracking(), Times.Once());
-            progressTracker.Verify(p => p.UpdateProgress(It.IsAny<int>(), It.IsAny<string>()), Times.Exactly(3));
+            progressTracker.Verify(p => p.UpdateProgress(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()), Times.Exactly(3));
             progressTracker.Verify(p => p.StopTracking(), Times.Once());
         }
     }

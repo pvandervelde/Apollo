@@ -252,7 +252,7 @@ namespace Apollo.Core.Dataset.Scheduling
                                 return false;
                             }
 
-                            RaiseOnExecutionProgress(-1, Resources.Progress_ExecutingSchedule);
+                            RaiseOnExecutionProgress(-1, Resources.Progress_ExecutingSchedule, false);
                         }
                         catch (Exception)
                         {
@@ -410,12 +410,12 @@ namespace Apollo.Core.Dataset.Scheduling
         /// </summary>
         public event EventHandler<ProgressEventArgs> OnExecutionProgress;
 
-        private void RaiseOnExecutionProgress(int progress, string mark)
+        private void RaiseOnExecutionProgress(int progress, string mark, bool hasErrors)
         {
             var local = OnExecutionProgress;
             if (local != null)
             {
-                local(this, new ProgressEventArgs(progress, mark));
+                local(this, new ProgressEventArgs(progress, mark, hasErrors));
             }
         }
 

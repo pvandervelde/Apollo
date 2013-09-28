@@ -20,9 +20,10 @@ namespace Apollo.Core.Dataset
         /// </summary>
         /// <param name="progress">The progress percentage, ranging from 0 to 100.</param>
         /// <param name="currentlyProcessing">The action that is currently being processed.</param>
+        /// <param name="hasErrors">A flag that indicates if there are any errors in the current action.</param>
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
             Justification = "This method is used to raise an event, hence the naming.")]
-        void RaiseOnProgress(int progress, string currentlyProcessing);
+        void RaiseOnProgress(int progress, string currentlyProcessing, bool hasErrors);
 
         /// <summary>
         /// Raises the <see cref="IDatasetApplicationNotifications.OnSwitchToEditingMode"/> event.

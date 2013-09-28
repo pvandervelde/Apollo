@@ -20,7 +20,7 @@ namespace Apollo.Core.Base.Activation
         /// <summary>
         /// The function that is used to load the dataset on to the machine that proposed the current plan.
         /// </summary>
-        private readonly Func<DistributionPlan, CancellationToken, Action<int, string>, Task<DatasetOnlineInformation>> m_Activator;
+        private readonly Func<DistributionPlan, CancellationToken, Action<int, string, bool>, Task<DatasetOnlineInformation>> m_Activator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DistributionPlan"/> class.
@@ -52,7 +52,7 @@ namespace Apollo.Core.Base.Activation
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "Loading a dataset is a time consuming task hence the return value of the function is a Task<T>.")]
         public DistributionPlan(
-            Func<DistributionPlan, CancellationToken, Action<int, string>, Task<DatasetOnlineInformation>> activator,
+            Func<DistributionPlan, CancellationToken, Action<int, string, bool>, Task<DatasetOnlineInformation>> activator,
             IDatasetOfflineInformation dataset,
             NetworkIdentifier machine,
             DatasetActivationProposal proposal)
@@ -109,7 +109,7 @@ namespace Apollo.Core.Base.Activation
         /// <returns>
         /// The collection of objects describing the activated datasets.
         /// </returns>
-        public Task<DatasetOnlineInformation> Accept(CancellationToken token, Action<int, string> progressReporter)
+        public Task<DatasetOnlineInformation> Accept(CancellationToken token, Action<int, string, bool> progressReporter)
         {
             return m_Activator(this, token, progressReporter);
         }

@@ -78,12 +78,13 @@ namespace Apollo.Core.Host
         /// </summary>
         /// <param name="progress">The progress percentage.</param>
         /// <param name="mark">The progress mark.</param>
-        private void RaiseOnStartupProgress(int progress, string mark)
+        /// <param name="hasErrors">A flag that indicates if there are any errors in the current action.</param>
+        private void RaiseOnStartupProgress(int progress, string mark, bool hasErrors)
         {
             var local = OnStartupProgress;
             if (local != null)
             {
-                local(this, new ProgressEventArgs(progress, mark));
+                local(this, new ProgressEventArgs(progress, mark, hasErrors));
             }
         }
 
@@ -151,7 +152,7 @@ namespace Apollo.Core.Host
                             var currentPercentage = e.Progress / (100.0 * startupOrder.Count);
                             var total = finishedPercentage + currentPercentage;
 
-                            RaiseOnStartupProgress((int)Math.Floor(total * 100), e.Description);
+                            RaiseOnStartupProgress((int)Math.Floor(total * 100), e.Description, e.HasErrors);
                         };
 
                     currentService.OnStartupProgress += handler;

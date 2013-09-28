@@ -30,6 +30,11 @@ namespace Apollo.UI.Wpf.Views.Progress
         private double m_Progress;
 
         /// <summary>
+        /// A flag that indicates if there were any errors while processing.
+        /// </summary>
+        private bool m_HasErrors;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ProgressModel"/> class.
         /// </summary>
         /// <param name="context">The context that is used to execute actions on the UI thread.</param>
@@ -56,16 +61,22 @@ namespace Apollo.UI.Wpf.Views.Progress
         private void HandleOnStartProgress(object sender, EventArgs e)
         {
             Progress = 0.0;
+            Description = string.Empty;
+            HasErrors = false;
         }
 
         private void HandleOnProgress(object sender, ProgressEventArgs e)
         {
             Progress = e.Progress / 100.0;
+            Description = e.Description;
+            HasErrors = e.HasErrors;
         }
 
         private void HandleOnStopProgress(object sender, EventArgs e)
         {
             Progress = 0.0;
+            Description = string.Empty;
+            HasErrors = false;
         }
 
         /// <summary>
@@ -110,6 +121,23 @@ namespace Apollo.UI.Wpf.Views.Progress
 
                 m_Progress = input;
                 Notify(() => Progress);
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether there were errors during the processing of the current action.
+        /// </summary>
+        public bool HasErrors
+        {
+            get
+            {
+                return m_HasErrors;
+            }
+
+            private set
+            {
+                m_HasErrors = value;
+                Notify(() => HasErrors);
             }
         }
     }

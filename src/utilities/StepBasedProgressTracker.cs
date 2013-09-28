@@ -23,11 +23,12 @@ namespace Apollo.Utilities
         /// </summary>
         /// <param name="progress">The progress percentage, ranging from 0 to 100.</param>
         /// <param name="mark">The action that is currently being processed.</param>
-        public void UpdateProgress(int progress, string mark)
+        /// <param name="hasErrors">A flag that indicates if there were any errors while processing the current action.</param>
+        public void UpdateProgress(int progress, string mark, bool hasErrors)
         {
             if (m_IsTracking)
             {
-                RaiseOnProgress(progress, mark);
+                RaiseOnProgress(progress, mark, hasErrors);
             }
         }
 
@@ -69,12 +70,13 @@ namespace Apollo.Utilities
         /// </summary>
         /// <param name="progress">The progress percentage. Should be between 0 and 100.</param>
         /// <param name="currentlyProcessing">The description of what is currently being processed.</param>
-        private void RaiseOnProgress(int progress, string currentlyProcessing)
+        /// <param name="hasErrors">A flag that indicates if there were any errors while processing the current action.</param>
+        private void RaiseOnProgress(int progress, string currentlyProcessing, bool hasErrors)
         {
             var local = OnProgress;
             if (local != null)
             {
-                local(this, new ProgressEventArgs(progress, currentlyProcessing));
+                local(this, new ProgressEventArgs(progress, currentlyProcessing, hasErrors));
             }
         }
 
