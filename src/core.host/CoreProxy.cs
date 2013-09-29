@@ -20,7 +20,7 @@ namespace Apollo.Core.Host
     /// so there is no need to request the bootstrapper to load it.
     /// </remarks>
     [AutoLoad]
-    internal sealed partial class CoreProxy : KernelService
+    internal sealed class CoreProxy : KernelService
     {
         /// <summary>
         /// The <see cref="Kernel"/> that owns this proxy.
@@ -41,7 +41,6 @@ namespace Apollo.Core.Host
         /// Thrown if <paramref name="owner"/> is <see langword="null"/>.
         /// </exception>
         public CoreProxy(IKernel owner, TaskScheduler scheduler = null)
-            : base()
         {
             {
                 Enforce.Argument(() => owner);

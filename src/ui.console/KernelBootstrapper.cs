@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Apollo.Core.Base;
 using Apollo.Core.Host;
+using Autofac;
 using Autofac.Core;
 using Lokad;
 using Nuclei.Communication;
@@ -18,22 +19,12 @@ namespace Apollo.UI.Console
     /// <summary>
     /// Defines the bootstrapper which will initialize the kernel.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Note that this bootstrapper only takes care of the bootstrapping
-    /// of the core, not the UI. By design the core and the UI are 
-    /// running with different IOC containers / bootstrapper methods. This means
-    /// that we can force a code separation because the UI controls cannot
-    /// get linked to any of the internal core elements. The only way for
-    /// the core and the UI to interact is via the UserInterfaceService.
-    /// </para>
-    /// </remarks>
     internal sealed class KernelBootstrapper : Bootstrapper
     {
         /// <summary>
         /// The function that will start the User Interface.
         /// </summary>
-        private readonly Action<IModule> m_OnStartUserInterface;
+        private readonly Action<IContainer> m_OnStartUserInterface;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelBootstrapper"/> class.
@@ -48,7 +39,7 @@ namespace Apollo.UI.Console
         /// </exception>
         public KernelBootstrapper(
             AutoResetEvent shutdownEvent,
-            Action<IModule> onStartUserInterface)
+            Action<IContainer> onStartUserInterface)
             : base(shutdownEvent)
         {
             {
@@ -93,7 +84,7 @@ namespace Apollo.UI.Console
         /// <param name="container">
         ///     The IOC module that contains the references for the User Interface.
         /// </param>
-        protected override void StartUserInterface(IModule container)
+        protected override void StartUserInterface(IContainer container)
         {
             m_OnStartUserInterface(container);
         }

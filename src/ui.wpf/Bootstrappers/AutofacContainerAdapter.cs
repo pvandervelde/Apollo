@@ -15,6 +15,7 @@ using Microsoft.Practices.Prism.Logging;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Prism.Regions.Behaviors;
 using Microsoft.Practices.ServiceLocation;
+using Nuclei.Diagnostics;
 
 namespace Apollo.UI.Wpf.Bootstrappers
 {
@@ -26,7 +27,7 @@ namespace Apollo.UI.Wpf.Bootstrappers
     /// </source>
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Autofac",
         Justification = "The correct spelling is 'Autofac'.")]
-    public class AutofacContainerAdapter : IContainerAdapter
+    public sealed class AutofacContainerAdapter : IContainerAdapter
     {
         /// <summary>
         /// Gets the main PRISM assembly.
@@ -42,7 +43,8 @@ namespace Apollo.UI.Wpf.Bootstrappers
         /// Initializes a new instance of the <see cref="AutofacContainerAdapter"/> class.
         /// </summary>
         /// <param name="container">The container.</param>
-        public AutofacContainerAdapter(IContainer container) : this(container, new TextLogger())
+        public AutofacContainerAdapter(IContainer container) 
+            : this(container, new PrismToDiagnosticsLogger(container.Resolve<SystemDiagnostics>()))
         {
         }
 
@@ -68,19 +70,6 @@ namespace Apollo.UI.Wpf.Bootstrappers
             RegisterInstance(Container)
                 .RegisterInstance<IServiceLocator>(new AutofacServiceLocator(Container))
                 .RegisterInstance<IContainerAdapter>(this); // optional .. do it if using IUnityContainer in your app.
-        }
-
-        /// <summary>
-        /// Initializes this instance.
-        /// </summary>
-        /// <returns>The current instance.</returns>
-        protected AutofacContainerAdapter Initialize()
-        {
-            var builder = new ContainerBuilder();
-
-            // N.B.: Build can only be called once. This is it!
-            Container = builder.Build();
-            return this;
         }
 
         /// <summary>

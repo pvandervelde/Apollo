@@ -15,7 +15,7 @@ using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Utilities;
 using Apollo.Utilities.Commands;
 using Apollo.Utilities.History;
-using Autofac.Core;
+using Autofac;
 using Moq;
 using Nuclei.Diagnostics;
 using NUnit.Framework;
@@ -95,17 +95,23 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            Action<IModule> onStartService = module => { };
+
+            var builder = new ContainerBuilder();
+            {
+                builder.Register(c => commands.Object).As<ICommandContainer>();
+                builder.Register(c => notificationNames).As<INotificationNameConstants>();
+                builder.Register(c => systemDiagnostics).As<SystemDiagnostics>();
+            }
+
+            Action<IContainer> onStartService = c => { };
 
             var service = new UserInterfaceService(
-                commands.Object, 
-                notificationNames,
-                systemDiagnostics,
+                builder.Build(),
                 onStartService);
 
             // Check that everything is the right place
             {
-                var original = new List<CommandId>()
+                var original = new List<CommandId>
                     {
                         ShutdownApplicationCommand.CommandId,
                         CreateProjectCommand.CommandId,
@@ -127,12 +133,17 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            Action<IModule> onStartService = module => { };
+            var builder = new ContainerBuilder();
+            {
+                builder.Register(c => commands.Object).As<ICommandContainer>();
+                builder.Register(c => notificationNames).As<INotificationNameConstants>();
+                builder.Register(c => systemDiagnostics).As<SystemDiagnostics>();
+            }
+
+            Action<IContainer> onStartService = c => { };
 
             var service = new UserInterfaceService(
-                commands.Object, 
-                notificationNames,
-                systemDiagnostics,
+                builder.Build(),
                 onStartService);
 
             Assert.IsFalse(service.Contains(new CommandId("bla")));
@@ -149,12 +160,17 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            Action<IModule> onStartService = module => { };
+            var builder = new ContainerBuilder();
+            {
+                builder.Register(c => commands.Object).As<ICommandContainer>();
+                builder.Register(c => notificationNames).As<INotificationNameConstants>();
+                builder.Register(c => systemDiagnostics).As<SystemDiagnostics>();
+            }
+
+            Action<IContainer> onStartService = c => { };
 
             var service = new UserInterfaceService(
-                commands.Object, 
-                notificationNames,
-                systemDiagnostics,
+                builder.Build(),
                 onStartService);
 
             Assert.Throws<ArgumentException>(() => service.Invoke(new CommandId("bla")));
@@ -171,12 +187,17 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            Action<IModule> onStartService = module => { };
+            var builder = new ContainerBuilder();
+            {
+                builder.Register(c => commands.Object).As<ICommandContainer>();
+                builder.Register(c => notificationNames).As<INotificationNameConstants>();
+                builder.Register(c => systemDiagnostics).As<SystemDiagnostics>();
+            }
+
+            Action<IContainer> onStartService = c => { };
 
             var service = new UserInterfaceService(
-                commands.Object, 
-                notificationNames,
-                systemDiagnostics,
+                builder.Build(),
                 onStartService);
 
             var proxy = new CoreProxy(new Mock<IKernel>().Object);
@@ -213,12 +234,17 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            Action<IModule> onStartService = module => { };
+            var builder = new ContainerBuilder();
+            {
+                builder.Register(c => commands.Object).As<ICommandContainer>();
+                builder.Register(c => notificationNames).As<INotificationNameConstants>();
+                builder.Register(c => systemDiagnostics).As<SystemDiagnostics>();
+            }
+
+            Action<IContainer> onStartService = c => { };
 
             var service = new UserInterfaceService(
-                commands.Object, 
-                notificationNames,
-                systemDiagnostics,
+                builder.Build(),
                 onStartService);
 
             Assert.Throws<ArgumentException>(() => service.Invoke(new CommandId("bla"), new Mock<ICommandContext>().Object));
@@ -235,12 +261,17 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            Action<IModule> onStartService = module => { };
+            var builder = new ContainerBuilder();
+            {
+                builder.Register(c => commands.Object).As<ICommandContainer>();
+                builder.Register(c => notificationNames).As<INotificationNameConstants>();
+                builder.Register(c => systemDiagnostics).As<SystemDiagnostics>();
+            }
+
+            Action<IContainer> onStartService = c => { };
 
             var service = new UserInterfaceService(
-                commands.Object, 
-                notificationNames,
-                systemDiagnostics,
+                builder.Build(),
                 onStartService);
 
             var proxy = new CoreProxy(new Mock<IKernel>().Object);
@@ -272,12 +303,17 @@ namespace Apollo.Core.Host.UserInterfaces
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            Action<IModule> onStartService = module => { };
+            var builder = new ContainerBuilder();
+            {
+                builder.Register(c => commands.Object).As<ICommandContainer>();
+                builder.Register(c => notificationNames).As<INotificationNameConstants>();
+                builder.Register(c => systemDiagnostics).As<SystemDiagnostics>();
+            }
+
+            Action<IContainer> onStartService = c => { };
 
             var service = new UserInterfaceService(
-                commands.Object, 
-                notificationNames,
-                systemDiagnostics,
+                builder.Build(),
                 onStartService);
 
             Assert.That(
@@ -296,12 +332,17 @@ namespace Apollo.Core.Host.UserInterfaces
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            Action<IModule> onStartService = module => { };
+            var builder = new ContainerBuilder();
+            {
+                builder.Register(c => commands.Object).As<ICommandContainer>();
+                builder.Register(c => notificationNames).As<INotificationNameConstants>();
+                builder.Register(c => systemDiagnostics).As<SystemDiagnostics>();
+            }
+
+            Action<IContainer> onStartService = c => { };
 
             var service = new UserInterfaceService(
-                commands.Object, 
-                notificationNames,
-                systemDiagnostics,
+                builder.Build(),
                 onStartService);
             Assert.IsFalse(service.IsConnectedToAllDependencies);
 
@@ -331,12 +372,17 @@ namespace Apollo.Core.Host.UserInterfaces
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            Action<IModule> onStartService = module => { };
+            var builder = new ContainerBuilder();
+            {
+                builder.Register(c => commands.Object).As<ICommandContainer>();
+                builder.Register(c => notificationNames).As<INotificationNameConstants>();
+                builder.Register(c => systemDiagnostics).As<SystemDiagnostics>();
+            }
+
+            Action<IContainer> onStartService = c => { };
 
             var service = new UserInterfaceService(
-                commands.Object, 
-                notificationNames,
-                systemDiagnostics,
+                builder.Build(),
                 onStartService);
 
             Assert.Throws<ArgumentNullException>(() => service.RegisterNotification(null, obj => { }));
@@ -348,12 +394,17 @@ namespace Apollo.Core.Host.UserInterfaces
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            Action<IModule> onStartService = module => { };
+            var builder = new ContainerBuilder();
+            {
+                builder.Register(c => commands.Object).As<ICommandContainer>();
+                builder.Register(c => notificationNames).As<INotificationNameConstants>();
+                builder.Register(c => systemDiagnostics).As<SystemDiagnostics>();
+            }
+
+            Action<IContainer> onStartService = c => { };
 
             var service = new UserInterfaceService(
-                commands.Object, 
-                notificationNames,
-                systemDiagnostics,
+                builder.Build(),
                 onStartService);
 
             Assert.Throws<ArgumentNullException>(() => service.RegisterNotification(new NotificationName("bla"), null));
@@ -365,12 +416,17 @@ namespace Apollo.Core.Host.UserInterfaces
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            Action<IModule> onStartService = module => { };
+            var builder = new ContainerBuilder();
+            {
+                builder.Register(c => commands.Object).As<ICommandContainer>();
+                builder.Register(c => notificationNames).As<INotificationNameConstants>();
+                builder.Register(c => systemDiagnostics).As<SystemDiagnostics>();
+            }
+
+            Action<IContainer> onStartService = c => { };
 
             var service = new UserInterfaceService(
-                commands.Object, 
-                notificationNames,
-                systemDiagnostics,
+                builder.Build(),
                 onStartService);
 
             Action<INotificationArguments> callback = obj => { };
@@ -385,12 +441,17 @@ namespace Apollo.Core.Host.UserInterfaces
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            Action<IModule> onStartService = module => { };
+            var builder = new ContainerBuilder();
+            {
+                builder.Register(c => commands.Object).As<ICommandContainer>();
+                builder.Register(c => notificationNames).As<INotificationNameConstants>();
+                builder.Register(c => systemDiagnostics).As<SystemDiagnostics>();
+            }
+
+            Action<IContainer> onStartService = c => { };
 
             var service = new UserInterfaceService(
-                commands.Object, 
-                notificationNames,
-                systemDiagnostics,
+                builder.Build(),
                 onStartService);
 
             var proxy = new CoreProxy(new Mock<IKernel>().Object);
@@ -423,12 +484,17 @@ namespace Apollo.Core.Host.UserInterfaces
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            Action<IModule> onStartService = module => { };
+            var builder = new ContainerBuilder();
+            {
+                builder.Register(c => commands.Object).As<ICommandContainer>();
+                builder.Register(c => notificationNames).As<INotificationNameConstants>();
+                builder.Register(c => systemDiagnostics).As<SystemDiagnostics>();
+            }
+
+            Action<IContainer> onStartService = c => { };
 
             var service = new UserInterfaceService(
-                commands.Object, 
-                notificationNames,
-                systemDiagnostics,
+                builder.Build(),
                 onStartService);
 
             service.RegisterNotification(notificationNames.SystemShuttingDown, obj => { throw new Exception(); });
@@ -463,12 +529,17 @@ namespace Apollo.Core.Host.UserInterfaces
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            Action<IModule> onStartService = module => { };
+            var builder = new ContainerBuilder();
+            {
+                builder.Register(c => commands.Object).As<ICommandContainer>();
+                builder.Register(c => notificationNames).As<INotificationNameConstants>();
+                builder.Register(c => systemDiagnostics).As<SystemDiagnostics>();
+            }
+
+            Action<IContainer> onStartService = c => { };
 
             var service = new UserInterfaceService(
-                commands.Object, 
-                notificationNames,
-                systemDiagnostics,
+                builder.Build(),
                 onStartService);
 
             bool wasInvoked = false;
@@ -507,15 +578,21 @@ namespace Apollo.Core.Host.UserInterfaces
             var notificationNames = new MockNotificationNameConstants();
 
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            Action<IModule> onStartService = module => { };
 
             bool isStarted = false;
             Action<INotificationArguments> onApplicationStartup = obj => { isStarted = true; };
 
+            var builder = new ContainerBuilder();
+            {
+                builder.Register(c => commands.Object).As<ICommandContainer>();
+                builder.Register(c => notificationNames).As<INotificationNameConstants>();
+                builder.Register(c => systemDiagnostics).As<SystemDiagnostics>();
+            }
+
+            Action<IContainer> onStartService = c => { };
+
             var service = new UserInterfaceService(
-                commands.Object,
-                notificationNames,
-                systemDiagnostics,
+                builder.Build(),
                 onStartService);
             service.RegisterNotification(notificationNames.StartupComplete, onApplicationStartup);
 

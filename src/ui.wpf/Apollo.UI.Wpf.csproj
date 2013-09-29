@@ -233,6 +233,7 @@
     <Compile Include="Bootstrappers\ContainerRegistrationScope.cs" />
     <Compile Include="Bootstrappers\ContainerRegistrationScopeExtensions.cs" />
     <Compile Include="Bootstrappers\IContainerAdapter.cs" />
+    <Compile Include="Bootstrappers\PrismToDiagnosticsLogger.cs" />
     <Compile Include="Bootstrappers\RegionAdapterMapper.cs" />
     <Compile Include="Bootstrappers\RegionBehaviorFactoryMapper.cs" />
     <Compile Include="Bootstrappers\ResolveAnythingSource.cs" />
@@ -297,6 +298,7 @@
     <Compile Include="Profiling\TimingIntervalHelper.cs" />
     <Compile Include="Profiling\ProfilingTimeReport.cs" />
     <Compile Include="Profiling\TimingReportCollection.cs" />
+    <Compile Include="UIConstants.cs" />
     <Compile Include="Utilities\DragDropHelpers.cs" />
     <Compile Include="Utilities\ItemsControlDragSourceAdvisor.cs" />
     <Compile Include="Utilities\PanelDragSourceAdvisor.cs" />

@@ -320,15 +320,16 @@ namespace Apollo.UI.Console
             // there are two constants and a DI reference.
             var bootstrapper = new KernelBootstrapper(
                 s_ShutdownEvent,
-                module =>
+                container =>
                 {
                     var builder = new ContainerBuilder();
                     {
-                        builder.RegisterModule(module);
                         builder.RegisterModule(new ConsoleModule());
                     }
 
-                    s_UiContainer = builder.Build();
+                    builder.Update(container);
+
+                    s_UiContainer = container;
                     s_ScriptHost = s_UiContainer.Resolve<IHostScripts>();
                     s_Diagnostics = s_UiContainer.Resolve<SystemDiagnostics>();
                     s_ApplicationFacade = s_UiContainer.Resolve<IAbstractApplications>();

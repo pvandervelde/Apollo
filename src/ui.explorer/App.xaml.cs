@@ -102,7 +102,7 @@ namespace Apollo.UI.Explorer
         {
             var bootstrapper = new KernelBootstrapper(
                 m_ShutdownEvent,
-                module => LoadUserInterface(module));
+                LoadUserInterface);
 
             // Load the core system. This will automatically
             // run the Prism bootstrapper which will then
@@ -113,17 +113,11 @@ namespace Apollo.UI.Explorer
         /// <summary>
         /// Loads the user interface.
         /// </summary>
-        /// <param name="userInterfaceModule">The user interface module.</param>
-        private void LoadUserInterface(IModule userInterfaceModule)
+        /// <param name="container">The dependency injection container for the application.</param>
+        private void LoadUserInterface(IContainer container)
         {
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
-            var builder = new ContainerBuilder();
-            {
-                builder.RegisterModule(userInterfaceModule);
-            }
-
-            var container = builder.Build();
             var bootstrapper = new UserInterfaceBootstrapper(container, m_ShutdownEvent);
             bootstrapper.Run();
         }

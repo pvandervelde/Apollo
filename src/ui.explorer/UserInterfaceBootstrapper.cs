@@ -12,22 +12,14 @@ using Autofac;
 using Lokad;
 using Microsoft.Practices.Prism.Logging;
 using Microsoft.Practices.Prism.Modularity;
+using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Logging;
 
 namespace Apollo.UI.Explorer
 {
     /// <summary>
     /// The bootstrapper for the User Interface.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Note that this bootstrapper only takes care of the bootstrapping
-    /// of the UI, not the core. By design the core and the UI are 
-    /// running with different IOC containers / bootstrapper objects. This means
-    /// that we can force a code separation because the UI controls cannot
-    /// get linked to any of the internal core elements. The only way for
-    /// the core and the UI to interact is via the UserInterfaceService.
-    /// </para>
-    /// </remarks>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable",
         Justification = "The logger doesn't die until the application is terminated. No point in having it be disposable.")]
     internal sealed class UserInterfaceBootstrapper : CompositeBootstrapper
@@ -43,9 +35,14 @@ namespace Apollo.UI.Explorer
         private readonly AutoResetEvent m_ResetEvent;
 
         /// <summary>
+        /// The object that provides the diagnostics for the application.
+        /// </summary>
+        private readonly SystemDiagnostics m_Diagnostics;
+
+        /// <summary>
         /// The default logger. To be replaced by the proper one.
         /// </summary>
-        private readonly ILoggerFacade m_Logger = new TextLogger();
+        private readonly ILoggerFacade m_Logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserInterfaceBootstrapper"/> class.
@@ -68,6 +65,8 @@ namespace Apollo.UI.Explorer
 
             m_ShellIocContainer = container;
             m_ResetEvent = resetEvent;
+            m_Diagnostics = m_ShellIocContainer.Resolve<SystemDiagnostics>();
+            m_Logger = new PrismToDiagnosticsLogger(m_Diagnostics);
         }
 
         /// <summary>
@@ -91,7 +90,10 @@ namespace Apollo.UI.Explorer
         /// </remarks>
         protected override void LogRunActivity(string message)
         {
-            // Just ignore everything ...
+            m_Diagnostics.Log(
+                LevelToLog.Trace,
+                ExplorerConstants.LogPrefix,
+                message);
         }
 
         /// <summary>

@@ -24,6 +24,8 @@ namespace Apollo.Core.Host.UserInterfaces.Application
 
             var service = new Mock<IUserInterfaceService>();
             {
+                service.Setup(s => s.Contains(It.IsAny<CommandId>()))
+                    .Returns(true);
                 service.Setup(s => s.Invoke(It.IsAny<CommandId>(), It.IsAny<ICommandContext>()))
                     .Callback<CommandId, ICommandContext>(
                         (id, context) => 

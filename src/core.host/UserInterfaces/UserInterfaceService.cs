@@ -13,7 +13,7 @@ using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.Properties;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Utilities.Commands;
-using Autofac.Core;
+using Autofac;
 using Lokad;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
@@ -33,6 +33,11 @@ namespace Apollo.Core.Host.UserInterfaces
             new Dictionary<NotificationName, Action<INotificationArguments>>();
 
         /// <summary>
+        /// The IOC container for the application.
+        /// </summary>
+        private readonly IContainer m_Container;
+
+        /// <summary>
         /// The object that provides the diagnostic methods for the system.
         /// </summary>
         private readonly SystemDiagnostics m_Diagnostics;
@@ -50,7 +55,7 @@ namespace Apollo.Core.Host.UserInterfaces
         /// <summary>
         /// The action which is executed when the service is started.
         /// </summary>
-        private readonly Action<IModule> m_OnStartService;
+        private readonly Action<IContainer> m_OnStartService;
 
         /// <summary>
         /// The service that handles the connection to the <c>Kernel</c>.
@@ -65,45 +70,29 @@ namespace Apollo.Core.Host.UserInterfaces
         /// <summary>
         /// Initializes a new instance of the <see cref="UserInterfaceService"/> class.
         /// </summary>
-        /// <param name="commands">The container that stores all the commands.</param>
-        /// <param name="notificationNames">The object that stores all the <see cref="NotificationName"/> objects for the application.</param>
-        /// <param name="systemDiagnostics">The object that provides the diagnostic methods for the system.</param>
+        /// <param name="container">The container that stores all the references for the application.</param>
         /// <param name="onStartService">
-        ///     The method that stores the IOC module that will be used by the User Interface to refer
-        ///     to the core User Interface objects. This module contains for instance the
-        ///     UserInterfaceService itself.
+        ///     The method that stores the IOC container that contains the references for the entire application.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="commands"/> is <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="notificationNames"/> is <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
+        /// Thrown if <paramref name="container"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="onStartService"/> is <see langword="null"/>.
         /// </exception>
-        public UserInterfaceService(
-            ICommandContainer commands,
-            INotificationNameConstants notificationNames,
-            SystemDiagnostics systemDiagnostics,
-            Action<IModule> onStartService)
-            : base()
+        public UserInterfaceService(IContainer container, Action<IContainer> onStartService)
         {
             {
-                Enforce.Argument(() => commands);
-                Enforce.Argument(() => notificationNames);
-                Enforce.Argument(() => systemDiagnostics);
+                Enforce.Argument(() => container);
                 Enforce.Argument(() => onStartService);
             }
 
-            m_NotificationNames = notificationNames;
+            m_Container = container;
+            m_NotificationNames = container.Resolve<INotificationNameConstants>();
+            m_Diagnostics = container.Resolve<SystemDiagnostics>();
             m_OnStartService = onStartService;
-            m_Diagnostics = systemDiagnostics;
 
-            m_Commands = commands;
+            m_Commands = container.Resolve<ICommandContainer>();
             {
                 m_Commands.Add(
                     ShutdownApplicationCommand.CommandId,
@@ -222,7 +211,7 @@ namespace Apollo.Core.Host.UserInterfaces
         /// </returns>
         public override IEnumerable<Type> ServicesToConnectTo()
         {
-            return new Type[] 
+            return new[] 
                 { 
                     typeof(CoreProxy),
                     typeof(ProjectService),
@@ -305,7 +294,13 @@ namespace Apollo.Core.Host.UserInterfaces
         /// </summary>
         protected override void StartService()
         {
-            m_OnStartService(new UserInterfaceModule(this));
+            var builder = new ContainerBuilder();
+            {
+                builder.RegisterModule(new UserInterfaceModule(this));
+            }
+
+            builder.Update(m_Container);
+            m_OnStartService(m_Container);
         }
 
         /// <summary>

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Apollo.Core.Base;
 using Apollo.Core.Host;
+using Autofac;
 using Autofac.Core;
 using Lokad;
 using Nuclei.Communication;
@@ -33,7 +34,7 @@ namespace Apollo.UI.Explorer
         /// <summary>
         /// The function that will start the User Interface.
         /// </summary>
-        private readonly Action<IModule> m_OnStartUserInterface;
+        private readonly Action<IContainer> m_OnStartUserInterface;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelBootstrapper"/> class.
@@ -48,7 +49,7 @@ namespace Apollo.UI.Explorer
         /// </exception>
         public KernelBootstrapper(
             AutoResetEvent shutdownEvent,
-            Action<IModule> onStartUserInterface)
+            Action<IContainer> onStartUserInterface)
             : base(shutdownEvent)
         {
             {
@@ -93,7 +94,7 @@ namespace Apollo.UI.Explorer
         /// <param name="container">
         ///     The IOC module that contains the references for the User Interface.
         /// </param>
-        protected override void StartUserInterface(IModule container)
+        protected override void StartUserInterface(IContainer container)
         {
             m_OnStartUserInterface(container);
         }

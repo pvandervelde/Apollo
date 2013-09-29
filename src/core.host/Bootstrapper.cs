@@ -12,11 +12,9 @@ using System.Threading;
 using Apollo.Core.Host.Plugins;
 using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces;
-using Apollo.Utilities.Commands;
 using Autofac;
 using Autofac.Core;
 using Lokad;
-using Nuclei.Diagnostics;
 
 namespace Apollo.Core.Host
 {
@@ -192,12 +190,7 @@ namespace Apollo.Core.Host
         /// </returns>
         private KernelService CreateUserInterfaceService(IContainer container)
         {
-            var userInterface = new UserInterfaceService(
-                container.Resolve<ICommandContainer>(),
-                container.Resolve<INotificationNameConstants>(),
-                container.Resolve<SystemDiagnostics>(),
-                StartUserInterface);
-
+            var userInterface = new UserInterfaceService(container, StartUserInterface);
             return userInterface;
         }
 
@@ -216,8 +209,8 @@ namespace Apollo.Core.Host
         /// the User Interface and then starts all the user interface elements.
         /// </summary>
         /// <param name="container">
-        ///     The IOC module that contains the references for the User Interface.
+        ///     The IOC container that contains the references the entire application.
         /// </param>
-        protected abstract void StartUserInterface(IModule container);
+        protected abstract void StartUserInterface(IContainer container);
     }
 }

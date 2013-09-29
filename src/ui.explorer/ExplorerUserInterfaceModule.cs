@@ -11,7 +11,6 @@ using System.Windows;
 using Apollo.Core.Host;
 using Apollo.Core.Host.UserInterfaces.Application;
 using Apollo.Core.Host.UserInterfaces.Projects;
-using Apollo.UI.Explorer.Nuclei;
 using Apollo.UI.Explorer.Nuclei.ExceptionHandling;
 using Apollo.UI.Explorer.Properties;
 using Apollo.UI.Explorer.Views.Menu;
@@ -113,8 +112,6 @@ namespace Apollo.UI.Explorer
         {
             var builder = new ContainerBuilder();
             {
-                // Register the utilities elements. These are 'shared' with the core
-                builder.RegisterModule(new ExplorerModule());
                 builder.RegisterModule(new CommonUIModule());
 
                 // Get all the registrations from Apollo.UI.Wpf
