@@ -7,10 +7,11 @@
              xmlns:lexEngine="clr-namespace:WPFLocalizeExtension.Engine;assembly=WPFLocalizeExtension"
              xmlns:lexProviders="clr-namespace:WPFLocalizeExtension.Providers;assembly=WPFLocalizeExtension"
              xmlns:lex="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
-                        lexEngine:LocalizeDictionary.DesignCulture="en"
-                        lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Wpf"
-                        lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
+             lexEngine:LocalizeDictionary.DesignCulture="en"
+             lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Wpf"
+             lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
              xmlns:pix="clr-namespace:PixelLab.Wpf;assembly=PixelLab.Wpf"
+             xmlns:converters="clr-namespace:Apollo.UI.Wpf.Converters"
              mc:Ignorable="d"
              d:DesignWidth="450"
              d:DesignHeight="300"
@@ -23,6 +24,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../../Styles/ButtonStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <converters:DatasetStateToImageConverter x:Key="datasetStateToImageConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
     <!-- DataContext is: DatasetModel-->
@@ -71,7 +74,7 @@
                            gi:ImageGreyer.IsGreyable="true"
                            Width="24"
                            Height="24"
-                           Margin="3, 0, 3, 0"/>
+                           Margin="3, 0, 3, 0" />
                 </Button>
 
                 <!-- CanBecomeParent ==> little icon at the bottom with a plus? -->
@@ -152,13 +155,13 @@
         </Border>
 
         <!-- IsActivated + Activate location ==> a set of hyper links to the machine description? -->
-        <Label Grid.Row="4" 
-                Grid.Column="0"
-                Margin="5, 5, 5, 0"
-                VerticalAlignment="Top">
+        <Label Grid.Row="4"
+               Grid.Column="0"
+               Margin="5, 5, 5, 0"
+               VerticalAlignment="Top">
             <TextBlock Text="{lex:Loc DatasetGraphView_DatasetRunningOn}"
-                        Foreground="SeaShell"
-                        FontWeight="Bold" />
+                       Foreground="SeaShell"
+                       FontWeight="Bold" />
         </Label>
         <Grid Grid.Row="4"
               Grid.Column="1">
@@ -170,38 +173,25 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-                
-            <TextBlock Grid.Row="0" 
+
+            <TextBlock Grid.Row="0"
                        Grid.Column="0"
                        Background="SeaShell"
                        Text="{Binding Path=RunsOn}" />
-            
+
             <Button x:Name="activateOrDeactivateDatasetButton"
                     x:FieldModifier="private"
                     Grid.Row="0"
                     Grid.Column="1"
                     Margin="5">
                 <Image Width="24"
-                        Height="24">
-                    <Image.Style>
-                        <Style TargetType="{x:Type Image}">
-                            <Setter Property="Source" 
-                                    Value="{lex:BLoc Img_Upload_48}" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Path=IsActivated}" 
-                                                Value="True">
-                                    <Setter Property="Source" 
-                                            Value="{lex:BLoc Img_Delete_48}" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Image.Style>
-                </Image>
+                       Height="24"
+                       Source="{Binding Path=IsActivated, Converter={StaticResource datasetStateToImageConverter}}" />
             </Button>
-            
-            <Button x:Name="showDetailButton" 
+
+            <Button x:Name="showDetailButton"
                     x:FieldModifier="private"
-                    Grid.Row="1" 
+                    Grid.Row="1"
                     Grid.Column="0"
                     HorizontalAlignment="Right"
                     Style="{StaticResource HyperlinkLikeButton}">
@@ -228,7 +218,7 @@
                    Margin="5, 5, 0, 0">
                 <TextBlock Text="{lex:Loc DatasetGraphView_DatasetProcessing}"
                            Foreground="SeaShell"
-                           FontWeight="Bold"/>
+                           FontWeight="Bold" />
             </Label>
             <Label Grid.Row="0"
                    Grid.Column="1"
@@ -244,7 +234,7 @@
                              Minimum="0"
                              Maximum="1"
                              MinHeight="15"
-                             Margin="5, 0, 5, 5"/>
+                             Margin="5, 0, 5, 5" />
             </Grid>
         </Grid>
     </Grid>

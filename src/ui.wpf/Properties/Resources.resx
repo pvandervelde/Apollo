@@ -767,4 +767,46 @@ Please wait ...</value>
   <data name="ScriptDescription_Language_PowerShell" xml:space="preserve">
     <value>PowerShell</value>
   </data>
+  <data name="Img_Activate_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Activate_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Activate_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Activate_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Activate_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Activate_24x24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Activate_256" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Activate_256x256.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Activate_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Activate_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Activate_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Activate_48x48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Activate_64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Activate_64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Deactivate_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Deactivate_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Deactivate_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Deactivate_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Deactivate_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Deactivate_24x24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Deactivate_256" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Deactivate_256x256.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Deactivate_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Deactivate_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Deactivate_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Deactivate_48x48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Deactivate_64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Deactivate_64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

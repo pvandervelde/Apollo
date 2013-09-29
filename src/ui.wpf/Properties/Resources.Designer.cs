@@ -360,6 +360,76 @@ namespace Apollo.UI.Wpf.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Img_Activate_128 {
+            get {
+                object obj = ResourceManager.GetObject("Img_Activate_128", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Img_Activate_16 {
+            get {
+                object obj = ResourceManager.GetObject("Img_Activate_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Img_Activate_24 {
+            get {
+                object obj = ResourceManager.GetObject("Img_Activate_24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Img_Activate_256 {
+            get {
+                object obj = ResourceManager.GetObject("Img_Activate_256", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Img_Activate_32 {
+            get {
+                object obj = ResourceManager.GetObject("Img_Activate_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Img_Activate_48 {
+            get {
+                object obj = ResourceManager.GetObject("Img_Activate_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Img_Activate_64 {
+            get {
+                object obj = ResourceManager.GetObject("Img_Activate_64", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Img_Add_128 {
             get {
                 object obj = ResourceManager.GetObject("Img_Add_128", resourceCulture);
@@ -653,6 +723,76 @@ namespace Apollo.UI.Wpf.Properties {
         internal static System.Drawing.Bitmap Img_Cut_48 {
             get {
                 object obj = ResourceManager.GetObject("Img_Cut_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Img_Deactivate_128 {
+            get {
+                object obj = ResourceManager.GetObject("Img_Deactivate_128", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Img_Deactivate_16 {
+            get {
+                object obj = ResourceManager.GetObject("Img_Deactivate_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Img_Deactivate_24 {
+            get {
+                object obj = ResourceManager.GetObject("Img_Deactivate_24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Img_Deactivate_256 {
+            get {
+                object obj = ResourceManager.GetObject("Img_Deactivate_256", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Img_Deactivate_32 {
+            get {
+                object obj = ResourceManager.GetObject("Img_Deactivate_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Img_Deactivate_48 {
+            get {
+                object obj = ResourceManager.GetObject("Img_Deactivate_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Img_Deactivate_64 {
+            get {
+                object obj = ResourceManager.GetObject("Img_Deactivate_64", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

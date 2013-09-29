@@ -263,6 +263,7 @@
     <Compile Include="CommonRegionNames.cs" />
     <Compile Include="CommonUIModule.cs" />
     <Compile Include="Converters\CommandToToolTipTextConverter.cs" />
+    <Compile Include="Converters\DatasetStateToImageConverter.cs" />
     <Compile Include="Converters\DistributionSuggestionToTextConverter.cs" />
     <Compile Include="Converters\FeedbackReportToTextConverter.cs" />
     <Compile Include="Converters\IsWorkingToHiddenPanelVisibilityConverter.cs" />
@@ -979,6 +980,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="README.txt" />
+    <None Include="Resources\Deactivate_256x256.png" />
+    <None Include="Resources\Deactivate_128x128.png" />
+    <None Include="Resources\Deactivate_64x64.png" />
+    <None Include="Resources\Deactivate_48x48.png" />
+    <None Include="Resources\Deactivate_32x32.png" />
+    <None Include="Resources\Deactivate_24x24.png" />
+    <None Include="Resources\Deactivate_16x16.png" />
+    <None Include="Resources\Activate_256x256.png" />
+    <None Include="Resources\Activate_128x128.png" />
+    <None Include="Resources\Activate_64x64.png" />
+    <None Include="Resources\Activate_48x48.png" />
+    <None Include="Resources\Activate_32x32.png" />
+    <None Include="Resources\Activate_24x24.png" />
+    <None Include="Resources\Activate_16x16.png" />
   </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
