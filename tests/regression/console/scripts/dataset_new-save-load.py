@@ -4,10 +4,25 @@
 
 # $Source$
 import clr
+clr.AddReference("System")
+clr.AddReference("System.Core")
 clr.AddReference("Apollo.Core.Scripting")
+clr.AddReference("Apollo.Core.Base")
 
 import sys
+import System.Diagnostics
+import System.Threading
+import Apollo.Core.Base
+import Apollo.Core.Base.Activation
 import Apollo.Core.Scripting
+
+from System.Threading import CancellationTokenSource
+from Apollo.Core.Base.Activation import SelectedProposal
+
+class MachineSelector:
+    @staticmethod
+    def selectmachine(options):
+        return SelectedProposal(options.FirstOrDefault().Plan)
 
 # Verify that we don't have an active project
 hasactiveproject = projects.HasActiveProject()
@@ -59,6 +74,51 @@ if childdataset.Summary != newsummary:
 else:
     print 'Pass: Dataset summary updated successfully'
 
+# Activate dataset on local machine
+processid = 0
+try:
+    token = CancellationTokenSource()
+    childdataset.Activate(DistributionLocations.Local, MachineSelector.selectmachine, token.Token)
+
+    # Find if there is a process with the right name
+    wasActivated = False
+    processes = Process.GetProcesses()
+    for p in processes:
+        if "" in p.ProcessName:
+            processid = p.Id
+            wasActivated = True
+            break
+
+    if wasActivated:
+        print 'Pass: Dataset was activated successfully'
+    else:
+        print 'Fail: Dataset was not activated'
+        sys.exit(1)
+except Exception, e:
+    print 'Fail: Dataset activation threw exception'
+    sys.exit(1)
+
+# Deactivate dataset on local machine
+try:
+    # Grab the child process so that we can watch it
+    process = Process.GetProcessById(processid)
+
+    # Deactivate it
+    childdataset.Deactivate()
+
+    # See if the child process is gone
+    if not process.HasExited:
+        process.WaitForExit(2 * 60 * 1000)
+
+    if not process.HasExited:
+        print 'Fail: Dataset was not deactivated'
+        sys.exit(1)
+    else:
+        print 'Pass: Dataset was deactivated successfully'
+except Exception, e:
+    print 'Fail: Dataset deactivation threw exception'
+    sys.exit(1)
+
 # Save
 
 # Close
@@ -70,7 +130,5 @@ else:
     print 'Pass: Project unloaded successfully'
 
 # Reload from disk
-
-# Activate dataset on local machine
 
 # Activate dataset on remote machine
