@@ -9,9 +9,34 @@
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>..\..\resource\icons\Apollo.ico</ApplicationIcon>
+    <DirWorkspace>$(SolutionDir)\..</DirWorkspace>
+    <DirBuild>$(DirWorkspace)\build</DirBuild>
+    <DirBuildTemp>$(DirBuild)\temp</DirBuildTemp>
+    <DirTemplates>$(DirWorkspace)\templates</DirTemplates>
+    <DirTools>$(DirWorkspace)\tools</DirTools>
+    <DirPackages>$(DirWorkspace)\packages</DirPackages>
+    <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
+    <!-- Version number -->
+    <VersionMajor>0</VersionMajor>
+    <VersionMinor>0</VersionMinor>
+    <VersionBuild>0</VersionBuild>
+    <VersionRevision>0</VersionRevision>
+    <!-- Jenkins, the build system adds the BUILD_NUMBER environment variable so we can get that here -->
+    <BuildNumber>$(BUILD_NUMBER)</BuildNumber>
+    <BuildNumber Condition=" '$(BuildNumber)' == '' ">0</BuildNumber>
+  </PropertyGroup>
+  <PropertyGroup>
+    <FileTemplateApplicationManifest>$(DirTemplates)\app.manifest.in</FileTemplateApplicationManifest>
+    <FileApplicationManifest>$(DirBuildTemp)\$(AssemblyName).exe.manifest</FileApplicationManifest>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
+  <Import Project="$(DirWorkspace)\version.xml" Condition="Exists('$(DirWorkspace)\version.xml')" />
+  <PropertyGroup>
+    <ApplicationIcon>..\..\resource\icons\Apollo.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>$(FileApplicationManifest)</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Args">
       <HintPath>..\..\packages\Args.1.0.4\lib\Net40\Args.dll</HintPath>
@@ -224,6 +249,9 @@
     </Compile>
     <None Include="app.config" />
     <AppDesigner Include="Properties\" />
+    <None Include="$(FileApplicationManifest)">
+        <Link>app.manifest</Link>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +281,69 @@
     <Content Include="README.txt" />
   </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild')" />
+  <Import Project="$(MsBuildExtensionsPath)\TemplateFile.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\TemplateFile.msbuild')" />
+  <!-- Clean up all the files we generate ourselves -->
+  <PropertyGroup>
+    <CleanDependsOn>
+            CleanGeneratedFiles;
+            $(CleanDependsOn);
+        </CleanDependsOn>
+  </PropertyGroup>
+  <Target Name="CleanGeneratedFiles">
+    <ItemGroup>
+      <GeneratedFiles Include="$(FileApplicationManifest)" />
+    </ItemGroup>
+    <Delete Files="@(GeneratedFiles)" />
+  </Target>
+  <!-- Just before we start building we'll generate the AssemblyInfo.XX.cs files-->
+  <PropertyGroup>
+    <BuildDependsOn>
+            GenerateManifest;
+            $(BuildDependsOn);
+        </BuildDependsOn>
+  </PropertyGroup>
+  <Target Name="_GetSnPath">
+    <GetFrameworkSdkPath>
+      <Output TaskParameter="Path" PropertyName="WindowsSdkPath" />
+    </GetFrameworkSdkPath>
+    <PropertyGroup>
+      <FileSNExe>$(WindowsSdkPath)bin\sn.exe</FileSNExe>
+    </PropertyGroup>
+    <!-- Sometimes theres nothing in the WindowsSdkPath dir and there's stuff in a deeper folder called 'NETFX 4.0 Tools'. -->
+    <PropertyGroup>
+      <FileSNExe Condition="!Exists($(FileSNExe))">$(WindowsSdkPath)bin\NETFX 4.0 Tools\sn.exe</FileSNExe>
+    </PropertyGroup>
+    <Message Text="sn.exe at: $(FileSNExe)" />
+  </Target>
+  <Target Name="GenerateManifest" DependsOnTargets="_GetSnPath">
+    <PublicKeySignatureFromKeyFile SnExe="$(FileSNExe)" DirTemp="$(DirBuildTemp)" Input="$(SOFTWARE_SIGNING_KEY_PATH)">
+      <Output TaskParameter="PublicKeyToken" PropertyName="PublicKeyTokenLocal" />
+    </PublicKeySignatureFromKeyFile>
+    
+    <!-- Generate the version number file -->
+    <ItemGroup>
+      <ManifestTokens Include="Major">
+        <ReplacementValue>$(VersionMajor)</ReplacementValue>
+      </ManifestTokens>
+      <ManifestTokens Include="Minor">
+        <ReplacementValue>$(VersionMinor)</ReplacementValue>
+      </ManifestTokens>
+      <ManifestTokens Include="Build">
+        <ReplacementValue>$(VersionBuild)</ReplacementValue>
+      </ManifestTokens>
+      <ManifestTokens Include="Revision">
+        <ReplacementValue>$(VersionRevision)</ReplacementValue>
+      </ManifestTokens>
+      <ManifestTokens Include="ProjectName">
+        <ReplacementValue>$(AssemblyName)</ReplacementValue>
+      </ManifestTokens>
+      <ManifestTokens Include="PublicKeyToken">
+        <ReplacementValue>$(PublicKeyTokenLocal)</ReplacementValue>
+      </ManifestTokens>      
+    </ItemGroup>
+    <TemplateFile Template="$(FileTemplateApplicationManifest)" OutputFileName="$(FileApplicationManifest)" Tokens="@(ManifestTokens)" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

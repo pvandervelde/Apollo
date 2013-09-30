@@ -148,17 +148,32 @@
     <TemplateFile Template="$(FileTemplateAssemblyBuildInfo)" OutputFileName="$(FileGeneratedAssemblyBuildInfo)" Tokens="@(BuildInfoTokens)" />
   </Target>
   <PropertyGroup>
-    <FileMoqDll>moq.dll</FileMoqDll>
-    <SnExe Condition="">$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.0A\bin\sn.exe</SnExe>
+    <FileSNExe>NotSet</FileSNExe>
   </PropertyGroup>
-  <Target Name="GenerateAssemblyInternalsVisbibleTo" DependsOnTargets="_PrepareBuildEnvironment">
+  <Target Name="_GetSnPath">
+    <GetFrameworkSdkPath>
+      <Output TaskParameter="Path" PropertyName="WindowsSdkPath" />
+    </GetFrameworkSdkPath>
+    <PropertyGroup>
+      <FileSNExe>$(WindowsSdkPath)bin\sn.exe</FileSNExe>
+    </PropertyGroup>
+    <!-- Sometimes theres nothing in the WindowsSdkPath dir and there's stuff in a deeper folder called 'NETFX 4.0 Tools'. -->
+    <PropertyGroup>
+      <FileSNExe Condition="!Exists($(FileSNExe))">$(WindowsSdkPath)bin\NETFX 4.0 Tools\sn.exe</FileSNExe>
+    </PropertyGroup>
+    <Message Text="sn.exe at: $(FileSNExe)" />
+  </Target>
+  <PropertyGroup>
+    <FileMoqDll>moq.dll</FileMoqDll>
+  </PropertyGroup>
+  <Target Name="GenerateAssemblyInternalsVisbibleTo" DependsOnTargets="_PrepareBuildEnvironment;_GetSnPath">
     <FindToolFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileMoqDll)">
       <Output TaskParameter="Path" PropertyName="PathMoqDll" />
     </FindToolFromPackages>
-    <PublicKeySignatureFromKeyFile SnExe="$(SnExe)" DirTemp="$(DirBuildTemp)" Input="$(SOFTWARE_SIGNING_KEY_PATH)">
+    <PublicKeySignatureFromKeyFile SnExe="$(FileSNExe)" DirTemp="$(DirBuildTemp)" Input="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Output TaskParameter="PublicKey" PropertyName="PublicKeyLocal" />
     </PublicKeySignatureFromKeyFile>
-    <PublicKeySignatureFromAssembly SnExe="$(SnExe)" Input="$(PathMoqDll)">
+    <PublicKeySignatureFromAssembly SnExe="$(FileSNExe)" Input="$(PathMoqDll)">
       <Output TaskParameter="PublicKey" PropertyName="PublicKeyMoq" />
     </PublicKeySignatureFromAssembly>
     <ItemGroup>

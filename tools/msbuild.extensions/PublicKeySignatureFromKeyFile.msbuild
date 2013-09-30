@@ -1,3 +1,7 @@
+<!-- 
+     Copyright 2013 Nuclei. Licensed under the Apache License, Version 2.0.
+-->
+
 <Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003' 
          ToolsVersion="4.0">
     <UsingTask TaskName="PublicKeySignatureFromKeyFile" 
@@ -8,6 +12,7 @@
             <DirTemp ParameterType="System.String" Required="true" />
             <Input ParameterType="System.String" Required="true" />
             <PublicKey ParameterType="System.String" Output="true" />
+            <PublicKeyToken ParameterType="System.String" Output="true" />
         </ParameterGroup>
         <Task>
             <Code Type="Method" Language="cs">
@@ -87,12 +92,13 @@
                             process.WaitForExit();
                         }
 
-                        const string startString = "Public key is";
+                        const string startString = "Public key (hash algorithm: sha1):";
                         const string endString = "Public key token is";
                         var publicKeyText = text.ToString();
                         var startIndex = publicKeyText.IndexOf(startString);
                         var endIndex = publicKeyText.IndexOf(endString);
                         PublicKey = publicKeyText.Substring(startIndex + startString.Length, endIndex - (startIndex + startString.Length));
+                        PublicKeyToken = publicKeyText.Substring(endIndex + endString.Length).Trim();
 
                         // Log.HasLoggedErrors is true if the task logged any errors -- even if they were logged 
                         // from a task's constructor or property setter. As long as this task is written to always log an error

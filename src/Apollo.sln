@@ -25,6 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Utilities", "test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FA065AF0-8827-4E09-ABAA-812E5E9AA363}"
 	ProjectSection(SolutionItems) = preProject
+		..\templates\app.manifest.in = ..\templates\app.manifest.in
 		..\templates\AssemblyInfo.BuildInformation.cs.in = ..\templates\AssemblyInfo.BuildInformation.cs.in
 		..\templates\AssemblyInfo.InternalsVisibleTo.cs.in = ..\templates\AssemblyInfo.InternalsVisibleTo.cs.in
 		..\templates\AssemblyInfo.VersionNumber.cs.in = ..\templates\AssemblyInfo.VersionNumber.cs.in
