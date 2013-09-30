@@ -158,6 +158,11 @@ namespace Apollo.Core.Scripting.Projects
             CancellationToken token);
 
         /// <summary>
+        /// Deactivates the dataset.
+        /// </summary>
+        void Deactivate();
+
+        /// <summary>
         /// An event raised when there is progress in the action that the dataset is
         /// currently executing.
         /// </summary>

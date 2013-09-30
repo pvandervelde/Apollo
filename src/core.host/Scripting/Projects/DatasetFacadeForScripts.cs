@@ -331,6 +331,14 @@ namespace Apollo.Core.Host.Scripting.Projects
         }
 
         /// <summary>
+        /// Deactivates the dataset.
+        /// </summary>
+        public void Deactivate()
+        {
+            m_Dataset.Deactivate();
+        }
+
+        /// <summary>
         /// An event raised when there is progress in the action that the dataset is
         /// currently executing.
         /// </summary>
