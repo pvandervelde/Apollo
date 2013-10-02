@@ -86,7 +86,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
 
             Assert.IsNotNull(project);
             Assert.IsNotNull(project.BaseDataset());
@@ -131,7 +132,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
 
             Assert.Throws<ArgumentNullException>(() => project.Save(null));
         }
@@ -171,7 +173,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             project.Close();
 
             Assert.Throws<CannotUseProjectAfterClosingItException>(() => project.Save(new Mock<IPersistenceInformation>().Object));
@@ -218,7 +221,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
 
             Assert.Throws<ArgumentNullException>(() => project.Export(null, false, new Mock<IPersistenceInformation>().Object));
         }
@@ -258,7 +262,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
 
             Assert.Throws<UnknownDatasetException>(() => project.Export(new DatasetId(), false, new Mock<IPersistenceInformation>().Object));
         }
@@ -298,7 +303,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var dataset = project.BaseDataset();
 
             Assert.Throws<ArgumentNullException>(() => project.Export(dataset.Id, false, null));
@@ -339,7 +345,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var dataset = project.BaseDataset();
             project.Close();
 
@@ -394,7 +401,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
 
             var name = string.Empty;
             project.OnNameChanged += (s, e) => { name = e.Value; };
@@ -443,7 +451,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
 
             var summary = string.Empty;
             project.OnSummaryChanged += (s, e) => { summary = e.Value; };
@@ -492,7 +501,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
 
             var marks = new List<TimeMarker>();
             marks.Add(TimeMarker.TheBeginOfTime);
@@ -603,7 +613,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
 
             var marks = new List<TimeMarker>();
             marks.Add(TimeMarker.TheBeginOfTime);
@@ -716,7 +727,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
 
             // Create a 'binary' tree of datasets. This should create the following tree:
             //                            X
@@ -823,7 +835,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
 
             // Create a 'binary' tree of datasets. This should create the following tree:
             //                            X

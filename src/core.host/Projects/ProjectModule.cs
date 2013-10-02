@@ -11,6 +11,7 @@ using Apollo.Core.Host.Plugins;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
 using Autofac;
+using Nuclei.Diagnostics;
 using QuickGraph;
 
 namespace Apollo.Core.Host.Projects
@@ -40,6 +41,7 @@ namespace Apollo.Core.Host.Projects
                             d => ctx.Resolve<DatasetStorageProxy>(new TypedParameter(typeof(DatasetOnlineInformation), d)),
                             c.Resolve<IHelpDistributingDatasets>(),
                             c.Resolve<ICollectNotifications>(),
+                            c.Resolve<SystemDiagnostics>(),
                             c.Resolve<IBuildProjects>());
                     })
                 .As<ProjectService>();
@@ -62,7 +64,8 @@ namespace Apollo.Core.Host.Projects
 
             builder.Register((c, p) => new ProxyCompositionLayer(
                     p.TypedAs<ICompositionCommands>(),
-                    c.Resolve<IConnectGroups>()))
+                    c.Resolve<IConnectGroups>(),
+                    c.Resolve<SystemDiagnostics>()))
                 .As<IProxyCompositionLayer>();
 
             builder.Register((c, p) => new GroupSelector(

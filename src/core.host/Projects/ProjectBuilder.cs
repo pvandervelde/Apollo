@@ -13,6 +13,7 @@ using Apollo.Core.Base.Activation;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
+using Nuclei.Diagnostics;
 
 namespace Apollo.Core.Host.Projects
 {
@@ -43,6 +44,11 @@ namespace Apollo.Core.Host.Projects
         private ICollectNotifications m_Notifications;
 
         /// <summary>
+        /// The object that provides the diagnostics methods for the application.
+        /// </summary>
+        private SystemDiagnostics m_Diagnostics;
+
+        /// <summary>
         /// The object describes how the project was persisted.
         /// </summary>
         private IPersistenceInformation m_ProjectStorage;
@@ -68,6 +74,9 @@ namespace Apollo.Core.Host.Projects
         /// <returns>
         /// The current builder instance with the timeline stored.
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="timeline"/> is <see langword="null" />.
+        /// </exception>
         public IBuildProjects WithTimeline(ITimeline timeline)
         {
             {
@@ -89,6 +98,9 @@ namespace Apollo.Core.Host.Projects
         /// <returns>
         /// The current builder instance with the function stored.
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="distributor"/> is <see langword="null" />.
+        /// </exception>
         public IBuildProjects WithDatasetDistributor(Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor)
         {
             {
@@ -106,6 +118,9 @@ namespace Apollo.Core.Host.Projects
         /// <returns>
         /// The current builder instance with the stream containing the project stored.
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="storageBuilder"/> is <see langword="null" />.
+        /// </exception>
         public IBuildProjects WithDataStorageBuilder(Func<DatasetOnlineInformation, DatasetStorageProxy> storageBuilder)
         {
             {
@@ -123,6 +138,9 @@ namespace Apollo.Core.Host.Projects
         /// <returns>
         /// The current builder instance with the notification object stored.
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="notifications"/> is <see langword="null" />.
+        /// </exception>
         public IBuildProjects WithNotifications(ICollectNotifications notifications)
         {
             {
@@ -130,6 +148,26 @@ namespace Apollo.Core.Host.Projects
             }
 
             m_Notifications = notifications;
+            return this;
+        }
+
+        /// <summary>
+        /// Provides the object that provides the diagnostics methods for the application.
+        /// </summary>
+        /// <param name="diagnostics">The object provides the diagnostics methods for the application.</param>
+        /// <returns>
+        /// The current builder instance with the diagnostics object stored.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
+        /// </exception>
+        public IBuildProjects WithDiagnostics(SystemDiagnostics diagnostics)
+        {
+            {
+                Lokad.Enforce.Argument(() => diagnostics);
+            }
+
+            m_Diagnostics = diagnostics;
             return this;
         }
 
@@ -142,6 +180,9 @@ namespace Apollo.Core.Host.Projects
         /// <returns>
         /// The current builder instance with the stream containing the project stored.
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="persistenceInfo"/> is <see langword="null" />.
+        /// </exception>
         public IBuildProjects FromStorage(IPersistenceInformation persistenceInfo)
         {
             {
@@ -158,6 +199,12 @@ namespace Apollo.Core.Host.Projects
         /// <returns>
         /// The newly created project.
         /// </returns>
+        /// <exception cref="CannotCreateProjectWithoutTimelineException">
+        ///     Thrown when no timeline object was provided.
+        /// </exception>
+        /// <exception cref="CannotCreateProjectWithoutDatasetDistributorException">
+        ///     Thrown when no dataset distributor function was provided.
+        /// </exception>
         public IProject Build()
         {
             {
@@ -170,7 +217,7 @@ namespace Apollo.Core.Host.Projects
                     Resources.Exceptions_Messages_CannotCreateProjectWithoutDatasetDistributor);
             }
 
-            return new Project(m_Timeline, m_Distributor, m_StorageBuilder, m_Notifications, m_ProjectStorage);
+            return new Project(m_Timeline, m_Distributor, m_StorageBuilder, m_Notifications, m_Diagnostics, m_ProjectStorage);
         }
     }
 }

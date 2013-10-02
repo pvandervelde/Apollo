@@ -61,6 +61,51 @@ namespace Apollo.Core.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Activating dataset [{0}]..
+        /// </summary>
+        internal static string DatasetProxy_LogMessage_ActivatingDataset_WithId {
+            get {
+                return ResourceManager.GetString("DatasetProxy_LogMessage_ActivatingDataset_WithId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Activation of dataset [{0}] was successful..
+        /// </summary>
+        internal static string DatasetProxy_LogMessage_DatasetActivationComplete_WithId {
+            get {
+                return ResourceManager.GetString("DatasetProxy_LogMessage_DatasetActivationComplete_WithId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deactivating dataset [{0}]..
+        /// </summary>
+        internal static string DatasetProxy_LogMessage_DeactivatingDataset_WithId {
+            get {
+                return ResourceManager.GetString("DatasetProxy_LogMessage_DeactivatingDataset_WithId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to activate dataset [{0}]. Exception was: {1}..
+        /// </summary>
+        internal static string DatasetProxy_LogMessage_FailedToActivateDataset_WithException {
+            get {
+                return ResourceManager.GetString("DatasetProxy_LogMessage_FailedToActivateDataset_WithException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reactivating dataset [{0}] on previously stored location: {1}..
+        /// </summary>
+        internal static string DatasetProxy_LogMessage_ReactivatingFromPreviouslyStoredLocation_WithLocation {
+            get {
+                return ResourceManager.GetString("DatasetProxy_LogMessage_ReactivatingFromPreviouslyStoredLocation_WithLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified argument was not inside the valid range..
         /// </summary>
         internal static string Exceptions_Messages_ArgumentOutOfRange {
@@ -899,6 +944,42 @@ namespace Apollo.Core.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Closing current project..
+        /// </summary>
+        internal static string Project_LogMessage_ClosingProject {
+            get {
+                return ResourceManager.GetString("Project_LogMessage_ClosingProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Creating new dataset with dataset [{0}] as parent..
+        /// </summary>
+        internal static string Project_LogMessage_CreatingDataset_WithInformation {
+            get {
+                return ResourceManager.GetString("Project_LogMessage_CreatingDataset_WithInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleted dataset [{0}]..
+        /// </summary>
+        internal static string Project_LogMessage_DeletedDataset_WithId {
+            get {
+                return ResourceManager.GetString("Project_LogMessage_DeletedDataset_WithId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting dataset [{0}] and all its children..
+        /// </summary>
+        internal static string Project_LogMessage_DeletingDatasetAndChildren_WithInformation {
+            get {
+                return ResourceManager.GetString("Project_LogMessage_DeletingDatasetAndChildren_WithInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Root.
         /// </summary>
         internal static string Projects_Dataset_RootDatasetName {
@@ -913,6 +994,87 @@ namespace Apollo.Core.Host.Properties {
         internal static string Projects_Dataset_RootDatasetSummary {
             get {
                 return ResourceManager.GetString("Projects_Dataset_RootDatasetSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adding new group [{0}] to composition layer..
+        /// </summary>
+        internal static string ProxyCompositionLayer_LogMessage_AddingGroup_WithId {
+            get {
+                return ResourceManager.GetString("ProxyCompositionLayer_LogMessage_AddingGroup_WithId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connecting exporting group [{1}] with importing group [{0}]..
+        /// </summary>
+        internal static string ProxyCompositionLayer_LogMessage_ConnectingGroups_WithImportAndExport {
+            get {
+                return ResourceManager.GetString("ProxyCompositionLayer_LogMessage_ConnectingGroups_WithImportAndExport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disconnecting all imports and exports from group [{0}]..
+        /// </summary>
+        internal static string ProxyCompositionLayer_LogMessage_DisconnectingAllFromGroup_WithId {
+            get {
+                return ResourceManager.GetString("ProxyCompositionLayer_LogMessage_DisconnectingAllFromGroup_WithId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disconnecting exporting group [{1}] from importing group [{0}]..
+        /// </summary>
+        internal static string ProxyCompositionLayer_LogMessage_DisconnectingGroups_WithImportAndExport {
+            get {
+                return ResourceManager.GetString("ProxyCompositionLayer_LogMessage_DisconnectingGroups_WithImportAndExport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reloading data from remote dataset..
+        /// </summary>
+        internal static string ProxyCompositionLayer_LogMessage_ReloadingFromDataset {
+            get {
+                return ResourceManager.GetString("ProxyCompositionLayer_LogMessage_ReloadingFromDataset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Removing group [{0}] from composition layer..
+        /// </summary>
+        internal static string ProxyCompositionLayer_LogMessage_RemovingGroup_WithId {
+            get {
+                return ResourceManager.GetString("ProxyCompositionLayer_LogMessage_RemovingGroup_WithId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adding new part [{0}] to repository..
+        /// </summary>
+        internal static string RemoteAssemblyScanner_LogMessage_AddingPartToRepository_WithPartInformation {
+            get {
+                return ResourceManager.GetString("RemoteAssemblyScanner_LogMessage_AddingPartToRepository_WithPartInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registering groups via exporter of type [{0}]..
+        /// </summary>
+        internal static string RemoteAssemblyScanner_LogMessage_RegisteringGroupsViaExporter_WithExporterType {
+            get {
+                return ResourceManager.GetString("RemoteAssemblyScanner_LogMessage_RegisteringGroupsViaExporter_WithExporterType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scanning assembly [{0}] for plugins..
+        /// </summary>
+        internal static string RemoteAssemblyScanner_LogMessage_ScanningAssembly_WithName {
+            get {
+                return ResourceManager.GetString("RemoteAssemblyScanner_LogMessage_ScanningAssembly_WithName", resourceCulture);
             }
         }
         

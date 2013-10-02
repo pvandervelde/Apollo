@@ -127,6 +127,7 @@ namespace Apollo.Core.Host.Projects
                             proxyLayer.Object),
                         proxyLayer.Object))
                 .WithNotifications(new Mock<ICollectNotifications>().Object)
+                .WithDiagnostics(systemDiagnostics)
                 .Build();
 
             Assert.IsNotNull(project);
@@ -169,6 +170,7 @@ namespace Apollo.Core.Host.Projects
                             proxyLayer.Object),
                         proxyLayer.Object))
                 .WithNotifications(new Mock<ICollectNotifications>().Object)
+                .WithDiagnostics(systemDiagnostics)
                 .Build();
 
             Assert.IsNotNull(project);

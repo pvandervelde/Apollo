@@ -7,7 +7,6 @@
 using System;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Plugins;
-using Apollo.Utilities;
 
 namespace Apollo.Core.Host.Projects
 {

@@ -152,7 +152,7 @@ namespace Apollo.Core.Host.Plugins
         /// </returns>
         public IPartRegistration RegisterObject(Type type)
         {
-            var plugin = m_Repository.Parts().Where(p => p.Identity.Equals(type)).FirstOrDefault();
+            var plugin = m_Repository.Parts().FirstOrDefault(p => p.Identity.Equals(type));
             if (plugin == null)
             {
                 throw new UnknownPluginTypeException();

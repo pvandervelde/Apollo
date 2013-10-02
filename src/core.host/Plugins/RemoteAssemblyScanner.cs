@@ -40,18 +40,10 @@ namespace Apollo.Core.Host.Plugins
             // delegates the type name is <RETURNTYPE>(<PARAMETERTYPES>), which means we don't know
             // exactly what the type is. Also MEF strips the Lazy<T> type and replaces it with T. Hence
             // we go straight to the actual import attribute and get it from there.
-            var attribute = memberAttributes
-                .Where(a => a is ImportAttribute)
-                .Select(a => (ImportAttribute)a)
-                .FirstOrDefault();
+            var attribute = memberAttributes.OfType<ImportAttribute>().FirstOrDefault();
             Debug.Assert(attribute != null, "There should be an import attribute.");
 
             var requiredType = attribute.ContractType ?? memberType;
-            if (requiredType == null)
-            {
-                return null;
-            }
-
             return requiredType;
         }
 
@@ -76,7 +68,7 @@ namespace Apollo.Core.Host.Plugins
             // this is really ugly because we assume that the underlying methods for a property are named as:
             // get_PROPERTYNAME and set_PROPERTYNAME. In this case we assume that exports always
             // have a get method.
-            var getMember = memberInfo.GetAccessors().Where(m => m.Name.Contains("get_")).First();
+            var getMember = memberInfo.GetAccessors().First(m => m.Name.Contains("get_"));
             var name = getMember.Name.Substring("get_".Length);
             var property = getMember.DeclaringType.GetProperty(name);
             return PropertyBasedExportDefinition.CreateDefinition(
@@ -111,7 +103,7 @@ namespace Apollo.Core.Host.Plugins
             // this is really ugly because we assume that the underlying methods for a property are named as:
             // get_PROPERTYNAME and set_PROPERTYNAME. In this case we assume that imports always
             // have a set method.
-            var getMember = memberInfo.GetAccessors().Where(m => m.Name.Contains("set_")).First();
+            var getMember = memberInfo.GetAccessors().First(m => m.Name.Contains("set_"));
             var name = getMember.Name.Substring("set_".Length);
             var property = getMember.DeclaringType.GetProperty(name);
 
@@ -310,6 +302,13 @@ namespace Apollo.Core.Host.Plugins
         {
             try
             {
+                m_Logger.Log(
+                    LevelToLog.Trace,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources.RemoteAssemblyScanner_LogMessage_ScanningAssembly_WithName,
+                        assembly.FullName));
+
                 var file = new FileInfo(assembly.LocalFilePath());
                 var fileInfo = new PluginFileInfo(file.FullName, file.LastWriteTimeUtc);
 
@@ -318,6 +317,13 @@ namespace Apollo.Core.Host.Plugins
                 var parts = mefParts.Select(p => ExtractActionsAndConditions(p.Item1, p.Item2, createTypeIdentity));
                 foreach (var part in parts)
                 {
+                    m_Logger.Log(
+                        LevelToLog.Trace,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            Resources.RemoteAssemblyScanner_LogMessage_AddingPartToRepository_WithPartInformation,
+                            part.Identity));
+
                     m_Repository.AddPart(part, fileInfo);
                 }
 
@@ -326,6 +332,13 @@ namespace Apollo.Core.Host.Plugins
                 {
                     try
                     {
+                        m_Logger.Log(
+                            LevelToLog.Trace,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                Resources.RemoteAssemblyScanner_LogMessage_RegisteringGroupsViaExporter_WithExporterType,
+                                t.AssemblyQualifiedName));
+
                         var builder = new GroupDefinitionBuilder(
                             m_Repository,
                             m_ImportEngine, 
@@ -409,8 +422,8 @@ namespace Apollo.Core.Host.Plugins
                     var contractImport = import as ContractBasedImportDefinition;
 
                     SerializableImportDefinition importDefinition = !ReflectionModelServices.IsImportingParameter(contractImport)
-                        ? importDefinition = CreatePropertyImport(contractImport, createTypeIdentity)
-                        : importDefinition = CreateConstructorParameterImport(contractImport, createTypeIdentity);
+                        ? CreatePropertyImport(contractImport, createTypeIdentity)
+                        : CreateConstructorParameterImport(contractImport, createTypeIdentity);
 
                     if (importDefinition != null)
                     {

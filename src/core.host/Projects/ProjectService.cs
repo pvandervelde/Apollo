@@ -9,6 +9,7 @@ using Apollo.Core.Base;
 using Apollo.Core.Base.Activation;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
+using Nuclei.Diagnostics;
 
 namespace Apollo.Core.Host.Projects
 {
@@ -44,6 +45,11 @@ namespace Apollo.Core.Host.Projects
         private readonly ICollectNotifications m_Notifications;
 
         /// <summary>
+        /// The object that provides the diagnostics methods for the application.
+        /// </summary>
+        private readonly SystemDiagnostics m_Diagnostics;
+
+        /// <summary>
         /// Handles the construction of new project objects.
         /// </summary>
         private readonly IBuildProjects m_Builder;
@@ -60,6 +66,7 @@ namespace Apollo.Core.Host.Projects
         /// <param name="dataStorageProxyBuilder">The function which returns a storage proxy for a newly loaded dataset.</param>
         /// <param name="datasetDistributor">The object that handles the distribution of datasets.</param>
         /// <param name="notifications">The object that stores the notifications for the user interface.</param>
+        /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
         /// <param name="projectBuilder">The object that builds new projects.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="timelineBuilder"/> is <see langword="null"/>.
@@ -74,6 +81,9 @@ namespace Apollo.Core.Host.Projects
         /// Thrown if <paramref name="notifications"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="diagnostics"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="projectBuilder"/> is <see langword="null"/>.
         /// </exception>
         public ProjectService(
@@ -81,6 +91,7 @@ namespace Apollo.Core.Host.Projects
             Func<DatasetOnlineInformation, DatasetStorageProxy> dataStorageProxyBuilder,
             IHelpDistributingDatasets datasetDistributor,
             ICollectNotifications notifications,
+            SystemDiagnostics diagnostics,
             IBuildProjects projectBuilder)
         {
             {
@@ -88,6 +99,7 @@ namespace Apollo.Core.Host.Projects
                 Lokad.Enforce.Argument(() => dataStorageProxyBuilder);
                 Lokad.Enforce.Argument(() => datasetDistributor);
                 Lokad.Enforce.Argument(() => notifications);
+                Lokad.Enforce.Argument(() => diagnostics);
                 Lokad.Enforce.Argument(() => projectBuilder);
             }
 
@@ -97,6 +109,7 @@ namespace Apollo.Core.Host.Projects
             m_DataStorageProxyBuilder = dataStorageProxyBuilder;
             m_DatasetDistributor = datasetDistributor;
             m_Notifications = notifications;
+            m_Diagnostics = diagnostics;
             m_Builder = projectBuilder;
         }
 
@@ -114,6 +127,7 @@ namespace Apollo.Core.Host.Projects
                     .WithDatasetDistributor((request, token) => m_DatasetDistributor.ProposeDistributionFor(request, token))
                     .WithDataStorageBuilder(m_DataStorageProxyBuilder)
                     .WithNotifications(m_Notifications)
+                    .WithDiagnostics(m_Diagnostics)
                     .Build();
             }
         }
@@ -144,6 +158,7 @@ namespace Apollo.Core.Host.Projects
                     .WithDatasetDistributor((request, token) => m_DatasetDistributor.ProposeDistributionFor(request, token))
                     .WithDataStorageBuilder(m_DataStorageProxyBuilder)
                     .WithNotifications(m_Notifications)
+                    .WithDiagnostics(m_Diagnostics)
                     .FromStorage(persistenceInfo)
                     .Build();
             }

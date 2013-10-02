@@ -39,6 +39,7 @@ namespace Apollo.Core.Host.Projects
             protected override DatasetProxy Copy(DatasetProxy original)
             {
                 var proxyLayer = new Mock<IProxyCompositionLayer>();
+                var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
                 Func<DatasetOnlineInformation, DatasetStorageProxy> func = d => new DatasetStorageProxy(
                     d,
                     new GroupSelector(
@@ -66,7 +67,8 @@ namespace Apollo.Core.Host.Projects
                             LoadFrom = null,
                         }, 
                     func,
-                    new Mock<ICollectNotifications>().Object);
+                    new Mock<ICollectNotifications>().Object,
+                    systemDiagnostics);
             }
 
             protected override DatasetProxy FirstInstance
@@ -169,7 +171,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
         }
 
         private static DatasetProxy GenerateDataset(IProject project)
@@ -232,7 +235,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var dataset = project.BaseDataset();
 
             Assert.IsNotNull(dataset);
@@ -274,7 +278,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var dataset = project.BaseDataset();
 
             var name = string.Empty;
@@ -324,7 +329,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var dataset = project.BaseDataset();
 
             var summary = string.Empty;
@@ -374,7 +380,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var dataset = project.BaseDataset();
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                 l => new SelectedProposal(plan);
@@ -436,7 +443,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var dataset = project.BaseDataset();
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                 l => new SelectedProposal(plan);
@@ -490,7 +498,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var dataset = project.BaseDataset();
 
             // Explicitly return nothing so that we cancel the process
@@ -560,7 +569,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var dataset = project.BaseDataset();
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                 l => new SelectedProposal(plan);
@@ -641,7 +651,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var dataset = project.BaseDataset();
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                 l => new SelectedProposal(plan);
@@ -693,7 +704,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var dataset = project.BaseDataset();
 
             var creationInformation = new DatasetCreationInformation()
@@ -747,7 +759,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var dataset = project.BaseDataset();
 
             Assert.Throws<ArgumentNullException>(() => dataset.CreateNewChild(null));
@@ -788,7 +801,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var dataset = project.BaseDataset();
 
             var creationInformation = new DatasetCreationInformation()
@@ -837,7 +851,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var dataset = project.BaseDataset();
 
             bool wasInvoked = false;
@@ -901,7 +916,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var dataset = project.BaseDataset();
 
             Assert.Throws<ArgumentNullException>(() => dataset.CreateNewChildren(null));
@@ -942,7 +958,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var dataset = project.BaseDataset();
 
             Assert.Throws<ArgumentException>(() => dataset.CreateNewChildren(new List<DatasetCreationInformation>()));
@@ -983,7 +1000,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var dataset = project.BaseDataset();
 
             var creationInformation = new DatasetCreationInformation()
@@ -1042,7 +1060,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var root = project.BaseDataset();
 
             var creationInformation = new DatasetCreationInformation()
@@ -1096,7 +1115,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var root = project.BaseDataset();
 
             Assert.Throws<CannotDeleteDatasetException>(() => root.Delete());
@@ -1137,7 +1157,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var root = project.BaseDataset();
 
             var creationInformation = new DatasetCreationInformation()
@@ -1203,7 +1224,8 @@ namespace Apollo.Core.Host.Projects
                         new Mock<IConnectGroups>().Object,
                         proxyLayer.Object),
                     proxyLayer.Object),
-                new Mock<ICollectNotifications>().Object);
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics);
             var root = project.BaseDataset();
 
             bool projectWasNotified = false;

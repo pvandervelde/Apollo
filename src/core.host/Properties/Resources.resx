@@ -411,4 +411,58 @@
   <data name="Notifications_FailedToActivateDataset" xml:space="preserve">
     <value>Dataset activation failed</value>
   </data>
+  <data name="DatasetProxy_LogMessage_ActivatingDataset_WithId" xml:space="preserve">
+    <value>Activating dataset [{0}].</value>
+  </data>
+  <data name="DatasetProxy_LogMessage_ReactivatingFromPreviouslyStoredLocation_WithLocation" xml:space="preserve">
+    <value>Reactivating dataset [{0}] on previously stored location: {1}.</value>
+  </data>
+  <data name="Project_LogMessage_ClosingProject" xml:space="preserve">
+    <value>Closing current project.</value>
+  </data>
+  <data name="Project_LogMessage_CreatingDataset_WithInformation" xml:space="preserve">
+    <value>Creating new dataset with dataset [{0}] as parent.</value>
+  </data>
+  <data name="Project_LogMessage_DeletedDataset_WithId" xml:space="preserve">
+    <value>Deleted dataset [{0}].</value>
+  </data>
+  <data name="Project_LogMessage_DeletingDatasetAndChildren_WithInformation" xml:space="preserve">
+    <value>Deleting dataset [{0}] and all its children.</value>
+  </data>
+  <data name="DatasetProxy_LogMessage_DatasetActivationComplete_WithId" xml:space="preserve">
+    <value>Activation of dataset [{0}] was successful.</value>
+  </data>
+  <data name="DatasetProxy_LogMessage_DeactivatingDataset_WithId" xml:space="preserve">
+    <value>Deactivating dataset [{0}].</value>
+  </data>
+  <data name="DatasetProxy_LogMessage_FailedToActivateDataset_WithException" xml:space="preserve">
+    <value>Failed to activate dataset [{0}]. Exception was: {1}.</value>
+  </data>
+  <data name="ProxyCompositionLayer_LogMessage_AddingGroup_WithId" xml:space="preserve">
+    <value>Adding new group [{0}] to composition layer.</value>
+  </data>
+  <data name="ProxyCompositionLayer_LogMessage_ConnectingGroups_WithImportAndExport" xml:space="preserve">
+    <value>Connecting exporting group [{1}] with importing group [{0}].</value>
+  </data>
+  <data name="ProxyCompositionLayer_LogMessage_DisconnectingAllFromGroup_WithId" xml:space="preserve">
+    <value>Disconnecting all imports and exports from group [{0}].</value>
+  </data>
+  <data name="ProxyCompositionLayer_LogMessage_DisconnectingGroups_WithImportAndExport" xml:space="preserve">
+    <value>Disconnecting exporting group [{1}] from importing group [{0}].</value>
+  </data>
+  <data name="ProxyCompositionLayer_LogMessage_ReloadingFromDataset" xml:space="preserve">
+    <value>Reloading data from remote dataset.</value>
+  </data>
+  <data name="ProxyCompositionLayer_LogMessage_RemovingGroup_WithId" xml:space="preserve">
+    <value>Removing group [{0}] from composition layer.</value>
+  </data>
+  <data name="RemoteAssemblyScanner_LogMessage_AddingPartToRepository_WithPartInformation" xml:space="preserve">
+    <value>Adding new part [{0}] to repository.</value>
+  </data>
+  <data name="RemoteAssemblyScanner_LogMessage_RegisteringGroupsViaExporter_WithExporterType" xml:space="preserve">
+    <value>Registering groups via exporter of type [{0}].</value>
+  </data>
+  <data name="RemoteAssemblyScanner_LogMessage_ScanningAssembly_WithName" xml:space="preserve">
+    <value>Scanning assembly [{0}] for plugins.</value>
+  </data>
 </root>

@@ -215,6 +215,7 @@ namespace Apollo.Core.Host.UserInterfaces
                     proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<ICollectNotifications>().Object,
+                systemDiagnostics,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
             service.Start();
@@ -289,6 +290,7 @@ namespace Apollo.Core.Host.UserInterfaces
                     proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<ICollectNotifications>().Object,
+                systemDiagnostics,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
             service.Start();
@@ -361,6 +363,7 @@ namespace Apollo.Core.Host.UserInterfaces
                     proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<ICollectNotifications>().Object,
+                systemDiagnostics,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
             Assert.IsTrue(service.IsConnectedToAllDependencies);
@@ -469,13 +472,14 @@ namespace Apollo.Core.Host.UserInterfaces
                     proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<ICollectNotifications>().Object,
+                systemDiagnostics,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
 
             service.Start();
             Assert.AreEqual(StartupState.Started, service.StartupState);
             
-            Assert.Throws<MissingNotificationActionException>(() => service.Stop());
+            Assert.Throws<MissingNotificationActionException>(service.Stop);
         }
 
         [Test]
@@ -514,13 +518,14 @@ namespace Apollo.Core.Host.UserInterfaces
                     proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<ICollectNotifications>().Object,
+                systemDiagnostics,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
 
             service.Start();
             Assert.AreEqual(StartupState.Started, service.StartupState);
             
-            Assert.Throws<Exception>(() => service.Stop());
+            Assert.Throws<Exception>(service.Stop);
         }
 
         [Test]
@@ -560,6 +565,7 @@ namespace Apollo.Core.Host.UserInterfaces
                     proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<ICollectNotifications>().Object,
+                systemDiagnostics,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
 
@@ -611,6 +617,7 @@ namespace Apollo.Core.Host.UserInterfaces
                     proxyLayer.Object),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<ICollectNotifications>().Object,
+                systemDiagnostics,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
 

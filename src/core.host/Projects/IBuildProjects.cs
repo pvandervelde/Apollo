@@ -12,6 +12,7 @@ using Apollo.Core.Base;
 using Apollo.Core.Base.Activation;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
+using Nuclei.Diagnostics;
 
 namespace Apollo.Core.Host.Projects
 {
@@ -67,6 +68,15 @@ namespace Apollo.Core.Host.Projects
         /// The current builder instance with the notification object stored.
         /// </returns>
         IBuildProjects WithNotifications(ICollectNotifications notifications);
+
+        /// <summary>
+        /// Provides the object that provides the diagnostics methods for the application.
+        /// </summary>
+        /// <param name="diagnostics">The object provides the diagnostics methods for the application.</param>
+        /// <returns>
+        /// The current builder instance with the diagnostics object stored.
+        /// </returns>
+        IBuildProjects WithDiagnostics(SystemDiagnostics diagnostics);
 
         /// <summary>
         /// Provides the <see cref="Stream"/> from which the project must be loaded.

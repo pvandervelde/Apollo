@@ -14,6 +14,7 @@ using Apollo.Core.Host.Plugins;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
 using Moq;
+using Nuclei.Diagnostics;
 using NUnit.Framework;
 using QuickGraph;
 
@@ -52,6 +53,8 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void Stop()
         {
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+
             ITimeline timeline = new Timeline(BuildStorage);
             var distributor = new Mock<IHelpDistributingDatasets>();
             var builder = new Mock<IBuildProjects>();
@@ -67,6 +70,7 @@ namespace Apollo.Core.Host.Projects
                     proxyLayer.Object),
                 distributor.Object,
                 new Mock<ICollectNotifications>().Object,
+                systemDiagnostics,
                 builder.Object);
 
             service.Start();
@@ -79,6 +83,8 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void StopWithProject()
         {
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+
             ITimeline timeline = new Timeline(BuildStorage);
             var distributor = new Mock<IHelpDistributingDatasets>();
 
@@ -114,6 +120,10 @@ namespace Apollo.Core.Host.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
+                builder.Setup(b => b.WithDiagnostics(It.IsAny<SystemDiagnostics>()))
+                    .Returns(builder.Object)
+                    .Verifiable();
+
                 builder.Setup(b => b.Build())
                     .Returns(project.Object)
                     .Verifiable();
@@ -130,6 +140,7 @@ namespace Apollo.Core.Host.Projects
                     proxyLayer.Object),
                 distributor.Object,
                 new Mock<ICollectNotifications>().Object,
+                systemDiagnostics,
                 builder.Object);
 
             service.Start();
@@ -148,6 +159,8 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void CreateNewProject()
         {
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+
             ITimeline timeline = new Timeline(BuildStorage);
             var distributor = new Mock<IHelpDistributingDatasets>();
 
@@ -177,6 +190,10 @@ namespace Apollo.Core.Host.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
+                builder.Setup(b => b.WithDiagnostics(It.IsAny<SystemDiagnostics>()))
+                    .Returns(builder.Object)
+                    .Verifiable();
+
                 builder.Setup(b => b.Build())
                     .Returns(project.Object)
                     .Verifiable();
@@ -193,6 +210,7 @@ namespace Apollo.Core.Host.Projects
                     proxyLayer.Object),
                 distributor.Object,
                 new Mock<ICollectNotifications>().Object,
+                systemDiagnostics,
                 builder.Object);
 
             service.CreateNewProject();
@@ -207,6 +225,8 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void LoadProjectWithNullPersistenceInformation()
         {
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+
             ITimeline timeline = new Timeline(BuildStorage);
             var distributor = new Mock<IHelpDistributingDatasets>();
             var builder = new Mock<IBuildProjects>();
@@ -222,6 +242,7 @@ namespace Apollo.Core.Host.Projects
                     proxyLayer.Object),
                 distributor.Object,
                 new Mock<ICollectNotifications>().Object,
+                systemDiagnostics,
                 builder.Object);
 
             Assert.Throws<ArgumentNullException>(() => service.LoadProject(null));
@@ -230,6 +251,8 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void LoadProject()
         {
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+
             ITimeline timeline = new Timeline(BuildStorage);
             var distributor = new Mock<IHelpDistributingDatasets>();
 
@@ -263,6 +286,10 @@ namespace Apollo.Core.Host.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
+                builder.Setup(b => b.WithDiagnostics(It.IsAny<SystemDiagnostics>()))
+                    .Returns(builder.Object)
+                    .Verifiable();
+
                 builder.Setup(b => b.Build())
                     .Returns(project.Object)
                     .Verifiable();
@@ -279,6 +306,7 @@ namespace Apollo.Core.Host.Projects
                     proxyLayer.Object),
                 distributor.Object,
                 new Mock<ICollectNotifications>().Object,
+                systemDiagnostics,
                 builder.Object);
 
             service.LoadProject(new Mock<IPersistenceInformation>().Object);
@@ -295,6 +323,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void UnloadProject()
         {
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             ITimeline timeline = new Timeline(BuildStorage);
             var distributor = new Mock<IHelpDistributingDatasets>();
 
@@ -327,6 +356,10 @@ namespace Apollo.Core.Host.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
+                builder.Setup(b => b.WithDiagnostics(It.IsAny<SystemDiagnostics>()))
+                    .Returns(builder.Object)
+                    .Verifiable();
+
                 builder.Setup(b => b.Build())
                     .Returns(project.Object);
             }
@@ -342,6 +375,7 @@ namespace Apollo.Core.Host.Projects
                     proxyLayer.Object),
                 distributor.Object,
                 new Mock<ICollectNotifications>().Object,
+                systemDiagnostics,
                 builder.Object);
 
             service.CreateNewProject();

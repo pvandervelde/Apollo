@@ -8,11 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Host.Plugins;
-using Apollo.Utilities;
+using Apollo.Core.Host.Properties;
+using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Logging;
 using QuickGraph;
 
 namespace Apollo.Core.Host.Projects
@@ -54,27 +57,39 @@ namespace Apollo.Core.Host.Projects
         private readonly IConnectGroups m_Connector;
 
         /// <summary>
+        /// The object that provides the diagnostics methods for the application.
+        /// </summary>
+        private readonly SystemDiagnostics m_Diagnostics;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ProxyCompositionLayer"/> class.
         /// </summary>
         /// <param name="commands">The object that provides the commands for the composition of part groups.</param>
         /// <param name="groupConnector">The object that handles the connection of part groups.</param>
+        /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="commands"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="groupConnector"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="diagnostics"/> is <see langword="null" />.
+        /// </exception>
         public ProxyCompositionLayer(
             ICompositionCommands commands,
-            IConnectGroups groupConnector)
+            IConnectGroups groupConnector,
+            SystemDiagnostics diagnostics)
         {
             {
                 Lokad.Enforce.Argument(() => commands);
                 Lokad.Enforce.Argument(() => groupConnector);
+                Lokad.Enforce.Argument(() => diagnostics);
             }
 
             m_Commands = commands;
             m_Connector = groupConnector;
+            m_Diagnostics = diagnostics;
         }
 
         /// <summary>
@@ -92,6 +107,14 @@ namespace Apollo.Core.Host.Projects
 
             var id = new GroupCompositionId();
             var remoteTask = m_Commands.Add(id, group);
+
+            m_Diagnostics.Log(
+                LevelToLog.Trace, 
+                HostConstants.LogPrefix,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.ProxyCompositionLayer_LogMessage_AddingGroup_WithId,
+                    id));
 
             return remoteTask.ContinueWith(
                 t =>
@@ -117,6 +140,14 @@ namespace Apollo.Core.Host.Projects
                 Debug.Assert(group != null, "The ID that should be removed should not be a null reference.");
                 Debug.Assert(m_Groups.ContainsKey(group), "The ID should be known.");
             }
+
+            m_Diagnostics.Log(
+                LevelToLog.Trace,
+                HostConstants.LogPrefix,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.ProxyCompositionLayer_LogMessage_RemovingGroup_WithId,
+                    group));
 
             var remoteTask = m_Commands.Remove(group);
             return remoteTask.ContinueWith(
@@ -211,6 +242,15 @@ namespace Apollo.Core.Host.Projects
                 throw new UnknownPartGroupException();
             }
 
+            m_Diagnostics.Log(
+                LevelToLog.Trace,
+                HostConstants.LogPrefix,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.ProxyCompositionLayer_LogMessage_ConnectingGroups_WithImportAndExport,
+                    importingGroup,
+                    exportingGroup));
+
             var parts = m_Connector.GenerateConnectionFor(m_Groups[importingGroup], importDefinition, m_Groups[exportingGroup]);
             var state = new GroupConnection(importingGroup, exportingGroup, importDefinition, parts);
             var remoteTask = m_Commands.Connect(state);
@@ -241,6 +281,15 @@ namespace Apollo.Core.Host.Projects
                 Debug.Assert(exportingGroup != null, "The ID of the exporting group should not be a null reference.");
             }
 
+            m_Diagnostics.Log(
+                LevelToLog.Trace,
+                HostConstants.LogPrefix,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.ProxyCompositionLayer_LogMessage_DisconnectingGroups_WithImportAndExport,
+                    importingGroup,
+                    exportingGroup));
+
             var remoteTask = m_Commands.Disconnect(importingGroup, exportingGroup);
             return remoteTask.ContinueWith(
                 t =>
@@ -259,6 +308,14 @@ namespace Apollo.Core.Host.Projects
             {
                 Debug.Assert(group != null, "The ID of the group should not be a null reference.");
             }
+
+            m_Diagnostics.Log(
+                LevelToLog.Trace,
+                HostConstants.LogPrefix,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.ProxyCompositionLayer_LogMessage_DisconnectingAllFromGroup_WithId,
+                    group));
 
             var remoteTask = m_Commands.Disconnect(group);
             return remoteTask.ContinueWith(
@@ -293,7 +350,7 @@ namespace Apollo.Core.Host.Projects
 
             lock (m_Lock)
             {
-                return m_GroupConnections.InEdges(importingGroup).Where(e => e.Import.Equals(importDefinition)).Any();
+                return m_GroupConnections.InEdges(importingGroup).Any(e => e.Import.Equals(importDefinition));
             }
         }
 
@@ -325,9 +382,7 @@ namespace Apollo.Core.Host.Projects
 
             lock (m_Lock)
             {
-                return m_GroupConnections.InEdges(importingGroup)
-                    .Where(e => e.Import.Equals(importDefinition) && e.Source.Equals(exportingGroup))
-                    .Any();
+                return m_GroupConnections.InEdges(importingGroup).Any(e => e.Import.Equals(importDefinition) && e.Source.Equals(exportingGroup));
             }
         }
 
@@ -366,6 +421,11 @@ namespace Apollo.Core.Host.Projects
         /// <returns>A task that will finish when the reload is complete.</returns>
         public Task ReloadFromDataset()
         {
+            m_Diagnostics.Log(
+                LevelToLog.Trace,
+                HostConstants.LogPrefix,
+                Resources.ProxyCompositionLayer_LogMessage_ReloadingFromDataset);
+
             var task = m_Commands.CurrentState();
             return task.ContinueWith(
                 t => 

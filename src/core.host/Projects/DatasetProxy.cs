@@ -17,6 +17,8 @@ using Apollo.Core.Base.Activation;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
+using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Logging;
 
 namespace Apollo.Core.Host.Projects
 {
@@ -115,7 +117,7 @@ namespace Apollo.Core.Host.Projects
         {
             {
                 Debug.Assert(members.Count() == 3, "There should only be three members.");
-                Debug.Assert(constructorArguments.Length == 3, "There should be only three constructor arguments.");
+                Debug.Assert(constructorArguments.Length == 4, "There should be four constructor arguments.");
             }
 
             IVariableTimeline<string> name = null;
@@ -148,6 +150,7 @@ namespace Apollo.Core.Host.Projects
                 constructorArguments[0] as DatasetConstructionParameters,
                 constructorArguments[1] as Func<DatasetOnlineInformation, DatasetStorageProxy>,
                 constructorArguments[2] as ICollectNotifications,
+                constructorArguments[3] as SystemDiagnostics,
                 historyId,
                 name,
                 summary,
@@ -168,6 +171,11 @@ namespace Apollo.Core.Host.Projects
         /// The object that collects the notifications for the user interface.
         /// </summary>
         private readonly ICollectNotifications m_Notifications;
+
+        /// <summary>
+        /// The object that provides the diagnostics methods for the application.
+        /// </summary>
+        private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
         /// The ID used by the timeline to uniquely identify the current object.
@@ -219,6 +227,7 @@ namespace Apollo.Core.Host.Projects
         /// <param name="constructorArgs">The object that holds all the constructor arguments that do not belong to the timeline.</param>
         /// <param name="proxyBuilder">The function that is used to create the proxy for the data inside the dataset.</param>
         /// <param name="notifications">The object that stores the notifications for the user interface.</param>
+        /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
         /// <param name="historyId">The ID for use in the history system.</param>
         /// <param name="name">The data structure that stores the history information for the name of the dataset.</param>
         /// <param name="summary">The data structure that stores the history information for the summary of the dataset.</param>
@@ -233,6 +242,9 @@ namespace Apollo.Core.Host.Projects
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="notifications"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="diagnostics"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="historyId"/> is <see langword="null" />.
@@ -250,6 +262,7 @@ namespace Apollo.Core.Host.Projects
             DatasetConstructionParameters constructorArgs,
             Func<DatasetOnlineInformation, DatasetStorageProxy> proxyBuilder,
             ICollectNotifications notifications,
+            SystemDiagnostics diagnostics,
             HistoryId historyId,
             IVariableTimeline<string> name,
             IVariableTimeline<string> summary,
@@ -259,6 +272,7 @@ namespace Apollo.Core.Host.Projects
                 Lokad.Enforce.Argument(() => constructorArgs);
                 Lokad.Enforce.Argument(() => proxyBuilder);
                 Lokad.Enforce.Argument(() => notifications);
+                Lokad.Enforce.Argument(() => diagnostics);
                 Lokad.Enforce.Argument(() => historyId);
                 Lokad.Enforce.Argument(() => name);
                 Lokad.Enforce.Argument(() => summary);
@@ -268,6 +282,7 @@ namespace Apollo.Core.Host.Projects
             m_ConstructorArgs = constructorArgs;
             m_ProxyBuilder = proxyBuilder;
             m_Notifications = notifications;
+            m_Diagnostics = diagnostics;
             m_HistoryId = historyId;
             m_Name = name;
             m_Summary = summary;
@@ -300,6 +315,16 @@ namespace Apollo.Core.Host.Projects
                     // and if we can't find it then grab the first machine in the selection.
                     // At some point we should make this a whole lot smarter but for now it'll do.
                     var original = m_DistributionLocation.Current;
+
+                    m_Diagnostics.Log(
+                        LevelToLog.Trace, 
+                        HostConstants.LogPrefix,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            Resources.DatasetProxy_LogMessage_ReactivatingFromPreviouslyStoredLocation_WithLocation,
+                            Id,
+                            original));
+
                     Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                         c =>
                         {
@@ -350,8 +375,8 @@ namespace Apollo.Core.Host.Projects
         /// </summary>
         public void BeforeRemoval()
         {
-            m_Name.OnExternalValueUpdate -= new EventHandler<EventArgs>(HandleOnNameUpdate);
-            m_Summary.OnExternalValueUpdate -= new EventHandler<EventArgs>(HandleOnSummaryUpdate);
+            m_Name.OnExternalValueUpdate -= HandleOnNameUpdate;
+            m_Summary.OnExternalValueUpdate -= HandleOnSummaryUpdate;
 
             if (IsActivated)
             {
@@ -643,15 +668,18 @@ namespace Apollo.Core.Host.Projects
                 Debug.Assert(preferredLocation != DistributionLocations.None, "A distribution location should be specified.");
             }
 
-            if (IsActivated)
+            if (IsActivated || m_IsActivating)
             {
                 return;
             }
 
-            if (m_IsActivating)
-            {
-                return;
-            }
+            m_Diagnostics.Log(
+                LevelToLog.Trace, 
+                HostConstants.LogPrefix,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.DatasetProxy_LogMessage_ActivatingDataset_WithId,
+                    Id));
 
             m_IsActivating = true;
             try
@@ -670,17 +698,9 @@ namespace Apollo.Core.Host.Projects
                 };
 
                 var suggestedPlans = m_ConstructorArgs.DistributionPlanGenerator(request, token);
-                var selection = from plan in suggestedPlans
-                                select new DistributionSuggestion(plan);
-
-                // Ask the user where they would like their dataset distributed to.
+                var selection = suggestedPlans.Select(plan => new DistributionSuggestion(plan));
                 var selectedPlan = machineSelector(selection);
-                if (token.IsCancellationRequested)
-                {
-                    return;
-                }
-
-                if (selectedPlan.WasSelectionCanceled)
+                if (token.IsCancellationRequested || selectedPlan.WasSelectionCanceled)
                 {
                     return;
                 }
@@ -694,6 +714,15 @@ namespace Apollo.Core.Host.Projects
                         {
                             if (t.Exception != null)
                             {
+                                m_Diagnostics.Log(
+                                    LevelToLog.Error, 
+                                    HostConstants.LogPrefix,
+                                    string.Format(
+                                        CultureInfo.InvariantCulture,
+                                        Resources.DatasetProxy_LogMessage_FailedToActivateDataset_WithException,
+                                        Id,
+                                        t.Exception));
+
                                 // Obviously not activated so ...
                                 RaiseOnProgressOfCurrentAction(100, string.Empty, false);
                                 RaiseOnDeactivated();
@@ -713,6 +742,14 @@ namespace Apollo.Core.Host.Projects
                             {
                                 m_DistributionLocation.Current = selectedPlan.Plan.MachineToDistributeTo;
                             }
+
+                            m_Diagnostics.Log(
+                                LevelToLog.Trace, 
+                                HostConstants.LogPrefix,
+                                string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    Resources.DatasetProxy_LogMessage_DatasetActivationComplete_WithId,
+                                    Id));
 
                             RaiseOnActivated();
                         }
@@ -755,6 +792,14 @@ namespace Apollo.Core.Host.Projects
             {
                 return;
             }
+
+            m_Diagnostics.Log(
+                LevelToLog.Trace, 
+                HostConstants.LogPrefix,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.DatasetProxy_LogMessage_DeactivatingDataset_WithId,
+                    Id));
 
             m_Connection.OnSwitchToEditMode -= HandleOnSwitchToEditMode;
             m_Connection.OnSwitchToExecutingMode -= HandleOnSwitchToExecutingMode;

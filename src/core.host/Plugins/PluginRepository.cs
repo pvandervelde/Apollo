@@ -11,7 +11,6 @@ using System.Linq;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Host.Properties;
-using Apollo.Utilities;
 using QuickGraph;
 using QuickGraph.Algorithms.RankedShortestPath;
 

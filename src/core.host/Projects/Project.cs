@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Apollo.Core.Base;
@@ -14,6 +15,8 @@ using Apollo.Core.Base.Activation;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
+using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Logging;
 using QuickGraph;
 
 namespace Apollo.Core.Host.Projects
@@ -73,6 +76,11 @@ namespace Apollo.Core.Host.Projects
         private readonly ICollectNotifications m_Notifications;
 
         /// <summary>
+        /// The object that provides the diagnostics methods for the application.
+        /// </summary>
+        private readonly SystemDiagnostics m_Diagnostics;
+
+        /// <summary>
         /// The ID number of the root dataset.
         /// </summary>
         private DatasetId m_RootDataset;
@@ -102,6 +110,7 @@ namespace Apollo.Core.Host.Projects
         /// </param>
         /// <param name="dataStorageProxyBuilder">The function which returns a storage proxy for a newly loaded dataset.</param>
         /// <param name="notifications">The object that stores the notifications for the user interface.</param>
+        /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="distributor"/> is <see langword="null" />.
         /// </exception>
@@ -111,12 +120,16 @@ namespace Apollo.Core.Host.Projects
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="notifications"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="diagnostics"/> is <see langword="null" />.
+        /// </exception>
         public Project(
             ITimeline timeline,
             Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor,
             Func<DatasetOnlineInformation, DatasetStorageProxy> dataStorageProxyBuilder,
-            ICollectNotifications notifications)
-            : this(timeline, distributor, dataStorageProxyBuilder, notifications, null)
+            ICollectNotifications notifications,
+            SystemDiagnostics diagnostics)
+            : this(timeline, distributor, dataStorageProxyBuilder, notifications, diagnostics, null)
         {
         }
 
@@ -130,6 +143,7 @@ namespace Apollo.Core.Host.Projects
         /// </param>
         /// <param name="dataStorageProxyBuilder">The function which returns a storage proxy for a newly loaded dataset.</param>
         /// <param name="notifications">The object that stores the notifications for the user interface.</param>
+        /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
         /// <param name="persistenceInfo">
         /// The object that describes how the project was persisted.
         /// </param>
@@ -145,11 +159,15 @@ namespace Apollo.Core.Host.Projects
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="notifications"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="diagnostics"/> is <see langword="null" />.
+        /// </exception>
         public Project(
             ITimeline timeline,
             Func<DatasetActivationRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor,
             Func<DatasetOnlineInformation, DatasetStorageProxy> dataStorageProxyBuilder,
             ICollectNotifications notifications,
+            SystemDiagnostics diagnostics,
             IPersistenceInformation persistenceInfo)
         {
             {
@@ -157,6 +175,7 @@ namespace Apollo.Core.Host.Projects
                 Lokad.Enforce.Argument(() => distributor);
                 Lokad.Enforce.Argument(() => dataStorageProxyBuilder);
                 Lokad.Enforce.Argument(() => notifications);
+                Lokad.Enforce.Argument(() => diagnostics);
             }
 
             m_Timeline = timeline;
@@ -172,6 +191,7 @@ namespace Apollo.Core.Host.Projects
             m_DataStorageProxyBuilder = dataStorageProxyBuilder;
 
             m_Notifications = notifications;
+            m_Diagnostics = diagnostics;
 
             if (persistenceInfo != null)
             {
@@ -495,6 +515,11 @@ namespace Apollo.Core.Host.Projects
         /// </design>
         public void Close()
         {
+            m_Diagnostics.Log(
+                LevelToLog.Info, 
+                HostConstants.LogPrefix,
+                Resources.Project_LogMessage_ClosingProject);
+
             // Indicate that we're closing the project. Do this first so that any actions that come
             // in parallel to this one will be notified.
             m_IsClosed = true;
@@ -536,6 +561,14 @@ namespace Apollo.Core.Host.Projects
                     (parent == null) || ((parent != null) && m_Datasets.Datasets[parent].CanBecomeParent),
                     "The given parent is not allowed to have children.");
             }
+
+            m_Diagnostics.Log(
+                LevelToLog.Trace, 
+                HostConstants.LogPrefix,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.Project_LogMessage_CreatingDataset_WithInformation,
+                    parent));
 
             var dataset = CreateNewDatasetProxy(newChild);
 
@@ -587,7 +620,8 @@ namespace Apollo.Core.Host.Projects
                 DatasetProxy.CreateInstance,
                 parameters,
                 m_DataStorageProxyBuilder,
-                m_Notifications);
+                m_Notifications,
+                m_Diagnostics);
 
             return newDataset;
         }
@@ -621,6 +655,14 @@ namespace Apollo.Core.Host.Projects
             {
                 return;
             }
+
+            m_Diagnostics.Log(
+                LevelToLog.Info, 
+                HostConstants.LogPrefix,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.Project_LogMessage_DeletingDatasetAndChildren_WithInformation,
+                    dataset));
 
             // Get all the datasets that need to be deleted
             // make sure we do this in an ordered way. We need to 
@@ -669,6 +711,14 @@ namespace Apollo.Core.Host.Projects
                     m_Datasets.Graph.RemoveVertex(datasetToDelete);
                     m_Datasets.Datasets.Remove(datasetToDelete);
                 }
+
+                m_Diagnostics.Log(
+                    LevelToLog.Trace, 
+                    HostConstants.LogPrefix,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources.Project_LogMessage_DeletedDataset_WithId,
+                        datasetToDelete));
             }
         }
 
