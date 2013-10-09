@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Activation;
 using Apollo.Utilities;
@@ -146,7 +145,6 @@ namespace Apollo.Core.Scripting.Projects
         /// <param name="machineSelector">
         ///     The function that selects the most suitable machine for the dataset to run on.
         /// </param>
-        /// <param name="token">The token that is used to cancel the activation.</param>
         /// <remarks>
         /// Note that the <paramref name="preferredLocation"/> is
         /// only a suggestion. The loader may decide to ignore the suggestion if there is a distribution
@@ -154,8 +152,7 @@ namespace Apollo.Core.Scripting.Projects
         /// </remarks>
         void Activate(
             DistributionLocations preferredLocation,
-            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
-            CancellationToken token);
+            Func<DistributionSuggestionProxy[], DistributionSuggestionProxy> machineSelector);
 
         /// <summary>
         /// Deactivates the dataset.

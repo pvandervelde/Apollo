@@ -21,20 +21,20 @@ namespace Apollo.Core.Host.Scripting.Projects
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class DatasetFacadeForScriptsTest : EqualityContractVerifierTest
+    public sealed class ScriptBackEndDatasetFacadeTest : EqualityContractVerifierTest
     {
-        private sealed class DatasetFacadeForScriptsEqualityContractVerifier : EqualityContractVerifier<DatasetFacadeForScripts>
+        private sealed class ScriptBackEndDatasetFacadeEqualityContractVerifier : EqualityContractVerifier<ScriptBackEndDatasetFacade>
         {
-            private readonly DatasetFacadeForScripts m_First = new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset()));
+            private readonly ScriptBackEndDatasetFacade m_First = new ScriptBackEndDatasetFacade(new DatasetFacade(CreateMockDataset()));
 
-            private readonly DatasetFacadeForScripts m_Second = new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset()));
+            private readonly ScriptBackEndDatasetFacade m_Second = new ScriptBackEndDatasetFacade(new DatasetFacade(CreateMockDataset()));
 
-            protected override DatasetFacadeForScripts Copy(DatasetFacadeForScripts original)
+            protected override ScriptBackEndDatasetFacade Copy(ScriptBackEndDatasetFacade original)
             {
-                return new DatasetFacadeForScripts(original.Facade);
+                return new ScriptBackEndDatasetFacade(original.Facade);
             }
 
-            protected override DatasetFacadeForScripts FirstInstance
+            protected override ScriptBackEndDatasetFacade FirstInstance
             {
                 get
                 {
@@ -42,7 +42,7 @@ namespace Apollo.Core.Host.Scripting.Projects
                 }
             }
 
-            protected override DatasetFacadeForScripts SecondInstance
+            protected override ScriptBackEndDatasetFacade SecondInstance
             {
                 get
                 {
@@ -59,16 +59,16 @@ namespace Apollo.Core.Host.Scripting.Projects
             }
         }
 
-        private sealed class DatasetFacadeForScriptsHashcodeContractVerfier : HashcodeContractVerifier
+        private sealed class ScriptBackEndDatasetFacadeHashcodeContractVerfier : HashcodeContractVerifier
         {
-            private readonly IEnumerable<DatasetFacadeForScripts> m_DistinctInstances
-                = new List<DatasetFacadeForScripts> 
+            private readonly IEnumerable<ScriptBackEndDatasetFacade> m_DistinctInstances
+                = new List<ScriptBackEndDatasetFacade> 
                      {
-                        new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
-                        new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
-                        new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
-                        new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
-                        new DatasetFacadeForScripts(new DatasetFacade(CreateMockDataset())),
+                        new ScriptBackEndDatasetFacade(new DatasetFacade(CreateMockDataset())),
+                        new ScriptBackEndDatasetFacade(new DatasetFacade(CreateMockDataset())),
+                        new ScriptBackEndDatasetFacade(new DatasetFacade(CreateMockDataset())),
+                        new ScriptBackEndDatasetFacade(new DatasetFacade(CreateMockDataset())),
+                        new ScriptBackEndDatasetFacade(new DatasetFacade(CreateMockDataset())),
                      };
 
             protected override IEnumerable<int> GetHashcodes()
@@ -94,9 +94,11 @@ namespace Apollo.Core.Host.Scripting.Projects
             return dataset.Object;
         }
 
-        private readonly DatasetFacadeForScriptsHashcodeContractVerfier m_HashcodeVerifier = new DatasetFacadeForScriptsHashcodeContractVerfier();
+        private readonly ScriptBackEndDatasetFacadeHashcodeContractVerfier m_HashcodeVerifier 
+            = new ScriptBackEndDatasetFacadeHashcodeContractVerfier();
 
-        private readonly DatasetFacadeForScriptsEqualityContractVerifier m_EqualityVerifier = new DatasetFacadeForScriptsEqualityContractVerifier();
+        private readonly ScriptBackEndDatasetFacadeEqualityContractVerifier m_EqualityVerifier 
+            = new ScriptBackEndDatasetFacadeEqualityContractVerifier();
 
         protected override HashcodeContractVerifier HashContract
         {
@@ -122,7 +124,7 @@ namespace Apollo.Core.Host.Scripting.Projects
                 dataset.SetupProperty(p => p.Name);
             }
 
-            var facade = new DatasetFacadeForScripts(new DatasetFacade(dataset.Object));
+            var facade = new ScriptBackEndDatasetFacade(new DatasetFacade(dataset.Object));
 
             var name = "name";
             facade.Name = name;
@@ -133,7 +135,7 @@ namespace Apollo.Core.Host.Scripting.Projects
         public void OnNameUpdate()
         {
             var dataset = new Mock<IProxyDataset>();
-            var facade = new DatasetFacadeForScripts(new DatasetFacade(dataset.Object));
+            var facade = new ScriptBackEndDatasetFacade(new DatasetFacade(dataset.Object));
 
             bool eventRaised = false;
             facade.OnNameChanged += (s, e) => { eventRaised = true; };
@@ -150,7 +152,7 @@ namespace Apollo.Core.Host.Scripting.Projects
                 dataset.SetupProperty(p => p.Summary);
             }
 
-            var facade = new DatasetFacadeForScripts(new DatasetFacade(dataset.Object));
+            var facade = new ScriptBackEndDatasetFacade(new DatasetFacade(dataset.Object));
 
             var summary = "text";
             facade.Summary = summary;
@@ -161,7 +163,7 @@ namespace Apollo.Core.Host.Scripting.Projects
         public void OnSummaryUpdate()
         {
             var dataset = new Mock<IProxyDataset>();
-            var facade = new DatasetFacadeForScripts(new DatasetFacade(dataset.Object));
+            var facade = new ScriptBackEndDatasetFacade(new DatasetFacade(dataset.Object));
 
             bool eventRaised = false;
             facade.OnSummaryChanged += (s, e) => { eventRaised = true; };
@@ -174,7 +176,7 @@ namespace Apollo.Core.Host.Scripting.Projects
         public void OnInvalidate()
         {
             var dataset = new Mock<IProxyDataset>();
-            var facade = new DatasetFacadeForScripts(new DatasetFacade(dataset.Object));
+            var facade = new ScriptBackEndDatasetFacade(new DatasetFacade(dataset.Object));
 
             bool wasInvalidated = false;
             facade.OnInvalidate += (s, e) => wasInvalidated = true;
@@ -187,7 +189,7 @@ namespace Apollo.Core.Host.Scripting.Projects
         public void OnActivated()
         {
             var dataset = new Mock<IProxyDataset>();
-            var facade = new DatasetFacadeForScripts(new DatasetFacade(dataset.Object));
+            var facade = new ScriptBackEndDatasetFacade(new DatasetFacade(dataset.Object));
 
             bool wasLoaded = false;
             facade.OnActivated += (s, e) => wasLoaded = true;
@@ -200,7 +202,7 @@ namespace Apollo.Core.Host.Scripting.Projects
         public void OnDeactivated()
         {
             var dataset = new Mock<IProxyDataset>();
-            var facade = new DatasetFacadeForScripts(new DatasetFacade(dataset.Object));
+            var facade = new ScriptBackEndDatasetFacade(new DatasetFacade(dataset.Object));
 
             bool wasUnloaded = false;
             facade.OnDeactivated += (s, e) => wasUnloaded = true;
@@ -218,7 +220,7 @@ namespace Apollo.Core.Host.Scripting.Projects
                     .Returns(false);
             }
 
-            var facade = new DatasetFacadeForScripts(new DatasetFacade(dataset.Object));
+            var facade = new ScriptBackEndDatasetFacade(new DatasetFacade(dataset.Object));
             Assert.Throws<CannotDeleteDatasetException>(() => facade.Delete());
         }
 
@@ -234,7 +236,7 @@ namespace Apollo.Core.Host.Scripting.Projects
                     .Verifiable();
             }
 
-            var facade = new DatasetFacadeForScripts(new DatasetFacade(dataset.Object));
+            var facade = new ScriptBackEndDatasetFacade(new DatasetFacade(dataset.Object));
             facade.Delete();
 
             dataset.Verify(d => d.Delete(), Times.Once());
@@ -250,11 +252,11 @@ namespace Apollo.Core.Host.Scripting.Projects
                     .Returns(new List<IProxyDataset> { child });
             }
 
-            var facade = new DatasetFacadeForScripts(new DatasetFacade(dataset.Object));
+            var facade = new ScriptBackEndDatasetFacade(new DatasetFacade(dataset.Object));
             var children = facade.Children();
 
             Assert.AreEqual(1, children.Count());
-            Assert.AreEqual(new DatasetFacadeForScripts(new DatasetFacade(child)), children.First());
+            Assert.AreEqual(new ScriptBackEndDatasetFacade(new DatasetFacade(child)), children.First());
         }
 
         [Test]
@@ -274,10 +276,10 @@ namespace Apollo.Core.Host.Scripting.Projects
                     .Returns(child);
             }
 
-            var facade = new DatasetFacadeForScripts(new DatasetFacade(dataset.Object));
+            var facade = new ScriptBackEndDatasetFacade(new DatasetFacade(dataset.Object));
             var childFacade = facade.AddChild();
 
-            Assert.AreEqual(new DatasetFacadeForScripts(new DatasetFacade(child)), childFacade);
+            Assert.AreEqual(new ScriptBackEndDatasetFacade(new DatasetFacade(child)), childFacade);
             Assert.IsFalse(creationInformation.CanBeAdopted);
             Assert.IsTrue(creationInformation.CanBecomeParent);
             Assert.IsTrue(creationInformation.CanBeCopied);

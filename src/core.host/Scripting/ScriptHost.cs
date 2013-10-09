@@ -6,6 +6,7 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Host.Scripting.Projects;
@@ -23,11 +24,6 @@ namespace Apollo.Core.Host.Scripting
     internal sealed class ScriptHost : IHostScripts
     {
         /// <summary>
-        /// The object that provides the project API for scripts.
-        /// </summary>
-        private readonly ILinkScriptsToProjects m_ProjectsForScripts;
-
-        /// <summary>
         /// The function that generates a new <c>AppDomain</c> with the given name.
         /// </summary>
         private readonly Func<string, AppDomainPaths, AppDomain> m_AppDomainBuilder;
@@ -36,6 +32,16 @@ namespace Apollo.Core.Host.Scripting
         /// The scheduler that will be used to schedule tasks.
         /// </summary>
         private readonly TaskScheduler m_Scheduler;
+
+        /// <summary>
+        /// The object that handles all project related actions.
+        /// </summary>
+        private readonly ScriptBackEndProjectHub m_Projects;
+
+        /// <summary>
+        /// The object that provides the project API for scripts.
+        /// </summary>
+        private ILinkScriptsToProjects m_ProjectsForScripts;
 
         /// <summary>
         /// The combination of the script language and the <c>AppDomain</c> that is used to run 
@@ -82,7 +88,7 @@ namespace Apollo.Core.Host.Scripting
                 Enforce.Argument(() => appdomainBuilder);
             }
 
-            m_ProjectsForScripts = new ProjectHubForScripts(projects);
+            m_Projects = new ScriptBackEndProjectHub(projects);
             m_AppDomainBuilder = appdomainBuilder;
             m_Scheduler = scheduler ?? TaskScheduler.Default;
         }
@@ -173,6 +179,18 @@ namespace Apollo.Core.Host.Scripting
                     typeof(ScriptDomainLauncher).Assembly.LocalFilePath(),
                     typeof(ScriptDomainLauncher).FullName)
                 .Unwrap() as ScriptDomainLauncher;
+
+            m_ProjectsForScripts = Activator.CreateInstanceFrom(
+                        scriptDomain,
+                        typeof(ScriptFrontEndProjectHub).Assembly.LocalFilePath(),
+                        typeof(ScriptFrontEndProjectHub).FullName,
+                        false,
+                        BindingFlags.Default, 
+                        null,
+                        new object[] { m_Projects },
+                        null,
+                        null)
+                    .Unwrap() as ScriptFrontEndProjectHub;
 
             var executor = launcher.Launch(language, m_ProjectsForScripts, outputChannel);
             return executor;

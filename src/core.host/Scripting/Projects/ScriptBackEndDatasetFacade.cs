@@ -21,9 +21,15 @@ using Lokad;
 namespace Apollo.Core.Host.Scripting.Projects
 {
     /// <summary>
-    /// Forms a facade of a dataset for the scripting API.
+    /// Forms the back-end of a facade over a dataset for the scripting API.
     /// </summary>
-    internal sealed class DatasetFacadeForScripts : MarshalByRefObject, IDatasetScriptFacade, IEquatable<DatasetFacadeForScripts>
+    /// <remarks>
+    /// This class is used in the original application <c>AppDomain</c> and provides a translating layer for the 
+    /// <see cref="ScriptFrontEndDatasetFacade"/>. Both classes are needed to deal with the problems caused by 
+    /// cross-AppDomain serialization. This class is marked as MarshalByRefObject because it needs
+    /// to be able to subscribe to events across an AppDomain boundary.
+    /// </remarks>
+    internal sealed class ScriptBackEndDatasetFacade : MarshalByRefObject, IEquatable<ScriptBackEndDatasetFacade>
     {
         /// <summary>
         /// Implements the operator ==.
@@ -31,7 +37,7 @@ namespace Apollo.Core.Host.Scripting.Projects
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DatasetFacadeForScripts first, DatasetFacadeForScripts second)
+        public static bool operator ==(ScriptBackEndDatasetFacade first, ScriptBackEndDatasetFacade second)
         {
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
@@ -58,7 +64,7 @@ namespace Apollo.Core.Host.Scripting.Projects
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DatasetFacadeForScripts first, DatasetFacadeForScripts second)
+        public static bool operator !=(ScriptBackEndDatasetFacade first, ScriptBackEndDatasetFacade second)
         {
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
@@ -85,13 +91,13 @@ namespace Apollo.Core.Host.Scripting.Projects
         private readonly DatasetFacade m_Dataset;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DatasetFacadeForScripts"/> class.
+        /// Initializes a new instance of the <see cref="ScriptBackEndDatasetFacade"/> class.
         /// </summary>
         /// <param name="facade">The object that stores information about the dataset.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="facade"/> is <see langword="null" />.
         /// </exception>
-        public DatasetFacadeForScripts(DatasetFacade facade)
+        public ScriptBackEndDatasetFacade(DatasetFacade facade)
         {
             {
                 Enforce.Argument(() => facade);
@@ -316,7 +322,6 @@ namespace Apollo.Core.Host.Scripting.Projects
         /// <param name="machineSelector">
         ///     The function that selects the most suitable machine for the dataset to run on.
         /// </param>
-        /// <param name="token">The token that is used to cancel the activation.</param>
         /// <remarks>
         /// Note that the <paramref name="preferredLocation"/> is
         /// only a suggestion. The loader may decide to ignore the suggestion if there is a distribution
@@ -324,10 +329,22 @@ namespace Apollo.Core.Host.Scripting.Projects
         /// </remarks>
         public void Activate(
             DistributionLocations preferredLocation,
-            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
-            CancellationToken token)
+            MachineSelectorFacade machineSelector)
         {
-            m_Dataset.Activate(preferredLocation, machineSelector, token);
+            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> func =
+                enumerable =>
+                {
+                    var selection = enumerable.ToList();
+                    var proxies = selection.Select(s => new DistributionSuggestionProxy(s)).ToArray();
+                    var result = machineSelector.SelectFrom(proxies);
+
+                    var selectedPlan = selection.Find(s => s.Plan.MachineToDistributeTo.Equals(result.MachineToDistributeTo));
+                    return new SelectedProposal(selectedPlan.Plan);
+                };
+
+            // CancellationToken is not serializable hence ...
+            var token = new CancellationTokenSource();
+            m_Dataset.Activate(preferredLocation, func, token.Token);
         }
 
         /// <summary>
@@ -403,10 +420,12 @@ namespace Apollo.Core.Host.Scripting.Projects
         /// current dataset.
         /// </summary>
         /// <returns>The collection that contains the direct children of the current dataset.</returns>
-        public IEnumerable<IDatasetScriptFacade> Children()
+        public IEnumerable<ScriptBackEndDatasetFacade> Children()
         {
             var children = m_Dataset.Children();
-            return from child in children select new DatasetFacadeForScripts(child);
+            return children
+                .Select(child => new ScriptBackEndDatasetFacade(child))
+                .ToList();
         }
 
         /// <summary>
@@ -415,9 +434,9 @@ namespace Apollo.Core.Host.Scripting.Projects
         /// <returns>
         /// The newly created dataset.
         /// </returns>
-        public IDatasetScriptFacade AddChild()
+        public ScriptBackEndDatasetFacade AddChild()
         {
-            return new DatasetFacadeForScripts(m_Dataset.AddChild());
+            return new ScriptBackEndDatasetFacade(m_Dataset.AddChild());
         }
 
         /// <summary>
@@ -433,15 +452,16 @@ namespace Apollo.Core.Host.Scripting.Projects
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="DatasetFacade"/> is equal to this instance.
+        /// Determines whether the specified <see cref="ScriptBackEndDatasetFacade"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="DatasetFacade"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="ScriptBackEndDatasetFacade"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="DatasetFacade"/> is equal to this instance; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the specified <see cref="ScriptBackEndDatasetFacade"/> is equal to this instance; 
+        /// otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public bool Equals(DatasetFacadeForScripts other)
+        public bool Equals(ScriptBackEndDatasetFacade other)
         {
             if (other == null)
             {
@@ -472,7 +492,7 @@ namespace Apollo.Core.Host.Scripting.Projects
                 return true;
             }
 
-            var dataset = obj as DatasetFacadeForScripts;
+            var dataset = obj as ScriptBackEndDatasetFacade;
             return Equals(dataset);
         }
 

@@ -16,7 +16,7 @@ namespace Apollo.Core.Host.Scripting.Projects
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class ProjectFacadeForScriptsTest
+    public sealed class ScriptFrontEndProjectFacadeTest
     {
         [Test]
         public void Name()
@@ -26,7 +26,7 @@ namespace Apollo.Core.Host.Scripting.Projects
                 project.SetupProperty(p => p.Name);
             }
 
-            var facade = new ProjectFacadeForScripts(new ProjectFacade(project.Object));
+            var facade = new ScriptFrontEndProjectFacade(new ScriptBackEndProjectFacade(new ProjectFacade(project.Object)));
 
             var name = "name";
             facade.Name = name;
@@ -37,7 +37,7 @@ namespace Apollo.Core.Host.Scripting.Projects
         public void OnNameUpdate()
         {
             var project = new Mock<IProject>();
-            var facade = new ProjectFacadeForScripts(new ProjectFacade(project.Object));
+            var facade = new ScriptFrontEndProjectFacade(new ScriptBackEndProjectFacade(new ProjectFacade(project.Object)));
 
             bool eventRaised = false;
             facade.OnNameChanged += (s, e) => { eventRaised = true; };
@@ -54,7 +54,7 @@ namespace Apollo.Core.Host.Scripting.Projects
                 project.SetupProperty(p => p.Summary);
             }
 
-            var facade = new ProjectFacadeForScripts(new ProjectFacade(project.Object));
+            var facade = new ScriptFrontEndProjectFacade(new ScriptBackEndProjectFacade(new ProjectFacade(project.Object)));
 
             var summary = "text";
             facade.Summary = summary;
@@ -65,7 +65,7 @@ namespace Apollo.Core.Host.Scripting.Projects
         public void OnSummaryUpdate()
         {
             var project = new Mock<IProject>();
-            var facade = new ProjectFacadeForScripts(new ProjectFacade(project.Object));
+            var facade = new ScriptFrontEndProjectFacade(new ScriptBackEndProjectFacade(new ProjectFacade(project.Object)));
 
             bool eventRaised = false;
             facade.OnSummaryChanged += (s, e) => { eventRaised = true; };
@@ -78,7 +78,7 @@ namespace Apollo.Core.Host.Scripting.Projects
         public void OnDatasetCreated()
         {
             var project = new Mock<IProject>();
-            var facade = new ProjectFacadeForScripts(new ProjectFacade(project.Object));
+            var facade = new ScriptFrontEndProjectFacade(new ScriptBackEndProjectFacade(new ProjectFacade(project.Object)));
 
             bool eventRaised = false;
             facade.OnDatasetCreated += (s, e) => { eventRaised = true; };
@@ -91,7 +91,7 @@ namespace Apollo.Core.Host.Scripting.Projects
         public void OnDatasetDeleted()
         {
             var project = new Mock<IProject>();
-            var facade = new ProjectFacadeForScripts(new ProjectFacade(project.Object));
+            var facade = new ScriptFrontEndProjectFacade(new ScriptBackEndProjectFacade(new ProjectFacade(project.Object)));
 
             bool eventRaised = false;
             facade.OnDatasetDeleted += (s, e) => { eventRaised = true; };
@@ -115,7 +115,7 @@ namespace Apollo.Core.Host.Scripting.Projects
                     .Returns(new Mock<IProxyDataset>().Object);
             }
 
-            var facade = new ProjectFacadeForScripts(new ProjectFacade(project.Object));
+            var facade = new ScriptFrontEndProjectFacade(new ScriptBackEndProjectFacade(new ProjectFacade(project.Object)));
             var root = facade.Root();
             Assert.IsNotNull(root);
         }

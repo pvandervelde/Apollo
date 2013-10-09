@@ -272,6 +272,9 @@
     <Compile Include="..\..\build\temp\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
+    <Compile Include="Scripting\Projects\ScriptBackEndDatasetFacadeTest.cs" />
+    <Compile Include="Scripting\Projects\ScriptBackEndProjectFacadeTest.cs" />
+    <Compile Include="Scripting\Projects\ScriptBackEndProjectHubTest.cs" />
     <Compile Include="ServiceCannotDependOnGenericKernelServiceExceptionTest.cs" />
     <Compile Include="ServiceCannotDependOnItselfExceptionTest.cs" />
     <Compile Include="ServiceTypeAlreadyInstalledExceptionTest.cs" />
@@ -297,10 +300,10 @@
     <Compile Include="UserInterfaces\Projects\UnloadProjectCommandTest.cs" />
     <Compile Include="Scripting\CancelScriptTokenTest.cs" />
     <Compile Include="Scripting\CannotInterruptRunningScriptExceptionTest.cs" />
-    <Compile Include="Scripting\Projects\DatasetFacadeForScriptsTest.cs" />
+    <Compile Include="Scripting\Projects\ScriptFrontEndDatasetFacadeTest.cs" />
     <Compile Include="Scripting\InvalidScriptLanguageExceptionTest.cs" />
-    <Compile Include="Scripting\Projects\ProjectFacadeForScriptsTest.cs" />
-    <Compile Include="Scripting\Projects\ProjectHubForScriptsTest.cs" />
+    <Compile Include="Scripting\Projects\ScriptFrontEndProjectFacadeTest.cs" />
+    <Compile Include="Scripting\Projects\ScriptFrontEndProjectHubTest.cs" />
     <Compile Include="Scripting\RemoteScriptRunnerTest.cs" />
     <Compile Include="Scripting\ScriptErrorInformationTest.cs" />
     <Compile Include="Scripting\ScriptExecutionFailureExceptionTest.cs" />

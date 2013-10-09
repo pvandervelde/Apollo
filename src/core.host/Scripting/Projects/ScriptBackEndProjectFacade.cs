@@ -7,13 +7,12 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Projects;
-using Apollo.Core.Scripting.Projects;
 using Lokad;
 
 namespace Apollo.Core.Host.Scripting.Projects
 {
     /// <summary>
-    /// Forms a facade of a project for the scripting API.
+    /// Forms the back-end facade over a project for the scripting API.
     /// </summary>
     /// <design>
     /// <para>
@@ -21,7 +20,13 @@ namespace Apollo.Core.Host.Scripting.Projects
     /// one facade creates a new project but the other facade(s) don't get the new project. 
     /// </para>
     /// </design>
-    internal sealed class ProjectFacadeForScripts : MarshalByRefObject, IProjectScriptFacade
+    /// <remarks>
+    /// This class is used in the original application <c>AppDomain</c> and and provides a translating layer 
+    /// for the <see cref="ScriptFrontEndProjectFacade"/>. Both classes are needed to deal with the problems 
+    /// caused by cross-AppDomain serialization. This class is marked as MarshalByRefObject because it needs
+    /// to be able to subscribe to events across an AppDomain boundary.
+    /// </remarks>
+    internal sealed class ScriptBackEndProjectFacade : MarshalByRefObject
     {
         /// <summary>
         /// The object that describes the current project.
@@ -29,13 +34,13 @@ namespace Apollo.Core.Host.Scripting.Projects
         private readonly ProjectFacade m_Current;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProjectFacadeForScripts"/> class.
+        /// Initializes a new instance of the <see cref="ScriptBackEndProjectFacade"/> class.
         /// </summary>
         /// <param name="current">The object that describes the current project.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="current"/> is <see langword="null" />.
         /// </exception>
-        public ProjectFacadeForScripts(ProjectFacade current)
+        public ScriptBackEndProjectFacade(ProjectFacade current)
         {
             {
                 Enforce.Argument(() => current);
@@ -173,10 +178,10 @@ namespace Apollo.Core.Host.Scripting.Projects
         /// Returns the root dataset for the current project.
         /// </summary>
         /// <returns>The root dataset.</returns>
-        public IDatasetScriptFacade Root()
+        public ScriptBackEndDatasetFacade Root()
         {
             var dataset = m_Current.Root();
-            return new DatasetFacadeForScripts(dataset);
+            return new ScriptBackEndDatasetFacade(dataset);
         }
 
         /// <summary>

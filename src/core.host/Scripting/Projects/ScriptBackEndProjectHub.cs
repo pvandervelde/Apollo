@@ -7,33 +7,39 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Projects;
-using Apollo.Core.Scripting.Projects;
 using Lokad;
 
 namespace Apollo.Core.Host.Scripting.Projects
 {
-    internal sealed class ProjectHubForScripts : MarshalByRefObject, ILinkScriptsToProjects
+    /// <summary>
+    /// Forms the back-end facade over the project hub for the scripting API.
+    /// </summary>
+    /// <remarks>
+    /// This class is used in the original application <c>AppDomain</c> and and provides a translating layer 
+    /// for the <see cref="ScriptFrontEndProjectHub"/>. Both classes are needed to deal with the problems 
+    /// caused by cross-AppDomain serialization. This class is marked as MarshalByRefObject because it needs
+    /// to be able to subscribe to events across an AppDomain boundary.
+    /// </remarks>
+    internal sealed class ScriptBackEndProjectHub : MarshalByRefObject
     {
         /// <summary>
         /// The object that handles all the project activities.
         /// </summary>
-        private ILinkToProjects m_Projects;
+        private readonly ILinkToProjects m_Projects;
 
         /// <summary>
         /// The current facade.
         /// </summary>
-        private IProjectScriptFacade m_Current;
+        private ScriptBackEndProjectFacade m_Current;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProjectHubForScripts"/> class.
+        /// Initializes a new instance of the <see cref="ScriptBackEndProjectHub"/> class.
         /// </summary>
-        /// <param name="projects">
-        ///     The object that handles all the project activities.
-        /// </param>
+        /// <param name="projects">The object that handles all the project activities.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="projects"/> is <see langword="null" />.
         /// </exception>
-        public ProjectHubForScripts(ILinkToProjects projects)
+        public ScriptBackEndProjectHub(ILinkToProjects projects)
         {
             {
                 Enforce.Argument(() => projects);
@@ -75,11 +81,11 @@ namespace Apollo.Core.Host.Scripting.Projects
         /// <returns>
         /// The currently active project.
         /// </returns>
-        public IProjectScriptFacade ActiveProject()
+        public ScriptBackEndProjectFacade ActiveProject()
         {
             if (m_Current == null)
             {
-                m_Current = new ProjectFacadeForScripts(m_Projects.ActiveProject());
+                m_Current = new ScriptBackEndProjectFacade(m_Projects.ActiveProject());
             }
 
             return m_Current;

@@ -222,9 +222,13 @@
     <Compile Include="Scripting\InvalidScriptLanguageException.cs" />
     <Compile Include="Scripting\ISendScriptOutput.cs" />
     <Compile Include="Scripting\ISyntaxVerifier.cs" />
-    <Compile Include="Scripting\Projects\DatasetFacadeForScripts.cs" />
-    <Compile Include="Scripting\Projects\ProjectFacadeForScripts.cs" />
-    <Compile Include="Scripting\Projects\ProjectHubForScripts.cs" />
+    <Compile Include="Scripting\Projects\MachineSelectorFacade.cs" />
+    <Compile Include="Scripting\Projects\ScriptBackEndDatasetFacade.cs" />
+    <Compile Include="Scripting\Projects\ScriptBackEndProjectFacade.cs" />
+    <Compile Include="Scripting\Projects\ScriptBackEndProjectHub.cs" />
+    <Compile Include="Scripting\Projects\ScriptFrontEndDatasetFacade.cs" />
+    <Compile Include="Scripting\Projects\ScriptFrontEndProjectFacade.cs" />
+    <Compile Include="Scripting\Projects\ScriptFrontEndProjectHub.cs" />
     <Compile Include="Scripting\RemoteScriptRunner.cs" />
     <Compile Include="Scripting\ScriptDomainLauncher.cs" />
     <Compile Include="Scripting\ScriptErrorInformation.cs" />

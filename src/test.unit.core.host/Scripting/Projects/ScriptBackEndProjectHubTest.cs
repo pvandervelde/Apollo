@@ -20,7 +20,7 @@ namespace Apollo.Core.Host.Scripting.Projects
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class ProjectHubForScriptsTest
+    public sealed class ScriptBackEndProjectHubTest
     {
         [Test]
         public void CreateNewProjectWithLoadingFailure()
@@ -40,7 +40,7 @@ namespace Apollo.Core.Host.Scripting.Projects
                     .Verifiable();
             }
 
-            var facade = new ProjectHubForScripts(new ProjectHub(service.Object));
+            var facade = new ScriptBackEndProjectHub(new ProjectHub(service.Object));
             Assert.Throws<FailedToCreateProjectException>(() => facade.NewProject());
             service.Verify(s => s.Invoke(It.IsAny<CommandId>(), It.IsAny<CreateProjectContext>()), Times.Exactly(1));
         }
@@ -69,7 +69,7 @@ namespace Apollo.Core.Host.Scripting.Projects
                     .Verifiable();
             }
 
-            var facade = new ProjectHubForScripts(new ProjectHub(service.Object));
+            var facade = new ScriptBackEndProjectHub(new ProjectHub(service.Object));
             facade.NewProject();
 
             Assert.IsTrue(facade.HasActiveProject());
@@ -92,7 +92,7 @@ namespace Apollo.Core.Host.Scripting.Projects
         public void UnloadProjectWithoutCurrentProject()
         {
             var service = new Mock<IUserInterfaceService>();
-            var facade = new ProjectHubForScripts(new ProjectHub(service.Object));
+            var facade = new ScriptBackEndProjectHub(new ProjectHub(service.Object));
             Assert.Throws<CannotUnloadProjectException>(() => facade.UnloadProject());
         }
 
@@ -119,7 +119,7 @@ namespace Apollo.Core.Host.Scripting.Projects
                         });
             }
 
-            var facade = new ProjectHubForScripts(new ProjectHub(service.Object));
+            var facade = new ScriptBackEndProjectHub(new ProjectHub(service.Object));
             facade.NewProject();
             Assert.IsTrue(facade.HasActiveProject());
 

@@ -73,6 +73,7 @@
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
+    <Compile Include="Projects\DistributionSuggestionProxy.cs" />
     <Compile Include="Projects\IDatasetScriptFacade.cs" />
     <Compile Include="Projects\ILinkScriptsToProjects.cs" />
     <Compile Include="Projects\IProjectScriptFacade.cs" />
