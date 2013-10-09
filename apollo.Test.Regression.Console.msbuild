@@ -72,7 +72,7 @@
             <ScriptFiles Include="$(DirTestRegressionConsole)\Scripts\*.*" />
         </ItemGroup>
         <Copy SourceFiles="@(ScriptFiles)" 
-              DestinationFolder="$(DirLocalTestFiles)" />
+              DestinationFolder="$(DirLocalTestFiles)\scripts" />
         
         <!-- Generate the Sherlock file -->
         <ItemGroup>
@@ -104,10 +104,8 @@
         </ItemGroup>
         <TemplateFile Template="$(FileTemplateSherlockConfiguration)" OutputFileName="$(FileSherlockConfiguration)" Tokens="@(SherlockTokens)" />
         
-        <!--
         <SherlockRegisterTest InstallDir="$(DirSherlock)"
                               Configuration="$(FileSherlockConfiguration)" />
-                              -->
     </Target>
     
     <PropertyGroup>

@@ -33,11 +33,10 @@
                     http://msdn.microsoft.com/en-us/library/system.globalization.cultureinfo.aspx
                     for more information.
                 -->
-                <operatingsystem configurationVersion="1.0"
-                                 name="Windows7"
+                <operatingsystem name="Windows7"
                                  servicepack="SP1"
                                  culture="en-US"
-                                 bitness="64"/>
+                                 architecturepointersize="64"/>
             </constraints>
         </environment>
     </environments>
@@ -47,8 +46,7 @@
     -->
     <teststeps>
         <!-- Copy the installers -->
-        <msi configurationVersion="1.0"
-             steporder="0"
+        <msi steporder="0"
              environment="Client"
              onfailure="Stop">
             <file><![CDATA[${FileApolloInstaller}]]></file>
@@ -57,8 +55,7 @@
         </msi>
         
         <!-- Copy the test files -->
-        <xcopy configurationVersion="1.0"
-               steporder="1" 
+        <xcopy steporder="1" 
                environment="Client"
                onfailure="Stop">
             <destination><![CDATA[${DirRemoteTestFiles}]]></destination>
@@ -69,8 +66,7 @@
         </xcopy>
         
         <!-- Run the console application -->
-        <console configurationVersion="1.0"
-                 steporder="2" 
+        <console steporder="2" 
                  environment="Client" 
                  onfailure="Continue">
             <exe><![CDATA[${DirInstallApollo}\Apollo.UI.Console.exe]]></exe>
@@ -79,8 +75,7 @@
             </params>
         </console>
         
-        <console configurationVersion="1.0"
-                 steporder="3" 
+        <console steporder="3" 
                  environment="Client" 
                  onfailure="Continue">
             <exe><![CDATA[${DirInstallApollo}\Apollo.UI.Console.exe]]></exe>
@@ -91,7 +86,7 @@
     </teststeps>
 
     <completednotification>
-        <file configurationVersion="1.0">
+        <file>
             <path><![CDATA[${DirSherlockLog}]]></path>
         </file>
     </completednotification>
