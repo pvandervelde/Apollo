@@ -322,13 +322,6 @@ namespace Apollo.UI.Console
                 s_ShutdownEvent,
                 container =>
                 {
-                    var builder = new ContainerBuilder();
-                    {
-                        builder.RegisterModule(new ConsoleModule());
-                    }
-
-                    builder.Update(container);
-
                     s_UiContainer = container;
                     s_ScriptHost = s_UiContainer.Resolve<IHostScripts>();
                     s_Diagnostics = s_UiContainer.Resolve<SystemDiagnostics>();
