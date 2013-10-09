@@ -41,13 +41,15 @@ namespace Apollo.UI.Wpf.Views.Progress
             collector.Raise(c => c.OnStartProgress += null, EventArgs.Empty);
 
             Assert.AreEqual(0.0, model.Progress);
-            Assert.AreEqual(1, propertyChangedWasRaised);
+            Assert.AreEqual(3, propertyChangedWasRaised);
             Assert.That(
                 properties,
                 Is.EquivalentTo(
                     new List<string>
                     {
                         "Progress",
+                        "Description",
+                        "HasErrors"
                     }));
         }
 
@@ -75,13 +77,15 @@ namespace Apollo.UI.Wpf.Views.Progress
             collector.Raise(c => c.OnProgress += null, new ProgressEventArgs(progress, "a", false));
 
             Assert.AreEqual(progress / 100.0, model.Progress);
-            Assert.AreEqual(1, propertyChangedWasRaised);
+            Assert.AreEqual(3, propertyChangedWasRaised);
             Assert.That(
                 properties,
                 Is.EquivalentTo(
                     new List<string>
                     {
                         "Progress",
+                        "Description",
+                        "HasErrors"
                     }));
         }
 
@@ -108,13 +112,15 @@ namespace Apollo.UI.Wpf.Views.Progress
             collector.Raise(c => c.OnStopProgress += null, EventArgs.Empty);
 
             Assert.AreEqual(0.0, model.Progress);
-            Assert.AreEqual(1, propertyChangedWasRaised);
+            Assert.AreEqual(3, propertyChangedWasRaised);
             Assert.That(
                 properties,
                 Is.EquivalentTo(
                     new List<string>
                     {
                         "Progress",
+                        "Description",
+                        "HasErrors"
                     }));
         }
     }
