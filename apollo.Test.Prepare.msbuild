@@ -8,6 +8,9 @@
         <DirBuild>$(DirWorkspace)\build</DirBuild>
         <DirBuildTemp>$(DirBuild)\temp</DirBuildTemp>
         <DirBuildTempTests>$(DirBuildTemp)\tests</DirBuildTempTests>
+        
+        <DirTestReports Condition=" '$(DirTestReports)' == '' ">$(DirBuildTempTests)\reports</DirTestReports>
+        <DirReportDumps Condition=" '$(DirReportDumps)' == '' ">$(DirTestReports)\apollo\regression</DirReportDumps>
     </PropertyGroup>
 
     <Target Name="Run" DependsOnTargets="_DisplayInfo;_Clean">
@@ -31,5 +34,11 @@
             <BuildFilesToDelete Include="$(DirBuildTempTests)\**\*.*"/>
         </ItemGroup>
         <Delete Files="@(BuildFilesToDelete)" />
+        
+        <ItemGroup>
+            <ReportFilesToDelete Include="$(DirReportDumps)\**\*.*"/>
+        </ItemGroup>
+        <Delete Files="@(ReportFilesToDelete)" />
+        <RemoveDir Directories="$(DirReportDumps)" />
     </Target>
 </Project>
