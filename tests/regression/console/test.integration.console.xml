@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<sherlock configurationVersion="1.1">
+<sherlock configurationVersion="1.2">
     <!--
         Provide some human readable information for the test. This information
         is used in the reports.
@@ -52,6 +52,8 @@
             <file><![CDATA[${FileApolloInstaller}]]></file>
             <params>
             </params>
+            <includeinreport includesystemlog="true">
+            </includeinreport>
         </msi>
         
         <!-- Copy the test files -->
@@ -63,6 +65,8 @@
             <paths>
                 <directory><![CDATA[${DirLocalTestFiles}\scripts]]></directory>
             </paths>
+            <includeinreport includesystemlog="true">
+            </includeinreport>
         </xcopy>
         
         <!-- Run the console application -->
@@ -73,6 +77,10 @@
             <params>
                 <param><![CDATA[-script "${DirRemoteTestFiles}\scripts\project_new-save-load.py"]]></param>
             </params>
+            <includeinreport includesystemlog="true">
+                <directory><![CDATA[C:\Users\Petrik\AppData\Local\P. van der Velde\Apollo.UI.Console\0.1\logs]]></directory>
+                <directory><![CDATA[C:\Users\Petrik\AppData\Local\P. van der Velde\Apollo.Core.Dataset\0.1\logs]]></directory>
+            </includeinreport>
         </console>
         
         <console steporder="3" 
@@ -82,6 +90,10 @@
             <params>
                 <param><![CDATA[-script "${DirRemoteTestFiles}\scripts\dataset_new-save-load.py"]]></param>
             </params>
+            <includeinreport includesystemlog="true">
+                <directory><![CDATA[C:\Users\Petrik\AppData\Local\P. van der Velde\Apollo.UI.Console\0.1\logs]]></directory>
+                <directory><![CDATA[C:\Users\Petrik\AppData\Local\P. van der Velde\Apollo.Core.Dataset\0.1\logs]]></directory>
+            </includeinreport>
         </console>
     </teststeps>
 
