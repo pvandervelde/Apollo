@@ -7,6 +7,7 @@
         <ShouldClean>true</ShouldClean>
         <ShouldHaveCoverage>true</ShouldHaveCoverage>
         <ShouldCleanPackages>false</ShouldCleanPackages>
+        <ShouldSwitchIssuesToTesting>false</ShouldSwitchIssuesToTesting>
         
         <!-- Directories -->
         <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
@@ -30,7 +31,7 @@
     <PropertyGroup>
         <MsBuildPrepareSwitchIssuesToTesting>$(DirWorkspace)\apollo.Build.SwitchIssuesToTesting.msbuild</MsBuildPrepareSwitchIssuesToTesting>
     </PropertyGroup>
-    <Target Name="_SwitchIssuesToTesting" >
+    <Target Name="_SwitchIssuesToTesting" Condition="$(ShouldSwitchIssuesToTesting)" >
         <MSBuild Projects="$(MsBuildPrepareSwitchIssuesToTesting)" />
     </Target>
     
