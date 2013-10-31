@@ -17,7 +17,6 @@
         
         <!-- Nuget -->
         <!-- These should only be defined on the build server! -->
-        <ShouldDeploy Condition=" '$(ShouldDeploy)' == ''">false</ShouldDeploy>
         <SymbolServerPath Condition=" '$(SymbolServerPath)' == '' "></SymbolServerPath>
     </PropertyGroup>
     
@@ -25,15 +24,14 @@
     
     <!-- Display info -->
     <Target Name="_DisplayInfo">
-        <Message Text="Pushing NuGet packages to the feed..." Condition=" '$(SymbolServerPath)' != '' AND '$(ShouldDeploy)' == 'true'" />
-        <Message Text="Not pushing NuGet packages to the feed." Condition="'$(ShouldDeploy)' != 'true'" />
+        <Message Text="Pushing NuGet packages to the feed..." Condition=" '$(SymbolServerPath)' != ''" />
         <Message Text="No symbol server path defined!" Condition=" '$(SymbolServerPath)' == ''" />
     </Target>
     
     <PropertyGroup>
         
     </PropertyGroup>
-    <Target Name="_DeployNugetPackage" DependsOnTargets="_DisplayInfo;" Condition=" '$(SymbolServerPath)' != '' AND '$(ShouldDeploy)' == 'true'">
+    <Target Name="_DeployNugetPackage" DependsOnTargets="_DisplayInfo;" Condition=" '$(SymbolServerPath)' != ''">
         <ItemGroup>
             <SymbolPackages Include="$(DirBuildDeploy)\*.symbols.nupkg" />
         </ItemGroup>
