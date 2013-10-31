@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<sherlock configurationVersion="1.0">
+<sherlock configurationVersion="1.2">
     <!--
         Provide some human readable information for the test. This information
         is used in the reports.
@@ -33,11 +33,10 @@
                     http://msdn.microsoft.com/en-us/library/system.globalization.cultureinfo.aspx
                     for more information.
                 -->
-                <operatingsystem configurationVersion="1.0"
-                                 name="Windows7"
+                <operatingsystem name="Windows7"
                                  servicepack="SP1"
                                  culture="en-US"
-                                 bitness="64"/>
+                                 architecturepointersize="64"/>
             </constraints>
         </environment>
     </environments>
@@ -47,42 +46,59 @@
     -->
     <teststeps>
         <!-- Copy the installers -->
-        <msi configurationVersion="1.0"
-             steporder="0"
-             environment="Client">
+        <msi steporder="0"
+             environment="Client"
+             onfailure="Stop">
             <file><![CDATA[${FileApolloInstaller}]]></file>
             <params>
             </params>
+            <includeinreport includesystemlog="true">
+            </includeinreport>
         </msi>
         
         <!-- Copy the test files -->
-        <xcopy configurationVersion="1.0"
-               steporder="3" 
-               environment="Client">
+        <xcopy steporder="1" 
+               environment="Client"
+               onfailure="Stop">
             <destination><![CDATA[${DirRemoteTestFiles}]]></destination>
             <base><![CDATA[${DirLocalTestFiles}]]></base>
             <paths>
-                <file><![CDATA[${DirLocalTestFiles}\packages.config]]></file>
-                <file><![CDATA[${DirLocalTestFiles}\knowngood.licenses.xml]]></file>
+                <directory><![CDATA[${DirLocalTestFiles}\scripts]]></directory>
             </paths>
+            <includeinreport includesystemlog="true">
+            </includeinreport>
         </xcopy>
         
-        <!-- Run nTreva on different package files -->
-        <script configurationVersion="1.0"
-                steporder="4" 
-                environment="Client" >
-            <file language="Powershell"><![CDATA[${FileNTrevaTest}]]></file>
+        <!-- Run the console application -->
+        <console steporder="2" 
+                 environment="Client" 
+                 onfailure="Continue">
+            <exe><![CDATA[${DirInstallApollo}\Apollo.UI.Console.exe]]></exe>
             <params>
-                <param key="installDir"><![CDATA[${DirRemoteInstall}\ntreva]]></param>
-                <param key="packageDir"><![CDATA[${DirRemoteInstall}]]></param>
-                <param key="packageConfigDir"><![CDATA[${DirRemoteTestFiles}]]></param>
-                <param key="knownGoodFile"><![CDATA[${DirRemoteTestFiles}\knowngood.licenses.xml]]></param>
+                <param><![CDATA[-script "${DirRemoteTestFiles}\scripts\project_new-save-load.py"]]></param>
             </params>
-        </script>
+            <includeinreport includesystemlog="true">
+                <directory><![CDATA[C:\Users\Petrik\AppData\Local\P. van der Velde\Apollo.UI.Console\0.1\logs]]></directory>
+                <directory><![CDATA[C:\Users\Petrik\AppData\Local\P. van der Velde\Apollo.Core.Dataset\0.1\logs]]></directory>
+            </includeinreport>
+        </console>
+        
+        <console steporder="3" 
+                 environment="Client" 
+                 onfailure="Continue">
+            <exe><![CDATA[${DirInstallApollo}\Apollo.UI.Console.exe]]></exe>
+            <params>
+                <param><![CDATA[-script "${DirRemoteTestFiles}\scripts\dataset_new-save-load.py"]]></param>
+            </params>
+            <includeinreport includesystemlog="true">
+                <directory><![CDATA[C:\Users\Petrik\AppData\Local\P. van der Velde\Apollo.UI.Console\0.1\logs]]></directory>
+                <directory><![CDATA[C:\Users\Petrik\AppData\Local\P. van der Velde\Apollo.Core.Dataset\0.1\logs]]></directory>
+            </includeinreport>
+        </console>
     </teststeps>
 
     <completednotification>
-        <file configurationVersion="1.0">
+        <file>
             <path><![CDATA[${DirSherlockLog}]]></path>
         </file>
     </completednotification>
