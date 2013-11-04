@@ -206,6 +206,9 @@
       <WixVersionTokens Include="Build">
         <ReplacementValue>$(VersionBuild)</ReplacementValue>
       </WixVersionTokens>
+      <WixVersionTokens Include="Revision">
+        <ReplacementValue>$(VersionRevision)</ReplacementValue>
+      </WixVersionTokens>
     </ItemGroup>
     <TemplateFile Template="$(FileTemplateWixVersion)" OutputFileName="$(FileGeneratedWixVersion)" Tokens="@(WixVersionTokens)" />
     <Message Text="File $(FileTemplateWixVersion)" Condition="Exists('$(FileTemplateWixVersion)')" />

@@ -16,7 +16,7 @@
                 <File Id="File.NSarrac.Framework.dll"
                       Name="NSarrac.Framework.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\NSarrac.Framework.dll"
+                      Source="$(var.BinFolder)\NSarrac.Framework.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -26,7 +26,7 @@
                 <File Id="File.Microsoft.Dynamic.dll"
                       Name="Microsoft.Dynamic.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Microsoft.Dynamic.dll"
+                      Source="$(var.BinFolder)\Microsoft.Dynamic.dll"
                       KeyPath="yes" />
             </Component>
         </DirectoryRef>

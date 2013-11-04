@@ -16,7 +16,7 @@
                 <File Id="File.Apollo.Core.Host.dll"
                       Name="Apollo.Core.Host.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Apollo.Core.Host.dll"
+                      Source="$(var.BinFolder)\Apollo.Core.Host.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -26,7 +26,7 @@
                 <File Id="File.Apollo.Core.Scripting.dll"
                       Name="Apollo.Core.Scripting.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Apollo.Core.Scripting.dll"
+                      Source="$(var.BinFolder)\Apollo.Core.Scripting.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -36,7 +36,7 @@
                 <File Id="File.IronPython.dll"
                       Name="IronPython.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\IronPython.dll"
+                      Source="$(var.BinFolder)\IronPython.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -46,7 +46,7 @@
                 <File Id="File.IronPython.Modules.dll"
                       Name="IronPython.Modules.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\IronPython.Modules.dll"
+                      Source="$(var.BinFolder)\IronPython.Modules.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -56,7 +56,7 @@
                 <File Id="File.Microsoft.Scripting.dll"
                       Name="Microsoft.Scripting.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Microsoft.Scripting.dll"
+                      Source="$(var.BinFolder)\Microsoft.Scripting.dll"
                       KeyPath="yes" />
             </Component>
         </DirectoryRef>

@@ -7,12 +7,12 @@
    -->
 
     <!-- Bin folder for roads -->
-    <?define Apollo_BinFolder="${DirBin}"?>
+    <?define BinFolder="${DirBin}"?>
 
     <!-- Define the folder that holds the resources -->
-    <?define Apollo_ResourceFolder="${DirResource}"?>
+    <?define ResourceFolder="${DirResource}"?>
     
     <!-- Define the folder that holds the setup files -->
     <!-- This is normally the directory in which the solution lives ... -->
-    <?define Apollo_SetupFolder="${DirInstall}" ?>
+    <?define SetupFolder="${DirInstall}" ?>
 </Include>

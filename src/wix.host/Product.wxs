@@ -35,11 +35,11 @@
         - The upgrade code is fixed and defined in dependencies.wxi
    -->
     <Product Id="*"
-             Name="$(var.Apollo_ProductName)"
+             Name="$(var.ProductName)"
              Language="1033"
-             Version="$(var.Apollo_CurrentVersion)"
-             Manufacturer="$(var.Company_Name)"
-             UpgradeCode="$(var.Apollo_UpgradeCode)">
+             Version="$(var.InstallVersion)"
+             Manufacturer="$(var.CompanyName)"
+             UpgradeCode="$(var.UpgradeCode)">
 
         <!--
             Define the package information.
@@ -54,57 +54,43 @@
                  Compressed="yes"
                  InstallPrivileges="elevated"
                  InstallScope="perMachine"
-                 Manufacturer="$(var.Company_Name)"
-                 Description="$(var.Apollo_Description)" />
+                 Manufacturer="$(var.CompanyName)"
+                 Description="$(var.Description)" />
 
         <!-- 
             Define the upgrade conditions. The upgrade code must be retained
             as long as we want to be able to replace an older version with a
             newer version.
+            
+            We currently only use Major upgrades (i.e. uninstall the old version
+            and install the new version). 
+            
+            Upgrades are done for a version as long as the upgrade code is the 
+            same.
         -->
-        <Upgrade Id="$(var.Apollo_UpgradeCode)">
-            <!--
-                Detect and overwrite previous versions of the product, upto
-                and including the OldestUpgradeVersion (see VersionNumber.wxi). 
-            -->
-            <UpgradeVersion OnlyDetect="no"
-                            Property="PREVIOUSVERSIONDETECTED"
-                            Minimum="$(var.Apollo_OldestUpgradeVersion)"
-                            IncludeMinimum="yes"
-                            Maximum="$(var.Apollo_CurrentVersion)"
-                            IncludeMaximum="no" />
-            <!--
-                Detect (but do not overwrite) any 'newer' versions, including
-                the current version. If a newer version is detected then we
-                exit the installer.
-            -->
-            <UpgradeVersion OnlyDetect="yes"
-                            Property="NEWERVERSIONDETECTED"
-                            Minimum="$(var.Apollo_CurrentVersion)"
-                            IncludeMinimum="yes" />
-        </Upgrade>
+        <MajorUpgrade DowngradeErrorMessage="A newer version of $(var.ProductName) is already installed."
+                      AllowDowngrades="no"
+                      AllowSameVersionUpgrades="yes" />
 
         <!-- Pack all the media in a single CAB file and stuff that in the MSI. -->
-        <Media Id="1"
-               Cabinet="media1.cab"
-               EmbedCab="yes" />
+        <MediaTemplate EmbedCab="yes" />
 
         <!-- 
             Define the install directory. By default this will be in the program files 
             folder. However we do allow the user to change this.
             By default the install location for a 32-bit binary on a 
             64-bit Windows version will look like:
-            <PROGRAM_FILES_X86>\<COMPANY_NAME>\Apollo
+            <PROGRAM_FILES_X86>\<CompanyName>\Apollo
         -->
         <Directory Id="TARGETDIR"
                    Name="SourceDir">
             <Directory Id="$(var.PlatformProgramFilesFolder)">
                 <Directory Id="Dir.Install.Company"
-                           Name="$(var.Company_InstallFolder)">
+                           Name="$(var.CompanyInstallFolder)">
                     <Directory Id="Dir.Install.Apollo"
-                               Name="$(var.Apollo_ProductInstallFolder)">
+                               Name="$(var.ProductInstallFolder)">
                         <Directory Id="INSTALLLOCATION"
-                                   Name="$(var.Apollo_ProductVersionFolder)">
+                                   Name="$(var.ProductVersionFolder)">
                         </Directory>
                     </Directory>
                 </Directory>
@@ -116,9 +102,9 @@
             <Directory Id="ProgramMenuFolder">
                 <!-- Define the sub-directory for the product -->
                 <Directory Id="Dir.Menu.Apollo"
-                           Name="$(var.Company_InstallFolder)">
+                           Name="$(var.CompanyInstallFolder)">
                     <!-- Wipe out the directory on un-install -->
-                    <Component Id="C.CleanApolloStartMenu"
+                    <Component Id="C.CleanStartMenu"
                                Guid="{ADAED3EC-FF15-43F9-95FB-AAF469F69E1C}">
                         <RemoveFolder Id="Dir.Menu.Apollo"
                                       On="uninstall" />
@@ -129,7 +115,7 @@
                              complain if we don't set this action.
                         -->
                         <RegistryValue Root='HKCU'
-                                       Key='Software\$(var.Company_Name)\$(var.Apollo_ProductName)'
+                                       Key='Software\$(var.CompanyName)\$(var.ProductName)'
                                        Type='string'
                                        Value=''
                                        KeyPath='yes' />
@@ -142,8 +128,8 @@
         </Directory>
 
         <Feature Id="F.Complete"
-                 Title="$(var.Apollo_ProductName)"
-                 Description="The complete install of the $(var.Apollo_ProductName) suite."
+                 Title="$(var.ProductName)"
+                 Description="The complete install of the $(var.ProductName) suite."
                  ConfigurableDirectory="INSTALLLOCATION"
                  Display="1"
                  Level="1">
@@ -151,7 +137,7 @@
             <FeatureRef Id="F.Apollo.UI.Console" />
                      
             <!-- Include the clean-up actis for the start menu item(s) -->
-            <ComponentRef Id="C.CleanApolloStartMenu" />
+            <ComponentRef Id="C.CleanStartMenu" />
             
             <!-- Note: The following ComponentGroupRef is required to pull in generated authoring from project references. -->
             <ComponentGroupRef Id="Product.Generated" />
@@ -160,11 +146,11 @@
         <!-- Properties -->
         <!-- This information is used in the install / uninstall dialog -->
         <!-- Contact information -->
-        <Property Id='ARPCONTACT'>$(var.Company_Name)</Property>
+        <Property Id='ARPCONTACT'>$(var.CompanyName)</Property>
         <!-- URL for technical support -->
-        <Property Id='ARPHELPLINK'>$(var.Company_HelpUrl)</Property>
+        <Property Id='ARPHELPLINK'>$(var.CompanyHelpUrl)</Property>
         <!-- URL for general information about the product -->
-        <Property Id='ARPURLINFOABOUT'>$(var.Company_HelpUrl)</Property>
+        <Property Id='ARPURLINFOABOUT'>$(var.CompanyHelpUrl)</Property>
         <!-- Icon -->
         <Property Id='ARPPRODUCTICON'>Icon.Apollo.ico</Property>
 
@@ -175,27 +161,16 @@
       -->
         <UIRef Id="WixUI_Mondo" />
         <!-- Define where the value of the install directory should be written to -->
-        <Property Id="WIXUI_INSTALLDIR"
-                  Value="INSTALLLOCATION" />
+        <Property Id="WIXUI_INSTALLDIR" Value="INSTALLLOCATION" />
 
         <!-- The banner bitmap. Needs to be 500 x 63 pixels -->
-        <WixVariable Id="WixUIBannerBmp"
-                     Value="$(var.SolutionDir)\..\resource\img\InstallerBanner.bmp" />
+        <WixVariable Id="WixUIBannerBmp" Value="$(var.ResourceFolder)\img\InstallerBanner.bmp" />
 
         <!-- The sidebar bitmap. Only used on the first page. Should be 164 x 314 pixels -->
-        <WixVariable Id="WixUIDialogBmp"
-                     Value="$(var.SolutionDir)\..\resource\img\InstallerSidebar.bmp" />
+        <WixVariable Id="WixUIDialogBmp" Value="$(var.ResourceFolder)\img\InstallerSidebar.bmp" />
 
         <!-- EULA -->
-        <WixVariable Id="WixUILicenseRtf" Value="$(var.SolutionDir)\..\resource\License.rtf" />
-
-        <!-- 
-            Indicate that an newer version is already installed.
-            see: http://wix.sourceforge.net/manual-wix3/major_upgrade.htm
-        -->
-        <Condition Message="A newer version of [ProductName] is already installed. In order to install an older version please un-install the current version first.">
-            NOT NEWERVERSIONDETECTED OR Installed
-        </Condition>
+        <WixVariable Id="WixUILicenseRtf" Value="$(var.ResourceFolder)\License.rtf" />
 
         <PropertyRef Id="NETFRAMEWORK45"/>
         <!--

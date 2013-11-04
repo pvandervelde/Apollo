@@ -17,11 +17,11 @@
                 <File Id="File.Apollo.UI.Explorer.Exe"
                       Name="Apollo.UI.Explorer.exe"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Apollo.UI.Explorer.exe"
+                      Source="$(var.BinFolder)\Apollo.UI.Explorer.exe"
                       KeyPath="yes">
                     <Shortcut Id="ShortCut.StartMenu.Apollo.UI.Explorer"
                               Directory="Dir.Menu.Apollo"
-                              Name="$(var.Apollo_ProductName) explorer"
+                              Name="$(var.ProductName) explorer"
                               Icon="Icon.Apollo.ico"
                               IconIndex="0"
                               WorkingDirectory="INSTALLLOCATION"
@@ -39,7 +39,7 @@
                 <File Id="File.Apollo.UI.Explorer.Exe.Config"
                       Name="Apollo.UI.Explorer.exe.config"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Apollo.UI.Explorer.exe.config"
+                      Source="$(var.BinFolder)\Apollo.UI.Explorer.exe.config"
                       KeyPath="yes" />
             </Component>
         </DirectoryRef>

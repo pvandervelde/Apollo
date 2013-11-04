@@ -16,7 +16,7 @@
                 <File Id="File.Apollo.UI.Wpf.dll"
                       Name="Apollo.UI.Wpf.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Apollo.UI.Wpf.dll"
+                      Source="$(var.BinFolder)\Apollo.UI.Wpf.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -26,7 +26,7 @@
                 <File Id="File.GraphSharp.dll"
                       Name="GraphSharp.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\GraphSharp.dll"
+                      Source="$(var.BinFolder)\GraphSharp.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -36,7 +36,7 @@
                 <File Id="File.GraphSharp.Controls.dll"
                       Name="GraphSharp.Controls.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\GraphSharp.Controls.dll"
+                      Source="$(var.BinFolder)\GraphSharp.Controls.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -46,7 +46,7 @@
                 <File Id="File.GreyableImage.dll"
                       Name="GreyableImage.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\GreyableImage.dll"
+                      Source="$(var.BinFolder)\GreyableImage.dll"
                       KeyPath="yes" />
             </Component>
             
@@ -56,7 +56,7 @@
                 <File Id="File.ICSharpCode.AvalonEdit.dll"
                       Name="ICSharpCode.AvalonEdit.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\ICSharpCode.AvalonEdit.dll"
+                      Source="$(var.BinFolder)\ICSharpCode.AvalonEdit.dll"
                       KeyPath="yes" />
             </Component>
             
@@ -66,7 +66,7 @@
                 <File Id="File.Microsoft.Practices.Prism.dll"
                       Name="Microsoft.Practices.Prism.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Microsoft.Practices.Prism.dll"
+                      Source="$(var.BinFolder)\Microsoft.Practices.Prism.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -76,7 +76,7 @@
                 <File Id="File.Microsoft.Practices.Prism.Interactivity.dll"
                       Name="Microsoft.Practices.Prism.Interactivity.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Microsoft.Practices.Prism.Interactivity.dll"
+                      Source="$(var.BinFolder)\Microsoft.Practices.Prism.Interactivity.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -86,7 +86,7 @@
                 <File Id="File.Microsoft.Practices.ServiceLocation.dll"
                       Name="Microsoft.Practices.ServiceLocation.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Microsoft.Practices.ServiceLocation.dll"
+                      Source="$(var.BinFolder)\Microsoft.Practices.ServiceLocation.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -96,7 +96,7 @@
                 <File Id="File.PixelLab.Common.dll"
                       Name="PixelLab.Common.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\PixelLab.Common.dll"
+                      Source="$(var.BinFolder)\PixelLab.Common.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -106,7 +106,7 @@
                 <File Id="File.PixelLab.Core.dll"
                       Name="PixelLab.Core.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\PixelLab.Core.dll"
+                      Source="$(var.BinFolder)\PixelLab.Core.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -116,7 +116,7 @@
                 <File Id="File.PixelLab.Wpf.dll"
                       Name="PixelLab.Wpf.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\PixelLab.Wpf.dll"
+                      Source="$(var.BinFolder)\PixelLab.Wpf.dll"
                       KeyPath="yes" />
             </Component>
             
@@ -126,7 +126,7 @@
                 <File Id="File.WPFExtensions.dll"
                       Name="WPFExtensions.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\WPFExtensions.dll"
+                      Source="$(var.BinFolder)\WPFExtensions.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -136,7 +136,7 @@
                 <File Id="File.WPFLocalizeExtension.dll"
                       Name="WPFLocalizeExtension.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\WPFLocalizeExtension.dll"
+                      Source="$(var.BinFolder)\WPFLocalizeExtension.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -146,7 +146,7 @@
                 <File Id="File.XAMLMarkupExtensions.dll"
                       Name="XAMLMarkupExtensions.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\XAMLMarkupExtensions.dll"
+                      Source="$(var.BinFolder)\XAMLMarkupExtensions.dll"
                       KeyPath="yes" />
             </Component>
         </DirectoryRef>

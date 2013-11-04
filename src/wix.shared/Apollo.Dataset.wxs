@@ -25,7 +25,7 @@
                 <File Id="File.Apollo.Core.Dataset.Exe"
                       Name="Apollo.Core.Dataset.exe"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Apollo.Core.Dataset.exe"
+                      Source="$(var.BinFolder)\Apollo.Core.Dataset.exe"
                       KeyPath="yes">
                 </File>
             </Component>
@@ -36,7 +36,7 @@
                 <File Id="File.Apollo.Core.Dataset.Exe.Config"
                       Name="Apollo.Core.Dataset.exe.config"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Apollo.Core.Dataset.exe.config"
+                      Source="$(var.BinFolder)\Apollo.Core.Dataset.exe.config"
                       KeyPath="yes" />
             </Component>
             
@@ -46,7 +46,7 @@
                 <File Id="File.Apollo.Core.Dataset.References.Xml"
                       Name="apollo.core.dataset.references.xml"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\apollo.core.dataset.references.xml"
+                      Source="$(var.BinFolder)\apollo.core.dataset.references.xml"
                       KeyPath="yes" />
             </Component>
             

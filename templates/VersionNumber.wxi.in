@@ -6,12 +6,15 @@
       They will be undone next time the file is generated.
     -->
 	
-	<!-- The current version -->
-    <?define Apollo_CurrentVersion = "${Major}.${Minor}.${Build}"?>
+	<!-- The complete version for the application -->
+    <?define ApplicationVersion = "${Major}.${Minor}.${Build}.${Revision}"?>
+    
+    <!-- The complete version for the plugins -->
+    <?define ApplicationPluginVersion = "${Major}.${Minor}.0.0"?>
+    
+    <!-- The version for the installer -->
+    <?define InstallVersion = "${Major}.${Minor}.${Build}"?>
 
     <!-- The install version string -->
-    <?define Apollo_ProductVersionFolder = "${Major}.${Minor}"?>
-
-    <!-- The oldest version from which we allow automatic upgrades -->
-    <?define Apollo_OldestUpgradeVersion = "0.0.1"?>
+    <?define ProductVersionFolder = "${Major}.${Minor}"?>
 </Include>

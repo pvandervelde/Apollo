@@ -3,7 +3,7 @@
 
     <?include $(var.CurrentProjectDir)\includes.wxi ?>
     <?include $(var.SolutionDir)..\build\temp\Dependencies.wxi ?>
-    
+
     <Fragment>
         <!-- 
             Define all the files that will be installed in the program files folder.
@@ -17,7 +17,7 @@
                 <File Id="File.Apollo.Core.Base.dll"
                       Name="Apollo.Core.Base.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Apollo.Core.Base.dll"
+                      Source="$(var.BinFolder)\Apollo.Core.Base.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -27,7 +27,7 @@
                 <File Id="File.Apollo.Core.Extensions.dll"
                       Name="Apollo.Core.Extensions.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Apollo.Core.Extensions.dll"
+                      Source="$(var.BinFolder)\Apollo.Core.Extensions.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -37,7 +37,7 @@
                 <File Id="File.Apollo.Utilities.dll"
                       Name="Apollo.Utilities.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Apollo.Utilities.dll"
+                      Source="$(var.BinFolder)\Apollo.Utilities.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -47,17 +47,17 @@
                 <File Id="File.Autofac.dll"
                       Name="Autofac.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Autofac.dll"
+                      Source="$(var.BinFolder)\Autofac.dll"
                       KeyPath="yes" />
             </Component>
-          
+
             <!-- Castle.Core.dll -->
             <Component Id="C.Castle.Core.dll"
                        Guid="{E224668B-0B61-43C0-B8D3-A179526C2F18}">
                 <File Id="File.Castle.Core.dll"
                       Name="Castle.Core.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Castle.Core.dll"
+                      Source="$(var.BinFolder)\Castle.Core.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -67,18 +67,18 @@
                 <File Id="File.Lokad.Shared.dll"
                       Name="Lokad.Shared.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Lokad.Shared.dll"
+                      Source="$(var.BinFolder)\Lokad.Shared.dll"
                       KeyPath="yes" />
             </Component>
 
             <!-- NLog.dll -->
             <Component Id="C.NLog.dll"
                        Guid="{81F63D98-CB9B-446F-B599-BAA6E996B1F9}">
-              <File Id="File.NLog.dll"
-                    Name="NLog.dll"
-                    DiskId="1"
-                    Source="$(var.Apollo_BinFolder)\NLog.dll"
-                    KeyPath="yes" />
+                <File Id="File.NLog.dll"
+                      Name="NLog.dll"
+                      DiskId="1"
+                      Source="$(var.BinFolder)\NLog.dll"
+                      KeyPath="yes" />
             </Component>
 
             <!-- Nuclei.dll -->
@@ -87,7 +87,7 @@
                 <File Id="File.Nuclei.dll"
                       Name="Nuclei.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Nuclei.dll"
+                      Source="$(var.BinFolder)\Nuclei.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -97,17 +97,17 @@
                 <File Id="File.Nuclei.Build.dll"
                       Name="Nuclei.Build.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Nuclei.Build.dll"
+                      Source="$(var.BinFolder)\Nuclei.Build.dll"
                       KeyPath="yes" />
             </Component>
-            
+
             <!-- Nuclei.Diagnostics.dll -->
             <Component Id="C.Nuclei.Diagnostics.dll"
                        Guid="{09724582-A966-4275-991B-2961B8A9678E}">
                 <File Id="File.Nuclei.Diagnostics.dll"
                       Name="Nuclei.Diagnostics.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Nuclei.Diagnostics.dll"
+                      Source="$(var.BinFolder)\Nuclei.Diagnostics.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -117,7 +117,7 @@
                 <File Id="File.Nuclei.Configuration.dll"
                       Name="Nuclei.Configuration.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Nuclei.Configuration.dll"
+                      Source="$(var.BinFolder)\Nuclei.Configuration.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -127,7 +127,7 @@
                 <File Id="File.Nuclei.Communication.dll"
                       Name="Nuclei.Communication.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Nuclei.Communication.dll"
+                      Source="$(var.BinFolder)\Nuclei.Communication.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -137,7 +137,7 @@
                 <File Id="File.QuickGraph.dll"
                       Name="QuickGraph.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\QuickGraph.dll"
+                      Source="$(var.BinFolder)\QuickGraph.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -147,7 +147,7 @@
                 <File Id="File.System.IO.Abstractions.dll"
                       Name="System.IO.Abstractions.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\System.IO.Abstractions.dll"
+                      Source="$(var.BinFolder)\System.IO.Abstractions.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -157,7 +157,7 @@
                 <File Id="File.System.Reactive.Core.dll"
                       Name="System.Reactive.Core.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\System.Reactive.Core.dll"
+                      Source="$(var.BinFolder)\System.Reactive.Core.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -167,7 +167,7 @@
                 <File Id="File.System.Reactive.Interfaces.dll"
                       Name="System.Reactive.Interfaces.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\System.Reactive.Interfaces.dll"
+                      Source="$(var.BinFolder)\System.Reactive.Interfaces.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -177,7 +177,7 @@
                 <File Id="File.System.Reactive.Linq.dll"
                       Name="System.Reactive.Linq.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\System.Reactive.Linq.dll"
+                      Source="$(var.BinFolder)\System.Reactive.Linq.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -187,7 +187,7 @@
                 <File Id="File.System.Reactive.PlatformServices.dll"
                       Name="System.Reactive.PlatformServices.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\System.Reactive.PlatformServices.dll"
+                      Source="$(var.BinFolder)\System.Reactive.PlatformServices.dll"
                       KeyPath="yes" />
             </Component>
         </DirectoryRef>
@@ -200,7 +200,7 @@
             Un-advertised shortcuts are advised against by the powers-that-be.
         -->
         <Icon Id="Icon.Apollo.ico"
-              SourceFile="$(var.Apollo_ResourceFolder)\icons\apollo.ico" />
+              SourceFile="$(var.ResourceFolder)\icons\apollo.ico" />
 
         <!-- The feature for the main program. -->
         <ComponentGroup Id="CGroup.Apollo.Base">
@@ -222,6 +222,7 @@
             <ComponentRef Id="C.System.Reactive.Interfaces.dll" />
             <ComponentRef Id="C.System.Reactive.Linq.dll" />
             <ComponentRef Id="C.System.Reactive.PlatformServices.dll" />
+
         </ComponentGroup>
     </Fragment>
 </Wix>

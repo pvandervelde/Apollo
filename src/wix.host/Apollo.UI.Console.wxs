@@ -17,11 +17,11 @@
                 <File Id="File.Apollo.UI.Console.Exe"
                       Name="Apollo.UI.Console.exe"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Apollo.UI.Console.exe"
+                      Source="$(var.BinFolder)\Apollo.UI.Console.exe"
                       KeyPath="yes">
                     <Shortcut Id="ShortCut.StartMenu.Apollo.UI.Console"
                               Directory="Dir.Menu.Apollo"
-                              Name="$(var.Apollo_ProductName) script runner"
+                              Name="$(var.ProductName) script runner"
                               Icon="Icon.Apollo.ico"
                               IconIndex="0"
                               WorkingDirectory="INSTALLLOCATION"
@@ -39,7 +39,7 @@
                 <File Id="File.Apollo.UI.Console.Exe.Config"
                       Name="Apollo.UI.Console.exe.config"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Apollo.UI.Console.exe.config"
+                      Source="$(var.BinFolder)\Apollo.UI.Console.exe.config"
                       KeyPath="yes" />
             </Component>
         </DirectoryRef>
