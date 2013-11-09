@@ -11,6 +11,7 @@
                 lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Explorer"
                 lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
         xmlns:regions="http://www.codeplex.com/prism"
+        AutomationProperties.AutomationId="{x:Static infrastructure:ShellAutomationIds.MainWindow}"
         Title="{lex:Loc MainWindow_Title}"
         Width="1024"
         Height="768"
@@ -47,6 +48,7 @@
                 Margin="0">
             <TabControl x:Name="tabs"
                         x:FieldModifier="private"
+                        AutomationProperties.AutomationId="{x:Static infrastructure:ShellAutomationIds.Tabs}"
                         Style="{StaticResource ChromeLikeTabControl}"
                         ItemContainerStyle="{StaticResource ChromeLikeTabItem}"
                         regions:RegionManager.RegionName="{x:Static common:CommonRegionNames.Content}" 

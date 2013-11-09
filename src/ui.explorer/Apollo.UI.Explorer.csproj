@@ -210,6 +210,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\tests\regression\explorer\scripts\AutomationId.Explorer.cs">
+      <Link>AutomationId.Explorer.cs</Link>
+    </Compile>
     <Compile Include="Commands\ShowWelcomeViewTabCommand.cs" />
     <Compile Include="Converters\ModelCollectionToTabItemsConverter.cs" />
     <Compile Include="ExplorerConstants.cs" />
@@ -377,7 +380,7 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="$(FileApplicationManifest)">
-        <Link>app.manifest</Link>
+      <Link>app.manifest</Link>
     </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
@@ -469,7 +472,6 @@
     <PublicKeySignatureFromKeyFile SnExe="$(FileSNExe)" DirTemp="$(DirBuildTemp)" Input="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Output TaskParameter="PublicKeyToken" PropertyName="PublicKeyTokenLocal" />
     </PublicKeySignatureFromKeyFile>
-    
     <!-- Generate the version number file -->
     <ItemGroup>
       <ManifestTokens Include="Major">
@@ -489,7 +491,7 @@
       </ManifestTokens>
       <ManifestTokens Include="PublicKeyToken">
         <ReplacementValue>$(PublicKeyTokenLocal)</ReplacementValue>
-      </ManifestTokens>      
+      </ManifestTokens>
     </ItemGroup>
     <TemplateFile Template="$(FileTemplateApplicationManifest)" OutputFileName="$(FileApplicationManifest)" Tokens="@(ManifestTokens)" />
   </Target>

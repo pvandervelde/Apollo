@@ -1,0 +1,146 @@
+//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System.Diagnostics.CodeAnalysis;
+
+#if IN_VS_SOLUTION
+namespace Apollo.UI.Explorer
+{
+#endif
+    /// <summary>
+    /// Defines the automation IDs for the shell window.
+    /// </summary>
+    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
+        Justification = "Don't want to create too many files for the automation IDs.")]
+    internal static class ShellAutomationIds
+    {
+        /// <summary>
+        /// The automation ID for the main window.
+        /// </summary>
+        public const string MainWindow = "Explorer.Shell.MainWindow";
+
+        /// <summary>
+        /// The automation ID for the tab control in the shell window.
+        /// </summary>
+        public const string Tabs = "Explorer.Shell.Tabs";
+    }
+
+    /// <summary>
+    /// Defines the automation IDs for the about window.
+    /// </summary>
+    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
+        Justification = "Don't want to create too many files for the automation IDs.")]
+    internal static class AboutAutomationIds
+    {
+        public const string MainWindow = "Explorer.About.MainWindow";
+    }
+
+    /// <summary>
+    /// Defines the automation IDs for the main menu.
+    /// </summary>
+    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
+        Justification = "Don't want to create too many files for the automation IDs.")]
+    internal static class MainMenuAutomationIds
+    {
+        /// <summary>
+        /// The automation ID for the main menu.
+        /// </summary>
+        public const string Menu = "Explorer.MainMenu.Menu";
+
+        /// <summary>
+        /// The automation ID for the File menu.
+        /// </summary>
+        public const string File = "Explorer.MainMenu.File";
+
+        /// <summary>
+        /// The automation ID for the File - New menu.
+        /// </summary>
+        public const string FileNew = "Explorer.MainMenu.File.New";
+
+        /// <summary>
+        /// The automation ID for the File - Open menu.
+        /// </summary>
+        public const string FileOpen = "Explorer.MainMenu.File.Open";
+
+        /// <summary>
+        /// The automation ID for the File - Close menu.
+        /// </summary>
+        public const string FileClose = "Explorer.MainMenu.File.Close";
+
+        /// <summary>
+        /// The automation ID for the File - Save menu.
+        /// </summary>
+        public const string FileSave = "Explorer.MainMenu.File.Save";
+
+        /// <summary>
+        /// The automation ID for the File - SaveAs menu.
+        /// </summary>
+        public const string FileSaveAs = "Explorer.MainMenu.File.SaveAs";
+
+        /// <summary>
+        /// The automation ID for the File - Exit menu.
+        /// </summary>
+        public const string FileExit = "Explorer.MainMenu.File.Exit";
+
+        /// <summary>
+        /// The automation ID for the Edit menu.
+        /// </summary>
+        public const string Edit = "Explorer.MainMenu.Edit";
+
+        /// <summary>
+        /// The automation ID for the Edit - Undo menu.
+        /// </summary>
+        public const string EditUndo = "Explorer.MainMenu.Edit.Undo";
+
+        /// <summary>
+        /// The automation ID for the Edit - Redo menu.
+        /// </summary>
+        public const string EditRedo = "Explorer.MainMenu.Edit.Redo";
+
+        /// <summary>
+        /// The automation ID for the View menu.
+        /// </summary>
+        public const string View = "Explorer.MainMenu.View";
+
+        /// <summary>
+        /// The automation ID for the View - StartPage menu.
+        /// </summary>
+        public const string ViewStartPage = "Explorer.MainMenu.View.StartPage";
+
+        /// <summary>
+        /// The automation ID for the View - Projects menu.
+        /// </summary>
+        public const string ViewProjects = "Explorer.MainMenu.View.Projects";
+
+        /// <summary>
+        /// The automation ID for the View - Script menu.
+        /// </summary>
+        public const string ViewScript = "Explorer.MainMenu.View.Script";
+
+        /// <summary>
+        /// The automation ID for the Run menu.
+        /// </summary>
+        public const string Run = "Explorer.MainMenu.Run";
+
+        /// <summary>
+        /// The automation ID for the Help menu.
+        /// </summary>
+        public const string Help = "Explorer.MainMenu.Help";
+
+        /// <summary>
+        /// The automation ID for the Help - Help menu.
+        /// </summary>
+        public const string HelpHelp = "Explorer.MainMenu.Help.Help";
+
+        /// <summary>
+        /// The automation ID for the Help - About menu.
+        /// </summary>
+        public const string HelpAbout = "Explorer.MainMenu.Help.About";
+    }
+
+#if IN_VS_SOLUTION
+}
+#endif

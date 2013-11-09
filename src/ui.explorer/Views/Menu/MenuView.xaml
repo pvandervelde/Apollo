@@ -1,93 +1,89 @@
-﻿<Common:RegionView
-    x:Class="Apollo.UI.Explorer.Views.Menu.MenuView"
-    x:ClassModifier="internal"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:lexEngine="clr-namespace:WPFLocalizeExtension.Engine;assembly=WPFLocalizeExtension"
-    xmlns:lexProviders="clr-namespace:WPFLocalizeExtension.Providers;assembly=WPFLocalizeExtension"
-    xmlns:lex="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
-    lexEngine:LocalizeDictionary.DesignCulture="en"
-    lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Explorer"
-    lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
-    xmlns:Common="clr-namespace:Apollo.UI.Wpf;assembly=Apollo.UI.Wpf">
+﻿<Common:RegionView x:Class="Apollo.UI.Explorer.Views.Menu.MenuView"
+                   x:ClassModifier="internal"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:infrastructure="clr-namespace:Apollo.UI.Explorer"
+                   xmlns:lexEngine="clr-namespace:WPFLocalizeExtension.Engine;assembly=WPFLocalizeExtension"
+                   xmlns:lexProviders="clr-namespace:WPFLocalizeExtension.Providers;assembly=WPFLocalizeExtension"
+                   xmlns:lex="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
+                   lexEngine:LocalizeDictionary.DesignCulture="en"
+                   lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Explorer"
+                   lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
+                   xmlns:Common="clr-namespace:Apollo.UI.Wpf;assembly=Apollo.UI.Wpf">
     <Common:RegionView.CommandBindings>
-        <CommandBinding
-            Command="New"
-            CanExecute="CommandNewProjectCanExecute"
-            Executed="CommandNewProjectExecuted" />
-        <CommandBinding
-            Command="Open"
-            CanExecute="CommandLoadProjectCanExecute"
-            Executed="CommandLoadProjectExecuted" />
-        <CommandBinding
-            Command="Save"
-            CanExecute="CommandSaveProjectCanExecute"
-            Executed="CommandSaveProjectExecuted" />
-        <CommandBinding
-            Command="Close"
-            CanExecute="CommandCloseProjectCanExecute"
-            Executed="CommandCloseProjectExecuted" />
+        <CommandBinding Command="New"
+                        CanExecute="CommandNewProjectCanExecute"
+                        Executed="CommandNewProjectExecuted" />
+        <CommandBinding Command="Open"
+                        CanExecute="CommandLoadProjectCanExecute"
+                        Executed="CommandLoadProjectExecuted" />
+        <CommandBinding Command="Save"
+                        CanExecute="CommandSaveProjectCanExecute"
+                        Executed="CommandSaveProjectExecuted" />
+        <CommandBinding Command="Close"
+                        CanExecute="CommandCloseProjectCanExecute"
+                        Executed="CommandCloseProjectExecuted" />
     </Common:RegionView.CommandBindings>
-    <Menu
-        DockPanel.Dock="Top"
-        IsMainMenu="True">
-        <MenuItem
-            Header="{lex:Loc MainWindow_Menu_File}">
-            <MenuItem
-                Command="New">
+    <Menu AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.Menu}" 
+          DockPanel.Dock="Top"
+          IsMainMenu="True">
+        <MenuItem AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.File}"
+                  Header="{lex:Loc MainWindow_Menu_File}">
+            <MenuItem AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.FileNew}"
+                      Command="New">
             </MenuItem>
-            <MenuItem
-                Command="Open" />
+            <MenuItem AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.FileOpen}"
+                      Command="Open" />
             <Separator />
-            <MenuItem
-                Command="Close" />
-            <MenuItem
-                Command="Save" />
-            <MenuItem
-                Command="SaveAs" />
+            <MenuItem AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.FileClose}"
+                      Command="Close" />
+            <MenuItem AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.FileSave}"
+                      Command="Save" />
+            <MenuItem AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.FileSaveAs}"
+                      Command="SaveAs" />
             <Separator />
             <!-- Recent -->
             <Separator />
-            <MenuItem
-                x:Name="miFileExit"
-                x:FieldModifier="private"
-                Header="{lex:Loc MainWindow_Menu_File_Exit}" />
+            <MenuItem x:Name="miFileExit"
+                      x:FieldModifier="private"
+                      AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.FileExit}"
+                      Header="{lex:Loc MainWindow_Menu_File_Exit}" />
         </MenuItem>
 
         <!-- Edit -->
-        <MenuItem
-            Header="{lex:Loc MainWindow_Menu_Edit}">
-            <MenuItem
-                x:Name="miEditUndo"
-                x:FieldModifier="private"
-                Header="{lex:Loc MainWindow_Menu_Edit_Undo}" />
-            <MenuItem
-                x:Name="miEditRedo"
-                x:FieldModifier="private"
-                Header="{lex:Loc MainWindow_Menu_Edit_Redo}" />
+        <MenuItem AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.Edit}"
+                  Header="{lex:Loc MainWindow_Menu_Edit}">
+            <MenuItem x:Name="miEditUndo"
+                      x:FieldModifier="private"
+                      AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.EditUndo}"
+                      Header="{lex:Loc MainWindow_Menu_Edit_Undo}" />
+            <MenuItem x:Name="miEditRedo"
+                      x:FieldModifier="private"
+                      AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.EditRedo}"
+                      Header="{lex:Loc MainWindow_Menu_Edit_Redo}" />
         </MenuItem>
 
         <!-- View -->
-        <MenuItem
-            Header="{lex:Loc MainWindow_Menu_View}">
-            <MenuItem
-                x:Name="miViewStartPage"
-                x:FieldModifier="private"
-                Header="{lex:Loc MainWindow_Menu_View_StartPage}" />
-            <MenuItem
-                x:Name="miViewProjects"
-                x:FieldModifier="private"
-                Header="{lex:Loc MainWindow_Menu_View_Projects}" />
-            <MenuItem
-                x:Name="miViewScript"
-                x:FieldModifier="private"
-                Header="{lex:Loc MainWindow_Menu_View_Script}" />
+        <MenuItem AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.View}"
+                  Header="{lex:Loc MainWindow_Menu_View}">
+            <MenuItem x:Name="miViewStartPage"
+                      x:FieldModifier="private"
+                      AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.ViewStartPage}"
+                      Header="{lex:Loc MainWindow_Menu_View_StartPage}" />
+            <MenuItem x:Name="miViewProjects"
+                      x:FieldModifier="private"
+                      AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.ViewProjects}"
+                      Header="{lex:Loc MainWindow_Menu_View_Projects}" />
+            <MenuItem x:Name="miViewScript"
+                      x:FieldModifier="private"
+                      AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.ViewScript}"
+                      Header="{lex:Loc MainWindow_Menu_View_Script}" />
         </MenuItem>
 
         <!-- Run -->
-        <MenuItem
-            Header="{lex:Loc MainWindow_Menu_Run}"
-            IsEnabled="False">
+        <MenuItem AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.Run}"
+                  Header="{lex:Loc MainWindow_Menu_Run}"
+                  IsEnabled="False">
         </MenuItem>
 
         <!-- Tools -->
@@ -95,15 +91,15 @@
         <!-- Window -->
 
         <!-- Help -->
-        <MenuItem
-            Header="{lex:Loc MainWindow_Menu_Help}">
-            <MenuItem
-                Command="Help" />
+        <MenuItem AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.Help}"
+                  Header="{lex:Loc MainWindow_Menu_Help}">
+            <MenuItem AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.HelpHelp}"
+                      Command="Help" />
             <Separator />
-            <MenuItem
-                x:Name="miHelpAbout"
-                x:FieldModifier="private"
-                Header="{lex:Loc MainWindow_Menu_Help_About}" />
+            <MenuItem x:Name="miHelpAbout"
+                      x:FieldModifier="private"
+                      AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.HelpAbout}"
+                      Header="{lex:Loc MainWindow_Menu_Help_About}" />
         </MenuItem>
 
     </Menu>

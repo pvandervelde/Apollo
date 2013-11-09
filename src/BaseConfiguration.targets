@@ -40,12 +40,12 @@
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
         <Optimize>false</Optimize>
-        <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
+        <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS;IN_VS_SOLUTION</DefineConstants>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
         <DebugType>pdbonly</DebugType>
         <Optimize>true</Optimize>
-        <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
+        <DefineConstants>TRACE;CODE_ANALYSIS;IN_VS_SOLUTION</DefineConstants>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Deploy|x64' ">
         <DebugType>pdbonly</DebugType>
