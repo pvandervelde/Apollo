@@ -3,6 +3,8 @@
 
     <?include $(var.CurrentProjectDir)\includes.wxi ?>
     <?include $(var.SolutionDir)..\build\temp\Dependencies.wxi ?>
+    <?include $(var.SolutionDir)..\templates\CompanyIncludes.wxi ?>
+    <?include $(var.SolutionDir)..\build\temp\VersionNumber.wxi ?>
 
     <Fragment>
         <!-- 
@@ -196,10 +198,10 @@
             <!-- InstallPath -->
             <Component Id="C.RegistryKey.InstallLocation"
                        Guid="{D8B3CCEE-7757-428E-8DB5-F49FEAF7760E}">
-                <RegistryKey Id="Registry.Apollo"
+                <RegistryKey Id="Registry.InstallLocation"
                              Root="HKLM"
                              Key="Software\$(var.CompanyInstallFolder)\$(var.ProductName)\$(var.ProductVersionFolder)"
-                             Action="createAndRemoveOnUninstall">
+                             ForceCreateOnInstall="yes">
                     <RegistryValue Type="string"
                                    Name="InstallPath"
                                    Value="[INSTALLLOCATION]"
@@ -210,10 +212,10 @@
             <!-- Application Version -->
             <Component Id="C.RegistryKey.Version"
                        Guid="">
-                <RegistryKey Id="Registry.Apollo"
+                <RegistryKey Id="Registry.Version"
                              Root="HKLM"
                              Key="Software\$(var.CompanyInstallFolder)\$(var.ProductName)\$(var.ProductVersionFolder)"
-                             Action="createAndRemoveOnUninstall">
+                             ForceCreateOnInstall="yes">
                     <RegistryValue Type="string"
                                    Name="Version"
                                    Value="$(var.ApplicationVersion)"
@@ -224,10 +226,10 @@
             <!-- Application plugin Version -->
             <Component Id="C.RegistryKey.VersionForPlugins"
                        Guid="">
-                <RegistryKey Id="Registry.Apollo"
+                <RegistryKey Id="Registry.VersionForPlugins"
                              Root="HKLM"
                              Key="Software\$(var.CompanyInstallFolder)\$(var.ProductName)\$(var.ProductVersionFolder)"
-                             Action="createAndRemoveOnUninstall">
+                             ForceCreateOnInstall="yes">
                     <RegistryValue Type="string"
                                    Name="VersionForPlugins"
                                    Value="$(var.ApplicationPluginVersion)"

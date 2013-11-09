@@ -183,11 +183,5 @@
         <Condition Message="Version 4.5 of the .NET framework is required for the setup to continue.">
             <![CDATA[Installed OR NETFRAMEWORK45]]>
         </Condition>
-
-
-        <!-- Remove old products if there are any before installing the new product. i.e. we're always doing a major upgrade. -->
-        <InstallExecuteSequence>
-            <RemoveExistingProducts After="InstallInitialize"/>
-        </InstallExecuteSequence>
     </Product>
 </Wix>
