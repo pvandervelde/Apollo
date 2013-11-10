@@ -50,7 +50,7 @@
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Deploy|x64' ">
         <DebugType>pdbonly</DebugType>
         <Optimize>true</Optimize>
-        <DefineConstants>TRACE</DefineConstants>
+        <DefineConstants>TRACE;IN_VS_SOLUTION</DefineConstants>
     </PropertyGroup>
     <PropertyGroup>
         <DirWorkspace>$(SolutionDir)\..</DirWorkspace>
