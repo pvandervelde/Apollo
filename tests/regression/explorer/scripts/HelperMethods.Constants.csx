@@ -31,3 +31,8 @@ public static string GetApolloExplorerFileName()
 {
     return "Apollo.UI.Explorer.exe";
 }
+
+public static int ShutdownWaitTimeInMilliSeconds()
+{
+    return 20000;
+}

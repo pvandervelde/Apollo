@@ -200,5 +200,11 @@ public static void ExitApplication(Application application)
     {
         Log("Closing application.");
         application.Close();
+
+        application.Process.WaitForExit(ShutdownWaitTimeInMilliSeconds());
+        if (!application.Process.HasExited)
+        {
+            application.Kill();
+        }
     }
 }

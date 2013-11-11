@@ -1,4 +1,5 @@
 #load AutomationId.Explorer.cs
+#load HelperMethods.Constants.csx
 #load HelperMethods.Logging.csx
 
 #r UIAutomationTypes, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35
@@ -81,5 +82,5 @@ public static void CloseApplicationViaFileExitMenuItem(Application application)
 
     exitMenu.Click();
 
-    application.Process.WaitForExit(20000);
+    application.Process.WaitForExit(ShutdownWaitTimeInMilliSeconds());
 }
