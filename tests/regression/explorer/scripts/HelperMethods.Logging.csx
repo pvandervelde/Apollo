@@ -23,6 +23,8 @@ public static void Log(string message)
         {
             writer.WriteLine(message);
         }
+
+        Console.WriteLine(message);
     }
     catch (IOException)
     {

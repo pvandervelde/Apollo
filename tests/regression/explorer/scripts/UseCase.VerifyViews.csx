@@ -6,11 +6,9 @@
 #load UseCase.VerifyViews.Cases.csx
 
 Log("Starting test ...");
-Console.WriteLine("Starting test ...");
 
 InitializeWhite();
 
-// Load application
 var applicationPath = GetApolloExplorerPath();
 if (string.IsNullOrEmpty(applicationPath))
 {
@@ -22,25 +20,11 @@ try
 {
     var text = string.Format(
         CultureInfo.InvariantCulture,
-        "{0} - PID: {1}",
+        "Started [{0}] - PID: [{1}]",
         application.Name,
         application.Process.Id);
-
     Log(text);
-    Console.WriteLine(text);
 
-    // find the main window
-    var mainWindow = MainWindow(application);
-
-    text = string.Format(
-        CultureInfo.InvariantCulture,
-        "MainWindow: {0}",
-        mainWindow.Title);
-
-    Log(text);
-    Console.WriteLine(text);
-
-    // Execute Window verifications
     VerifyWelcomeTab();
 
     VerifyFileMenu();
@@ -61,7 +45,6 @@ try
 }
 catch(Exception e)
 {
-    Console.WriteLine(e);
     Log(e.ToString());
     throw;
 }
@@ -74,4 +57,3 @@ finally
 }
 
 Log("Completed test");
-Console.WriteLine("Completed test");

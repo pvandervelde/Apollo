@@ -27,5 +27,10 @@ public static void VerifyRunMenu()
 
 public static void VerifyHelpMenu()
 {
+    VerifyAboutDialog();
+}
 
+private static void VerifyAboutDialog()
+{
+    // Stuff
 }
