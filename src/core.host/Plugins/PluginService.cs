@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using Nuclei.Configuration;
+using Nuclei.Diagnostics;
 
 namespace Apollo.Core.Host.Plugins
 {
@@ -30,13 +31,18 @@ namespace Apollo.Core.Host.Plugins
         /// </summary>
         /// <param name="configuration">The object that stores the configuration for the current application.</param>
         /// <param name="detector">The object that detects the available plugins.</param>
+        /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="configuration"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="detector"/> is <see langword="null" />.
         /// </exception>
-        public PluginService(IConfiguration configuration, PluginDetector detector)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
+        /// </exception>
+        public PluginService(IConfiguration configuration, PluginDetector detector, SystemDiagnostics diagnostics)
+            : base(diagnostics)
         {
             {
                 Lokad.Enforce.Argument(() => configuration);

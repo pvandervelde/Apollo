@@ -754,6 +754,60 @@ namespace Apollo.Core.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to start kernel service of type [{0}]. Error was {1}..
+        /// </summary>
+        internal static string Kernel_LogMessage_FailedToStartService_WithTypeAndError {
+            get {
+                return ResourceManager.GetString("Kernel_LogMessage_FailedToStartService_WithTypeAndError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to stop kernel service of type [{0}]. Error was {1}..
+        /// </summary>
+        internal static string Kernel_LogMessage_FailedToStopService_WithTypeAndError {
+            get {
+                return ResourceManager.GetString("Kernel_LogMessage_FailedToStopService_WithTypeAndError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kernel starting ....
+        /// </summary>
+        internal static string Kernel_LogMessage_KernelStarting {
+            get {
+                return ResourceManager.GetString("Kernel_LogMessage_KernelStarting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kernel start-up completed..
+        /// </summary>
+        internal static string Kernel_LogMessage_KernelStartupComplete {
+            get {
+                return ResourceManager.GetString("Kernel_LogMessage_KernelStartupComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kernel stopped..
+        /// </summary>
+        internal static string Kernel_LogMessage_KernelStopped {
+            get {
+                return ResourceManager.GetString("Kernel_LogMessage_KernelStopped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stopping kernel ....
+        /// </summary>
+        internal static string Kernel_LogMessage_KernelStopping {
+            get {
+                return ResourceManager.GetString("Kernel_LogMessage_KernelStopping", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An exception occurred while sending a message. Exception information is: {0}.
         /// </summary>
         internal static string Kernel_LogMessage_MessageSendExceptionOccurred {
@@ -768,6 +822,42 @@ namespace Apollo.Core.Host.Properties {
         internal static string Kernel_LogMessage_ServiceDisconnectionFailed {
             get {
                 return ResourceManager.GetString("Kernel_LogMessage_ServiceDisconnectionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kernel service of type [{0}] started..
+        /// </summary>
+        internal static string Kernel_LogMessage_ServiceStarted_WithType {
+            get {
+                return ResourceManager.GetString("Kernel_LogMessage_ServiceStarted_WithType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kernel service of type [{0}] stopped..
+        /// </summary>
+        internal static string Kernel_LogMessage_ServiceStopped_WithType {
+            get {
+                return ResourceManager.GetString("Kernel_LogMessage_ServiceStopped_WithType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting kernel service of type [{0}]..
+        /// </summary>
+        internal static string Kernel_LogMessage_StartingService_WithType {
+            get {
+                return ResourceManager.GetString("Kernel_LogMessage_StartingService_WithType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stopping kernel service of type [{0}]..
+        /// </summary>
+        internal static string Kernel_LogMessage_StoppingService_WithType {
+            get {
+                return ResourceManager.GetString("Kernel_LogMessage_StoppingService_WithType", resourceCulture);
             }
         }
         
@@ -1079,11 +1169,38 @@ namespace Apollo.Core.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invoking user interface command with ID: {0}.
+        /// </summary>
+        internal static string UserInterface_LogMessage_InvokingCommand_WithId {
+            get {
+                return ResourceManager.GetString("UserInterface_LogMessage_InvokingCommand_WithId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An exception occurred while sending a message. Exception information is: {0}.
         /// </summary>
         internal static string UserInterface_LogMessage_MessageSendExceptionOccurred {
             get {
                 return ResourceManager.GetString("UserInterface_LogMessage_MessageSendExceptionOccurred", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to shut down application. Error was: {0}..
+        /// </summary>
+        internal static string UserInterface_LogMessage_ShutDownFailed_WithError {
+            get {
+                return ResourceManager.GetString("UserInterface_LogMessage_ShutDownFailed_WithError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Received request to shut down application..
+        /// </summary>
+        internal static string UserInterface_LogMessage_ShuttingDown {
+            get {
+                return ResourceManager.GetString("UserInterface_LogMessage_ShuttingDown", resourceCulture);
             }
         }
         

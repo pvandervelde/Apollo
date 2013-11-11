@@ -7,6 +7,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Moq;
+using Nuclei.Diagnostics;
 using NUnit.Framework;
 
 namespace Apollo.Core.Host
@@ -19,7 +20,8 @@ namespace Apollo.Core.Host
         [Test]
         public void ServicesToConnectTo()
         {
-            var service = new CoreProxy(new Mock<IKernel>().Object);
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+            var service = new CoreProxy(new Mock<IKernel>().Object, systemDiagnostics);
             Assert.IsFalse(service.ServicesToConnectTo().Exists());
         }
 
@@ -33,7 +35,8 @@ namespace Apollo.Core.Host
                     .Callback(() => wasShutdown = true);
             }
 
-            var service = new CoreProxy(kernel.Object);
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+            var service = new CoreProxy(kernel.Object, systemDiagnostics);
 
             service.Start();
             var task = service.Shutdown();
@@ -45,8 +48,9 @@ namespace Apollo.Core.Host
         [Test]
         public void NotifyServicesOfStartupCompletion()
         {
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             var kernel = new Mock<IKernel>();
-            var service = new CoreProxy(kernel.Object);
+            var service = new CoreProxy(kernel.Object, systemDiagnostics);
 
             bool wasInvoked = false;
             service.OnStartupComplete += (s, e) => { wasInvoked = true; };

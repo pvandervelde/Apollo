@@ -295,7 +295,6 @@
     <Compile Include="UserInterfaces\Application\ISystemInformationStorage.cs" />
     <Compile Include="UserInterfaces\Application\SystemInformation.cs" />
     <Compile Include="UserInterfaces\Application\SystemInformationStorage.cs" />
-    <Compile Include="UserInterfaces\DuplicateNotificationException.cs" />
     <Compile Include="INotificationNameConstants.cs" />
     <Compile Include="UserInterfaces\IUserInterfaceService.cs" />
     <Compile Include="NotificationName.cs" />

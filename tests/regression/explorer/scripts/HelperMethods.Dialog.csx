@@ -23,9 +23,7 @@ public static Window MainWindow(Application application)
 }
 
 // Menu
-
-// Menu - File
-public static Menu GetFileMenu(Application application)
+public static MenuBar GetMainMenu(Application application)
 {
     var mainWindow = MainWindow(application);
 
@@ -64,24 +62,7 @@ public static Menu GetFileMenu(Application application)
         .AndControlType(ControlType.Menu);
     var menu = (MenuBar)mainWindow.Get(menuSearchCriteria);
 
-    var menuText = string.Format(
-        CultureInfo.InvariantCulture,
-        "Found object for menu of type: {0}",
-        menu.GetType());
-    Log(menuText);
-    Console.WriteLine(menuText);
-
-    var fileMenuSearchCriteria = SearchCriteria.ByAutomationId(MainMenuAutomationIds.File);
-    var fileMenu = (Menu)menu.MenuItemBy(fileMenuSearchCriteria);
-
-    var fileMenuText = string.Format(
-        CultureInfo.InvariantCulture,
-        "Found object for file menu of type: {0}",
-        fileMenu.GetType());
-    Log(fileMenuText);
-    Console.WriteLine(fileMenuText);
-
-    return fileMenu;
+    return menu;
 }
 
 // Menu - Edit
@@ -92,11 +73,13 @@ public static Menu GetFileMenu(Application application)
 
 public static void CloseApplicationViaFileExitMenuItem(Application application)
 {
-    var fileMenu = GetFileMenu(application);
+    var menu = GetMainMenu(application);
 
+    var fileMenuSearchCriteria = SearchCriteria.ByAutomationId(MainMenuAutomationIds.File);
     var exitSearchCriteria = SearchCriteria.ByAutomationId(MainMenuAutomationIds.FileExit);
-    var exitMenu = fileMenu.SubMenu(exitSearchCriteria);
+    var exitMenu = menu.MenuItemBy(fileMenuSearchCriteria, exitSearchCriteria);
+
     exitMenu.Click();
 
-    application.Process.WaitForExit(1000);
+    application.Process.WaitForExit(20000);
 }

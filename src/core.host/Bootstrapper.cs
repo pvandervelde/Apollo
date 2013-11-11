@@ -15,6 +15,7 @@ using Apollo.Core.Host.UserInterfaces;
 using Autofac;
 using Autofac.Core;
 using Lokad;
+using Nuclei.Diagnostics;
 
 namespace Apollo.Core.Host
 {
@@ -109,12 +110,13 @@ namespace Apollo.Core.Host
         /// Creates the kernel.
         /// </summary>
         /// <param name="shutdownAction">The action that should be executed just before shutdown.</param>
+        /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
         /// <returns>
         /// The newly created kernel.
         /// </returns>
-        private static IKernel CreateKernel(Action shutdownAction)
+        private static IKernel CreateKernel(Action shutdownAction, SystemDiagnostics diagnostics)
         {
-            return new Kernel(shutdownAction);
+            return new Kernel(shutdownAction, diagnostics);
         }
 
         /// <summary>
@@ -145,6 +147,7 @@ namespace Apollo.Core.Host
         {
             // Load up the IOC container
             var container = CreateIocContainer(AdditionalCoreModules());
+            var diagnostics = container.Resolve<SystemDiagnostics>();
 
             Action shutdownAction = () =>
                 {
@@ -154,7 +157,7 @@ namespace Apollo.Core.Host
                     // indicate that we're done with the shutdown
                     m_ShutdownEvent.Set();
                 };
-            var kernel = CreateKernel(shutdownAction);
+            var kernel = CreateKernel(shutdownAction, diagnostics);
 
             var serviceTypes = FindServiceTypes();
             foreach (var serviceType in serviceTypes)
@@ -163,7 +166,7 @@ namespace Apollo.Core.Host
             }
 
             // Load the UI service
-            var userInterfaceService = CreateUserInterfaceService(container);
+            var userInterfaceService = CreateUserInterfaceService(container, diagnostics);
             kernel.Install(userInterfaceService);
 
             kernel.Start();
@@ -185,12 +188,13 @@ namespace Apollo.Core.Host
         /// Creates the user interface service.
         /// </summary>
         /// <param name="container">The IOC container that contains all the references.</param>
+        /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
         /// <returns>
         /// The newly created user interface service.
         /// </returns>
-        private KernelService CreateUserInterfaceService(IContainer container)
+        private KernelService CreateUserInterfaceService(IContainer container, SystemDiagnostics diagnostics)
         {
-            var userInterface = new UserInterfaceService(container, StartUserInterface);
+            var userInterface = new UserInterfaceService(container, StartUserInterface, diagnostics);
             return userInterface;
         }
 

@@ -93,6 +93,7 @@ namespace Apollo.Core.Host.Projects
             ICollectNotifications notifications,
             SystemDiagnostics diagnostics,
             IBuildProjects projectBuilder)
+            : base(diagnostics)
         {
             {
                 Lokad.Enforce.Argument(() => timelineBuilder);

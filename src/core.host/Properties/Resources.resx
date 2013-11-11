@@ -465,4 +465,43 @@
   <data name="RemoteAssemblyScanner_LogMessage_ScanningAssembly_WithName" xml:space="preserve">
     <value>Scanning assembly [{0}] for plugins.</value>
   </data>
+  <data name="Kernel_LogMessage_FailedToStartService_WithTypeAndError" xml:space="preserve">
+    <value>Failed to start kernel service of type [{0}]. Error was {1}.</value>
+  </data>
+  <data name="Kernel_LogMessage_FailedToStopService_WithTypeAndError" xml:space="preserve">
+    <value>Failed to stop kernel service of type [{0}]. Error was {1}.</value>
+  </data>
+  <data name="Kernel_LogMessage_KernelStarting" xml:space="preserve">
+    <value>Kernel starting ...</value>
+  </data>
+  <data name="Kernel_LogMessage_KernelStartupComplete" xml:space="preserve">
+    <value>Kernel start-up completed.</value>
+  </data>
+  <data name="Kernel_LogMessage_KernelStopped" xml:space="preserve">
+    <value>Kernel stopped.</value>
+  </data>
+  <data name="Kernel_LogMessage_KernelStopping" xml:space="preserve">
+    <value>Stopping kernel ...</value>
+  </data>
+  <data name="Kernel_LogMessage_ServiceStarted_WithType" xml:space="preserve">
+    <value>Kernel service of type [{0}] started.</value>
+  </data>
+  <data name="Kernel_LogMessage_ServiceStopped_WithType" xml:space="preserve">
+    <value>Kernel service of type [{0}] stopped.</value>
+  </data>
+  <data name="Kernel_LogMessage_StartingService_WithType" xml:space="preserve">
+    <value>Starting kernel service of type [{0}].</value>
+  </data>
+  <data name="Kernel_LogMessage_StoppingService_WithType" xml:space="preserve">
+    <value>Stopping kernel service of type [{0}].</value>
+  </data>
+  <data name="UserInterface_LogMessage_InvokingCommand_WithId" xml:space="preserve">
+    <value>Invoking user interface command with ID: {0}</value>
+  </data>
+  <data name="UserInterface_LogMessage_ShutDownFailed_WithError" xml:space="preserve">
+    <value>Failed to shut down application. Error was: {0}.</value>
+  </data>
+  <data name="UserInterface_LogMessage_ShuttingDown" xml:space="preserve">
+    <value>Received request to shut down application.</value>
+  </data>
 </root>

@@ -13,6 +13,8 @@ using System.Linq;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
 using Lokad;
+using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Logging;
 using QuickGraph;
 using QuickGraph.Algorithms;
 
@@ -44,6 +46,11 @@ namespace Apollo.Core.Host
         private readonly Action m_ShutdownAction;
 
         /// <summary>
+        /// The object that provides the diagnostics methods for the application.
+        /// </summary>
+        private readonly SystemDiagnostics m_Diagnostics;
+
+        /// <summary>
         /// The start-up state of the kernel.
         /// </summary>
         private StartupState m_State = StartupState.NotStarted;
@@ -52,9 +59,11 @@ namespace Apollo.Core.Host
         /// Initializes a new instance of the <see cref="Kernel"/> class.
         /// </summary>
         /// <param name="shutdownAction">The action that should be executed just before shut down.</param>
-        public Kernel(Action shutdownAction = null)
+        /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
+        public Kernel(Action shutdownAction, SystemDiagnostics diagnostics)
         {
             m_ShutdownAction = shutdownAction;
+            m_Diagnostics = diagnostics;
 
             // Add our own proxy to the collection of services.
             // Do that in the constructor so that this is always loaded.
@@ -65,7 +74,7 @@ namespace Apollo.Core.Host
             // possible if we start poking around in the data structures of the kernel.
             // In other words there shouldn't be any (legal) way of removing the
             // coreproxy object.
-            Install(new CoreProxy(this));
+            Install(new CoreProxy(this, diagnostics));
         }
 
         /// <summary>
@@ -110,6 +119,11 @@ namespace Apollo.Core.Host
         /// </design>
         public void Start()
         {
+            m_Diagnostics.Log(
+                LevelToLog.Info, 
+                HostConstants.LogPrefix,
+                Resources.Kernel_LogMessage_KernelStarting);
+
             m_State = StartupState.Starting;
 
             // In order to keep this flexible we will need to sort the services
@@ -174,6 +188,11 @@ namespace Apollo.Core.Host
                     }
                 }
             }
+
+            m_Diagnostics.Log(
+                LevelToLog.Info,
+                HostConstants.LogPrefix,
+                Resources.Kernel_LogMessage_KernelStartupComplete);
 
             m_State = StartupState.Started;
             SendStartupCompleteMessage();
@@ -254,6 +273,11 @@ namespace Apollo.Core.Host
             Justification = "The shutdown must proceede even if a service throws an unknown exception.")]
         public void Shutdown()
         {
+            m_Diagnostics.Log(
+                LevelToLog.Info,
+                HostConstants.LogPrefix,
+                Resources.Kernel_LogMessage_KernelStopping);
+
             m_State = StartupState.Stopping;
 
             // In order to keep this flexible we will need to sort the services
@@ -287,6 +311,11 @@ namespace Apollo.Core.Host
             }
 
             m_State = StartupState.Stopped;
+
+            m_Diagnostics.Log(
+                LevelToLog.Info,
+                HostConstants.LogPrefix,
+                Resources.Kernel_LogMessage_KernelStopped);
         }
 
         /// <summary>

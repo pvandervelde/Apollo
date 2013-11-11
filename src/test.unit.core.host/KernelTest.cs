@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Nuclei.Diagnostics;
 using NUnit.Framework;
 
 namespace Apollo.Core.Host
@@ -32,7 +33,9 @@ namespace Apollo.Core.Host
             /// Initializes a new instance of the <see cref="AdaptableKernelService"/> class.
             /// </summary>
             /// <param name="connectingServices">The connecting services.</param>
-            public AdaptableKernelService(Type[] connectingServices)
+            /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
+            public AdaptableKernelService(Type[] connectingServices, SystemDiagnostics diagnostics)
+                : base(diagnostics)
             {
                 m_ConnectingServices = connectingServices;
             }
@@ -79,7 +82,9 @@ namespace Apollo.Core.Host
             /// </summary>
             /// <param name="startupAction">The startup action.</param>
             /// <param name="stopAction">The stop action.</param>
-            public KernelService1(Action<KernelService> startupAction, Action<KernelService> stopAction)
+            /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
+            public KernelService1(Action<KernelService> startupAction, Action<KernelService> stopAction, SystemDiagnostics diagnostics)
+                : base(diagnostics)
             {
                 m_StartupAction = startupAction;
                 m_StopAction = stopAction;
@@ -132,7 +137,9 @@ namespace Apollo.Core.Host
             /// </summary>
             /// <param name="startupAction">The startup action.</param>
             /// <param name="stopAction">The stop action.</param>
-            public KernelService2(Action<KernelService> startupAction, Action<KernelService> stopAction)
+            /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
+            public KernelService2(Action<KernelService> startupAction, Action<KernelService> stopAction, SystemDiagnostics diagnostics)
+                : base(diagnostics)
             {
                 m_StartupAction = startupAction;
                 m_StopAction = stopAction;
@@ -238,7 +245,9 @@ namespace Apollo.Core.Host
             /// </summary>
             /// <param name="startupAction">The startup action.</param>
             /// <param name="stopAction">The stop action.</param>
-            public KernelService3(Action<KernelService> startupAction, Action<KernelService> stopAction)
+            /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
+            public KernelService3(Action<KernelService> startupAction, Action<KernelService> stopAction, SystemDiagnostics diagnostics)
+                : base(diagnostics)
             {
                 m_StartupAction = startupAction;
                 m_StopAction = stopAction;
@@ -299,7 +308,9 @@ namespace Apollo.Core.Host
             /// </summary>
             /// <param name="startupAction">The startup action.</param>
             /// <param name="stopAction">The stop action.</param>
-            public KernelService4(Action<KernelService> startupAction, Action<KernelService> stopAction)
+            /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
+            public KernelService4(Action<KernelService> startupAction, Action<KernelService> stopAction, SystemDiagnostics diagnostics)
+                : base(diagnostics)
             {
                 m_StartupAction = startupAction;
                 m_StopAction = stopAction;
@@ -341,50 +352,58 @@ namespace Apollo.Core.Host
         [Test]
         public void InstallServiceWithAlreadyInstalledService()
         {
-            var kernel = new Kernel();
-            Assert.Throws<ServiceTypeAlreadyInstalledException>(() => kernel.Install(new CoreProxy(kernel)));
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+            var kernel = new Kernel(
+                () => { },
+                systemDiagnostics);
+            Assert.Throws<ServiceTypeAlreadyInstalledException>(() => kernel.Install(new CoreProxy(kernel, systemDiagnostics)));
         }
 
         [Test]
         public void InstallServiceThatDependsOnItself()
         {
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             var testMock = new AdaptableKernelService(
-                new[] { typeof(AdaptableKernelService) });
+                new[] { typeof(AdaptableKernelService) },
+                systemDiagnostics);
 
-            var kernel = new Kernel();
+            var kernel = new Kernel(
+                () => { },
+                systemDiagnostics);
             Assert.Throws<ServiceCannotDependOnItselfException>(() => kernel.Install(testMock));
         }
 
         [Test]
         public void InstallServiceThatDependsOnKernelService()
         {
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             var testMock = new AdaptableKernelService(
-                new[] { typeof(KernelService) });
+                new[] { typeof(KernelService) },
+                systemDiagnostics);
 
-            var kernel = new Kernel();
+            var kernel = new Kernel(
+                () => { },
+                systemDiagnostics);
             Assert.Throws<ServiceCannotDependOnGenericKernelServiceException>(() => kernel.Install(testMock));
         }
 
         [Test]
         public void InstallServiceAsDependentFirst()
         {
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             var kernelTestMock1 = new KernelService1(
-                service =>
-                    {
-                    },
-                service =>
-                    {
-                    });
+                service => { },
+                service => { },
+                systemDiagnostics);
 
             var kernelTestMock2 = new KernelService2(
-                service =>
-                {
-                },
-                service =>
-                {
-                });
+                service => { },
+                service => { },
+                systemDiagnostics);
 
-            var kernel = new Kernel();
+            var kernel = new Kernel(
+                () => { },
+                systemDiagnostics);
             kernel.Install(kernelTestMock1);
             kernel.Install(kernelTestMock2);
 
@@ -394,23 +413,20 @@ namespace Apollo.Core.Host
         [Test]
         public void InstallServiceAsDependentLast()
         {
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             var kernelTestMock1 = new KernelService1(
-                service =>
-                {
-                },
-                service =>
-                {
-                });
+                service => { },
+                service => { },
+                systemDiagnostics);
 
             var kernelTestMock2 = new KernelService2(
-                service =>
-                {
-                },
-                service =>
-                {
-                });
+                service => { },
+                service => { },
+                systemDiagnostics);
 
-            var kernel = new Kernel();
+            var kernel = new Kernel(
+                () => { },
+                systemDiagnostics);
             kernel.Install(kernelTestMock2);
             kernel.Install(kernelTestMock1);
 
@@ -432,13 +448,16 @@ namespace Apollo.Core.Host
             // Service 4
             var startupOrder = new List<KernelService>();
 
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             Action<KernelService> storeAction = startupOrder.Add;
-            var testMock1 = new KernelService1(storeAction, service => { });
-            var testMock2 = new KernelService2(storeAction, service => { });
-            var testMock3 = new KernelService3(storeAction, service => { });
-            var testMock4 = new KernelService4(storeAction, service => { });
+            var testMock1 = new KernelService1(storeAction, service => { }, systemDiagnostics);
+            var testMock2 = new KernelService2(storeAction, service => { }, systemDiagnostics);
+            var testMock3 = new KernelService3(storeAction, service => { }, systemDiagnostics);
+            var testMock4 = new KernelService4(storeAction, service => { }, systemDiagnostics);
 
-            var kernel = new Kernel();
+            var kernel = new Kernel(
+                () => { },
+                systemDiagnostics);
             kernel.Install(testMock1);
             kernel.Install(testMock2);
             kernel.Install(testMock3);
@@ -474,13 +493,16 @@ namespace Apollo.Core.Host
             // Service 4
             var stopOrder = new List<KernelService>();
 
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             Action<KernelService> storeAction = stopOrder.Add;
-            var testMock1 = new KernelService1(service => { }, storeAction);
-            var testMock2 = new KernelService2(service => { }, storeAction);
-            var testMock3 = new KernelService3(service => { }, storeAction);
-            var testMock4 = new KernelService4(service => { }, storeAction);
+            var testMock1 = new KernelService1(service => { }, storeAction, systemDiagnostics);
+            var testMock2 = new KernelService2(service => { }, storeAction, systemDiagnostics);
+            var testMock3 = new KernelService3(service => { }, storeAction, systemDiagnostics);
+            var testMock4 = new KernelService4(service => { }, storeAction, systemDiagnostics);
 
-            var kernel = new Kernel();
+            var kernel = new Kernel(
+                () => { },
+                systemDiagnostics);
             kernel.Install(testMock1);
             kernel.Install(testMock2);
             kernel.Install(testMock3);

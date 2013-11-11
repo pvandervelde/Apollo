@@ -8,6 +8,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Lokad;
+using Nuclei.Diagnostics;
 
 namespace Apollo.Core.Host
 {
@@ -36,11 +37,16 @@ namespace Apollo.Core.Host
         /// Initializes a new instance of the <see cref="CoreProxy"/> class.
         /// </summary>
         /// <param name="owner">The <see cref="Kernel"/> to which this proxy is linked.</param>
+        /// <param name="diagnostics">The object that handles the diagnostics for the application.</param>
         /// <param name="scheduler">The scheduler that is used to run tasks.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="owner"/> is <see langword="null"/>.
         /// </exception>
-        public CoreProxy(IKernel owner, TaskScheduler scheduler = null)
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="diagnostics"/> is <see langword="null"/>.
+        /// </exception>
+        public CoreProxy(IKernel owner, SystemDiagnostics diagnostics, TaskScheduler scheduler = null)
+            : base(diagnostics)
         {
             {
                 Enforce.Argument(() => owner);

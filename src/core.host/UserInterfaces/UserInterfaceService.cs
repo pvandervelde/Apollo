@@ -29,8 +29,8 @@ namespace Apollo.Core.Host.UserInterfaces
         /// <summary>
         /// The collection of notifications that must be passed on to the user interface.
         /// </summary>
-        private readonly Dictionary<NotificationName, Action<INotificationArguments>> m_Notifications =
-            new Dictionary<NotificationName, Action<INotificationArguments>>();
+        private readonly Dictionary<NotificationName, List<Action<INotificationArguments>>> m_Notifications =
+            new Dictionary<NotificationName, List<Action<INotificationArguments>>>();
 
         /// <summary>
         /// The IOC container for the application.
@@ -74,13 +74,18 @@ namespace Apollo.Core.Host.UserInterfaces
         /// <param name="onStartService">
         ///     The method that stores the IOC container that contains the references for the entire application.
         /// </param>
+        /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="container"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="onStartService"/> is <see langword="null"/>.
         /// </exception>
-        public UserInterfaceService(IContainer container, Action<IContainer> onStartService)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
+        /// </exception>
+        public UserInterfaceService(IContainer container, Action<IContainer> onStartService, SystemDiagnostics diagnostics)
+            : base(diagnostics)
         {
             {
                 Enforce.Argument(() => container);
@@ -152,6 +157,14 @@ namespace Apollo.Core.Host.UserInterfaces
                     StartupState);
             }
 
+            Diagnostics.Log(
+                LevelToLog.Trace, 
+                HostConstants.LogPrefix,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.UserInterface_LogMessage_InvokingCommand_WithId,
+                    id));
+
             m_Commands.Invoke(id);
         }
 
@@ -171,6 +184,14 @@ namespace Apollo.Core.Host.UserInterfaces
                     Resources.Exceptions_Messages_ServicesIsNotFullyFunctional, 
                     StartupState);
             }
+
+            Diagnostics.Log(
+                LevelToLog.Trace,
+                HostConstants.LogPrefix,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.UserInterface_LogMessage_InvokingCommand_WithId,
+                    id));
 
             m_Commands.Invoke(id, context);
         }
@@ -193,12 +214,13 @@ namespace Apollo.Core.Host.UserInterfaces
                 Enforce.Argument(() => callback);
             }
 
-            if (m_Notifications.ContainsKey(name))
+            if (!m_Notifications.ContainsKey(name))
             {
-                throw new DuplicateNotificationException(name);
+                m_Notifications.Add(name, new List<Action<INotificationArguments>>());
             }
 
-            m_Notifications.Add(name, callback);
+            var list = m_Notifications[name];
+            list.Add(callback);
         }
 
         /// <summary>
@@ -254,22 +276,23 @@ namespace Apollo.Core.Host.UserInterfaces
                 return;
             }
 
-            var action = m_Notifications[m_NotificationNames.StartupComplete];
-            try
+            var list = m_Notifications[m_NotificationNames.StartupComplete];
+            foreach (var action in list)
             {
-                action(null);
-            }
-            catch (Exception e)
-            {
-                m_Diagnostics.Log(
-                    LevelToLog.Error,
-                    HostConstants.LogPrefix,
-                    string.Format(
-                        CultureInfo.InvariantCulture, 
-                        Resources.UserInterrface_LogMessage_StartupCompleteNotificationFailed, 
-                        e));
-
-                throw;
+                try
+                {
+                    action(null);
+                }
+                catch (Exception e)
+                {
+                    m_Diagnostics.Log(
+                        LevelToLog.Error,
+                        HostConstants.LogPrefix,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            Resources.UserInterrface_LogMessage_StartupCompleteNotificationFailed,
+                            e));
+                }
             }
         }
 
@@ -313,19 +336,20 @@ namespace Apollo.Core.Host.UserInterfaces
                 throw new MissingNotificationActionException(m_NotificationNames.SystemShuttingDown);
             }
 
-            var action = m_Notifications[m_NotificationNames.SystemShuttingDown];
-            try
+            var list = m_Notifications[m_NotificationNames.SystemShuttingDown];
+            foreach (var action in list)
             {
-                action(null);
-            }
-            catch (Exception e)
-            {
-                m_Diagnostics.Log(
-                    LevelToLog.Error,
-                    HostConstants.LogPrefix,
-                    string.Format(CultureInfo.InvariantCulture, Resources.UserInterrface_LogMessage_DisconnectPreActionFailed, e));
-
-                throw;
+                try
+                {
+                    action(null);
+                }
+                catch (Exception e)
+                {
+                    m_Diagnostics.Log(
+                        LevelToLog.Error,
+                        HostConstants.LogPrefix,
+                        string.Format(CultureInfo.InvariantCulture, Resources.UserInterrface_LogMessage_DisconnectPreActionFailed, e));
+                }
             }
         }
     }

@@ -51,7 +51,8 @@ namespace Apollo.Core.Host.Plugins
 
             builder.Register(c => new PluginService(
                     c.Resolve<IConfiguration>(),
-                    c.Resolve<PluginDetector>()))
+                    c.Resolve<PluginDetector>(),
+                    c.Resolve<SystemDiagnostics>()))
                 .As<PluginService>();
 
             builder.Register(c => new GroupImportEngine( 

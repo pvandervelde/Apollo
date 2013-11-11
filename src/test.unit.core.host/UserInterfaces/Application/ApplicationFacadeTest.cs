@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Utilities.Commands;
 using Moq;
+using Nuclei.Diagnostics;
 using NUnit.Framework;
 
 namespace Apollo.Core.Host.UserInterfaces.Application
@@ -36,7 +37,14 @@ namespace Apollo.Core.Host.UserInterfaces.Application
                             });
             }
 
-            var facade = new ApplicationFacade(service.Object);
+            var notificationNames = new Mock<INotificationNameConstants>();
+            {
+                notificationNames.Setup(n => n.SystemShuttingDown)
+                    .Returns(new NotificationName("a"));
+            }
+
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+            var facade = new ApplicationFacade(service.Object, notificationNames.Object, systemDiagnostics);
             facade.Shutdown();
             Assert.IsTrue(wasTriggered);
         }
@@ -44,8 +52,15 @@ namespace Apollo.Core.Host.UserInterfaces.Application
         [Test]
         public void ApplicationStatus()
         {
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             var service = new Mock<IUserInterfaceService>();
-            var facade = new ApplicationFacade(service.Object);
+            var notificationNames = new Mock<INotificationNameConstants>();
+            {
+                notificationNames.Setup(n => n.SystemShuttingDown)
+                    .Returns(new NotificationName("a"));
+            }
+
+            var facade = new ApplicationFacade(service.Object, notificationNames.Object, systemDiagnostics);
 
             var status = facade.ApplicationStatus;
             Assert.IsNotNull(status);
@@ -69,7 +84,14 @@ namespace Apollo.Core.Host.UserInterfaces.Application
                             });
             }
 
-            var facade = new ApplicationFacade(service.Object);
+            var notificationNames = new Mock<INotificationNameConstants>();
+            {
+                notificationNames.Setup(n => n.SystemShuttingDown)
+                    .Returns(new NotificationName("a"));
+            }
+
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+            var facade = new ApplicationFacade(service.Object, notificationNames.Object, systemDiagnostics);
             
             var name = new NotificationName("bla");
             Action<INotificationArguments> callback = o => { };

@@ -7,7 +7,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
+using Nuclei.Diagnostics;
+using Nuclei.Diagnostics.Logging;
 
 namespace Apollo.Core.Host
 {
@@ -22,9 +26,41 @@ namespace Apollo.Core.Host
     internal abstract class KernelService : INeedStartup, IHaveServiceDependencies
     {
         /// <summary>
+        /// The object that provides the diagnostics methods for the application.
+        /// </summary>
+        private readonly SystemDiagnostics m_Diagnostics;
+
+        /// <summary>
         /// Stores the current startup state.
         /// </summary>
         private StartupState m_StartupState = StartupState.NotStarted;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KernelService"/> class.
+        /// </summary>
+        /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
+        /// </exception>
+        protected KernelService(SystemDiagnostics diagnostics)
+        {
+            {
+                Lokad.Enforce.Argument(() => diagnostics);
+            }
+
+            m_Diagnostics = diagnostics;
+        }
+
+        /// <summary>
+        /// Gets the object that provides the diagnostics methods for the application.
+        /// </summary>
+        protected SystemDiagnostics Diagnostics
+        {
+            get
+            {
+                return m_Diagnostics;
+            }
+        }
 
         /// <summary>
         /// The event that is fired when there is an update in the startup process.
@@ -51,15 +87,40 @@ namespace Apollo.Core.Host
         /// </summary>
         public void Start()
         {
+            m_Diagnostics.Log(
+                LevelToLog.Trace,
+                HostConstants.LogPrefix,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.Kernel_LogMessage_StartingService_WithType,
+                    GetType()));
+
             m_StartupState = StartupState.Starting;
             try
             {
                 StartService();
                 m_StartupState = StartupState.Started;
+
+                m_Diagnostics.Log(
+                    LevelToLog.Trace,
+                    HostConstants.LogPrefix,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources.Kernel_LogMessage_ServiceStarted_WithType,
+                        GetType()));
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 m_StartupState = StartupState.Failed;
+
+                m_Diagnostics.Log(
+                    LevelToLog.Trace,
+                    HostConstants.LogPrefix,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources.Kernel_LogMessage_FailedToStartService_WithTypeAndError,
+                        GetType(),
+                        e));
 
                 throw;
             }
@@ -79,15 +140,40 @@ namespace Apollo.Core.Host
         /// </summary>
         public void Stop()
         {
+            m_Diagnostics.Log(
+                LevelToLog.Trace,
+                HostConstants.LogPrefix,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources.Kernel_LogMessage_StoppingService_WithType,
+                    GetType()));
+
             m_StartupState = StartupState.Stopping;
             try
             {
                 StopService();
                 m_StartupState = StartupState.Stopped;
+
+                m_Diagnostics.Log(
+                    LevelToLog.Trace,
+                    HostConstants.LogPrefix,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources.Kernel_LogMessage_ServiceStopped_WithType,
+                        GetType()));
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 m_StartupState = StartupState.Failed;
+
+                m_Diagnostics.Log(
+                    LevelToLog.Trace,
+                    HostConstants.LogPrefix,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources.Kernel_LogMessage_FailedToStopService_WithTypeAndError,
+                        GetType(),
+                        e));
 
                 throw;
             }

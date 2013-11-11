@@ -284,7 +284,6 @@
     <Compile Include="UserInterfaces\Application\ApplicationFacadeTest.cs" />
     <Compile Include="UserInterfaces\Application\SystemInformationStorageTest.cs" />
     <Compile Include="UserInterfaces\Application\SystemInformationTest.cs" />
-    <Compile Include="UserInterfaces\DuplicateNotificationExceptionTest.cs" />
     <Compile Include="UserInterfaces\MissingNotificationActionExceptionTest.cs" />
     <Compile Include="UserInterfaces\Projects\CannotCreateNewProjectExceptionTest.cs" />
     <Compile Include="UserInterfaces\Projects\CannotLoadProjectExceptionTest.cs" />

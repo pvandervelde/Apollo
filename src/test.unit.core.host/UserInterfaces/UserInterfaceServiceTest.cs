@@ -107,7 +107,8 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var service = new UserInterfaceService(
                 builder.Build(),
-                onStartService);
+                onStartService,
+                systemDiagnostics);
 
             // Check that everything is the right place
             {
@@ -144,7 +145,8 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var service = new UserInterfaceService(
                 builder.Build(),
-                onStartService);
+                onStartService,
+                systemDiagnostics);
 
             Assert.IsFalse(service.Contains(new CommandId("bla")));
         }
@@ -171,7 +173,8 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var service = new UserInterfaceService(
                 builder.Build(),
-                onStartService);
+                onStartService,
+                systemDiagnostics);
 
             Assert.Throws<ArgumentException>(() => service.Invoke(new CommandId("bla")));
         }
@@ -198,9 +201,10 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var service = new UserInterfaceService(
                 builder.Build(),
-                onStartService);
+                onStartService,
+                systemDiagnostics);
 
-            var proxy = new CoreProxy(new Mock<IKernel>().Object);
+            var proxy = new CoreProxy(new Mock<IKernel>().Object, systemDiagnostics);
             service.ConnectTo(proxy);
 
             ITimeline timeline = new Timeline(BuildStorage);
@@ -246,7 +250,8 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var service = new UserInterfaceService(
                 builder.Build(),
-                onStartService);
+                onStartService,
+                systemDiagnostics);
 
             Assert.Throws<ArgumentException>(() => service.Invoke(new CommandId("bla"), new Mock<ICommandContext>().Object));
         }
@@ -273,9 +278,10 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var service = new UserInterfaceService(
                 builder.Build(),
-                onStartService);
+                onStartService,
+                systemDiagnostics);
 
-            var proxy = new CoreProxy(new Mock<IKernel>().Object);
+            var proxy = new CoreProxy(new Mock<IKernel>().Object, systemDiagnostics);
             service.ConnectTo(proxy);
 
             ITimeline timeline = new Timeline(BuildStorage);
@@ -316,7 +322,8 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var service = new UserInterfaceService(
                 builder.Build(),
-                onStartService);
+                onStartService,
+                systemDiagnostics);
 
             Assert.That(
                 service.ServicesToConnectTo(),
@@ -345,10 +352,11 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var service = new UserInterfaceService(
                 builder.Build(),
-                onStartService);
+                onStartService,
+                systemDiagnostics);
             Assert.IsFalse(service.IsConnectedToAllDependencies);
 
-            var proxy = new CoreProxy(new Mock<IKernel>().Object);
+            var proxy = new CoreProxy(new Mock<IKernel>().Object, systemDiagnostics);
             service.ConnectTo(proxy);
 
             ITimeline timeline = new Timeline(BuildStorage);
@@ -386,7 +394,8 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var service = new UserInterfaceService(
                 builder.Build(),
-                onStartService);
+                onStartService,
+                systemDiagnostics);
 
             Assert.Throws<ArgumentNullException>(() => service.RegisterNotification(null, obj => { }));
         }
@@ -408,7 +417,8 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var service = new UserInterfaceService(
                 builder.Build(),
-                onStartService);
+                onStartService,
+                systemDiagnostics);
 
             Assert.Throws<ArgumentNullException>(() => service.RegisterNotification(new NotificationName("bla"), null));
         }
@@ -430,12 +440,13 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var service = new UserInterfaceService(
                 builder.Build(),
-                onStartService);
+                onStartService,
+                systemDiagnostics);
 
             Action<INotificationArguments> callback = obj => { };
             service.RegisterNotification(notificationNames.SystemShuttingDown, callback);
 
-            Assert.Throws<DuplicateNotificationException>(() => service.RegisterNotification(notificationNames.SystemShuttingDown, obj => { }));
+            Assert.DoesNotThrow(() => service.RegisterNotification(notificationNames.SystemShuttingDown, obj => { }));
         }
 
         [Test]
@@ -455,9 +466,10 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var service = new UserInterfaceService(
                 builder.Build(),
-                onStartService);
+                onStartService,
+                systemDiagnostics);
 
-            var proxy = new CoreProxy(new Mock<IKernel>().Object);
+            var proxy = new CoreProxy(new Mock<IKernel>().Object, systemDiagnostics);
             service.ConnectTo(proxy);
 
             ITimeline timeline = new Timeline(BuildStorage);
@@ -499,11 +511,12 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var service = new UserInterfaceService(
                 builder.Build(),
-                onStartService);
+                onStartService,
+                systemDiagnostics);
 
             service.RegisterNotification(notificationNames.SystemShuttingDown, obj => { throw new Exception(); });
 
-            var proxy = new CoreProxy(new Mock<IKernel>().Object);
+            var proxy = new CoreProxy(new Mock<IKernel>().Object, systemDiagnostics);
             service.ConnectTo(proxy);
 
             ITimeline timeline = new Timeline(BuildStorage);
@@ -525,7 +538,7 @@ namespace Apollo.Core.Host.UserInterfaces
             service.Start();
             Assert.AreEqual(StartupState.Started, service.StartupState);
             
-            Assert.Throws<Exception>(service.Stop);
+            Assert.DoesNotThrow(service.Stop);
         }
 
         [Test]
@@ -545,12 +558,13 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var service = new UserInterfaceService(
                 builder.Build(),
-                onStartService);
+                onStartService,
+                systemDiagnostics);
 
             bool wasInvoked = false;
             service.RegisterNotification(notificationNames.SystemShuttingDown, obj => { wasInvoked = true; });
 
-            var proxy = new CoreProxy(new Mock<IKernel>().Object);
+            var proxy = new CoreProxy(new Mock<IKernel>().Object, systemDiagnostics);
             service.ConnectTo(proxy);
 
             ITimeline timeline = new Timeline(BuildStorage);
@@ -578,6 +592,60 @@ namespace Apollo.Core.Host.UserInterfaces
         }
 
         [Test]
+        public void StopWithMultipleNotifications()
+        {
+            var commands = new Mock<ICommandContainer>();
+            var notificationNames = new MockNotificationNameConstants();
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+            var builder = new ContainerBuilder();
+            {
+                builder.Register(c => commands.Object).As<ICommandContainer>();
+                builder.Register(c => notificationNames).As<INotificationNameConstants>();
+                builder.Register(c => systemDiagnostics).As<SystemDiagnostics>();
+            }
+
+            Action<IContainer> onStartService = c => { };
+
+            var service = new UserInterfaceService(
+                builder.Build(),
+                onStartService,
+                systemDiagnostics);
+
+            bool wasFirstInvoked = false;
+            service.RegisterNotification(notificationNames.SystemShuttingDown, obj => { wasFirstInvoked = true; });
+
+            bool wasSecondInvoked = false;
+            service.RegisterNotification(notificationNames.SystemShuttingDown, obj => { wasSecondInvoked = true; });
+
+            var proxy = new CoreProxy(new Mock<IKernel>().Object, systemDiagnostics);
+            service.ConnectTo(proxy);
+
+            ITimeline timeline = new Timeline(BuildStorage);
+            var proxyLayer = new Mock<IProxyCompositionLayer>();
+            var projects = new ProjectService(
+                () => timeline,
+                d => new DatasetStorageProxy(
+                    d,
+                    new GroupSelector(
+                        new Mock<IConnectGroups>().Object,
+                        proxyLayer.Object),
+                    proxyLayer.Object),
+                new Mock<IHelpDistributingDatasets>().Object,
+                new Mock<ICollectNotifications>().Object,
+                systemDiagnostics,
+                new Mock<IBuildProjects>().Object);
+            service.ConnectTo(projects);
+
+            service.Start();
+            Assert.AreEqual(StartupState.Started, service.StartupState);
+
+            service.Stop();
+            Assert.AreEqual(StartupState.Stopped, service.StartupState);
+            Assert.IsTrue(wasFirstInvoked);
+            Assert.IsTrue(wasSecondInvoked);
+        }
+
+        [Test]
         public void HandleApplicationStartupCompleteMessage()
         {
             var commands = new Mock<ICommandContainer>();
@@ -599,10 +667,11 @@ namespace Apollo.Core.Host.UserInterfaces
 
             var service = new UserInterfaceService(
                 builder.Build(),
-                onStartService);
+                onStartService,
+                systemDiagnostics);
             service.RegisterNotification(notificationNames.StartupComplete, onApplicationStartup);
 
-            var proxy = new CoreProxy(new Mock<IKernel>().Object);
+            var proxy = new CoreProxy(new Mock<IKernel>().Object, systemDiagnostics);
             service.ConnectTo(proxy);
 
             ITimeline timeline = new Timeline(BuildStorage);

@@ -9,6 +9,7 @@ using Apollo.Core.Host.UserInterfaces.Application;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Autofac;
 using Lokad;
+using Nuclei.Diagnostics;
 
 namespace Apollo.Core.Host.UserInterfaces
 {
@@ -54,7 +55,10 @@ namespace Apollo.Core.Host.UserInterfaces
                 .As<IUserInterfaceService>()
                 .ExternallyOwned();
 
-            builder.Register(c => new ApplicationFacade(c.Resolve<IUserInterfaceService>()))
+            builder.Register(c => new ApplicationFacade(
+                    c.Resolve<IUserInterfaceService>(),
+                    c.Resolve<INotificationNameConstants>(),
+                    c.Resolve<SystemDiagnostics>()))
                 .As<IAbstractApplications>()
                 .SingleInstance();
 
