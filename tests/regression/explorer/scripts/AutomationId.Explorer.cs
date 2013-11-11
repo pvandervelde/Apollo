@@ -7,27 +7,11 @@
 using System.Diagnostics.CodeAnalysis;
 
 #if IN_VS_SOLUTION
+// We can't have namespaces in scriptcs files for some reason, so we'll just pretend
+// that the namespace isn't there in the script with the use of some compiler magic
 namespace Apollo.UI.Explorer
 {
 #endif
-    /// <summary>
-    /// Defines the automation IDs for the shell window.
-    /// </summary>
-    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
-        Justification = "Don't want to create too many files for the automation IDs.")]
-    internal static class ShellAutomationIds
-    {
-        /// <summary>
-        /// The automation ID for the main window.
-        /// </summary>
-        public const string MainWindow = "Explorer.Shell.MainWindow";
-
-        /// <summary>
-        /// The automation ID for the tab control in the shell window.
-        /// </summary>
-        public const string Tabs = "Explorer.Shell.Tabs";
-    }
-
     /// <summary>
     /// Defines the automation IDs for the about window.
     /// </summary>
@@ -35,7 +19,35 @@ namespace Apollo.UI.Explorer
         Justification = "Don't want to create too many files for the automation IDs.")]
     internal static class AboutAutomationIds
     {
+        /// <summary>
+        /// The automation ID for the main window.
+        /// </summary>
         public const string MainWindow = "Explorer.About.MainWindow";
+
+        /// <summary>
+        /// The automation ID for the control that contains the product name.
+        /// </summary>
+        public const string ProductName = "Explorer.About.ProductName";
+
+        /// <summary>
+        /// The automation ID for the control that contains the product version.
+        /// </summary>
+        public const string ProductVersion = "Explorer.About.ProductVersion";
+
+        /// <summary>
+        /// The automation ID for the control that contains the copyright.
+        /// </summary>
+        public const string Copyright = "Explorer.About.Copyright";
+
+        /// <summary>
+        /// The automation ID for the control that contains the company name.
+        /// </summary>
+        public const string CompanyName = "Explorer.About.CompanyName";
+
+        /// <summary>
+        /// The automation ID for the control that contains the product description.
+        /// </summary>
+        public const string ProductDescription = "Explorer.About.ProductDescription";
     }
 
     /// <summary>
@@ -139,6 +151,24 @@ namespace Apollo.UI.Explorer
         /// The automation ID for the Help - About menu.
         /// </summary>
         public const string HelpAbout = "Explorer.MainMenu.Help.About";
+    }
+
+    /// <summary>
+    /// Defines the automation IDs for the shell window.
+    /// </summary>
+    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
+        Justification = "Don't want to create too many files for the automation IDs.")]
+    internal static class ShellAutomationIds
+    {
+        /// <summary>
+        /// The automation ID for the main window.
+        /// </summary>
+        public const string MainWindow = "Explorer.Shell.MainWindow";
+
+        /// <summary>
+        /// The automation ID for the tab control in the shell window.
+        /// </summary>
+        public const string Tabs = "Explorer.Shell.Tabs";
     }
 
 #if IN_VS_SOLUTION

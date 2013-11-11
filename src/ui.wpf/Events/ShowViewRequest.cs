@@ -35,14 +35,9 @@ namespace Apollo.UI.Wpf.Events
         private readonly IRegionManager m_RegionManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ShowViewRequest"/> class.
+        /// A flag that indicates if the view is modal or not.
         /// </summary>
-        /// <param name="presenterType">Type of the presenter.</param>
-        /// <param name="regionName">Name of the region.</param>
-        /// <param name="parameter">The parameter.</param>
-        public ShowViewRequest(Type presenterType, string regionName, Parameter parameter) : this(presenterType, regionName, parameter, null)
-        {
-        }
+        private readonly bool m_IsModal;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShowViewRequest"/> class.
@@ -51,12 +46,19 @@ namespace Apollo.UI.Wpf.Events
         /// <param name="regionName">Name of the region.</param>
         /// <param name="parameter">The parameter.</param>
         /// <param name="regionManager">The region manager.</param>
-        public ShowViewRequest(Type presenterType, string regionName, Parameter parameter, IRegionManager regionManager)
+        /// <param name="isModal">A flag that indicates if the view is a modal view or not.</param>
+        public ShowViewRequest(
+            Type presenterType, 
+            string regionName, 
+            Parameter parameter, 
+            IRegionManager regionManager = null, 
+            bool isModal = false)
         {
             m_PresenterType = presenterType;
             m_RegionName = regionName;
             m_Parameter = parameter;
             m_RegionManager = regionManager;
+            m_IsModal = isModal;
         }
 
         /// <summary>
@@ -104,6 +106,17 @@ namespace Apollo.UI.Wpf.Events
             get 
             { 
                 return m_Parameter; 
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether a view is a modal view or not.
+        /// </summary>
+        public bool IsModal
+        {
+            get
+            {
+                return m_IsModal;
             }
         }
     }

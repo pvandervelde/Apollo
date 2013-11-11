@@ -28,7 +28,9 @@ namespace Apollo.UI.Explorer.Commands
                 new ShowViewRequest(
                     typeof(AboutPresenter), 
                     "AboutWindow", 
-                    new AboutParameter(context)));
+                    new AboutParameter(context),
+                    null,
+                    true));
         }
 
         /// <summary>

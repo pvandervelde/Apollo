@@ -95,7 +95,8 @@
         <Image Source="{lex:Loc AboutBanner_Png}" />
         <StackPanel x:Uid="displayArea"
                     Style="{StaticResource DisplayAreaStyle}">
-            <Label x:Name="productName"
+            <Label AutomationProperties.AutomationId="{x:Static infrastructure:AboutAutomationIds.ProductName}"
+                   x:Name="productName"
                    x:Uid="productName"
                    Content="{Binding Mode=OneTime, Path=Product}" />
             <StackPanel x:Uid="versionArea"
@@ -103,14 +104,17 @@
                 <Label x:Name="versionLabel"
                        x:Uid="VersionLabel"
                        Content="Version - " />
-                <Label x:Name="version"
+                <Label AutomationProperties.AutomationId="{x:Static infrastructure:AboutAutomationIds.ProductVersion}"
+                       x:Name="version"
                        x:Uid="version"
                        Content="{Binding Mode=OneTime, Path=Version}" />
             </StackPanel>
-            <Label x:Name="copyright"
+            <Label AutomationProperties.AutomationId="{x:Static infrastructure:AboutAutomationIds.Copyright}"
+                   x:Name="copyright"
                    x:Uid="copyright"
                    Content="{Binding Mode=OneTime, Path=Copyright}" />
-            <Label x:Name="company"
+            <Label AutomationProperties.AutomationId="{x:Static infrastructure:AboutAutomationIds.CompanyName}"
+                   x:Name="company"
                    x:Uid="company"
                    Content="{Binding Mode=OneTime, Path=Company}" />
             <Label x:Name="reserved"
@@ -120,7 +124,8 @@
                    x:Uid="info"
                    Style="{StaticResource ParagraphSeparator}"
                    Content="Product details:" />
-            <TextBox x:Name="description"
+            <TextBox AutomationProperties.AutomationId="{x:Static infrastructure:AboutAutomationIds.ProductDescription}"
+                     x:Name="description"
                      x:Uid="description"
                      Text="{Binding Mode=OneTime, Path=Description}"
                      Style="{StaticResource ReadOnlyDescStyle}" />

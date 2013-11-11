@@ -77,7 +77,28 @@ namespace Apollo.UI.Wpf.Events.Listeners
             var viewWindow = view as Window;
             if (viewWindow != null)
             {
-                Action showWindow = () => viewWindow.Show();
+                Action showWindow = 
+                    () =>
+                    {
+                        var mainWindow = Application.Current.MainWindow;
+                        if (!ReferenceEquals(mainWindow, viewWindow))
+                        {
+                            if (request.IsModal)
+                            {
+                                viewWindow.Owner = Application.Current.MainWindow;
+                                viewWindow.ShowDialog();
+                                viewWindow.Owner = null;
+                            }
+                            else
+                            {
+                                viewWindow.Show();
+                            }
+                        }
+                        else
+                        {
+                            viewWindow.Show();
+                        }
+                    };
                 if (viewWindow.Dispatcher.CheckAccess())
                 {
                     showWindow();
