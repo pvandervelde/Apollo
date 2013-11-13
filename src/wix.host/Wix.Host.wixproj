@@ -26,7 +26,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\templates\CompanyIncludes.wxi">
+    <Content Include="..\..\build\temp\CompanyIncludes.wxi">
       <Link>CompanyIncludes.wxi</Link>
     </Content>
     <Content Include="..\..\build\temp\Dependencies.wxi">

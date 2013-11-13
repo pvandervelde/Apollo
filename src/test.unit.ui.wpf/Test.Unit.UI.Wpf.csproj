@@ -259,7 +259,7 @@
     <Compile Include="Views\Progress\ProgressPresenterTest.cs" />
     <Compile Include="Views\Projects\ProjectDescriptionModelTest.cs" />
     <Compile Include="Views\Projects\ProjectDescriptionPresenterTest.cs" />
-    <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
+    <Compile Include="..\..\build\temp\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
     <Compile Include="..\..\build\temp\AssemblyInfo.BuildInformation.cs">

@@ -230,7 +230,7 @@
     <EmbeddedResource Include="$(COMPANY_PUBLIC_KEY_PATH)">
       <Link>Properties\NSarracReportPublicKey.xml</Link>
     </EmbeddedResource>
-    <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
+    <Compile Include="..\..\build\temp\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
     <Compile Include="..\..\build\temp\AssemblyInfo.BuildInformation.cs">

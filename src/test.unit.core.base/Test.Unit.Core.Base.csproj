@@ -181,7 +181,7 @@
     <Compile Include="Scheduling\FixedScheduleBuilderTest.cs" />
     <Compile Include="Scheduling\ScheduleVerifierTest.cs" />
     <Compile Include="Scheduling\UnknownScheduleExceptionTest.cs" />
-    <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
+    <Compile Include="..\..\build\temp\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
     <Compile Include="..\..\build\temp\AssemblyInfo.BuildInformation.cs">

@@ -263,7 +263,7 @@
     <Compile Include="Projects\ProjectTest.cs" />
     <Compile Include="Projects\UnknownDatasetExceptionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
+    <Compile Include="..\..\build\temp\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
     <Compile Include="..\..\build\temp\AssemblyInfo.BuildInformation.cs">

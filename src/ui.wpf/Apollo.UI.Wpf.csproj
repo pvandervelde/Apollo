@@ -214,7 +214,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
+    <Compile Include="..\..\build\temp\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
     <Compile Include="..\..\build\temp\AssemblyInfo.BuildInformation.cs">

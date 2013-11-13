@@ -3,7 +3,7 @@
 
     <?include $(var.CurrentProjectDir)\includes.wxi ?>
     <?include $(var.SolutionDir)..\build\temp\Dependencies.wxi ?>
-    <?include $(var.SolutionDir)..\templates\CompanyIncludes.wxi ?>
+    <?include $(var.SolutionDir)..\build\temp\CompanyIncludes.wxi ?>
     <?include $(var.SolutionDir)..\build\temp\VersionNumber.wxi ?>
 
     <Fragment>

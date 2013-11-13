@@ -19,7 +19,7 @@
         Include the company include file. This contains some general information
         regarding the manufacturer that is needed for the installer.
    -->
-    <?include $(var.SolutionDir)..\templates\CompanyIncludes.wxi ?>
+    <?include $(var.SolutionDir)..\build\temp\CompanyIncludes.wxi ?>
 
     <!--
         Include the include file. This contains some general information
@@ -115,7 +115,7 @@
                              complain if we don't set this action.
                         -->
                         <RegistryValue Root='HKCU'
-                                       Key='Software\$(var.CompanyName)\$(var.ProductName)'
+                                       Key='Software\$(var.CompanyInstallFolder)\$(var.ProductName)'
                                        Type='string'
                                        Value=''
                                        KeyPath='yes' />

@@ -193,7 +193,7 @@
     <Compile Include="Plugins\UnableToLoadPluginTypeExceptionTest.cs" />
     <Compile Include="Plugins\UnknownGroupCompositionIdExceptionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
+    <Compile Include="..\..\build\temp\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
     <Compile Include="..\..\build\temp\AssemblyInfo.BuildInformation.cs">
