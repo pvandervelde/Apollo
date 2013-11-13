@@ -26,17 +26,17 @@ try
         application.Process.Id);
     LogInfo(text);
 
-    VerifyWelcomeTab();
+    VerifyWelcomeTab(application);
 
-    VerifyFileMenu();
+    VerifyFileMenu(application);
 
-    VerifyEditMenu();
+    VerifyEditMenu(application);
 
-    VerifyViewMenu();
+    VerifyViewMenu(application);
 
-    VerifyRunMenu();
+    VerifyRunMenu(application);
 
-    VerifyHelpMenu();
+    VerifyHelpMenu(application);
 
     CloseApplicationViaFileExitMenuItem(application);
     if (application.HasExited)

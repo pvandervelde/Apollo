@@ -1,36 +1,42 @@
+using TestStack.White;
 
 // Execute Window verifications
-public static void VerifyWelcomeTab()
+public static void VerifyWelcomeTab(Application application)
 {
 
 }
 
-public static void VerifyFileMenu()
+public static void VerifyFileMenu(Application application)
 {
 
 }
 
-public static void VerifyEditMenu()
+public static void VerifyEditMenu(Application application)
 {
 
 }
 
-public static void VerifyViewMenu()
+public static void VerifyViewMenu(Application application)
 {
 
 }
 
-public static void VerifyRunMenu()
+public static void VerifyRunMenu(Application application)
 {
 
 }
 
-public static void VerifyHelpMenu()
+public static void VerifyHelpMenu(Application application)
 {
+    // VerifyHelpItem();
     VerifyAboutDialog();
 }
 
-private static void VerifyAboutDialog()
+private static void VerifyAboutDialog(Application application)
 {
-    // Stuff
+    // Check application name
+    // Check application version
+    // Check company name
+    // Check copyright
+    // Check licenses
 }
