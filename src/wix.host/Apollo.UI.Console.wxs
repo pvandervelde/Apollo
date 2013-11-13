@@ -4,6 +4,7 @@
 
     <?include includes.wxi ?>
     <?include $(var.SolutionDir)..\build\temp\Dependencies.wxi ?>
+    <?include $(var.SolutionDir)..\build\temp\ProductIncludes.wxi ?>
 
     <Fragment>
         <!-- 

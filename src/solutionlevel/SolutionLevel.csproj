@@ -46,17 +46,21 @@
     <FileTemplateAssemblyVersion>$(DirTemplates)\AssemblyInfo.VersionNumber.cs.in</FileTemplateAssemblyVersion>
     <FileTemplateAssemblyBuildInfo>$(DirTemplates)\AssemblyInfo.BuildInformation.cs.in</FileTemplateAssemblyBuildInfo>
     <FileTemplateInternalsVisibleTo>$(DirTemplates)\AssemblyInfo.InternalsVisibleTo.cs.in</FileTemplateInternalsVisibleTo>
+    <FileTemplateProductInformation>$(DirTemplates)\ProductInformation.cs.in</FileTemplateProductInformation>
     <FileTemplateWixCompany>$(DirTemplates)\CompanyIncludes.wxi.in</FileTemplateWixCompany>
-    <FileTemplateWixVersion>$(DirTemplates)\VersionNumber.wxi.in</FileTemplateWixVersion>
     <FileTemplateWixDependencies>$(DirTemplates)\Dependencies.wxi.in</FileTemplateWixDependencies>
+    <FileTemplateWixProduct>$(DirTemplates)\ProductIncludes.wxi.in</FileTemplateWixProduct>
+    <FileTemplateWixVersion>$(DirTemplates)\VersionNumber.wxi.in</FileTemplateWixVersion>
     <!-- Generated files -->
     <FileGeneratedAssemblyBase>$(DirBuildTemp)\AssemblyInfo.Base.cs</FileGeneratedAssemblyBase>
     <FileGeneratedAssemblyVersion>$(DirBuildTemp)\AssemblyInfo.VersionNumber.cs</FileGeneratedAssemblyVersion>
     <FileGeneratedAssemblyBuildInfo>$(DirBuildTemp)\AssemblyInfo.BuildInformation.cs</FileGeneratedAssemblyBuildInfo>
     <FileGeneratedInternalsVisibleTo>$(DirBuildTemp)\AssemblyInfo.InternalsVisibleTo.cs</FileGeneratedInternalsVisibleTo>
+    <FileGeneratedProductInformation>$(DirBuildTemp)\ProductInformation.cs</FileGeneratedProductInformation>
     <FileGeneratedWixCompany>$(DirBuildTemp)\CompanyIncludes.wxi</FileGeneratedWixCompany>
-    <FileGeneratedWixVersion>$(DirBuildTemp)\VersionNumber.wxi</FileGeneratedWixVersion>
     <FileGeneratedWixDependencies>$(DirBuildTemp)\Dependencies.wxi</FileGeneratedWixDependencies>
+    <FileGeneratedWixProduct>$(DirBuildTemp)\ProductIncludes.wxi</FileGeneratedWixProduct>
+    <FileGeneratedWixVersion>$(DirBuildTemp)\VersionNumber.wxi</FileGeneratedWixVersion>
     <FileGeneratedLicenses>$(DirBuildTemp)\licenses.xml</FileGeneratedLicenses>
     <!-- Version number -->
     <VersionMajor>0</VersionMajor>
@@ -77,6 +81,7 @@
   <Import Project="$(MsBuildExtensionsPath)\PublicKeySignatureFromAssembly.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\PublicKeySignatureFromAssembly.msbuild')" />
   <Import Project="$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild')" />
   <Import Project="$(DirWorkspace)\company.xml" Condition="Exists('$(DirWorkspace)\company.xml')" />
+  <Import Project="$(DirWorkspace)\product.xml" Condition="Exists('$(DirWorkspace)\product.xml')" />
   <Import Project="$(DirWorkspace)\version.xml" Condition="Exists('$(DirWorkspace)\version.xml')" />
   <Target Name="_PrepareBuildEnvironment">
     <MakeDir Directories="$(DirBuild);" Condition="!Exists('$(DirBuild)')" />
@@ -94,11 +99,13 @@
       <GeneratedFiles Include="$(FileGeneratedAssemblyBase)" />
       <GeneratedFiles Include="$(FileGeneratedAssemblyVersion)" />
       <GeneratedFiles Include="$(FileGeneratedAssemblyBuildInfo)" />
+      <GeneratedFiles Include="$(FileGeneratedProductInformation)" />
       <GeneratedFiles Include="$(FileGeneratedLicenses)" />
       <GeneratedFiles Include="$(FileGeneratedInternalsVisibleTo)" />
       <GeneratedFiles Include="$(FileGeneratedWixCompany)" />
-      <GeneratedFiles Include="$(FileGeneratedWixVersion)" />
       <GeneratedFiles Include="$(FileGeneratedWixDependencies)" />
+      <GeneratedFiles Include="$(FileGeneratedWixProduct)" />
+      <GeneratedFiles Include="$(FileGeneratedWixVersion)" />
     </ItemGroup>
     <Delete Files="@(GeneratedFiles)" />
   </Target>
@@ -109,7 +116,9 @@
       GenerateAssemblyInfoVersionNumber;
       GenerateAssemblyInfoBuildInfo;
       GenerateAssemblyInternalsVisbibleTo;
+      GenerateProductInformation;
       GenerateWixCompanyIncludes;
+      GenerateWixProductIncludes;
       GenerateWixVersionNumber;
       GenerateWixDependencies;
       $(BuildDependsOn);
@@ -118,11 +127,11 @@
   <Target Name="GenerateAssemblyInfoBase" DependsOnTargets="_PrepareBuildEnvironment">
     <!-- Generate the version number file -->
     <ItemGroup>
-      <BaseTokens Include="CompanyName">
+      <CompanyTokens Include="CompanyName">
         <ReplacementValue>$(CompanyName)</ReplacementValue>
-      </BaseTokens>
+      </CompanyTokens>
     </ItemGroup>
-    <TemplateFile Template="$(FileTemplateAssemblyBase)" OutputFileName="$(FileGeneratedAssemblyBase)" Tokens="@(BaseTokens)" />
+    <TemplateFile Template="$(FileTemplateAssemblyBase)" OutputFileName="$(FileGeneratedAssemblyBase)" Tokens="@(CompanyTokens)" />
   </Target>
   <Target Name="GenerateAssemblyInfoVersionNumber" DependsOnTargets="_PrepareBuildEnvironment">
     <!-- Generate the version number file -->
@@ -212,6 +221,18 @@
     </ItemGroup>
     <TemplateFile Template="$(FileTemplateInternalsVisibleTo)" OutputFileName="$(FileGeneratedInternalsVisibleTo)" Tokens="@(InternalsVisibleToTokens)" />
   </Target>
+  <Target Name="GenerateProductInformation" DependsOnTargets="_PrepareBuildEnvironment">
+    <!-- Generate the version number file -->
+    <ItemGroup>
+      <ProductInformationTokens Include="ProductSuite">
+        <ReplacementValue>$(ProductSuite)</ReplacementValue>
+      </ProductInformationTokens>
+      <ProductInformationTokens Include="ProductName">
+        <ReplacementValue>$(ProductName)</ReplacementValue>
+      </ProductInformationTokens>
+    </ItemGroup>
+    <TemplateFile Template="$(FileTemplateProductInformation)" OutputFileName="$(FileGeneratedProductInformation)" Tokens="@(ProductInformationTokens)" />
+  </Target>
   <Target Name="GenerateWixCompanyIncludes" DependsOnTargets="_PrepareBuildEnvironment">
     <!-- Generate the version number file -->
     <ItemGroup>
@@ -226,6 +247,21 @@
       </CompanyTokens>
     </ItemGroup>
     <TemplateFile Template="$(FileTemplateWixCompany)" OutputFileName="$(FileGeneratedWixCompany)" Tokens="@(CompanyTokens)" />
+  </Target>
+  <Target Name="GenerateWixProductIncludes" DependsOnTargets="_PrepareBuildEnvironment">
+    <!-- Generate the version number file -->
+    <ItemGroup>
+      <ProductTokens Include="ProductName">
+        <ReplacementValue>$(ProductName)</ReplacementValue>
+      </ProductTokens>
+      <ProductTokens Include="ProductDescription">
+        <ReplacementValue>$(ProductDescription)</ReplacementValue>
+      </ProductTokens>
+      <ProductTokens Include="ProductPathName">
+        <ReplacementValue>$(ProductPathName)</ReplacementValue>
+      </ProductTokens>
+    </ItemGroup>
+    <TemplateFile Template="$(FileTemplateWixProduct)" OutputFileName="$(FileGeneratedWixProduct)" Tokens="@(ProductTokens)" />
   </Target>
   <Target Name="GenerateWixVersionNumber">
     <!-- Generate the version number file -->

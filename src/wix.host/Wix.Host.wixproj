@@ -32,6 +32,9 @@
     <Content Include="..\..\build\temp\Dependencies.wxi">
       <Link>Dependencies.wxi</Link>
     </Content>
+    <Content Include="..\..\build\temp\ProductIncludes.wxi">
+      <Link>ProductIncludes.wxi</Link>
+    </Content>
     <Content Include="..\..\build\temp\VersionNumber.wxi">
       <Link>VersionNumber.wxi</Link>
     </Content>

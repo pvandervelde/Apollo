@@ -11,13 +11,4 @@
         <?define PlatformProgramFilesFolder="ProgramFilesFolder" ?>
         <?define UpgradeCode="{386A1FC8-C111-41CF-9BB2-7EF64985952A}"?>
     <?endif ?>
-
-    <!-- The product name as you want it to appear in the installer -->
-    <?define ProductName="Apollo" ?>
-
-    <!-- The product name as you want it to appear in the installer -->
-    <?define Description="Apollo" ?>
-
-    <!-- Define the default install folder -->
-    <?define ProductInstallFolder="Apollo" ?>
 </Include>

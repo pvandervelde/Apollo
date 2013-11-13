@@ -22,6 +22,12 @@
     <?include $(var.SolutionDir)..\build\temp\CompanyIncludes.wxi ?>
 
     <!--
+        Include the product include file. This contains some general information
+        regarding the product that is needed for the installer.
+   -->
+    <?include $(var.SolutionDir)..\build\temp\ProductIncludes.wxi ?>
+
+    <!--
         Include the include file. This contains some general information
         regarding Apollo that is needed for the installer.
    -->
