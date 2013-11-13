@@ -2,10 +2,11 @@
 #load HelperMethods.Dialog.csx
 #load HelperMethods.Initialization.csx
 #load HelperMethods.Logging.csx
+#load HelperMethods.Menu.csx
 #load HelperMethods.Testing.csx
 #load UseCase.VerifyViews.Cases.csx
 
-Log("Starting test ...");
+LogInfo("Starting test ...");
 
 InitializeWhite();
 
@@ -23,7 +24,7 @@ try
         "Started [{0}] - PID: [{1}]",
         application.Name,
         application.Process.Id);
-    Log(text);
+    LogInfo(text);
 
     VerifyWelcomeTab();
 
@@ -42,10 +43,15 @@ try
     {
         application = null;
     }
+
+    if (HasLoggedErrors())
+    {
+        throw new RegressionTestFailedException("One or more errors were logged.");
+    }
 }
 catch(Exception e)
 {
-    Log(e.ToString());
+    LogError(e.ToString());
     throw;
 }
 finally
@@ -54,6 +60,7 @@ finally
     {
         ExitApplication(application);
     }
+
+    LogInfo("Test finished");
 }
 
-Log("Completed test");
