@@ -46,6 +46,7 @@
     <FileTemplateAssemblyVersion>$(DirTemplates)\AssemblyInfo.VersionNumber.cs.in</FileTemplateAssemblyVersion>
     <FileTemplateAssemblyBuildInfo>$(DirTemplates)\AssemblyInfo.BuildInformation.cs.in</FileTemplateAssemblyBuildInfo>
     <FileTemplateInternalsVisibleTo>$(DirTemplates)\AssemblyInfo.InternalsVisibleTo.cs.in</FileTemplateInternalsVisibleTo>
+    <FileTemplateCompanyInformation>$(DirTemplates)\CompanyInformation.cs.in</FileTemplateCompanyInformation>
     <FileTemplateProductInformation>$(DirTemplates)\ProductInformation.cs.in</FileTemplateProductInformation>
     <FileTemplateWixCompany>$(DirTemplates)\CompanyIncludes.wxi.in</FileTemplateWixCompany>
     <FileTemplateWixDependencies>$(DirTemplates)\Dependencies.wxi.in</FileTemplateWixDependencies>
@@ -56,6 +57,7 @@
     <FileGeneratedAssemblyVersion>$(DirBuildTemp)\AssemblyInfo.VersionNumber.cs</FileGeneratedAssemblyVersion>
     <FileGeneratedAssemblyBuildInfo>$(DirBuildTemp)\AssemblyInfo.BuildInformation.cs</FileGeneratedAssemblyBuildInfo>
     <FileGeneratedInternalsVisibleTo>$(DirBuildTemp)\AssemblyInfo.InternalsVisibleTo.cs</FileGeneratedInternalsVisibleTo>
+    <FileGeneratedCompanyInformation>$(DirBuildTemp)\CompanyInformation.cs</FileGeneratedCompanyInformation>
     <FileGeneratedProductInformation>$(DirBuildTemp)\ProductInformation.cs</FileGeneratedProductInformation>
     <FileGeneratedWixCompany>$(DirBuildTemp)\CompanyIncludes.wxi</FileGeneratedWixCompany>
     <FileGeneratedWixDependencies>$(DirBuildTemp)\Dependencies.wxi</FileGeneratedWixDependencies>
@@ -99,6 +101,7 @@
       <GeneratedFiles Include="$(FileGeneratedAssemblyBase)" />
       <GeneratedFiles Include="$(FileGeneratedAssemblyVersion)" />
       <GeneratedFiles Include="$(FileGeneratedAssemblyBuildInfo)" />
+      <GeneratedFiles Include="$(FileGeneratedCompanyInformation)" />
       <GeneratedFiles Include="$(FileGeneratedProductInformation)" />
       <GeneratedFiles Include="$(FileGeneratedLicenses)" />
       <GeneratedFiles Include="$(FileGeneratedInternalsVisibleTo)" />
@@ -116,6 +119,7 @@
       GenerateAssemblyInfoVersionNumber;
       GenerateAssemblyInfoBuildInfo;
       GenerateAssemblyInternalsVisbibleTo;
+      GenerateCompanyInformation;
       GenerateProductInformation;
       GenerateWixCompanyIncludes;
       GenerateWixProductIncludes;
@@ -127,52 +131,55 @@
   <Target Name="GenerateAssemblyInfoBase" DependsOnTargets="_PrepareBuildEnvironment">
     <!-- Generate the version number file -->
     <ItemGroup>
-      <CompanyTokens Include="CompanyName">
+      <BaseCsTokens Include="CompanyName">
         <ReplacementValue>$(CompanyName)</ReplacementValue>
-      </CompanyTokens>
+      </BaseCsTokens>
     </ItemGroup>
-    <TemplateFile Template="$(FileTemplateAssemblyBase)" OutputFileName="$(FileGeneratedAssemblyBase)" Tokens="@(CompanyTokens)" />
+    <TemplateFile Template="$(FileTemplateAssemblyBase)" OutputFileName="$(FileGeneratedAssemblyBase)" Tokens="@(BaseCsTokens)" />
   </Target>
   <Target Name="GenerateAssemblyInfoVersionNumber" DependsOnTargets="_PrepareBuildEnvironment">
     <!-- Generate the version number file -->
     <ItemGroup>
-      <VersionTokens Include="Major">
+      <VersionCsTokens Include="Major">
         <ReplacementValue>$(VersionMajor)</ReplacementValue>
-      </VersionTokens>
-      <VersionTokens Include="Minor">
+      </VersionCsTokens>
+      <VersionCsTokens Include="Minor">
         <ReplacementValue>$(VersionMinor)</ReplacementValue>
-      </VersionTokens>
-      <VersionTokens Include="Build">
+      </VersionCsTokens>
+      <VersionCsTokens Include="Build">
         <ReplacementValue>$(VersionBuild)</ReplacementValue>
-      </VersionTokens>
-      <VersionTokens Include="Revision">
+      </VersionCsTokens>
+      <VersionCsTokens Include="Revision">
         <ReplacementValue>$(VersionRevision)</ReplacementValue>
-      </VersionTokens>
+      </VersionCsTokens>
     </ItemGroup>
-    <TemplateFile Template="$(FileTemplateAssemblyVersion)" OutputFileName="$(FileGeneratedAssemblyVersion)" Tokens="@(VersionTokens)" />
+    <TemplateFile Template="$(FileTemplateAssemblyVersion)" OutputFileName="$(FileGeneratedAssemblyVersion)" Tokens="@(VersionCsTokens)" />
   </Target>
   <Target Name="GenerateAssemblyInfoBuildInfo" DependsOnTargets="_PrepareBuildEnvironment">
     <GitCommitHash LocalPath="$(DirWorkspace)">
       <Output TaskParameter="RevNo" PropertyName="VcsRevision" />
     </GitCommitHash>
     <ItemGroup>
-      <BuildInfoTokens Include="CopyrightYear">
+      <BuildInfoCsTokens Include="CompanyName">
+        <ReplacementValue>$(CompanyName)</ReplacementValue>
+      </BuildInfoCsTokens>
+      <BuildInfoCsTokens Include="CopyrightYear">
         <ReplacementValue>$(Year)</ReplacementValue>
-      </BuildInfoTokens>
-      <BuildInfoTokens Include="Configuration">
+      </BuildInfoCsTokens>
+      <BuildInfoCsTokens Include="Configuration">
         <ReplacementValue>$(Configuration)</ReplacementValue>
-      </BuildInfoTokens>
-      <BuildInfoTokens Include="BuildTime">
+      </BuildInfoCsTokens>
+      <BuildInfoCsTokens Include="BuildTime">
         <ReplacementValue>$(Now)</ReplacementValue>
-      </BuildInfoTokens>
-      <BuildInfoTokens Include="BuildNumber">
+      </BuildInfoCsTokens>
+      <BuildInfoCsTokens Include="BuildNumber">
         <ReplacementValue>$(BuildNumber)</ReplacementValue>
-      </BuildInfoTokens>
-      <BuildInfoTokens Include="VcsRevision">
+      </BuildInfoCsTokens>
+      <BuildInfoCsTokens Include="VcsRevision">
         <ReplacementValue>$(VcsRevision)</ReplacementValue>
-      </BuildInfoTokens>
+      </BuildInfoCsTokens>
     </ItemGroup>
-    <TemplateFile Template="$(FileTemplateAssemblyBuildInfo)" OutputFileName="$(FileGeneratedAssemblyBuildInfo)" Tokens="@(BuildInfoTokens)" />
+    <TemplateFile Template="$(FileTemplateAssemblyBuildInfo)" OutputFileName="$(FileGeneratedAssemblyBuildInfo)" Tokens="@(BuildInfoCsTokens)" />
   </Target>
   <PropertyGroup>
     <FileSNExe>NotSet</FileSNExe>
@@ -215,87 +222,99 @@
       <InternalsVisibleTo Include="[assembly: InternalsVisibleTo(&quot;DynamicProxyGenAssembly2, PublicKey=0024000004800000940000000602000000240000525341310004000001000100c547cac37abd99c8db225ef2f6c8a3602f3b3606cc9891605d02baa56104f4cfc0734aa39b93bf7852f7d9266654753cc297e7d2edfe0bac1cdcf9f717241550e0a7b191195b7667bb4f64bcb8e2121380fd1d9d46ad2d92d2d15605093924cceaf74c4861eff62abf69b9291ed0a340e113be11e6a7d3113e92484cf7045cc7&quot;)]" />
     </ItemGroup>
     <ItemGroup>
-      <InternalsVisibleToTokens Include="Attributes">
+      <InternalsVisibleToCsTokens Include="Attributes">
         <ReplacementValue Condition=" '$(Configuration)' != 'Deploy' ">@(InternalsVisibleTo, '')</ReplacementValue>
-      </InternalsVisibleToTokens>
+      </InternalsVisibleToCsTokens>
     </ItemGroup>
-    <TemplateFile Template="$(FileTemplateInternalsVisibleTo)" OutputFileName="$(FileGeneratedInternalsVisibleTo)" Tokens="@(InternalsVisibleToTokens)" />
+    <TemplateFile Template="$(FileTemplateInternalsVisibleTo)" OutputFileName="$(FileGeneratedInternalsVisibleTo)" Tokens="@(InternalsVisibleToCsTokens)" />
+  </Target>
+  <Target Name="GenerateCompanyInformation" DependsOnTargets="_PrepareBuildEnvironment">
+    <!-- Generate the version number file -->
+    <ItemGroup>
+      <CompanyCsTokens Include="CompanyName">
+        <ReplacementValue>$(CompanyName)</ReplacementValue>
+      </CompanyCsTokens>
+      <CompanyCsTokens Include="CompanyUrl">
+        <ReplacementValue>$(CompanyUrl)</ReplacementValue>
+      </CompanyCsTokens>
+    </ItemGroup>
+    <TemplateFile Template="$(FileTemplateCompanyInformation)" OutputFileName="$(FileGeneratedCompanyInformation)" Tokens="@(CompanyCsTokens)" />
   </Target>
   <Target Name="GenerateProductInformation" DependsOnTargets="_PrepareBuildEnvironment">
     <!-- Generate the version number file -->
     <ItemGroup>
-      <ProductInformationTokens Include="ProductSuite">
+      <ProductInformationCsTokens Include="ProductSuite">
         <ReplacementValue>$(ProductSuite)</ReplacementValue>
-      </ProductInformationTokens>
-      <ProductInformationTokens Include="ProductName">
+      </ProductInformationCsTokens>
+      <ProductInformationCsTokens Include="ProductName">
         <ReplacementValue>$(ProductName)</ReplacementValue>
-      </ProductInformationTokens>
+      </ProductInformationCsTokens>
     </ItemGroup>
-    <TemplateFile Template="$(FileTemplateProductInformation)" OutputFileName="$(FileGeneratedProductInformation)" Tokens="@(ProductInformationTokens)" />
+    <TemplateFile Template="$(FileTemplateProductInformation)" OutputFileName="$(FileGeneratedProductInformation)" Tokens="@(ProductInformationCsTokens)" />
   </Target>
   <Target Name="GenerateWixCompanyIncludes" DependsOnTargets="_PrepareBuildEnvironment">
     <!-- Generate the version number file -->
     <ItemGroup>
-      <CompanyTokens Include="CompanyName">
+      <CompanyWixTokens Include="CompanyName">
         <ReplacementValue>$(CompanyName)</ReplacementValue>
-      </CompanyTokens>
-      <CompanyTokens Include="CompanyPathName">
+      </CompanyWixTokens>
+      <CompanyWixTokens Include="CompanyPathName">
         <ReplacementValue>$(CompanyPathName)</ReplacementValue>
-      </CompanyTokens>
-      <CompanyTokens Include="CompanyUrl">
+      </CompanyWixTokens>
+      <CompanyWixTokens Include="CompanyUrl">
         <ReplacementValue>$(CompanyUrl)</ReplacementValue>
-      </CompanyTokens>
+      </CompanyWixTokens>
     </ItemGroup>
-    <TemplateFile Template="$(FileTemplateWixCompany)" OutputFileName="$(FileGeneratedWixCompany)" Tokens="@(CompanyTokens)" />
+    <TemplateFile Template="$(FileTemplateWixCompany)" OutputFileName="$(FileGeneratedWixCompany)" Tokens="@(CompanyWixTokens)" />
   </Target>
   <Target Name="GenerateWixProductIncludes" DependsOnTargets="_PrepareBuildEnvironment">
     <!-- Generate the version number file -->
     <ItemGroup>
-      <ProductTokens Include="ProductName">
+      <ProductWixTokens Include="ProductName">
         <ReplacementValue>$(ProductName)</ReplacementValue>
-      </ProductTokens>
-      <ProductTokens Include="ProductDescription">
+      </ProductWixTokens>
+      <ProductWixTokens Include="ProductDescription">
         <ReplacementValue>$(ProductDescription)</ReplacementValue>
-      </ProductTokens>
-      <ProductTokens Include="ProductPathName">
+      </ProductWixTokens>
+      <ProductWixTokens Include="ProductPathName">
         <ReplacementValue>$(ProductPathName)</ReplacementValue>
-      </ProductTokens>
+      </ProductWixTokens>
     </ItemGroup>
-    <TemplateFile Template="$(FileTemplateWixProduct)" OutputFileName="$(FileGeneratedWixProduct)" Tokens="@(ProductTokens)" />
+    <TemplateFile Template="$(FileTemplateWixProduct)" OutputFileName="$(FileGeneratedWixProduct)" Tokens="@(ProductWixTokens)" />
   </Target>
   <Target Name="GenerateWixVersionNumber">
     <!-- Generate the version number file -->
     <ItemGroup>
-      <WixVersionTokens Include="Major">
+      <VersionWixTokens Include="Major">
         <ReplacementValue>$(VersionMajor)</ReplacementValue>
-      </WixVersionTokens>
-      <WixVersionTokens Include="Minor">
+      </VersionWixTokens>
+      <VersionWixTokens Include="Minor">
         <ReplacementValue>$(VersionMinor)</ReplacementValue>
-      </WixVersionTokens>
-      <WixVersionTokens Include="Build">
+      </VersionWixTokens>
+      <VersionWixTokens Include="Build">
         <ReplacementValue>$(VersionBuild)</ReplacementValue>
-      </WixVersionTokens>
-      <WixVersionTokens Include="Revision">
+      </VersionWixTokens>
+      <VersionWixTokens Include="Revision">
         <ReplacementValue>$(VersionRevision)</ReplacementValue>
-      </WixVersionTokens>
+      </VersionWixTokens>
     </ItemGroup>
-    <TemplateFile Template="$(FileTemplateWixVersion)" OutputFileName="$(FileGeneratedWixVersion)" Tokens="@(WixVersionTokens)" />
+    <TemplateFile Template="$(FileTemplateWixVersion)" OutputFileName="$(FileGeneratedWixVersion)" Tokens="@(VersionWixTokens)" />
     <Message Text="File $(FileTemplateWixVersion)" Condition="Exists('$(FileTemplateWixVersion)')" />
     <Message Text="File $(FileGeneratedWixVersion)" Condition="Exists('$(FileGeneratedWixVersion)')" />
   </Target>
   <Target Name="GenerateWixDependencies">
     <ItemGroup>
-      <WixBuildInfoTokens Include="DirBin">
+      <BuildInfoWixTokens Include="DirBin">
         <ReplacementValue>$(OutputPath)</ReplacementValue>
-      </WixBuildInfoTokens>
-      <WixBuildInfoTokens Include="DirResource">
+      </BuildInfoWixTokens>
+      <BuildInfoWixTokens Include="DirResource">
         <ReplacementValue>$(DirResource)</ReplacementValue>
-      </WixBuildInfoTokens>
-      <WixBuildInfoTokens Include="DirInstall">
+      </BuildInfoWixTokens>
+      <BuildInfoWixTokens Include="DirInstall">
         <ReplacementValue>$(SolutionDir)</ReplacementValue>
-      </WixBuildInfoTokens>
+      </BuildInfoWixTokens>
     </ItemGroup>
-    <TemplateFile Template="$(FileTemplateWixDependencies)" OutputFileName="$(FileGeneratedWixDependencies)" Tokens="@(WixBuildInfoTokens)" />
+    <TemplateFile Template="$(FileTemplateWixDependencies)" OutputFileName="$(FileGeneratedWixDependencies)" Tokens="@(BuildInfoWixTokens)" />
     <Message Text="File $(FileTemplateWixDependencies)" Condition="Exists('$(FileTemplateWixDependencies)')" />
     <Message Text="File $(FileGeneratedWixDependencies)" Condition="Exists('$(FileGeneratedWixDependencies)')" />
   </Target>

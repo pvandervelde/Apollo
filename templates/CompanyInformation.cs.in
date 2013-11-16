@@ -16,18 +16,18 @@
 namespace Apollo.Internals
 {
     /// <summary>
-    /// Stores marketing information about the product.
+    /// Stores marketing information about the company.
     /// </summary>
-    internal static class ProductInformation
+    internal static class CompanyInformation
     {
         /// <summary>
-        /// The marketing name for the product suite of which the current assembly is part.
+        /// The name of the company.
         /// </summary>
-        public const string ProductSuite = "${ProductSuite}";
+        public const string CompanyName = "${CompanyName}";
         
         /// <summary>
-        /// The marketing name of the product of which the current assembly is part.
+        /// The URL of the main website of the company.
         /// </summary>
-        public const string ProductName = "${ProductName}";
+        public const string CompanyUrl = @"${CompanyUrl}";
     }
 }

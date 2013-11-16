@@ -16,6 +16,7 @@ using System.Threading;
 using System.Xml.Linq;
 using Apollo.Core.Host.Scripting;
 using Apollo.Core.Host.UserInterfaces.Application;
+using Apollo.Internals;
 using Apollo.UI.Console.Nuclei;
 using Apollo.UI.Console.Nuclei.ExceptionHandling;
 using Apollo.UI.Console.Properties;
@@ -239,7 +240,10 @@ namespace Apollo.UI.Console
 
         private static void ShowHeader()
         {
-            System.Console.WriteLine(Resources.Header_ApplicationAndVersion, GetVersion());
+            System.Console.WriteLine(
+                Resources.Header_ApplicationAndVersion, 
+                ProductInformation.ProductName,
+                GetVersion());
             System.Console.WriteLine(GetCopyright());
             System.Console.WriteLine(GetLibraryLicenses());
         }

@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using Apollo.Internals;
 using NUnit.Framework;
 
 namespace Apollo.Utilities
@@ -32,21 +33,15 @@ namespace Apollo.Utilities
         [Test]
         public void CompanyName()
         {
-            var assembly = GetAssembly();
-            var attribute = assembly.GetCustomAttributes(typeof(AssemblyCompanyAttribute), false)[0] as AssemblyCompanyAttribute;
-
             var constants = new ApplicationConstants();
-            Assert.AreEqual(attribute.Company, constants.CompanyName);
+            Assert.AreEqual(CompanyInformation.CompanyName, constants.CompanyName);
         }
 
         [Test]
         public void ApplicationName()
         {
-            var assembly = GetAssembly();
-            var attribute = assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false)[0] as AssemblyProductAttribute;
-
             var constants = new ApplicationConstants();
-            Assert.AreEqual(attribute.Product, constants.ApplicationName);
+            Assert.AreEqual(ProductInformation.ProductName, constants.ApplicationName);
         }
 
         [Test]

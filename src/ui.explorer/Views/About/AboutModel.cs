@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
+using Apollo.Internals;
 using Apollo.UI.Wpf;
 
 namespace Apollo.UI.Explorer.Views.About
@@ -19,9 +20,8 @@ namespace Apollo.UI.Explorer.Views.About
     {
         private const string PropertyNameTitle = "Title";
         private const string PropertyNameDescription = "Description";
-        private const string PropertyNameProduct = "Product";
+        private const string PropertyNameVersion = "InformationalVersion";
         private const string PropertyNameCopyright = "Copyright";
-        private const string PropertyNameCompany = "Company";
 
         /// <summary>
         /// Gets the specified property value either from a specific attribute, or from a resource dictionary.
@@ -89,11 +89,10 @@ namespace Apollo.UI.Explorer.Views.About
         {
             get
             {
-                string result = string.Empty;
-
-                var version = Assembly.GetExecutingAssembly().GetName().Version;
-                if (version != null)
+                string result = CalculatePropertyValue<AssemblyInformationalVersionAttribute>(PropertyNameVersion);
+                if (string.IsNullOrEmpty(result))
                 {
+                    var version = Assembly.GetExecutingAssembly().GetName().Version;
                     result = version.ToString();
                 }
 
@@ -123,7 +122,7 @@ namespace Apollo.UI.Explorer.Views.About
         {
             get 
             { 
-                return CalculatePropertyValue<AssemblyProductAttribute>(PropertyNameProduct); 
+                return ProductInformation.ProductName; 
             }
         }
 
@@ -149,7 +148,7 @@ namespace Apollo.UI.Explorer.Views.About
         {
             get 
             { 
-                return CalculatePropertyValue<AssemblyCompanyAttribute>(PropertyNameCompany); 
+                return CompanyInformation.CompanyName; 
             }
         }
 
@@ -175,7 +174,7 @@ namespace Apollo.UI.Explorer.Views.About
         {
             get 
             {
-                return @"http://www.google.com"; 
+                return CompanyInformation.CompanyUrl; 
             }
         }
     }

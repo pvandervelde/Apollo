@@ -161,6 +161,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\build\temp\CompanyInformation.cs">
+      <Link>CompanyInformation.cs</Link>
+    </Compile>
+    <Compile Include="..\..\build\temp\ProductInformation.cs">
+      <Link>ProductInformation.cs</Link>
+    </Compile>
     <Compile Include="ConsoleConstants.cs" />
     <Compile Include="ConsoleModule.cs" />
     <Compile Include="KernelBootstrapper.cs" />
@@ -250,7 +256,7 @@
     <None Include="app.config" />
     <AppDesigner Include="Properties\" />
     <None Include="$(FileApplicationManifest)">
-        <Link>app.manifest</Link>
+      <Link>app.manifest</Link>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
@@ -320,7 +326,6 @@
     <PublicKeySignatureFromKeyFile SnExe="$(FileSNExe)" DirTemp="$(DirBuildTemp)" Input="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Output TaskParameter="PublicKeyToken" PropertyName="PublicKeyTokenLocal" />
     </PublicKeySignatureFromKeyFile>
-    
     <!-- Generate the version number file -->
     <ItemGroup>
       <ManifestTokens Include="Major">
@@ -340,7 +345,7 @@
       </ManifestTokens>
       <ManifestTokens Include="PublicKeyToken">
         <ReplacementValue>$(PublicKeyTokenLocal)</ReplacementValue>
-      </ManifestTokens>      
+      </ManifestTokens>
     </ItemGroup>
     <TemplateFile Template="$(FileTemplateApplicationManifest)" OutputFileName="$(FileApplicationManifest)" Tokens="@(ManifestTokens)" />
   </Target>

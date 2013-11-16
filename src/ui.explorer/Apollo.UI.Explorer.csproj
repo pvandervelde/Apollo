@@ -210,6 +210,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\build\temp\CompanyInformation.cs">
+      <Link>CompanyInformation.cs</Link>
+    </Compile>
+    <Compile Include="..\..\build\temp\ProductInformation.cs">
+      <Link>ProductInformation.cs</Link>
+    </Compile>
     <Compile Include="..\..\tests\regression\explorer\scripts\AutomationId.Explorer.cs">
       <Link>AutomationId.Explorer.cs</Link>
     </Compile>

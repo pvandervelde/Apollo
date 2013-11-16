@@ -145,7 +145,7 @@
     <value>The license verification has failed. Please contact your vendor.</value>
   </data>
   <data name="Header_ApplicationAndVersion" xml:space="preserve">
-    <value>Apollo script runner ({0})</value>
+    <value>{0} script runner ({1})</value>
   </data>
   <data name="Header_OtherPackages_IdAndLicense" xml:space="preserve">
     <value>        {0} (version: {1}). For more information see: {2}</value>

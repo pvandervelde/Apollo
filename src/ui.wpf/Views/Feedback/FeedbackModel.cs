@@ -25,6 +25,7 @@ namespace Apollo.UI.Wpf.Views.Feedback
             // When running unit tests in nUnit, Assembly.GetEntryAssembly returns null, so in that case fake it.
             var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
 
+            // Get the assembly product name, not the actual product name.
             var attributes = assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false);
             var name = (attributes.Length > 0 && attributes[0] is AssemblyProductAttribute)
                 ? (attributes[0] as AssemblyProductAttribute).Product

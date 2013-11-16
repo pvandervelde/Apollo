@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics;
 using System.Reflection;
+using Apollo.Internals;
 
 namespace Apollo.Utilities
 {
@@ -61,8 +62,7 @@ namespace Apollo.Utilities
         {
             get
             {
-                var assemblyCompany = GetAttributeFromAssembly<AssemblyCompanyAttribute>();
-                return assemblyCompany.Company;
+                return CompanyInformation.CompanyName;
             }
         }
 
@@ -74,8 +74,7 @@ namespace Apollo.Utilities
         {
             get
             {
-                var assemblyName = GetAttributeFromAssembly<AssemblyProductAttribute>();
-                return assemblyName.Product;
+                return ProductInformation.ProductName;
             }
         }
 

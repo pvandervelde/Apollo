@@ -226,6 +226,9 @@
     <Compile Include="..\..\build\temp\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
+    <Compile Include="..\..\build\temp\ProductInformation.cs">
+      <Link>ProductInformation.cs</Link>
+    </Compile>
     <Compile Include="Bootstrappers\AutofacContainerAdapter.cs" />
     <Compile Include="Bootstrappers\AutofacServiceLocator.cs" />
     <Compile Include="Bootstrappers\CompositeBootstrapper.cs" />

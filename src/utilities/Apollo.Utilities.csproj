@@ -22,6 +22,12 @@
     <Compile Include="..\..\build\temp\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
+    <Compile Include="..\..\build\temp\CompanyInformation.cs">
+      <Link>CompanyInformation.cs</Link>
+    </Compile>
+    <Compile Include="..\..\build\temp\ProductInformation.cs">
+      <Link>ProductInformation.cs</Link>
+    </Compile>
     <Compile Include="AppDomainPaths.cs" />
     <Compile Include="ApplicationConstants.cs" />
     <Compile Include="Commands\EmptyCommandContext.cs" />
