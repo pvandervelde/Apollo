@@ -19,6 +19,7 @@ public static Window AboutWindow(Application application)
 {
     // Note that the windows can't be found through an Automation ID for some reason, hence
     // using the title of the window.
-    var window = application.GetWindow("About", InitializeOption.NoCache);
+    var mainWindow = MainWindow(application);
+    var window = mainWindow.ModalWindow("About");
     return window;
 }

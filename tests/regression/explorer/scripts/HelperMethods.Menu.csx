@@ -57,14 +57,6 @@ public static MenuBar GetMainMenu(Application application)
     return menu;
 }
 
-// Menu - Edit
-
-// Menu - About
-
-// Menu - View
-
-public static
-
 public static void CloseApplicationViaFileExitMenuItem(Application application)
 {
     var menu = GetMainMenu(application);
@@ -77,3 +69,19 @@ public static void CloseApplicationViaFileExitMenuItem(Application application)
 
     application.Process.WaitForExit(ShutdownWaitTimeInMilliSeconds());
 }
+
+// Menu - Edit
+
+// Menu - Help
+public static void OpenAboutDialogViaHelpAboutMenuItem(Application application)
+{
+    var menu = GetMainMenu(application);
+
+    var helpMenuSearchCriteria = SearchCriteria.ByAutomationId(MainMenuAutomationIds.Help);
+    var aboutSearchCriteria = SearchCriteria.ByAutomationId(MainMenuAutomationIds.HelpAbout);
+    var aboutMenu = menu.MenuItemBy(helpMenuSearchCriteria, aboutSearchCriteria);
+
+    aboutMenu.Click();
+}
+
+// Menu - View
