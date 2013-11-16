@@ -65,7 +65,7 @@ private static string FindApolloInstallDirectoryInRegistry()
         CultureInfo.InvariantCulture,
         @"software\{0}\{1}\{2}",
         GetInstalledCompanyName(),
-        GetInstalledApplicationName(),
+        GetInstalledProductName(),
         GetInstalledApplicationVersion());
     var key = Registry.LocalMachine.OpenSubKey(keyPath);
     if (key == null)
@@ -87,7 +87,7 @@ private static string FindApolloInstallDirectoryInDefaultLocation()
         CultureInfo.InvariantCulture,
         @"c:\program files\{0}\{1}\{2}",
         GetInstalledCompanyName(),
-        GetInstalledApplicationName(),
+        GetInstalledProductName(),
         GetInstalledApplicationVersion());
     if (Directory.Exists(expectedX64Path))
     {
@@ -104,7 +104,7 @@ private static string FindApolloInstallDirectoryInDefaultLocation()
         CultureInfo.InvariantCulture,
         @"c:\Program Files (x86)\{0}\{1}\{2}",
         GetInstalledCompanyName(),
-        GetInstalledApplicationName(),
+        GetInstalledProductName(),
         GetInstalledApplicationVersion());
     if (Directory.Exists(expectedX86Path))
     {
