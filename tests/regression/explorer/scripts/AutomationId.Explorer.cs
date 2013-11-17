@@ -172,6 +172,29 @@ namespace Apollo.UI.Explorer
     }
 
     /// <summary>
+    /// Defines the automation IDs for the tab control in the main window.
+    /// </summary>
+    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
+        Justification = "Don't want to create too many files for the automation IDs.")]
+    internal static class TabAutomationIds
+    {
+        /// <summary>
+        /// The automation ID for the scroll left control.
+        /// </summary>
+        public const string ScrollLeft = "Explorer.Tab.ScrollLeft";
+
+        /// <summary>
+        /// The automation ID for the scroll right control.
+        /// </summary>
+        public const string ScrollRight = "Explorer.Tab.ScrollRight";
+
+        /// <summary>
+        /// The automation ID for the tab items control.
+        /// </summary>
+        public const string TabItems = "Explorer.Tab.TabItems";
+    }
+
+    /// <summary>
     /// Defines the automation IDs for the welcome view.
     /// </summary>
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
@@ -182,6 +205,11 @@ namespace Apollo.UI.Explorer
         /// The automation ID for the application name control.
         /// </summary>
         public const string ApplicationName = "Explorer.WelcomeView.ApplicationName";
+
+        /// <summary>
+        /// The automation ID for the welcome view tab close button.
+        /// </summary>
+        public const string CloseTabButton = "Explorer.WelcomeView.CloseTabButton";
 
         /// <summary>
         /// The automation ID for the 'Close page after project load' control.
