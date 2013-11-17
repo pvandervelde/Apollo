@@ -19,36 +19,6 @@ using TestStack.White.UIItems.WindowStripControls;
 public static MenuBar GetMainMenu(Application application)
 {
     var mainWindow = MainWindow(application);
-
-    foreach(var item in mainWindow.Items)
-    {
-        Console.WriteLine(
-            string.Format(
-                CultureInfo.InvariantCulture,
-                "UIItem: Id = {0}; Name={1}; Type={2}; AutomationId = {3}; ControlType = {4}",
-                item.Id,
-                item.Name,
-                item.GetType(),
-                item.AutomationElement.Current.AutomationId,
-                item.AutomationElement.Current.ControlType.ProgrammaticName));
-
-        var itemCollection = item as UIItemContainer;
-        if (itemCollection != null)
-        {
-            foreach(var subItem in itemCollection.Items)
-            {
-                Console.WriteLine(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "    UIItem: Id = {0}; Name={1}; AutomationId = {2}; ControlType = {3}",
-                        subItem.Id,
-                        subItem.Name,
-                        subItem.AutomationElement.Current.AutomationId,
-                        subItem.AutomationElement.Current.ControlType.ProgrammaticName));
-            }
-        }
-    }
-
     var menuSearchCriteria = SearchCriteria
         .ByAutomationId(MainMenuAutomationIds.Menu)
         .AndControlType(ControlType.Menu);
