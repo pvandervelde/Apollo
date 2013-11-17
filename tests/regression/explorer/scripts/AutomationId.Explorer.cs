@@ -171,6 +171,44 @@ namespace Apollo.UI.Explorer
         public const string Tabs = "Explorer.Shell.Tabs";
     }
 
+    /// <summary>
+    /// Defines the automation IDs for the welcome view.
+    /// </summary>
+    [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
+        Justification = "Don't want to create too many files for the automation IDs.")]
+    internal static class WelcomeViewAutomationIds
+    {
+        /// <summary>
+        /// The automation ID for the application name control.
+        /// </summary>
+        public const string ApplicationName = "Explorer.WelcomeView.ApplicationName";
+
+        /// <summary>
+        /// The automation ID for the 'Close page after project load' control.
+        /// </summary>
+        public const string ClosePageAfterLoad = "Explorer.WelcomeView.ClosePageAfterLoad";
+
+        /// <summary>
+        /// The automation ID for the most recently used items control.
+        /// </summary>
+        public const string MostRecentlyUsedItems = "Explorer.WelcomeView.MostRecentlyUsedItems";
+
+        /// <summary>
+        /// The automation ID for the 'New Project' control.
+        /// </summary>
+        public const string NewProject = "Explorer.WelcomeView.NewProject";
+
+        /// <summary>
+        /// The automation ID for the 'Open Project' control.
+        /// </summary>
+        public const string OpenProject = "Explorer.WelcomeView.OpenProject";
+
+        /// <summary>
+        /// The automation ID for the 'Show page on startup' control.
+        /// </summary>
+        public const string ShowPageOnStartup = "Explorer.WelcomeView.ShowPageOnStartup";
+    }
+
 #if IN_VS_SOLUTION
 }
 #endif

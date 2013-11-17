@@ -8,7 +8,8 @@
              xmlns:lexEngine="clr-namespace:WPFLocalizeExtension.Engine;assembly=WPFLocalizeExtension"
              xmlns:lexProviders="clr-namespace:WPFLocalizeExtension.Providers;assembly=WPFLocalizeExtension"
              xmlns:lex="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
-                lexEngine:LocalizeDictionary.DesignCulture="en"
+             xmlns:infrastructure="clr-namespace:Apollo.UI.Explorer"
+             lexEngine:LocalizeDictionary.DesignCulture="en"
                 lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Explorer"
                 lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
              mc:Ignorable="d" 
@@ -66,7 +67,7 @@
                 <StackPanel Grid.Row="0" 
                             Orientation="Vertical"
                             Margin="0, 30, 0, 10">
-                    <TextBlock
+                    <TextBlock AutomationProperties.AutomationId="{x:Static infrastructure:WelcomeViewAutomationIds.ApplicationName}"
                         FontSize="32"
                         HorizontalAlignment="Left"
                         TextWrapping="Wrap"
@@ -85,17 +86,17 @@
                         FontSize="18"
                         FontWeight="Bold"
                         Text="{lex:Loc WelcomeView_Start}" />
-                    
-                    <Button
-                        Margin="0, 3, 0, 3"
+
+                    <Button AutomationProperties.AutomationId="{x:Static infrastructure:WelcomeViewAutomationIds.NewProject}"
+                            Margin="0, 3, 0, 3"
                         Style="{StaticResource HyperlinkLikeButton}"
                         Command="{Binding NewProjectCommand}">
                         <TextBlock
                             Text="{lex:Loc WelcomeView_NewProject}" />
                     </Button>
-                    
-                    <Button
-                        Margin="0, 3, 0, 3"
+
+                    <Button AutomationProperties.AutomationId="{x:Static infrastructure:WelcomeViewAutomationIds.OpenProject}"
+                            Margin="0, 3, 0, 3"
                         Style="{StaticResource HyperlinkLikeButton}"
                         Command="{Binding OpenProjectCommand}">
                         <TextBlock
@@ -123,7 +124,7 @@
                         FontWeight="Bold"
                         Text="{lex:Loc WelcomeView_Recent}"/>
 
-                    <ItemsControl 
+                    <ItemsControl AutomationProperties.AutomationId="{x:Static infrastructure:WelcomeViewAutomationIds.MostRecentlyUsedItems}"
                         Grid.Row="1"
                         ItemTemplate="{StaticResource mruButton}"
                         ItemsSource="{Binding MostRecentlyUsed}">
@@ -143,16 +144,16 @@
                     <Separator
                         Background="SteelBlue"
                         Margin="0, 10, 0, 20" />
-                    
-                    <CheckBox 
-                        Margin="0,2,0,2"
+
+                    <CheckBox AutomationProperties.AutomationId="{x:Static infrastructure:WelcomeViewAutomationIds.ClosePageAfterLoad}"
+                              Margin="0,2,0,2"
                         IsChecked="{Binding ClosePageAfterProjectLoad, Mode=TwoWay}">
                         <TextBlock
                             Text="{lex:Loc WelcomeView_ClosePageAfterProjectLoad}" />
                     </CheckBox>
-                    
-                    <CheckBox
-                        Margin="0,2,0,2"
+
+                    <CheckBox AutomationProperties.AutomationId="{x:Static infrastructure:WelcomeViewAutomationIds.ShowPageOnStartup}"
+                              Margin="0,2,0,2"
                         IsChecked="{Binding ShowPageOnStartup, Mode=TwoWay}">
                         <TextBlock
                             Text="{lex:Loc WelcomeView_ShowPageOnStartup}" />
