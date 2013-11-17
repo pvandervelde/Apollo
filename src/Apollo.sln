@@ -26,13 +26,20 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FA065AF0-8827-4E09-ABAA-812E5E9AA363}"
 	ProjectSection(SolutionItems) = preProject
 		..\templates\app.manifest.in = ..\templates\app.manifest.in
+		..\templates\AssemblyInfo.Base.cs.in = ..\templates\AssemblyInfo.Base.cs.in
 		..\templates\AssemblyInfo.BuildInformation.cs.in = ..\templates\AssemblyInfo.BuildInformation.cs.in
 		..\templates\AssemblyInfo.InternalsVisibleTo.cs.in = ..\templates\AssemblyInfo.InternalsVisibleTo.cs.in
 		..\templates\AssemblyInfo.VersionNumber.cs.in = ..\templates\AssemblyInfo.VersionNumber.cs.in
 		..\company.xml = ..\company.xml
+		..\templates\CompanyIncludes.wxi.in = ..\templates\CompanyIncludes.wxi.in
+		..\templates\CompanyInformation.cs.in = ..\templates\CompanyInformation.cs.in
+		..\templates\Dependencies.wxi.in = ..\templates\Dependencies.wxi.in
 		..\nuget.config = ..\nuget.config
 		..\packages.config = ..\packages.config
+		..\templates\ProductIncludes.wxi.in = ..\templates\ProductIncludes.wxi.in
+		..\templates\ProductInformation.cs.in = ..\templates\ProductInformation.cs.in
 		..\version.xml = ..\version.xml
+		..\templates\VersionNumber.wxi.in = ..\templates\VersionNumber.wxi.in
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Extensions", "core.extensions\Apollo.Core.Extensions.csproj", "{EE14FAFE-8E78-11E1-B5D3-6DF7BBE59B18}"
