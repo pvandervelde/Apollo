@@ -19,13 +19,13 @@ public static void VerifyWelcomeTab(Application application)
         .ByAutomationId(WelcomeViewAutomationIds.ApplicationName);
     var nameLabel = (Label)startPage.Get(applicationNameSearchCiteria);
     var nameText = nameLabel.Text;
-    AssertAreEqual(GetProductName(), nameText);
+    AssertAreEqual(GetProductName(), nameText, "Welcome tab - Product Name");
 
     // Check 'keep open' flag
     var keepOpenFlagSearchCriteria = SearchCriteria
         .ByAutomationId(WelcomeViewAutomationIds.ClosePageAfterLoad);
     var keepOpenCheckBox = (CheckBox)startPage.Get(keepOpenFlagSearchCriteria);
-    AssertIsFalse(keepOpenCheckBox.Checked);
+    AssertIsFalse(keepOpenCheckBox.Checked, "Welcome tab - Keep open not checked");
     if (keepOpenCheckBox.Checked)
     {
         keepOpenCheckBox.Checked = false;
@@ -39,13 +39,33 @@ public static void VerifyWelcomeTab(Application application)
 
     // Check that the start page hasn't been closed
     var currentStartPage = GetStartPageTabItem(application);
-    AssertIsNotNull(currentStartPage);
-    AssertIsFalse(currentStartPage.IsSelected);
+    AssertIsNotNull(currentStartPage, "Welcome tab - Start page exists after opening project");
+    AssertIsFalse(currentStartPage.IsSelected, "Welcome tab - Start page is not selected after opening project");
+
+    var currentProjectPage = GetProjectPageTabItem(application);
+    AssertIsNotNull(currentProjectPage, "Welcome tab - Project page exists after opening project");
+    AssertIsTrue(currentProjectPage.IsSelected, "Welcome tab - Project page is selected after opening project");
+
+    // Check that File - close has been enabled
+    var fileCloseMenu = GetFileCloseMenuItem(application);
+    AssertIsTrue(fileCloseMenu.Enabled, "Welcome tab - File - Close menu is enabled");
+
+    // HACK: It seems that the File menu stays open when we check the File - close menu item
+    var fileMenu = GetFileMenuItem(application);
+    if (fileMenu.IsFocussed)
+    {
+        fileMenu.Click();
+    }
+
+    // Close the project via the close button on the tab page
+    CloseProjectPageTab(application);
 }
 
 public static void VerifyFileMenu(Application application)
 {
-    // New (check that start page has closed)
+    // If a project is open, then close it
+
+    // New (check that start page has closed, project page has opened, and close has been enabled)
     // Open
     // Exit
 }
@@ -90,21 +110,21 @@ private static void VerifyAboutDialog(Application application)
         .ByAutomationId(AboutAutomationIds.ProductName);
     var nameLabel = (Label)dialog.Get(applicationNameSearchCiteria);
     var nameText = nameLabel.Text;
-    AssertAreEqual(GetProductName(), nameText);
+    AssertAreEqual(GetProductName(), nameText, "About dialog - Product name");
 
     // Check application version
     var applicationVersionSearchCriteria = SearchCriteria
         .ByAutomationId(AboutAutomationIds.ProductVersion);
     var versionLabel = (Label)dialog.Get(applicationVersionSearchCriteria);
     var versionText = versionLabel.Text;
-    AssertAreEqual(GetFullApplicationVersion(), versionText);
+    AssertAreEqual(GetFullApplicationVersion(), versionText, "About dialog - Product version");
 
     // Check company name
     var companyNameSearchCriteria = SearchCriteria
         .ByAutomationId(AboutAutomationIds.CompanyName);
     var companyLabel = (Label)dialog.Get(companyNameSearchCriteria);
     var companyText = companyLabel.Text;
-    AssertAreEqual(GetCompanyName(), companyText);
+    AssertAreEqual(GetCompanyName(), companyText, "About dialog - Company name");
 
     // Check copyright
     var copyrightSearchCriteria = SearchCriteria
@@ -117,7 +137,8 @@ private static void VerifyAboutDialog(Application application)
             "Copyright {0} 2009 - {1}",
             GetCompanyName(),
             DateTimeOffset.Now.Year),
-        copyrightText);
+        copyrightText,
+        "About dialog - Copyright");
 
     dialog.Close();
 }
