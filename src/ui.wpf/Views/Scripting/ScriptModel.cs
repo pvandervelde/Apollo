@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using Apollo.Core.Host.Scripting;
+using Apollo.UI.Explorer;
 using Apollo.UI.Wpf.Properties;
 
 namespace Apollo.UI.Wpf.Views.Scripting
@@ -55,6 +56,23 @@ namespace Apollo.UI.Wpf.Views.Scripting
             get
             {
                 return Resources.ScriptView_ViewName;
+            }
+        }
+
+        /// <summary>
+        /// Gets the UI automation ID of the close tab button.
+        /// </summary>
+        /// <remarks>
+        /// Note that this is breaking the loose coupling via the regions because this control
+        /// is not supposed to know that it will be in a tab control ...
+        /// </remarks>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "These methods are being used by WPF databinding.")]
+        public string CloseButtonId
+        {
+            get
+            {
+                return ScriptViewAutomationIds.CloseTabButton;
             }
         }
 
