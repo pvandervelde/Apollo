@@ -4,7 +4,8 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib"
                     xmlns:mwt="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
                     xmlns:commonutils="clr-namespace:Apollo.UI.Wpf.Utilities;assembly=Apollo.UI.Wpf"
-                    xmlns:converters="clr-namespace:Apollo.UI.Explorer.Converters">
+                    xmlns:converters="clr-namespace:Apollo.UI.Explorer.Converters"
+                    xmlns:infrastructure="clr-namespace:Apollo.UI.Explorer">
     <!-- 
         Taken from: http://www.blogs.intuidev.com/post/2010/02/15/WPF-TabControl-series-Part-4-Closeable-TabItems.aspx
     -->
@@ -788,14 +789,16 @@
                                  does not implements PageLeft/PageRight, LineLeft/LineRight
                                  are used.
                               -->
-                                    <RepeatButton x:Name="cmdScrollLeft"
+                                    <RepeatButton AutomationProperties.AutomationId="{x:Static infrastructure:TabAutomationIds.ScrollLeft}"
+                                                  x:Name="cmdScrollLeft"
                                                   Focusable="False"
                                                   Style="{StaticResource LineButtonStyle}"
                                                   CommandTarget="{Binding ElementName=svTP}"
                                                   Command="ScrollBar.LineLeftCommand"
                                                   Content="{StaticResource ArrowLeftPath}"
                                                   IsEnabled="{Binding ElementName=PART_ScrollContentPresenter, Path=CanScrollLeft}" />
-                                    <RepeatButton x:Name="cmdScrollRight"
+                                    <RepeatButton AutomationProperties.AutomationId="{x:Static infrastructure:TabAutomationIds.ScrollRight}"
+                                                  x:Name="cmdScrollRight"
                                                   Focusable="False"
                                                   Style="{StaticResource LineButtonStyle}"
                                                   CommandTarget="{Binding ElementName=svTP}"
@@ -807,7 +810,8 @@
                                  containing all TabItems, with the selected one being checked.
                                  Clicking an item here will select the respective TabItem.
                               -->
-                                    <Menu Background="Transparent">
+                                    <Menu AutomationProperties.AutomationId="{x:Static infrastructure:TabAutomationIds.TabItems}"
+                                          Background="Transparent">
                                         <MenuItem Style="{StaticResource TabMenuButtonStyle}"
                                                   ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}}, 
                                                             Converter={StaticResource modelCollectionToTabItemsConverter}}"
@@ -925,12 +929,11 @@
                               button belongs to, a relative binding will do the trick (i.e., 
                               (bubble up to the parent TabItem).
                            -->
-                                <Button x:Name="cmdTabItemCloseButton"
+                                <Button AutomationProperties.AutomationId="{Binding Path=Content.DataContext.CloseButtonId}" 
+                                        x:Name="cmdTabItemCloseButton"
                                         Style="{StaticResource TabItemCloseButtonStyle}"
                                         Command="{Binding Path=Content.DataContext.CloseCommand}"
-                                        CommandParameter="{Binding  
-                                       RelativeSource={RelativeSource FindAncestor, 
-                                       AncestorType={x:Type TabItem}}}"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabItem}}}"
                                         Grid.Column="1"
                                         Margin="-7,5,7,5" />
                             </Grid>
