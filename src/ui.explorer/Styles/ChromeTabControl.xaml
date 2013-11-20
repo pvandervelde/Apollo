@@ -5,7 +5,8 @@
                     xmlns:mwt="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
                     xmlns:commonutils="clr-namespace:Apollo.UI.Wpf.Utilities;assembly=Apollo.UI.Wpf"
                     xmlns:converters="clr-namespace:Apollo.UI.Explorer.Converters"
-                    xmlns:infrastructure="clr-namespace:Apollo.UI.Explorer">
+                    xmlns:infrastructure="clr-namespace:Apollo.UI.Explorer"
+                    xmlns:controls="clr-namespace:Apollo.UI.Explorer.Controls">
     <!-- 
         Taken from: http://www.blogs.intuidev.com/post/2010/02/15/WPF-TabControl-series-Part-4-Closeable-TabItems.aspx
     -->
@@ -718,7 +719,7 @@
 
     <!-- The TabControl's Style. -->
     <Style x:Key="ChromeLikeTabControl"
-           TargetType="{x:Type TabControl}"
+           TargetType="{x:Type controls:GenericAutomationTabControl}"
            x:Name="TabControl">
         <Setter Property="SnapsToDevicePixels"
                 Value="true" />
@@ -726,7 +727,7 @@
                 Value="1,0,1,1" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="TabControl">
+                <ControlTemplate TargetType="controls:GenericAutomationTabControl">
                     <Grid KeyboardNavigation.TabNavigation="Local">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />

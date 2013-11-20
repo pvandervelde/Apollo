@@ -220,6 +220,7 @@
       <Link>AutomationId.Explorer.cs</Link>
     </Compile>
     <Compile Include="Commands\ShowWelcomeViewTabCommand.cs" />
+    <Compile Include="Controls\GenericAutomationTabControl.cs" />
     <Compile Include="Converters\ModelCollectionToTabItemsConverter.cs" />
     <Compile Include="ExplorerConstants.cs" />
     <Compile Include="ExplorerModule.cs" />
@@ -438,6 +439,7 @@
   <ItemGroup>
     <Content Include="README.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Import Project="$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild')" />
   <Import Project="$(MsBuildExtensionsPath)\TemplateFile.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\TemplateFile.msbuild')" />

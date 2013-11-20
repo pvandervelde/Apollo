@@ -232,6 +232,7 @@
     <Compile Include="..\..\tests\regression\explorer\scripts\AutomationId.Wpf.cs">
       <Link>AutomationId.Wpf.cs</Link>
     </Compile>
+    <Compile Include="Automation\GenericAutomationPeer.cs" />
     <Compile Include="Bootstrappers\AutofacContainerAdapter.cs" />
     <Compile Include="Bootstrappers\AutofacServiceLocator.cs" />
     <Compile Include="Bootstrappers\CompositeBootstrapper.cs" />

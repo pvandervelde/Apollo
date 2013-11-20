@@ -10,7 +10,7 @@
                 lexEngine:LocalizeDictionary.DesignCulture="en"
                 lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Explorer"
                 lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
-        xmlns:regions="http://www.codeplex.com/prism"
+        xmlns:regions="http://www.codeplex.com/prism" xmlns:controls="clr-namespace:Apollo.UI.Explorer.Controls"
         AutomationProperties.AutomationId="{x:Static infrastructure:ShellAutomationIds.MainWindow}"
         Title="{lex:Loc MainWindow_Title}"
         Width="1024"
@@ -46,6 +46,15 @@
         <Border Grid.Row="1"
                 Background="LightSteelBlue"
                 Margin="0">
+            <controls:GenericAutomationTabControl AutomationProperties.AutomationId="{x:Static infrastructure:ShellAutomationIds.Tabs}"
+                        Style="{StaticResource ChromeLikeTabControl}"
+                        ItemContainerStyle="{StaticResource ChromeLikeTabItem}"
+                        regions:RegionManager.RegionName="{x:Static common:CommonRegionNames.Content}" 
+                        Width="Auto" 
+                        Height="Auto" 
+                        HorizontalAlignment="Stretch" 
+                        Margin="0,3,0,3" />
+            <!--
             <TabControl AutomationProperties.AutomationId="{x:Static infrastructure:ShellAutomationIds.Tabs}"
                         Style="{StaticResource ChromeLikeTabControl}"
                         ItemContainerStyle="{StaticResource ChromeLikeTabItem}"
@@ -54,6 +63,7 @@
                         Height="Auto" 
                         HorizontalAlignment="Stretch" 
                         Margin="0,3,0,3" />
+            -->
         </Border>
         
         <!-- Status bar -->
