@@ -15,6 +15,9 @@ namespace Apollo.UI.Wpf.Automation
     /// Defines a generic automation peer that can be used to find dynamically generated UI elements
     /// for UI automation.
     /// </summary>
+    /// <remarks>
+    /// Original code from here: http://www.colinsalmcorner.com/2011/11/genericautomationpeer-helping-coded-ui.html.
+    /// </remarks>
     public sealed class GenericAutomationPeer : UIElementAutomationPeer
     {
         /// <summary>
