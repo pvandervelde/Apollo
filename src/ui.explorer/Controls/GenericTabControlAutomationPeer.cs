@@ -7,24 +7,29 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Automation.Peers;
+using System.Windows.Controls;
 using System.Windows.Media;
+using Lokad.Quality;
 
-namespace Apollo.UI.Wpf.Automation
+namespace Apollo.UI.Explorer.Controls
 {
     /// <summary>
-    /// Defines a generic automation peer that can be used to find dynamically generated UI elements
+    /// Defines a generic automation peer for tab controls that can be used to find dynamically generated UI elements
     /// for UI automation.
     /// </summary>
     /// <remarks>
     /// Original code from here: http://www.colinsalmcorner.com/2011/11/genericautomationpeer-helping-coded-ui.html.
     /// </remarks>
-    public sealed class GenericAutomationPeer : UIElementAutomationPeer
+    public sealed class GenericTabControlAutomationPeer : TabControlAutomationPeer
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenericAutomationPeer"/> class.
+        /// Initializes a new instance of the <see cref="GenericTabControlAutomationPeer"/> class.
         /// </summary>
-        /// <param name="owner">The UI element that is the top level owner for this peer.</param>
-        public GenericAutomationPeer(UIElement owner)
+        /// <param name="owner">
+        /// The <see cref="T:System.Windows.Controls.TabControl"/> that is associated with this
+        ///  <see cref="GenericTabControlAutomationPeer"/>.
+        /// </param>
+        public GenericTabControlAutomationPeer([NotNull] TabControl owner) 
             : base(owner)
         {
         }
@@ -44,7 +49,7 @@ namespace Apollo.UI.Wpf.Automation
             return list;
         }
 
-        private List<AutomationPeer> GetChildPeers(UIElement element)
+        private IEnumerable<AutomationPeer> GetChildPeers(UIElement element)
         {
             var list = new List<AutomationPeer>();
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)

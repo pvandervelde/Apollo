@@ -6,13 +6,8 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-#if IN_VS_SOLUTION
-// We can't have namespaces in scriptcs files for some reason, so we'll just pretend
-// that the namespace isn't there in the script with the use of some compiler magic
 namespace Apollo.UI.Explorer
 {
-#endif
-
     /// <summary>
     /// Defines the automation IDs for the project view.
     /// </summary>
@@ -20,6 +15,11 @@ namespace Apollo.UI.Explorer
         Justification = "Don't want to create too many files for the automation IDs.")]
     internal static class ProjectViewAutomationIds
     {
+        /// <summary>
+        /// The automation ID for the header of the control.
+        /// </summary>
+        public const string Header = "Wpf.ProjectView.Header";
+
         /// <summary>
         /// The automation ID for the project view tab close button.
         /// </summary>
@@ -34,11 +34,13 @@ namespace Apollo.UI.Explorer
     internal static class ScriptViewAutomationIds
     {
         /// <summary>
+        /// The automation ID for the header of the control.
+        /// </summary>
+        public const string Header = "Wpf.ScriptView.Header";
+
+        /// <summary>
         /// The automation ID for the script view tab close button.
         /// </summary>
         public const string CloseTabButton = "Wpf.ScriptView.CloseTabButton";
     }
-
-#if IN_VS_SOLUTION
 }
-#endif

@@ -62,6 +62,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{583E31
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Wix.Host", "wix.host\Wix.Host.wixproj", "{B8DE1DF9-52C3-4EA2-AF76-F45B35BEFEBC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.UI.Explorer", "test.ui.explorer\Test.UI.Explorer.csproj", "{96589EDE-BE39-4FEA-8614-188DD936792A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -165,6 +167,12 @@ Global
 		{B8DE1DF9-52C3-4EA2-AF76-F45B35BEFEBC}.Deploy|x64.Build.0 = Deploy|x64
 		{B8DE1DF9-52C3-4EA2-AF76-F45B35BEFEBC}.Release|x64.ActiveCfg = Release|x64
 		{B8DE1DF9-52C3-4EA2-AF76-F45B35BEFEBC}.Release|x64.Build.0 = Release|x64
+		{96589EDE-BE39-4FEA-8614-188DD936792A}.Debug|x64.ActiveCfg = Debug|x64
+		{96589EDE-BE39-4FEA-8614-188DD936792A}.Debug|x64.Build.0 = Debug|x64
+		{96589EDE-BE39-4FEA-8614-188DD936792A}.Deploy|x64.ActiveCfg = Deploy|x64
+		{96589EDE-BE39-4FEA-8614-188DD936792A}.Deploy|x64.Build.0 = Deploy|x64
+		{96589EDE-BE39-4FEA-8614-188DD936792A}.Release|x64.ActiveCfg = Release|x64
+		{96589EDE-BE39-4FEA-8614-188DD936792A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

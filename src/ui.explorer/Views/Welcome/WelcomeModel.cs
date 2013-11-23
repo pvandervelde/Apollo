@@ -54,6 +54,23 @@ namespace Apollo.UI.Explorer.Views.Welcome
         }
 
         /// <summary>
+        /// Gets the UI automation ID of the tab item.
+        /// </summary>
+        /// <remarks>
+        /// Note that this is breaking the loose coupling via the regions because this control
+        /// is not supposed to know that it will be in a tab control ...
+        /// </remarks>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "These methods are being used by WPF databinding.")]
+        public string TabId
+        {
+            get
+            {
+                return WelcomeViewAutomationIds.Header;
+            }
+        }
+
+        /// <summary>
         /// Gets the UI automation ID of the close tab button.
         /// </summary>
         /// <remarks>

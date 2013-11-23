@@ -538,6 +538,8 @@
                 Value="{Binding Path=IsEnabled}" />
         <Setter Property="IsChecked"
                 Value="{Binding Path=IsSelected, Mode=TwoWay}" />
+        <Setter Property="AutomationProperties.AutomationId"
+                Value="{Binding Path=AutomationProperties.AutomationId}" />
         <Setter Property="Foreground"
                 Value="{StaticResource MenuItem_ForegroundBrush}" />
         <Style.Triggers>
@@ -814,7 +816,7 @@
                                     <Menu AutomationProperties.AutomationId="{x:Static infrastructure:TabAutomationIds.TabItems}"
                                           Background="Transparent">
                                         <MenuItem Style="{StaticResource TabMenuButtonStyle}"
-                                                  ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}}, 
+                                                  ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:GenericAutomationTabControl}}, 
                                                             Converter={StaticResource modelCollectionToTabItemsConverter}}"
                                                   ItemContainerStyle="{StaticResource TabMenuItem}">
                                         </MenuItem>
@@ -887,6 +889,8 @@
                 Value="{StaticResource TabItemFocusVisual}" />
         <Setter Property="Header"
                 Value="{Binding Path=Content.DataContext.DisplayName}" />
+        <Setter Property="AutomationProperties.AutomationId"
+                Value="{Binding Path=Content.DataContext.TabId}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabItem}">

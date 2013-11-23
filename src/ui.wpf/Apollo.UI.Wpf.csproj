@@ -229,7 +229,7 @@
     <Compile Include="..\..\build\temp\ProductInformation.cs">
       <Link>ProductInformation.cs</Link>
     </Compile>
-    <Compile Include="..\..\tests\regression\explorer\scripts\AutomationId.Wpf.cs">
+    <Compile Include="..\AutomationId.Wpf.cs">
       <Link>AutomationId.Wpf.cs</Link>
     </Compile>
     <Compile Include="Automation\GenericAutomationPeer.cs" />

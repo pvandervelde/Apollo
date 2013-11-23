@@ -6,12 +6,8 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-#if IN_VS_SOLUTION
-// We can't have namespaces in scriptcs files for some reason, so we'll just pretend
-// that the namespace isn't there in the script with the use of some compiler magic
 namespace Apollo.UI.Explorer
 {
-#endif
     /// <summary>
     /// Defines the automation IDs for the about window.
     /// </summary>
@@ -202,6 +198,11 @@ namespace Apollo.UI.Explorer
     internal static class WelcomeViewAutomationIds
     {
         /// <summary>
+        /// The automation ID for the header of the control.
+        /// </summary>
+        public const string Header = "Explorer.WelcomeView.Header";
+
+        /// <summary>
         /// The automation ID for the application name control.
         /// </summary>
         public const string ApplicationName = "Explorer.WelcomeView.ApplicationName";
@@ -236,7 +237,4 @@ namespace Apollo.UI.Explorer
         /// </summary>
         public const string ShowPageOnStartup = "Explorer.WelcomeView.ShowPageOnStartup";
     }
-
-#if IN_VS_SOLUTION
 }
-#endif

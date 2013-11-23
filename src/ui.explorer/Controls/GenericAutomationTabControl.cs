@@ -6,14 +6,13 @@
 
 using System.Windows.Automation.Peers;
 using System.Windows.Controls;
-using Apollo.UI.Wpf.Automation;
 
 namespace Apollo.UI.Explorer.Controls
 {
     /// <summary>
     /// Defines a tab control which has special automation skills.
     /// </summary>
-    public class GenericAutomationTabControl : TabControl
+    internal sealed class GenericAutomationTabControl : TabControl
     {
         /// <summary>
         /// Provides an appropriate <see cref="T:System.Windows.Automation.Peers.TabControlAutomationPeer"/> implementation for this 
@@ -24,7 +23,7 @@ namespace Apollo.UI.Explorer.Controls
         /// </returns>
         protected override AutomationPeer OnCreateAutomationPeer()
         {
-            return new GenericAutomationPeer(this);
+            return new GenericTabControlAutomationPeer(this);
         }
     }
 }
