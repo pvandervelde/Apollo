@@ -26,6 +26,11 @@ namespace Apollo.Internals
         public const string CompanyName = "${CompanyName}";
         
         /// <summary>
+        /// The name of the path in the file system related to the company name.
+        /// </summary>
+        public const string CompanyPathName = "${CompanyPathName}";
+        
+        /// <summary>
         /// The URL of the main website of the company.
         /// </summary>
         public const string CompanyUrl = @"${CompanyUrl}";

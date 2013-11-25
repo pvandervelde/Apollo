@@ -234,6 +234,9 @@
       <CompanyCsTokens Include="CompanyName">
         <ReplacementValue>$(CompanyName)</ReplacementValue>
       </CompanyCsTokens>
+      <CompanyCsTokens Include="CompanyPathName">
+        <ReplacementValue>$(CompanyPathName)</ReplacementValue>
+      </CompanyCsTokens>
       <CompanyCsTokens Include="CompanyUrl">
         <ReplacementValue>$(CompanyUrl)</ReplacementValue>
       </CompanyCsTokens>
@@ -248,6 +251,9 @@
       </ProductInformationCsTokens>
       <ProductInformationCsTokens Include="ProductName">
         <ReplacementValue>$(ProductName)</ReplacementValue>
+      </ProductInformationCsTokens>
+      <ProductInformationCsTokens Include="ProductPathName">
+        <ReplacementValue>$(ProductPathName)</ReplacementValue>
       </ProductInformationCsTokens>
     </ItemGroup>
     <TemplateFile Template="$(FileTemplateProductInformation)" OutputFileName="$(FileGeneratedProductInformation)" Tokens="@(ProductInformationCsTokens)" />

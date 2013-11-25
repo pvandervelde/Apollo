@@ -51,6 +51,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Autofac.3.1.1\lib\net40\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\packages\Castle.Core.3.2.1\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
     <Reference Include="EasyHttp">
       <HintPath>..\..\packages\EasyHttp.1.4.7.0\lib\net40\EasyHttp.dll</HintPath>
     </Reference>

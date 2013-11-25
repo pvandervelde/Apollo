@@ -1,16 +1,26 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
+using Apollo.Internals;
 using Microsoft.Win32;
 using TestStack.White;
 
 namespace Test.UI.Explorer.Controls
 {
-    public static class ApplicationProxies
+    /// <summary>
+    /// Defines methods for working with an application.
+    /// </summary>
+    internal static class ApplicationProxies
     {
-        public static string GetApolloExplorerPath()
+        /// <summary>
+        /// Gets the full path to the Explorer application.
+        /// </summary>
+        /// <param name="log">The log object.</param>
+        /// <returns>The full path to the application.</returns>
+        public static string GetApolloExplorerPath(Log log)
         {
-            var directory = FindApolloInstallDirectory();
+            var directory = FindApolloInstallDirectory(log);
             if (!string.IsNullOrEmpty(directory))
             {
                 return Path.Combine(directory, Constants.GetApolloExplorerFileName());
@@ -19,59 +29,51 @@ namespace Test.UI.Explorer.Controls
             return null;
         }
 
-        public static string FindApolloInstallDirectory()
+        /// <summary>
+        /// Locates the directory in which the Explorer application is located.
+        /// </summary>
+        /// <param name="log">The log object.</param>
+        /// <returns>The directory in which the Explorer application is located.</returns>
+        public static string FindApolloInstallDirectory(Log log)
         {
-            Log.Info("Searching registry for application path ...");
-            var installPathInRegistry = FindApolloInstallDirectoryInRegistry();
+            var installPathInRegistry = FindApolloInstallDirectoryInRegistry(log);
             if (!string.IsNullOrEmpty(installPathInRegistry))
             {
-                Log.Info(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "Found path: {0}",
-                        installPathInRegistry));
                 return installPathInRegistry;
             }
 
-            Log.Info("Searching default install location for application ...");
-            var installPathInDefaultLocation = FindApolloInstallDirectoryInDefaultLocation();
+            var installPathInDefaultLocation = FindApolloInstallDirectoryInDefaultLocation(log);
             if (!string.IsNullOrEmpty(installPathInDefaultLocation))
             {
-                Log.Info(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "Found path: {0}",
-                        installPathInDefaultLocation));
                 return installPathInDefaultLocation;
             }
 
-            Log.Info("Searching development path for application ...");
-            var installPathInDevelopmentLocation = FindApolloInstallDirectoryInDevelopmentLocation();
+            var installPathInDevelopmentLocation = FindApolloInstallDirectoryInDevelopmentLocation(log);
             if (!string.IsNullOrEmpty(installPathInDevelopmentLocation))
             {
-                Log.Info(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "Found path: {0}",
-                        installPathInDevelopmentLocation));
                 return installPathInDevelopmentLocation;
             }
 
             return null;
         }
 
-        private static string FindApolloInstallDirectoryInRegistry()
+        private static string VersionNumberPath()
+        {
+            return Assembly.GetExecutingAssembly().GetName().Version.ToString(2);
+        }
+
+        private static string FindApolloInstallDirectoryInRegistry(Log log)
         {
             var keyPath = string.Format(
                 CultureInfo.InvariantCulture,
                 @"software\{0}\{1}\{2}",
-                Constants.GetInstalledCompanyName(),
-                Constants.GetInstalledProductName(),
-                Constants.GetInstalledApplicationVersion());
+                CompanyInformation.CompanyPathName,
+                ProductInformation.ProductPathName,
+                VersionNumberPath());
             var key = Registry.LocalMachine.OpenSubKey(keyPath);
             if (key == null)
             {
-                Log.Info(
+                log.Info(
                     string.Format(
                         CultureInfo.InvariantCulture,
                         "Failed to find registry path at: {0}.",
@@ -82,20 +84,20 @@ namespace Test.UI.Explorer.Controls
             return (string)key.GetValue(Constants.GetInstallLocationRegistryKeyName());
         }
 
-        private static string FindApolloInstallDirectoryInDefaultLocation()
+        private static string FindApolloInstallDirectoryInDefaultLocation(Log log)
         {
             var expectedX64Path = string.Format(
                 CultureInfo.InvariantCulture,
                 @"c:\program files\{0}\{1}\{2}",
-                Constants.GetInstalledCompanyName(),
-                Constants.GetInstalledProductName(),
-                Constants.GetInstalledApplicationVersion());
+                CompanyInformation.CompanyPathName,
+                ProductInformation.ProductPathName,
+                VersionNumberPath());
             if (Directory.Exists(expectedX64Path))
             {
                 return expectedX64Path;
             }
 
-            Log.Info(
+            log.Info(
                 string.Format(
                     CultureInfo.InvariantCulture,
                     "Failed to find application directory at: {0}.",
@@ -104,15 +106,15 @@ namespace Test.UI.Explorer.Controls
             var expectedX86Path = string.Format(
                 CultureInfo.InvariantCulture,
                 @"c:\Program Files (x86)\{0}\{1}\{2}",
-                Constants.GetInstalledCompanyName(),
-                Constants.GetInstalledProductName(),
-                Constants.GetInstalledApplicationVersion());
+                CompanyInformation.CompanyPathName,
+                ProductInformation.ProductPathName,
+                VersionNumberPath());
             if (Directory.Exists(expectedX86Path))
             {
                 return expectedX86Path;
             }
 
-            Log.Info(
+            log.Info(
                 string.Format(
                     CultureInfo.InvariantCulture,
                     "Failed to find application directory at: {0}.",
@@ -121,42 +123,15 @@ namespace Test.UI.Explorer.Controls
             return null;
         }
 
-        private static string FindApolloInstallDirectoryInDevelopmentLocation()
+        private static string FindApolloInstallDirectoryInDevelopmentLocation(Log log)
         {
-            var currentDirectory = Constants.GetPathOfExecutingScript();
-
-            // Move up the directory structure searching for a folder called 'build'
-            string buildDirectory = null;
-            while (!string.IsNullOrEmpty(currentDirectory))
-            {
-                Log.Info(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "Searching for build directory in: {0}",
-                        currentDirectory));
-
-                var buildDirectories = Directory.GetDirectories(currentDirectory, "build");
-                if (buildDirectories.Length != 0)
-                {
-                    buildDirectory = buildDirectories[0];
-                    Log.Info(
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            "Found build directory at: {0}",
-                            buildDirectory));
-
-                    break;
-                }
-
-                currentDirectory = Path.GetDirectoryName(currentDirectory);
-            }
-
+            var buildDirectory = Constants.GetPathOfExecutingScript();
             if (!string.IsNullOrEmpty(buildDirectory))
             {
                 // Move down the directory structure to find the final file
                 var binDirectory = Path.Combine(buildDirectory, "bin");
                 var explorerFiles = Directory.GetFiles(binDirectory, Constants.GetApolloExplorerFileName(), SearchOption.AllDirectories);
-                Log.Info(
+                log.Info(
                     string.Format(
                         CultureInfo.InvariantCulture,
                         "Found apollo explorer at [{0}].",
@@ -171,7 +146,13 @@ namespace Test.UI.Explorer.Controls
             return null;
         }
 
-        public static Application StartApplication(string applicationPath)
+        /// <summary>
+        /// Starts the application.
+        /// </summary>
+        /// <param name="applicationPath">The full path to the application executable.</param>
+        /// <param name="log">The log object.</param>
+        /// <returns>The application.</returns>
+        public static Application StartApplication(string applicationPath, Log log)
         {
             var processInfo = new ProcessStartInfo
             {
@@ -180,7 +161,7 @@ namespace Test.UI.Explorer.Controls
                 WindowStyle = ProcessWindowStyle.Maximized,
             };
 
-            Log.Info(
+            log.Info(
                 string.Format(
                     CultureInfo.InvariantCulture,
                     "Loading application from: {0}",
@@ -188,18 +169,23 @@ namespace Test.UI.Explorer.Controls
 
             var application = Application.Launch(processInfo);
 
-            Log.Info("Launched application, waiting for idle ...");
+            log.Info("Launched application, waiting for idle ...");
             application.WaitWhileBusy();
 
-            Log.Info("Application launched and idle");
+            log.Info("Application launched and idle");
             return application;
         }
 
-        public static void ExitApplication(Application application)
+        /// <summary>
+        /// Exits the application, first by closing it and then by killing it.
+        /// </summary>
+        /// <param name="application">The application.</param>
+        /// <param name="log">The log object.</param>
+        public static void ExitApplication(Application application, Log log)
         {
             if (application != null)
             {
-                Log.Info("Closing application.");
+                log.Info("Closing application.");
                 application.Close();
 
                 application.Process.WaitForExit(Constants.ShutdownWaitTimeInMilliSeconds());

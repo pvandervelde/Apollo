@@ -1,20 +1,30 @@
-using System.Globalization;
+//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
 using System.Linq;
 using System.Windows.Automation;
 using Apollo.UI.Explorer;
 using TestStack.White;
-using TestStack.White.Factory;
 using TestStack.White.UIItems;
 using TestStack.White.UIItems.Finders;
-using TestStack.White.UIItems.MenuItems;
 using TestStack.White.UIItems.TabItems;
-using TestStack.White.UIItems.WindowItems;
 using TestStack.White.UIItems.WindowStripControls;
 
 namespace Test.UI.Explorer.Controls
 {
-    public static class TabProxies
+    /// <summary>
+    /// Provides helper methods for dealing with tab controls.
+    /// </summary>
+    internal static class TabProxies
     {
+        /// <summary>
+        /// Returns the tab control in the main window of the application.
+        /// </summary>
+        /// <param name="application">The application.</param>
+        /// <returns>The tab control in the main window of the application.</returns>
         public static Tab GetMainTab(Application application)
         {
             var mainWindow = DialogProxies.MainWindow(application);
@@ -25,24 +35,34 @@ namespace Test.UI.Explorer.Controls
             return tab;
         }
 
+        /// <summary>
+        /// Returns the the start page tab item for the application.
+        /// </summary>
+        /// <param name="application">The application.</param>
+        /// <returns>The start page tab item.</returns>
         public static ITabPage GetStartPageTabItem(Application application)
         {
             var tab = GetMainTab(application);
-            var startPage = tab.Pages
-                .Where(p => string.Equals(WelcomeViewAutomationIds.Header, p.Id))
-                .FirstOrDefault();
+            var startPage = tab.Pages.FirstOrDefault(p => string.Equals(WelcomeViewAutomationIds.Header, p.Id));
             return startPage;
         }
 
+        /// <summary>
+        /// Returns the project page tab item for the application.
+        /// </summary>
+        /// <param name="application">The application.</param>
+        /// <returns>The project page tab item.</returns>
         public static ITabPage GetProjectPageTabItem(Application application)
         {
             var tab = GetMainTab(application);
-            var projectPage = tab.Pages
-                .Where(p => string.Equals(ProjectViewAutomationIds.Header, p.Id))
-                .FirstOrDefault();
+            var projectPage = tab.Pages.FirstOrDefault(p => string.Equals(ProjectViewAutomationIds.Header, p.Id));
             return projectPage;
         }
 
+        /// <summary>
+        /// Opens the project page tab via the start page 'New project' button.
+        /// </summary>
+        /// <param name="application">The application.</param>
         public static void OpenProjectPageViaStartPageButton(Application application)
         {
             var startPage = GetStartPageTabItem(application);
@@ -54,6 +74,10 @@ namespace Test.UI.Explorer.Controls
             newProjectButton.Click();
         }
 
+        /// <summary>
+        /// Closes the project tab item via the close button on the tab item.
+        /// </summary>
+        /// <param name="application">The application.</param>
         public static void CloseProjectPageTab(Application application)
         {
             var projectPage = GetProjectPageTabItem(application);
@@ -65,6 +89,10 @@ namespace Test.UI.Explorer.Controls
             closeTabButton.Click();
         }
 
+        /// <summary>
+        /// Closes the start page tab item via the close button on the tab item.
+        /// </summary>
+        /// <param name="application">The application.</param>
         public static void CloseStartPageTab(Application application)
         {
             var startPage = GetStartPageTabItem(application);
@@ -75,7 +103,11 @@ namespace Test.UI.Explorer.Controls
             var closeTabButton = (Button)startPage.Get(closeTabSearchCriteria);
             closeTabButton.Click();
         }
-
+        
+        /// <summary>
+        /// Switches to the project tab item via the menu on the tab control.
+        /// </summary>
+        /// <param name="application">The application.</param>
         public static void SwitchToProjectPageViaTabMenu(Application application)
         {
             var mainWindow = DialogProxies.MainWindow(application);
@@ -91,6 +123,10 @@ namespace Test.UI.Explorer.Controls
             projectViewMenu.Click();
         }
 
+        /// <summary>
+        /// Switches to the start page tab item via the menu on the tab control.
+        /// </summary>
+        /// <param name="application">The application.</param>
         public static void SwitchToStartPageViaTabMenu(Application application)
         {
             var mainWindow = DialogProxies.MainWindow(application);

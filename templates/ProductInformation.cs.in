@@ -29,5 +29,10 @@ namespace Apollo.Internals
         /// The marketing name of the product of which the current assembly is part.
         /// </summary>
         public const string ProductName = "${ProductName}";
+
+        /// <summary>
+        /// The name of the path in the file system related to the product name.
+        /// </summary>
+        public const string ProductPathName = "${ProductPathName}";
     }
 }

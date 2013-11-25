@@ -1,17 +1,28 @@
-//-----------------------------------------------------------------------
-// <copyright company="P. van der Velde">
-//     Copyright (c) P. van der Velde. All rights reserved.
-// </copyright>
-//-----------------------------------------------------------------------
-
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Castle.Core.Logging;
 using TestStack.White.Configuration;
 
 namespace Test.UI.Explorer
 {
-    public static class Initialize
+    class Program
     {
-        public static void InitializeWhite()
+        static void Main(string[] args)
+        {
+            InitializeWhite();
+
+            // Initialize the container
+            var container = DependencyInjection.ToContainer();
+
+            // Select the type of test to execute
+            // Initialize the correct verifier
+            // Execute
+        }
+
+        internal static void InitializeWhite()
         {
             // Set the search depth, we won't go more than two levels down in controls.
             CoreAppXmlConfiguration.Instance.RawElementBasedSearch = true;
@@ -22,4 +33,3 @@ namespace Test.UI.Explorer
         }
     }
 }
-
