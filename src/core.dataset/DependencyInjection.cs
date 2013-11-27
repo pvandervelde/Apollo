@@ -223,10 +223,7 @@ namespace Apollo.Core.Dataset
                         var storage = c.Resolve<IStoreHistoryMarkers>();
                         return new MarkHistoryVertexProcessor(
                             c.Resolve<ITimeline>(),
-                            m => 
-                            {
-                                storage.Add(m);
-                            });
+                            storage.Add);
                     })
                 .As<IProcesExecutableScheduleVertices>();
 
@@ -244,13 +241,10 @@ namespace Apollo.Core.Dataset
                         var ctx = c.Resolve<IComponentContext>();
                         return new ScheduleDistributor(
                             c.Resolve<IStoreSchedules>(),
-                            (s, id, i) =>
-                            {
-                                return ctx.Resolve<IExecuteSchedules>(
-                                    new TypedParameter(typeof(ISchedule), s),
-                                    new TypedParameter(typeof(ScheduleId), id),
-                                    new TypedParameter(typeof(ScheduleExecutionInfo), i));
-                            });
+                            (s, id, i) => ctx.Resolve<IExecuteSchedules>(
+                                new TypedParameter(typeof(ISchedule), s),
+                                new TypedParameter(typeof(ScheduleId), id),
+                                new TypedParameter(typeof(ScheduleExecutionInfo), i)));
                     })
                 .As<IDistributeScheduleExecutions>()
                 .SingleInstance();
