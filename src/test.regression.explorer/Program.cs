@@ -27,10 +27,31 @@ namespace Test.Regression.Explorer
         /// </summary>
         private const int UnhandledExceptionApplicationExitCode = 1;
 
+        /// <summary>
+        /// The maximum number of times we retry the test.
+        /// </summary>
+        private const int MaximumRetryCount = 3;
+
         static int Main(string[] args)
         {
             InitializeWhite();
 
+            int count = 0;
+            bool hasPassed = false;
+            while ((count < MaximumRetryCount) && (!hasPassed))
+            {
+                var result = RunTests();
+                hasPassed = result.Status == TestStatus.Passed;
+                count++;
+            }
+
+            Console.ReadLine();
+
+            return hasPassed ? NormalApplicationExitCode : UnhandledExceptionApplicationExitCode;
+        }
+
+        private static TestResult RunTests()
+        {
             // Initialize the container
             var container = DependencyInjection.Load();
 
@@ -42,10 +63,8 @@ namespace Test.Regression.Explorer
             var log = container.Resolve<Log>();
             verifier.Verify(log);
 
-            Console.ReadLine();
-
             var result = container.Resolve<TestResult>();
-            return result.Status == TestStatus.Passed ? NormalApplicationExitCode : UnhandledExceptionApplicationExitCode;
+            return result;
         }
 
         private static void InitializeWhite()
