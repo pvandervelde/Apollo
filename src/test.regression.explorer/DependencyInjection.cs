@@ -25,7 +25,7 @@ namespace Test.Regression.Explorer
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string DefaultInfoFileName = "test.regression.explorer.{0}.log";
+        private const string DefaultInfoFileName = "test.regression.explorer.log";
 
         private static void RegisterDiagnostics(ContainerBuilder builder)
         {
@@ -60,10 +60,7 @@ namespace Test.Regression.Explorer
             builder.Register(c => LoggerBuilder.ForFile(
                     Path.Combine(
                         Assembly.GetExecutingAssembly().LocalDirectoryPath(),
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            DefaultInfoFileName,
-                            Process.GetCurrentProcess().Id)),
+                        DefaultInfoFileName),
                     new DebugLogTemplate(
                         c.Resolve<IConfiguration>(),
                         () => DateTimeOffset.Now)))
