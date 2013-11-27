@@ -28,7 +28,6 @@ namespace Test.Regression.Explorer.UseCases
         public void Verify(Log testLog)
         {
             testLog.Info("Starting test ...");
-            var assert = new Assert(testLog);
 
             var applicationPath = ApplicationProxies.GetApolloExplorerPath(testLog);
             if (string.IsNullOrEmpty(applicationPath))
@@ -36,9 +35,32 @@ namespace Test.Regression.Explorer.UseCases
                 throw new RegressionTestFailedException("Could not find application path.");
             }
 
+            try
+            {
+                ExecuteTest(applicationPath, testLog, VerifyTabBehaviour);
+                ExecuteTest(applicationPath, testLog, VerifyWelcomeTab);
+                ExecuteTest(applicationPath, testLog, VerifyFileMenu);
+                ExecuteTest(applicationPath, testLog, VerifyEditMenu);
+                ExecuteTest(applicationPath, testLog, VerifyViewMenu);
+                ExecuteTest(applicationPath, testLog, VerifyRunMenu);
+                ExecuteTest(applicationPath, testLog, VerifyHelpMenu);
+            }
+            catch (Exception e)
+            {
+                testLog.Error(e.ToString());
+            }
+            finally
+            {
+                testLog.Info("Test finished");
+            }
+        }
+
+        private void ExecuteTest(string applicationPath, Log testLog, Action<Application, Log, Assert> testToExecute)
+        {
             var application = ApplicationProxies.StartApplication(applicationPath, testLog);
             try
             {
+                var assert = new Assert(testLog);
                 var text = string.Format(
                     CultureInfo.InvariantCulture,
                     "Started [{0}] - PID: [{1}]",
@@ -46,19 +68,7 @@ namespace Test.Regression.Explorer.UseCases
                     application.Process.Id);
                 testLog.Info(text);
 
-                VerifyTabBehaviour(application, testLog, assert);
-
-                VerifyWelcomeTab(application, testLog, assert);
-
-                VerifyFileMenu(application, testLog, assert);
-
-                VerifyEditMenu(application, testLog, assert);
-
-                VerifyViewMenu(application, testLog, assert);
-
-                VerifyRunMenu(application, testLog, assert);
-
-                VerifyHelpMenu(application, testLog, assert);
+                testToExecute(application, testLog, assert);
 
                 MenuProxies.CloseApplicationViaFileExitMenuItem(application);
                 if (application.HasExited)
@@ -76,8 +86,6 @@ namespace Test.Regression.Explorer.UseCases
                 {
                     ApplicationProxies.ExitApplication(application, testLog);
                 }
-
-                testLog.Info("Test finished");
             }
         }
 
