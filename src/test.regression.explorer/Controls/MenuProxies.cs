@@ -11,7 +11,7 @@ using TestStack.White.UIItems.Finders;
 using TestStack.White.UIItems.MenuItems;
 using TestStack.White.UIItems.WindowStripControls;
 
-namespace Test.UI.Explorer.Controls
+namespace Test.Regression.Explorer.Controls
 {
     /// <summary>
     /// Provides helper methods for dealing with menus.

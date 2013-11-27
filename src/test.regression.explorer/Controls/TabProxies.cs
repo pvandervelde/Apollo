@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using System.Windows.Automation;
 using Apollo.UI.Explorer;
@@ -13,7 +14,7 @@ using TestStack.White.UIItems.Finders;
 using TestStack.White.UIItems.TabItems;
 using TestStack.White.UIItems.WindowStripControls;
 
-namespace Test.UI.Explorer.Controls
+namespace Test.Regression.Explorer.Controls
 {
     /// <summary>
     /// Provides helper methods for dealing with tab controls.
@@ -118,7 +119,7 @@ namespace Test.UI.Explorer.Controls
             var menu = (MenuBar)mainWindow.Get(tabMenuSearchCriteria);
 
             var topLevelMenuSearchCriteria = SearchCriteria.ByText(string.Empty);
-            var projectViewSearchCriteria = SearchCriteria.ByAutomationId(ProjectViewAutomationIds.Header);
+            var projectViewSearchCriteria = SearchCriteria.ByText("Project");
             var projectViewMenu = menu.MenuItemBy(topLevelMenuSearchCriteria, projectViewSearchCriteria);
             projectViewMenu.Click();
         }
@@ -135,12 +136,11 @@ namespace Test.UI.Explorer.Controls
                 .ByAutomationId(TabAutomationIds.TabItems)
                 .AndControlType(ControlType.Menu);
             var menu = (MenuBar)mainWindow.Get(tabMenuSearchCriteria);
-
+            
             var topLevelMenuSearchCriteria = SearchCriteria.ByText(string.Empty);
-            var welcomeViewSearchCriteria = SearchCriteria.ByAutomationId(WelcomeViewAutomationIds.Header);
+            var welcomeViewSearchCriteria = SearchCriteria.ByText("Start page");
             var welcomeViewMenu = menu.MenuItemBy(topLevelMenuSearchCriteria, welcomeViewSearchCriteria);
             welcomeViewMenu.Click();
         }
     }
 }
-

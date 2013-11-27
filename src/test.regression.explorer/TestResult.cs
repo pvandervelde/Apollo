@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 
-namespace Test.UI.Explorer
+namespace Test.Regression.Explorer
 {
     /// <summary>
     /// Stores the result of a test.

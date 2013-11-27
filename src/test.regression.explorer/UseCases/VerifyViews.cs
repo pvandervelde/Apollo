@@ -1,14 +1,20 @@
+//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
 using System;
 using System.Globalization;
 using System.Reflection;
 using Apollo.Internals;
 using Apollo.UI.Explorer;
-using Test.UI.Explorer.Controls;
+using Test.Regression.Explorer.Controls;
 using TestStack.White;
 using TestStack.White.UIItems;
 using TestStack.White.UIItems.Finders;
 
-namespace Test.UI.Explorer.UseCases
+namespace Test.Regression.Explorer.UseCases
 {
     /// <summary>
     /// Verifies that the controls in the different views of the application work as they are supposed to.
@@ -309,5 +315,3 @@ namespace Test.UI.Explorer.UseCases
         }
     }
 }
-
-

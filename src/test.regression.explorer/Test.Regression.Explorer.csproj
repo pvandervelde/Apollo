@@ -53,7 +53,7 @@
     <Reference Include="Mono.Cecil.Rocks">
       <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
     </Reference>
-    <Reference Include="NLog">
+    <Reference Include="NLog, Version=2.0.1.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NLog.2.0.1.2\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="Nuclei">
@@ -62,22 +62,23 @@
     <Reference Include="Nuclei.Build">
       <HintPath>..\..\packages\Nuclei.Build.0.6.5.0\lib\net45\Nuclei.Build.dll</HintPath>
     </Reference>
-    <Reference Include="Nuclei.Configuration">
-      <HintPath>..\..\packages\Nuclei.Configuration.0.6.7.0\lib\net45\Nuclei.Configuration.dll</HintPath>
+    <Reference Include="Nuclei.Configuration, Version=0.6.5.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Nuclei.Configuration.0.6.5.0\lib\net45\Nuclei.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="Nuclei.Diagnostics">
+    <Reference Include="Nuclei.Diagnostics, Version=0.6.5.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Nuclei.Diagnostics.0.6.5.0\lib\net45\Nuclei.Diagnostics.dll</HintPath>
     </Reference>
-    <Reference Include="QuickGraph">
+    <Reference Include="QuickGraph, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
       <HintPath>..\..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.dll</HintPath>
     </Reference>
-    <Reference Include="QuickGraph.Data">
+    <Reference Include="QuickGraph.Data, Version=3.6.61114.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.Data.dll</HintPath>
     </Reference>
-    <Reference Include="QuickGraph.Graphviz">
+    <Reference Include="QuickGraph.Graphviz, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
       <HintPath>..\..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.Graphviz.dll</HintPath>
     </Reference>
-    <Reference Include="QuickGraph.Serialization">
+    <Reference Include="QuickGraph.Serialization, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -125,7 +126,7 @@
     <Compile Include="DependencyInjection.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="Mono.Options\Options.cs">
-        <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="..\..\build\temp\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
+    <Compile Include="RegressionApplicationConstants.cs" />
     <Compile Include="RegressionTestFailedException.cs" />
     <Compile Include="IUserInterfaceVerifier.cs" />
     <Compile Include="TestResult.cs" />

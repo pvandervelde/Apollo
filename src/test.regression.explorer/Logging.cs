@@ -9,7 +9,7 @@ using System.Globalization;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 
-namespace Test.UI.Explorer
+namespace Test.Regression.Explorer
 {
     /// <summary>
     /// Provides logging capabilities for the user interface tests.
@@ -67,7 +67,7 @@ namespace Test.UI.Explorer
         /// <summary>
         /// Logs an error message.
         /// </summary>
-        /// <param name="message">The message</param>
+        /// <param name="message">The message.</param>
         public void Error(string message)
         {
             m_Diagnostics.Log(

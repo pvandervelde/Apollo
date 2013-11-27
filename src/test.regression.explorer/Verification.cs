@@ -7,7 +7,7 @@
 using System;
 using System.Globalization;
 
-namespace Test.UI.Explorer
+namespace Test.Regression.Explorer
 {
     /// <summary>
     /// Defines methods for testing conditions and recording failures.
@@ -40,7 +40,7 @@ namespace Test.UI.Explorer
         /// </summary>
         /// <param name="expected">The expected text.</param>
         /// <param name="actual">The actual text.</param>
-        /// <param name="location">A description of where the comparision took place.</param>
+        /// <param name="location">A description of where the comparison took place.</param>
         public void AreEqual(string expected, string actual, string location)
         {
             if (!string.Equals(expected, actual))
@@ -59,7 +59,7 @@ namespace Test.UI.Explorer
         /// Verifies that the condition that is <see langword="false" />
         /// </summary>
         /// <param name="condition">The condition that should be <see langword="false" /></param>
-        /// <param name="location">A description of where the comparision took place.</param>
+        /// <param name="location">A description of where the comparison took place.</param>
         public void IsFalse(bool condition, string location)
         {
             if (condition)
@@ -76,7 +76,7 @@ namespace Test.UI.Explorer
         /// Verifies that the condition that is <see langword="true" />
         /// </summary>
         /// <param name="condition">The condition that should be <see langword="true" /></param>
-        /// <param name="location">A description of where the comparision took place.</param>
+        /// <param name="location">A description of where the comparison took place.</param>
         public void IsTrue(bool condition, string location)
         {
             if (!condition)
@@ -93,7 +93,7 @@ namespace Test.UI.Explorer
         /// Verifies that the reference that is not <see langword="null" />
         /// </summary>
         /// <param name="reference">The reference that should not be <see langword="null" /></param>
-        /// <param name="location">A description of where the comparision took place.</param>
+        /// <param name="location">A description of where the comparison took place.</param>
         public void IsNotNull(object reference, string location)
         {
             if (ReferenceEquals(reference, null))
@@ -110,7 +110,7 @@ namespace Test.UI.Explorer
         /// Verifies that the reference that is <see langword="null" />
         /// </summary>
         /// <param name="reference">The reference that should be <see langword="null" /></param>
-        /// <param name="location">A description of where the comparision took place.</param>
+        /// <param name="location">A description of where the comparison took place.</param>
         public void IsNull(object reference, string location)
         {
             if (!ReferenceEquals(reference, null))
@@ -125,4 +125,3 @@ namespace Test.UI.Explorer
         }
     }
 }
-

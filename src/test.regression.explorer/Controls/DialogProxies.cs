@@ -8,7 +8,7 @@ using TestStack.White;
 using TestStack.White.Factory;
 using TestStack.White.UIItems.WindowItems;
 
-namespace Test.UI.Explorer.Controls
+namespace Test.Regression.Explorer.Controls
 {
     /// <summary>
     /// Provides helper methods for dealing with dialogs.
@@ -43,4 +43,3 @@ namespace Test.UI.Explorer.Controls
         }
     }
 }
-

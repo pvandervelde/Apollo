@@ -7,23 +7,18 @@
 namespace Test.Regression.Explorer
 {
     /// <summary>
-    /// Indicates the final status of the test, either pass or fail.
+    /// Defines the constants for the regression test application.
     /// </summary>
-    internal enum TestStatus
+    internal static class RegressionApplicationConstants
     {
         /// <summary>
-        /// The test has no result.
+        /// The name of the configuration section that describes the configuration of the application.
         /// </summary>
-        None,
+        public const string ConfigurationSectionApplicationSettings = "regressiontest";
 
         /// <summary>
-        /// The test has failed.
+        /// The prefix used for each log message.
         /// </summary>
-        Failed,
-        
-        /// <summary>
-        /// The test has passed.
-        /// </summary>
-        Passed,
+        public const string LogPrefix = "Test.Regression";
     }
 }

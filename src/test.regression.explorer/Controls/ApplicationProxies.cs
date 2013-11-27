@@ -1,3 +1,10 @@
+//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -6,7 +13,7 @@ using Apollo.Internals;
 using Microsoft.Win32;
 using TestStack.White;
 
-namespace Test.UI.Explorer.Controls
+namespace Test.Regression.Explorer.Controls
 {
     /// <summary>
     /// Defines methods for working with an application.
@@ -129,16 +136,15 @@ namespace Test.UI.Explorer.Controls
             if (!string.IsNullOrEmpty(buildDirectory))
             {
                 // Move down the directory structure to find the final file
-                var binDirectory = Path.Combine(buildDirectory, "bin");
-                var explorerFiles = Directory.GetFiles(binDirectory, Constants.GetApolloExplorerFileName(), SearchOption.AllDirectories);
-                log.Info(
+                var explorerFiles = Directory.GetFiles(buildDirectory, Constants.GetApolloExplorerFileName(), SearchOption.AllDirectories);
+                if (explorerFiles.Length == 1)
+                {
+                    log.Info(
                     string.Format(
                         CultureInfo.InvariantCulture,
                         "Found apollo explorer at [{0}].",
-                        string.Join("; ", explorerFiles)));
+                        buildDirectory));
 
-                if (explorerFiles.Length == 1)
-                {
                     return Path.GetDirectoryName(explorerFiles[0]);
                 }
             }
@@ -186,15 +192,26 @@ namespace Test.UI.Explorer.Controls
             if (application != null)
             {
                 log.Info("Closing application.");
-                application.Close();
-
-                application.Process.WaitForExit(Constants.ShutdownWaitTimeInMilliSeconds());
-                if (!application.Process.HasExited)
+                try
                 {
-                    application.Kill();
+                    application.Close();
+                    if (application.Process.HasExited)
+                    {
+                        return;
+                    }
+
+                    application.Process.WaitForExit(Constants.ShutdownWaitTimeInMilliSeconds());
+                    if (!application.Process.HasExited)
+                    {
+                        application.Kill();
+                    }
+                }
+                catch (InvalidOperationException)
+                {
+                    // Do nothing because the cause for this exception is when there is no process
+                    // associated with the application.Process object.
                 }
             }
         }
     }
 }
-

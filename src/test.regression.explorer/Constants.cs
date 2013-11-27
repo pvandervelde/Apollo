@@ -7,7 +7,7 @@
 using System.Reflection;
 using Nuclei;
 
-namespace Test.UI.Explorer
+namespace Test.Regression.Explorer
 {
     /// <summary>
     /// Defines the constant values for the application.
@@ -36,4 +36,3 @@ namespace Test.UI.Explorer
         }
     }
 }
-

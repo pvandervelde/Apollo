@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Test.UI.Explorer.UseCases
+namespace Test.Regression.Explorer.UseCases
 {
     /// <summary>
     /// Verifies that it is possible to create a new project and
