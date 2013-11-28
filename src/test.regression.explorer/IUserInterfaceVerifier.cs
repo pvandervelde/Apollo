@@ -4,6 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Collections.Generic;
+
 namespace Test.Regression.Explorer
 {
     /// <summary>
@@ -12,9 +14,9 @@ namespace Test.Regression.Explorer
     internal interface IUserInterfaceVerifier
     {
         /// <summary>
-        /// Verifies a part of the user interface.
+        /// Returns a collection of tests that should be executed.
         /// </summary>
-        /// <param name="testLog">The log object used for the current test.</param>
-        void Verify(Log testLog);
+        /// <returns>The list of test cases that should be executed for the current verifier.</returns>
+        IEnumerable<TestCase> TestsToExecute();
     }
 }

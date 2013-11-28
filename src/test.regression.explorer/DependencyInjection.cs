@@ -6,8 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Reflection;
 using Autofac;
@@ -78,15 +76,7 @@ namespace Test.Regression.Explorer
 
         private static void RegisterLog(ContainerBuilder builder)
         {
-            builder.Register(c => new Log(
-                c.Resolve<TestResult>(),
-                c.Resolve<SystemDiagnostics>()));
-        }
-
-        private static void RegisterTestResult(ContainerBuilder builder)
-        {
-            builder.Register(c => new TestResult())
-                .SingleInstance();
+            builder.Register(c => new Log(c.Resolve<SystemDiagnostics>()));
         }
 
         private static void RegisterTests(ContainerBuilder builder)
@@ -115,7 +105,6 @@ namespace Test.Regression.Explorer
                 RegisterDiagnostics(builder);
                 RegisterTests(builder);
                 RegisterLog(builder);
-                RegisterTestResult(builder);
             }
 
             result = builder.Build();

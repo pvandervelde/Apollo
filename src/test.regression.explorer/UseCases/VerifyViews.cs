@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using Apollo.Internals;
@@ -22,71 +23,18 @@ namespace Test.Regression.Explorer.UseCases
     internal class VerifyViews : IUserInterfaceVerifier
     {
         /// <summary>
-        /// Verifies a part of the user interface.
+        /// Returns a collection of tests that should be executed.
         /// </summary>
-        /// <param name="testLog">The log object used for the current test.</param>
-        public void Verify(Log testLog)
+        /// <returns>The list of test cases that should be executed for the current verifier.</returns>
+        public IEnumerable<TestCase> TestsToExecute()
         {
-            testLog.Info("Starting test ...");
-
-            var applicationPath = ApplicationProxies.GetApolloExplorerPath(testLog);
-            if (string.IsNullOrEmpty(applicationPath))
-            {
-                throw new RegressionTestFailedException("Could not find application path.");
-            }
-
-            try
-            {
-                ExecuteTest(applicationPath, testLog, VerifyTabBehaviour);
-                ExecuteTest(applicationPath, testLog, VerifyWelcomeTab);
-                ExecuteTest(applicationPath, testLog, VerifyFileMenu);
-                ExecuteTest(applicationPath, testLog, VerifyEditMenu);
-                ExecuteTest(applicationPath, testLog, VerifyViewMenu);
-                ExecuteTest(applicationPath, testLog, VerifyRunMenu);
-                ExecuteTest(applicationPath, testLog, VerifyHelpMenu);
-            }
-            catch (Exception e)
-            {
-                testLog.Error(e.ToString());
-            }
-            finally
-            {
-                testLog.Info("Test finished");
-            }
-        }
-
-        private void ExecuteTest(string applicationPath, Log testLog, Action<Application, Log, Assert> testToExecute)
-        {
-            var application = ApplicationProxies.StartApplication(applicationPath, testLog);
-            try
-            {
-                var assert = new Assert(testLog);
-                var text = string.Format(
-                    CultureInfo.InvariantCulture,
-                    "Started [{0}] - PID: [{1}]",
-                    application.Name,
-                    application.Process.Id);
-                testLog.Info(text);
-
-                testToExecute(application, testLog, assert);
-
-                MenuProxies.CloseApplicationViaFileExitMenuItem(application);
-                if (application.HasExited)
+            return new List<TestCase>
                 {
-                    application = null;
-                }
-            }
-            catch (Exception e)
-            {
-                testLog.Error(e.ToString());
-            }
-            finally
-            {
-                if (application != null)
-                {
-                    ApplicationProxies.ExitApplication(application, testLog);
-                }
-            }
+                    new TestCase("Tab behaviour", VerifyTabBehaviour),
+                    new TestCase("Welcome tab", VerifyWelcomeTab),
+                    new TestCase("View menu", VerifyViewMenu),
+                    new TestCase("Help menu", VerifyHelpMenu),
+                };
         }
 
         /// <summary>
@@ -94,9 +42,11 @@ namespace Test.Regression.Explorer.UseCases
         /// </summary>
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
-        /// <param name="assert">The object used to verify the test conditions.</param>
-        private void VerifyTabBehaviour(Application application, Log log, Assert assert)
+        /// <returns>The test result for the current test case.</returns>
+        private TestResult VerifyTabBehaviour(Application application, Log log)
         {
+            var result = new TestResult();
+            var assert = new Assert(result, log);
             var startPage = TabProxies.GetStartPageTabItem(application);
             if (startPage == null)
             {
@@ -129,6 +79,8 @@ namespace Test.Regression.Explorer.UseCases
             assert.IsFalse(projectPage.IsSelected, "Tabs - Project is not selected");
 
             TabProxies.CloseProjectPageTab(application);
+
+            return result;
         }
 
         /// <summary>
@@ -136,9 +88,11 @@ namespace Test.Regression.Explorer.UseCases
         /// </summary>
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
-        /// <param name="assert">The object used to verify the test conditions.</param>
-        public void VerifyWelcomeTab(Application application, Log log, Assert assert)
+        /// <returns>The test result for the current test case.</returns>
+        public TestResult VerifyWelcomeTab(Application application, Log log)
         {
+            var result = new TestResult();
+            var assert = new Assert(result, log);
             var startPage = TabProxies.GetStartPageTabItem(application);
             if (!startPage.IsSelected)
             {
@@ -189,6 +143,8 @@ namespace Test.Regression.Explorer.UseCases
 
             // Close the project via the close button on the tab page
             TabProxies.CloseProjectPageTab(application);
+
+            return result;
         }
 
         /// <summary>
@@ -197,13 +153,15 @@ namespace Test.Regression.Explorer.UseCases
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
         /// <param name="assert">The object used to verify the test conditions.</param>
-        public void VerifyFileMenu(Application application, Log log, Assert assert)
+        /// <returns>The test result for the current test case.</returns>
+        public TestResult VerifyFileMenu(Application application, Log log, Assert assert)
         {
             // If a project is open, then close it
 
             // New (check that start page has closed, project page has opened, and close has been enabled)
             // Open
             // Exit
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -212,10 +170,12 @@ namespace Test.Regression.Explorer.UseCases
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
         /// <param name="assert">The object used to verify the test conditions.</param>
-        public void VerifyEditMenu(Application application, Log log, Assert assert)
+        /// <returns>The test result for the current test case.</returns>
+        public TestResult VerifyEditMenu(Application application, Log log, Assert assert)
         {
             // Undo
             // Redo
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -223,9 +183,11 @@ namespace Test.Regression.Explorer.UseCases
         /// </summary>
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
-        /// <param name="assert">The object used to verify the test conditions.</param>
-        public void VerifyViewMenu(Application application, Log log, Assert assert)
+        /// <returns>The test result for the current test case.</returns>
+        public TestResult VerifyViewMenu(Application application, Log log)
         {
+            var result = new TestResult();
+            var assert = new Assert(result, log);
             var startPage = TabProxies.GetStartPageTabItem(application);
             if (startPage != null)
             {
@@ -246,6 +208,7 @@ namespace Test.Regression.Explorer.UseCases
 
             // Open new project
             // Check that project enables
+            return result;
         }
 
         /// <summary>
@@ -254,9 +217,11 @@ namespace Test.Regression.Explorer.UseCases
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
         /// <param name="assert">The object used to verify the test conditions.</param>
-        public void VerifyRunMenu(Application application, Log log, Assert assert)
+        /// <returns>The test result for the current test case.</returns>
+        public TestResult VerifyRunMenu(Application application, Log log, Assert assert)
         {
             // Do nothing for now
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -264,11 +229,16 @@ namespace Test.Regression.Explorer.UseCases
         /// </summary>
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
-        /// <param name="assert">The object used to verify the test conditions.</param>
-        public void VerifyHelpMenu(Application application, Log log, Assert assert)
+        /// <returns>The test result for the current test case.</returns>
+        public TestResult VerifyHelpMenu(Application application, Log log)
         {
+            var result = new TestResult();
+            var assert = new Assert(result, log);
+
             // VerifyHelpItem();
             VerifyAboutDialog(application, log, assert);
+
+            return result;
         }
 
         /// <summary>

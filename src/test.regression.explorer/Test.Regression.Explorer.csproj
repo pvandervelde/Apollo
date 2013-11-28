@@ -124,6 +124,7 @@
     <Compile Include="Controls\MenuProxies.cs" />
     <Compile Include="Controls\TabProxies.cs" />
     <Compile Include="DependencyInjection.cs" />
+    <Compile Include="TestCase.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="Mono.Options\Options.cs">
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
@@ -142,6 +143,7 @@
     <Compile Include="RegressionApplicationConstants.cs" />
     <Compile Include="RegressionTestFailedException.cs" />
     <Compile Include="IUserInterfaceVerifier.cs" />
+    <Compile Include="TestContext.cs" />
     <Compile Include="TestResult.cs" />
     <Compile Include="TestStatus.cs" />
     <Compile Include="UseCases\NewProject.cs" />

@@ -22,29 +22,18 @@ namespace Test.Regression.Explorer
         private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
-        /// The test result for the current test.
-        /// </summary>
-        private readonly TestResult m_Result;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Log"/> class.
         /// </summary>
-        /// <param name="result">The test result for the current test.</param>
         /// <param name="diagnostics">The object that provides the diagnostics methods.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="result"/> is <see langword="null" />.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
         /// </exception>
-        public Log(TestResult result, SystemDiagnostics diagnostics)
+        public Log(SystemDiagnostics diagnostics)
         {
             {
-                Lokad.Enforce.Argument(() => result);
                 Lokad.Enforce.Argument(() => diagnostics);
             }
 
-            m_Result = result;
             m_Diagnostics = diagnostics;
         }
 
@@ -61,7 +50,6 @@ namespace Test.Regression.Explorer
                     "{0} INFO - {1}",
                     DateTimeOffset.Now,
                     message));
-            Console.WriteLine(message);
         }
 
         /// <summary>
@@ -77,8 +65,6 @@ namespace Test.Regression.Explorer
                     "{0} ERROR - {1}",
                     DateTimeOffset.Now,
                     message));
-            Console.Error.WriteLine(message);
-            m_Result.AddError(message);
         }
     }
 }

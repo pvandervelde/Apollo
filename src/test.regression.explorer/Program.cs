@@ -6,8 +6,10 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Autofac;
 using Castle.Core.Logging;
+using Test.Regression.Explorer.Controls;
 using Test.Regression.Explorer.UseCases;
 using TestStack.White.Configuration;
 
@@ -36,35 +38,38 @@ namespace Test.Regression.Explorer
         {
             InitializeWhite();
 
-            int count = 0;
-            bool hasPassed = false;
-            while ((count < MaximumRetryCount) && (!hasPassed))
+            // Initialize the container
+            var container = DependencyInjection.Load();
+
+            var log = container.Resolve<Log>();
+            var globalResult = new TestResult();
+            
+            var applicationPath = ApplicationProxies.GetApolloExplorerPath(log);
+            if (string.IsNullOrEmpty(applicationPath))
             {
-                var result = RunTests();
-                hasPassed = result.Status == TestStatus.Passed;
-                count++;
+                throw new RegressionTestFailedException("Could not find application path.");
+            }
+
+            // Select the type of test to execute
+            var verifier = container.ResolveKeyed<IUserInterfaceVerifier>(typeof(VerifyViews));
+            foreach (var testCase in verifier.TestsToExecute())
+            {
+                var localResult = ExecuteTestCase(testCase, log, applicationPath);
+                foreach (var error in localResult.Errors)
+                {
+                    globalResult.AddError(error);
+                }
+            }
+
+            // Write a report with all the errors.
+            foreach (var error in globalResult.Errors)
+            {
+                Console.Error.WriteLine(error);
             }
 
             Console.ReadLine();
 
-            return hasPassed ? NormalApplicationExitCode : UnhandledExceptionApplicationExitCode;
-        }
-
-        private static TestResult RunTests()
-        {
-            // Initialize the container
-            var container = DependencyInjection.Load();
-
-            // Select the type of test to execute
-            // Initialize the correct verifier
-            var verifier = container.ResolveKeyed<IUserInterfaceVerifier>(typeof(VerifyViews));
-
-            // Execute
-            var log = container.Resolve<Log>();
-            verifier.Verify(log);
-
-            var result = container.Resolve<TestResult>();
-            return result;
+            return globalResult.Status == TestStatus.Passed ? NormalApplicationExitCode : UnhandledExceptionApplicationExitCode;
         }
 
         private static void InitializeWhite()
@@ -75,6 +80,71 @@ namespace Test.Regression.Explorer
 
             // Don't log anything for the moment.
             CoreAppXmlConfiguration.Instance.LoggerFactory = new WhiteDefaultLoggerFactory(LoggerLevel.Error);
+        }
+
+        private static TestResult ExecuteTestCase(TestCase testCase, Log testLog, string applicationPath)
+        {
+            var count = 0;
+            var hasPassed = false;
+            var result = new TestResult();
+            while ((count < MaximumRetryCount) && (!hasPassed))
+            {
+                testLog.Info(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Executing test case: {0}. Iteration: {1}",
+                        testCase.Name,
+                        count + 1));
+                try
+                {
+                    using (var context = new TestContext(applicationPath, testLog))
+                    {
+                        TestResult local;
+                        try
+                        {
+                            local = testCase.Test(context.Application, testLog);
+                            foreach (var error in local.Errors)
+                            {
+                                result.AddError(error);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            testLog.Error(e.ToString());
+                            result.AddError(
+                                string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    "Error in test case: {0}. Error was: {1}",
+                                    testCase.Name,
+                                    e));
+                        }
+                        finally
+                        {
+                            testLog.Info(
+                                string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    "Completed test case: {0}. Result: {1}",
+                                    testCase.Name,
+                                    result.Status));
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    result.AddError(
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Test case failed for: {0}. Iteration: {1}. Error: {2}",
+                            testCase.Name,
+                            count + 1,
+                            e));
+                }
+
+                hasPassed = result.Status == TestStatus.Passed;
+                count++;
+            }
+
+            return result;
         }
     }
 }
