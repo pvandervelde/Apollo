@@ -8,6 +8,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
+using Apollo.Internals;
 using Apollo.UI.Explorer.Properties;
 using Apollo.UI.Wpf;
 using Apollo.UI.Wpf.Models;
@@ -105,7 +106,7 @@ namespace Apollo.UI.Explorer.Views.Welcome
         {
             get
             {
-                return Resources.Application_Name_NoFileOpen;
+                return ProductInformation.ProductName;
             }
         }
 
