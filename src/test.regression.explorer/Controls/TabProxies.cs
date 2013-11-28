@@ -4,7 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Linq;
 using System.Windows.Automation;
 using Apollo.UI.Explorer;
@@ -67,10 +66,14 @@ namespace Test.Regression.Explorer.Controls
         public static void OpenProjectPageViaStartPageButton(Application application)
         {
             var startPage = GetStartPageTabItem(application);
+            if (!startPage.IsSelected)
+            {
+                startPage.Select();
+            }
 
-            // New button
             var newProjectSearchCriteria = SearchCriteria
-                .ByAutomationId(WelcomeViewAutomationIds.NewProject);
+                .ByAutomationId(WelcomeViewAutomationIds.NewProject)
+                .AndControlType(ControlType.Button);
             var newProjectButton = (Button)startPage.Get(newProjectSearchCriteria);
             newProjectButton.Click();
         }
