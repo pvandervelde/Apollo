@@ -15,6 +15,11 @@ namespace Test.Regression.Explorer
     internal sealed class Assert
     {
         /// <summary>
+        /// The test result for the current test.
+        /// </summary>
+        private readonly TestResult m_Result;
+
+        /// <summary>
         /// The logger.
         /// </summary>
         private readonly Log m_Log;
@@ -22,16 +27,22 @@ namespace Test.Regression.Explorer
         /// <summary>
         /// Initializes a new instance of the <see cref="Assert"/> class.
         /// </summary>
+        /// <param name="result">The test result.</param>
         /// <param name="log">The logger.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="result"/> is <see langword="null" />.
+        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="log"/> is <see langword="null" />.
         /// </exception>
-        public Assert(Log log)
+        public Assert(TestResult result, Log log)
         {
             {
+                Lokad.Enforce.Argument(() => result);
                 Lokad.Enforce.Argument(() => log);
             }
 
+            m_Result = result;
             m_Log = log;
         }
 
@@ -45,13 +56,14 @@ namespace Test.Regression.Explorer
         {
             if (!string.Equals(expected, actual))
             {
-                m_Log.Error(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "{0} - Fail: Expected: {1}. Actual: {2}",
-                        location,
-                        expected,
-                        actual));
+                var message = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "{0} - Fail: Expected: {1}. Actual: {2}",
+                    location,
+                    expected,
+                    actual);
+                m_Log.Error(message);
+                m_Result.AddError(message);
             }
         }
 
@@ -64,11 +76,12 @@ namespace Test.Regression.Explorer
         {
             if (condition)
             {
-                m_Log.Error(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "{0} - Fail: Expected condition to be false, was true",
-                        location));
+                var message = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "{0} - Fail: Expected condition to be false, was true",
+                    location);
+                m_Log.Error(message);
+                m_Result.AddError(message);
             }
         }
 
@@ -81,11 +94,12 @@ namespace Test.Regression.Explorer
         {
             if (!condition)
             {
-                m_Log.Error(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "{0} - Fail: Expected condition to be true, was false",
-                        location));
+                var message = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "{0} - Fail: Expected condition to be true, was false",
+                    location);
+                m_Log.Error(message);
+                m_Result.AddError(message);
             }
         }
 
@@ -98,11 +112,12 @@ namespace Test.Regression.Explorer
         {
             if (ReferenceEquals(reference, null))
             {
-                m_Log.Error(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "{0} - Fail: Expected reference to not be NULL but was.",
-                        location));
+                var message = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "{0} - Fail: Expected reference to not be NULL but was.",
+                    location);
+                m_Log.Error(message);
+                m_Result.AddError(message);
             }
         }
 
@@ -115,12 +130,13 @@ namespace Test.Regression.Explorer
         {
             if (!ReferenceEquals(reference, null))
             {
-                m_Log.Error(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "{0} - Fail: Expected reference to be NULL but was: {1}",
-                        location,
-                        reference));
+                var message = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "{0} - Fail: Expected reference to be NULL but was: {1}",
+                    location,
+                    reference);
+                m_Log.Error(message);
+                m_Result.AddError(message);
             }
         }
     }
