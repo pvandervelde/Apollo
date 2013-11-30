@@ -57,18 +57,20 @@ namespace Apollo.Core.Dataset
 
             int functionReturnResult = -1;
 
-            var processor = new LogBasedExceptionProcessor(
+            using (var processor = new LogBasedExceptionProcessor(
                 LoggerBuilder.ForFile(
                     Path.Combine(new FileConstants(new ApplicationConstants()).LogPath(), DefaultErrorFileName),
-                    new DebugLogTemplate(new NullConfiguration(), () => DateTimeOffset.Now)));
-            var result = TopLevelExceptionGuard.RunGuarded(
+                    new DebugLogTemplate(new NullConfiguration(), () => DateTimeOffset.Now))))
+            {
+                var result = TopLevelExceptionGuard.RunGuarded(
                 () => functionReturnResult = RunApplication(args, new ApplicationContext()),
                 new ExceptionProcessor[]
                     {
                         processor.Process,
                     });
 
-            return (result == GuardResult.Failure) ? UnhandledExceptionApplicationExitCode : functionReturnResult;
+                return (result == GuardResult.Failure) ? UnhandledExceptionApplicationExitCode : functionReturnResult;
+            }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",

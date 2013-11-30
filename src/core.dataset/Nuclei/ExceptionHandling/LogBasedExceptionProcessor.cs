@@ -14,7 +14,7 @@ namespace Apollo.Core.Dataset.Nuclei.ExceptionHandling
     /// <summary>
     /// An exception processor that writes the exception out to an <see cref="ILogger"/> object.
     /// </summary>
-    internal sealed class LogBasedExceptionProcessor
+    internal sealed class LogBasedExceptionProcessor : IDisposable
     {
         /// <summary>
         /// The logger which is used to store the exception message.
