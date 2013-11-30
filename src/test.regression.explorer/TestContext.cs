@@ -47,7 +47,7 @@ namespace Test.Regression.Explorer
 
             m_Log = log;
             m_Application = ApplicationProxies.StartApplication(path, log);
-            if (Application.Process.HasExited)
+            if ((m_Application == null) || (m_Application.Process == null) || Application.Process.HasExited)
             {
                 throw new RegressionTestFailedException();
             }
@@ -80,8 +80,19 @@ namespace Test.Regression.Explorer
             {
                 MenuProxies.CloseApplicationViaFileExitMenuItem(m_Application);
                 m_Application.Process.WaitForExit(10000);
+            }
+            catch (Exception e)
+            {
+                m_Log.Error(
+                   string.Format(
+                       CultureInfo.InvariantCulture,
+                       "Failed to terminate application via the menu. Error was: {0}",
+                       e));
+            }
 
-                if (!m_Application.Process.HasExited)
+            try
+            {
+                if ((m_Application != null) && (m_Application.Process != null) && !m_Application.Process.HasExited)
                 {
                     ApplicationProxies.ExitApplication(m_Application, m_Log);
                 }

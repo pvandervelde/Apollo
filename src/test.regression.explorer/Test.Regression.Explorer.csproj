@@ -123,7 +123,9 @@
     <Compile Include="Controls\DialogProxies.cs" />
     <Compile Include="Controls\MenuProxies.cs" />
     <Compile Include="Controls\TabProxies.cs" />
+    <Compile Include="Controls\WelcomePageControlProxies.cs" />
     <Compile Include="DependencyInjection.cs" />
+    <Compile Include="Retry.cs" />
     <Compile Include="TestCase.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="Mono.Options\Options.cs">
@@ -143,6 +145,7 @@
     <Compile Include="RegressionApplicationConstants.cs" />
     <Compile Include="RegressionTestFailedException.cs" />
     <Compile Include="IUserInterfaceVerifier.cs" />
+    <Compile Include="TestConstants.cs" />
     <Compile Include="TestContext.cs" />
     <Compile Include="TestResult.cs" />
     <Compile Include="TestStatus.cs" />

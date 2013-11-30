@@ -160,6 +160,16 @@ namespace Test.Regression.Explorer.Controls
         /// <returns>The application.</returns>
         public static Application StartApplication(string applicationPath, Log log)
         {
+            if (string.IsNullOrEmpty(applicationPath))
+            {
+                return null;
+            }
+
+            if (!File.Exists(applicationPath))
+            {
+                return null;
+            }
+
             var processInfo = new ProcessStartInfo
             {
                 FileName = applicationPath,
@@ -210,6 +220,14 @@ namespace Test.Regression.Explorer.Controls
                 {
                     // Do nothing because the cause for this exception is when there is no process
                     // associated with the application.Process object.
+                }
+                catch (Exception e)
+                {
+                    log.Error(
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Error trying to terminate application. Error was: {0}",
+                            e));
                 }
             }
         }

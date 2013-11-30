@@ -29,11 +29,6 @@ namespace Test.Regression.Explorer
         /// </summary>
         private const int UnhandledExceptionApplicationExitCode = 1;
 
-        /// <summary>
-        /// The maximum number of times we retry the test.
-        /// </summary>
-        private const int MaximumRetryCount = 3;
-
         static int Main(string[] args)
         {
             InitializeWhite();
@@ -87,7 +82,7 @@ namespace Test.Regression.Explorer
             var count = 0;
             var hasPassed = false;
             var result = new TestResult();
-            while ((count < MaximumRetryCount) && (!hasPassed))
+            while ((count < TestConstants.MaximumRetryCount) && (!hasPassed))
             {
                 testLog.Info(
                     string.Format(

@@ -22,10 +22,14 @@ namespace Test.Regression.Explorer.Controls
         /// <returns>The main window of the application.</returns>
         public static Window MainWindow(Application application)
         {
+            if ((application == null) || application.HasExited)
+            {
+                throw new RegressionTestFailedException();
+            }
+
             // Note that the windows can't be found through an Automation ID for some reason, hence
             // using the title of the window.
-            var window = application.GetWindow("Project explorer", InitializeOption.NoCache);
-            return window;
+            return Retry.Times(() => application.GetWindow("Project explorer", InitializeOption.NoCache));
         }
 
         /// <summary>
@@ -35,11 +39,20 @@ namespace Test.Regression.Explorer.Controls
         /// <returns>The about window of the application.</returns>
         public static Window AboutWindow(Application application)
         {
+            if ((application == null) || application.HasExited)
+            {
+                throw new RegressionTestFailedException();
+            }
+
             // Note that the windows can't be found through an Automation ID for some reason, hence
             // using the title of the window.
             var mainWindow = MainWindow(application);
-            var window = mainWindow.ModalWindow("About");
-            return window;
+            if (mainWindow == null)
+            {
+                return null;
+            }
+
+            return Retry.Times(() => mainWindow.ModalWindow("About"));
         }
     }
 }
