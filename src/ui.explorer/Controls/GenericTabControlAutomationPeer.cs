@@ -44,7 +44,8 @@ namespace Apollo.UI.Explorer.Controls
         /// </returns>
         protected override List<AutomationPeer> GetChildrenCore()
         {
-            var list = base.GetChildrenCore();
+            // It is possible for the return value to be null if there are no child controls
+            var list = base.GetChildrenCore() ?? new List<AutomationPeer>();
             list.AddRange(GetChildPeers(Owner));
             return list;
         }
