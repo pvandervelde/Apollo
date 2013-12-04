@@ -130,7 +130,7 @@ namespace Apollo.Core.Dataset
                     task.ContinueWith(
                         t =>
                         {
-                            using (m_Diagnostics.Profiler.Measure("Loading dataset from file."))
+                            using (m_Diagnostics.Profiler.Measure(Globals.TimingGroup, "Loading dataset from file."))
                             {
                                 m_LoadAction(new FileInfo(filePath));
                             }

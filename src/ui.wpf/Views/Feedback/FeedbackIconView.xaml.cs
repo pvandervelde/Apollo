@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Input;
+using Apollo.Core.Base;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Profiling;
 
@@ -95,7 +96,7 @@ namespace Apollo.UI.Wpf.Views.Feedback
         {
             e.Handled = true;
 
-            using (m_Diagnostics.Profiler.Measure("Sending feedback report"))
+            using (m_Diagnostics.Profiler.Measure(Globals.TimingGroup, "Sending feedback report"))
             {
                 Model.SendReport();
             }

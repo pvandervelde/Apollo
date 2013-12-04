@@ -152,7 +152,7 @@ namespace Apollo.Core.Base.Activation
         /// </returns>
         public IEnumerable<DistributionPlan> ProposeDistributionFor(DatasetActivationRequest activationRequest, CancellationToken token)
         {
-            using (m_Diagnostics.Profiler.Measure("Generating local proposal"))
+            using (m_Diagnostics.Profiler.Measure(Globals.TimingGroup, "Generating local proposal"))
             {
                 var proposal = m_LocalDistributor.ProposeForLocalMachine(activationRequest.ExpectedLoadPerMachine);
                 var plan = new DistributionPlan(
