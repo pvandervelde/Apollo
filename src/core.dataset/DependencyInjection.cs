@@ -104,14 +104,6 @@ namespace Apollo.Core.Dataset
                         () => DateTimeOffset.Now)))
                 .As<ILogger>()
                 .SingleInstance();
-
-            builder.Register(c => LoggerBuilder.ForEventLog(
-                    Assembly.GetExecutingAssembly().GetName().Name,
-                    new DebugLogTemplate(
-                        c.Resolve<IConfiguration>(),
-                        () => DateTimeOffset.Now)))
-                .As<ILogger>()
-                .SingleInstance();
         }
 
         private static void RegisterProfiler(ContainerBuilder builder)
