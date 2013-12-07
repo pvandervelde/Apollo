@@ -220,8 +220,8 @@
       <Link>AutomationId.Explorer.cs</Link>
     </Compile>
     <Compile Include="Commands\ShowWelcomeViewTabCommand.cs" />
-    <Compile Include="Controls\GenericAutomationTabControl.cs" />
-    <Compile Include="Controls\GenericTabControlAutomationPeer.cs" />
+    <Compile Include="Controls\ChromeAutomationTabControl.cs" />
+    <Compile Include="Controls\ChromeTabControlAutomationPeer.cs" />
     <Compile Include="Converters\ModelCollectionToTabItemsConverter.cs" />
     <Compile Include="ExplorerConstants.cs" />
     <Compile Include="ExplorerModule.cs" />

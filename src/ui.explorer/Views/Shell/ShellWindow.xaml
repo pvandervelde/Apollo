@@ -7,10 +7,11 @@
         xmlns:lexEngine="clr-namespace:WPFLocalizeExtension.Engine;assembly=WPFLocalizeExtension"
         xmlns:lexProviders="clr-namespace:WPFLocalizeExtension.Providers;assembly=WPFLocalizeExtension"
         xmlns:lex="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
-                lexEngine:LocalizeDictionary.DesignCulture="en"
-                lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Explorer"
-                lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
-        xmlns:regions="http://www.codeplex.com/prism" xmlns:controls="clr-namespace:Apollo.UI.Explorer.Controls"
+        lexEngine:LocalizeDictionary.DesignCulture="en"
+        lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Explorer"
+        lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
+        xmlns:regions="http://www.codeplex.com/prism"
+        xmlns:controls="clr-namespace:Apollo.UI.Explorer.Controls"
         AutomationProperties.AutomationId="{x:Static infrastructure:ShellAutomationIds.MainWindow}"
         Title="{lex:Loc MainWindow_Title}"
         Width="1024"
@@ -21,8 +22,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary
-                    Source="/Styles/ChromeTabControl.xaml" />
+                <ResourceDictionary Source="/Styles/ChromeTabControl.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -46,28 +46,17 @@
         <Border Grid.Row="1"
                 Background="LightSteelBlue"
                 Margin="0">
-            <controls:GenericAutomationTabControl AutomationProperties.AutomationId="{x:Static infrastructure:ShellAutomationIds.Tabs}"
-                        Style="{StaticResource ChromeLikeTabControl}"
-                        ItemContainerStyle="{StaticResource ChromeLikeTabItem}"
-                        regions:RegionManager.RegionName="{x:Static common:CommonRegionNames.Content}" 
-                        Width="Auto" 
-                        Height="Auto" 
-                        HorizontalAlignment="Stretch" 
-                        Margin="0,3,0,3" />
-            <!--
-            <TabControl AutomationProperties.AutomationId="{x:Static infrastructure:ShellAutomationIds.Tabs}"
-                        Style="{StaticResource ChromeLikeTabControl}"
-                        ItemContainerStyle="{StaticResource ChromeLikeTabItem}"
-                        regions:RegionManager.RegionName="{x:Static common:CommonRegionNames.Content}" 
-                        Width="Auto" 
-                        Height="Auto" 
-                        HorizontalAlignment="Stretch" 
-                        Margin="0,3,0,3" />
-            -->
+            <controls:ChromeAutomationTabControl AutomationProperties.AutomationId="{x:Static infrastructure:ShellAutomationIds.Tabs}"
+                                                 ItemContainerStyle="{StaticResource ChromeLikeTabItem}"
+                                                 regions:RegionManager.RegionName="{x:Static common:CommonRegionNames.Content}"
+                                                 Width="Auto"
+                                                 Height="Auto"
+                                                 HorizontalAlignment="Stretch"
+                                                 Margin="0,3,0,3" />
         </Border>
-        
+
         <!-- Status bar -->
         <ItemsControl Grid.Row="2"
-                      regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.StatusBar}"/>
+                      regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.StatusBar}" />
     </Grid>
 </Window>

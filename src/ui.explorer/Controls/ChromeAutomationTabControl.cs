@@ -12,7 +12,7 @@ namespace Apollo.UI.Explorer.Controls
     /// <summary>
     /// Defines a tab control which has special automation skills.
     /// </summary>
-    internal sealed class GenericAutomationTabControl : TabControl
+    internal sealed class ChromeAutomationTabControl : TabControl
     {
         /// <summary>
         /// Provides an appropriate <see cref="T:System.Windows.Automation.Peers.TabControlAutomationPeer"/> implementation for this 
@@ -23,7 +23,8 @@ namespace Apollo.UI.Explorer.Controls
         /// </returns>
         protected override AutomationPeer OnCreateAutomationPeer()
         {
-            return new GenericTabControlAutomationPeer(this);
+            // return new ChromeTabControlAutomationPeer(this);
+            return base.OnCreateAutomationPeer();
         }
     }
 }
