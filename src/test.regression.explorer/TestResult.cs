@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 namespace Test.Regression.Explorer
@@ -22,6 +23,12 @@ namespace Test.Regression.Explorer
         /// Adds an error to the test result error collection.
         /// </summary>
         /// <param name="message">The error message.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="message"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="message"/> is an empty string.
+        /// </exception>
         public void AddError(string message)
         {
             {

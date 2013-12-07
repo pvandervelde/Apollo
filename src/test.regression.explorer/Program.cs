@@ -5,11 +5,17 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Linq;
+using System.Runtime.InteropServices;
 using Autofac;
 using Castle.Core.Logging;
+using Nuclei.Diagnostics;
 using Test.Regression.Explorer.Controls;
+using Test.Regression.Explorer.Reporting;
 using Test.Regression.Explorer.UseCases;
 using TestStack.White.Configuration;
 
@@ -29,62 +35,109 @@ namespace Test.Regression.Explorer
         /// </summary>
         private const int UnhandledExceptionApplicationExitCode = 1;
 
+        private const int MinimizeWindow = 6;
+
+        [DllImport("Kernel32.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        private static extern IntPtr GetConsoleWindow();
+
+        [DllImport("User32.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool ShowWindow([In]IntPtr hWnd, [In]int nCmdShow);
+
+        private static void MinimizeConsoleWindow()
+        {
+            IntPtr hWndConsole = GetConsoleWindow();
+            ShowWindow(hWndConsole, MinimizeWindow);
+        }
+
         static int Main(string[] args)
         {
-            InitializeWhite();
+            // Minimize directly on start-up so that we can't take focus on our own window
+            MinimizeConsoleWindow();
 
-            // Initialize the container
-            var container = DependencyInjection.Load();
-
-            var log = container.Resolve<Log>();
             var globalResult = new TestResult();
-            
-            var applicationPath = ApplicationProxies.GetApolloExplorerPath(log);
-            if (string.IsNullOrEmpty(applicationPath))
+            try
             {
-                throw new RegressionTestFailedException("Could not find application path.");
-            }
+                // Initialize the container
+                var container = DependencyInjection.Load();
+                InitializeWhite(container);
 
-            // Select the type of test to execute
-            var verifier = container.ResolveKeyed<IUserInterfaceVerifier>(typeof(VerifyViews));
-            foreach (var testCase in verifier.TestsToExecute())
-            {
-                var localResult = ExecuteTestCase(testCase, log, applicationPath);
-                foreach (var error in localResult.Errors)
+                var reporters = container.Resolve<IEnumerable<IReporter>>();
+                var log = container.Resolve<Log>();
+
+                var applicationPath = ApplicationProxies.GetApolloExplorerPath(log);
+                if (string.IsNullOrEmpty(applicationPath))
                 {
-                    globalResult.AddError(error);
+                    var message = "Could not find application path.";
+                    reporters.ForEach(r => r.AddErrorMessage(message));
+                    globalResult.AddError(message);
+                }
+
+                // Select the type of test to execute
+                var verifier = container.ResolveKeyed<IUserInterfaceVerifier>(typeof(VerifyViews));
+                foreach (var testCase in verifier.TestsToExecute())
+                {
+                    var message = string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Starting: {0}",
+                        testCase.Name);
+                    reporters.ForEach(r => r.AddInformationalMessage(message));
+                    var localResult = ExecuteTestCase(testCase, log, applicationPath);
+                    if (localResult.Status == TestStatus.Passed)
+                    {
+                        var succesMessage = string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Successfully completed test: {0}",
+                            testCase.Name);
+                        reporters.ForEach(r => r.AddInformationalMessage(succesMessage));
+                    }
+                    else
+                    {
+                        foreach (var error in localResult.Errors)
+                        {
+                            var failMessage = error;
+                            globalResult.AddError(error);
+                            reporters.ForEach(r => r.AddErrorMessage(failMessage));
+                        }
+                    }
                 }
             }
-
-            // Write a report with all the errors.
-            foreach (var error in globalResult.Errors)
+            catch (Exception e)
             {
-                Console.Error.WriteLine(error);
+                var message = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Unhandled exception occurred during the execution of the regression tests. Error was: {0}",
+                    e);
+                globalResult.AddError(message);
             }
-
-            Console.ReadLine();
 
             return globalResult.Status == TestStatus.Passed ? NormalApplicationExitCode : UnhandledExceptionApplicationExitCode;
         }
 
-        private static void InitializeWhite()
+        private static void InitializeWhite(IContainer container)
         {
-            // Set the search depth, we won't go more than two levels down in controls.
-            CoreAppXmlConfiguration.Instance.RawElementBasedSearch = true;
-            CoreAppXmlConfiguration.Instance.MaxElementSearchDepth = 2;
+            // Set the search depth, we won't go more than four levels down in controls.
+            CoreAppXmlConfiguration.Instance.RawElementBasedSearch = false;
+            CoreAppXmlConfiguration.Instance.MaxElementSearchDepth = 4;
 
             // Don't log anything for the moment.
-            CoreAppXmlConfiguration.Instance.LoggerFactory = new WhiteDefaultLoggerFactory(LoggerLevel.Error);
+            CoreAppXmlConfiguration.Instance.LoggerFactory = new WhiteLogRedirectorFactory(
+                container.Resolve<SystemDiagnostics>(), 
+                LoggerLevel.Debug);
         }
 
-        private static TestResult ExecuteTestCase(TestCase testCase, Log testLog, string applicationPath)
+        private static TestResult ExecuteTestCase(TestStep testCase, Log testLog, string applicationPath)
         {
+            const string prefix = "Execute test case";
             var count = 0;
             var hasPassed = false;
-            var result = new TestResult();
+            var results = Enumerable.Range(0, TestConstants.MaximumRetryCount)
+                .Select(i => new TestResult())
+                .ToArray();
             while ((count < TestConstants.MaximumRetryCount) && (!hasPassed))
             {
                 testLog.Info(
+                    prefix,
                     string.Format(
                         CultureInfo.InvariantCulture,
                         "Executing test case: {0}. Iteration: {1}",
@@ -100,13 +153,13 @@ namespace Test.Regression.Explorer
                             local = testCase.Test(context.Application, testLog);
                             foreach (var error in local.Errors)
                             {
-                                result.AddError(error);
+                                results[count].AddError(error);
                             }
                         }
                         catch (Exception e)
                         {
-                            testLog.Error(e.ToString());
-                            result.AddError(
+                            testLog.Error(prefix, e.ToString());
+                            results[count].AddError(
                                 string.Format(
                                     CultureInfo.InvariantCulture,
                                     "Error in test case: {0}. Error was: {1}",
@@ -116,17 +169,18 @@ namespace Test.Regression.Explorer
                         finally
                         {
                             testLog.Info(
+                                prefix,
                                 string.Format(
                                     CultureInfo.InvariantCulture,
                                     "Completed test case: {0}. Result: {1}",
                                     testCase.Name,
-                                    result.Status));
+                                    results[count].Status));
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    result.AddError(
+                    results[count].AddError(
                         string.Format(
                             CultureInfo.InvariantCulture,
                             "Test case failed for: {0}. Iteration: {1}. Error: {2}",
@@ -135,11 +189,13 @@ namespace Test.Regression.Explorer
                             e));
                 }
 
-                hasPassed = result.Status == TestStatus.Passed;
+                // Take snapshot of application
+                // Grab log and error log
+                hasPassed = results[count].Status == TestStatus.Passed;
                 count++;
             }
 
-            return result;
+            return results[count - 1];
         }
     }
 }

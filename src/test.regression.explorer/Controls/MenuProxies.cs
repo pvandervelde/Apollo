@@ -23,10 +23,12 @@ namespace Test.Regression.Explorer.Controls
         /// Returns the main menu of the application.
         /// </summary>
         /// <param name="application">The application.</param>
+        /// <param name="log">The log object.</param>
         /// <returns>The main menu of the application.</returns>
-        public static MenuBar GetMainMenu(Application application)
+        public static MenuBar GetMainMenu(Application application, Log log)
         {
-            var mainWindow = DialogProxies.MainWindow(application);
+            const string prefix = "Menus - Get main menu";
+            var mainWindow = DialogProxies.MainWindow(application, log);
             if (mainWindow == null)
             {
                 return null;
@@ -35,34 +37,62 @@ namespace Test.Regression.Explorer.Controls
             var menuSearchCriteria = SearchCriteria
                 .ByAutomationId(MainMenuAutomationIds.Menu)
                 .AndControlType(ControlType.Menu);
-            return Retry.Times(() => (MenuBar)mainWindow.Get(menuSearchCriteria));
+            return Retry.Times(
+                () =>
+                {
+                    log.Debug(prefix, "Trying to get main menu.");
+
+                    var menu = (MenuBar)mainWindow.Get(menuSearchCriteria);
+                    if (menu == null)
+                    {
+                        log.Error(prefix, "Failed to get the main menu.");
+                    }
+
+                    return menu;
+                });
         }
 
         /// <summary>
         /// Returns the 'File' menu item.
         /// </summary>
         /// <param name="application">The application.</param>
+        /// <param name="log">The log object.</param>
         /// <returns>The 'File' menu item.</returns>
-        public static Menu GetFileMenuItem(Application application)
+        public static Menu GetFileMenuItem(Application application, Log log)
         {
-            var menu = GetMainMenu(application);
+            const string prefix = "Menus - Get 'File' menu";
+            var menu = GetMainMenu(application, log);
             if (menu == null)
             {
                 return null;
             }
 
             var fileMenuSearchCriteria = SearchCriteria.ByAutomationId(MainMenuAutomationIds.File);
-            return Retry.Times(() => menu.MenuItemBy(fileMenuSearchCriteria));
+            return Retry.Times(
+                () =>
+                {
+                    log.Debug(prefix, "Trying to get the 'File' menu item.");
+
+                    var menuItem = menu.MenuItemBy(fileMenuSearchCriteria);
+                    if (menuItem == null)
+                    {
+                        log.Error(prefix, "Failed to get the 'File' menu item.");
+                    }
+
+                    return menuItem;
+                });
         }
 
         /// <summary>
         /// Returns the 'File- New' menu item.
         /// </summary>
         /// <param name="application">The application.</param>
+        /// <param name="log">The log object.</param>
         /// <returns>The 'File - New' menu item.</returns>
-        public static Menu GetFileNewMenuItem(Application application)
+        public static Menu GetFileNewMenuItem(Application application, Log log)
         {
-            var menu = GetMainMenu(application);
+            const string prefix = "Menus - Get 'File - New' menu";
+            var menu = GetMainMenu(application, log);
             if (menu == null)
             {
                 return null;
@@ -70,17 +100,31 @@ namespace Test.Regression.Explorer.Controls
 
             var fileMenuSearchCriteria = SearchCriteria.ByAutomationId(MainMenuAutomationIds.File);
             var newSearchCriteria = SearchCriteria.ByAutomationId(MainMenuAutomationIds.FileNew);
-            return Retry.Times(() => menu.MenuItemBy(fileMenuSearchCriteria, newSearchCriteria));
+            return Retry.Times(
+                () =>
+                {
+                    log.Debug(prefix, "Trying to get the 'File - New' menu item.");
+
+                    var menuItem = menu.MenuItemBy(fileMenuSearchCriteria, newSearchCriteria);
+                    if (menuItem == null)
+                    {
+                        log.Error(prefix, "Failed to find the 'File - New' menu item.");
+                    }
+
+                    return menuItem;
+                });
         }
 
         /// <summary>
         /// Returns the 'File - Close' menu item.
         /// </summary>
         /// <param name="application">The application.</param>
+        /// <param name="log">The log object.</param>
         /// <returns>The 'File - Close' menu item.</returns>
-        public static Menu GetFileCloseMenuItem(Application application)
+        public static Menu GetFileCloseMenuItem(Application application, Log log)
         {
-            var menu = GetMainMenu(application);
+            const string prefix = "Menus - Get 'File - Close' menu";
+            var menu = GetMainMenu(application, log);
             if (menu == null)
             {
                 return null;
@@ -88,22 +132,36 @@ namespace Test.Regression.Explorer.Controls
 
             var fileMenuSearchCriteria = SearchCriteria.ByAutomationId(MainMenuAutomationIds.File);
             var closeSearchCriteria = SearchCriteria.ByAutomationId(MainMenuAutomationIds.FileClose);
-            return Retry.Times(() => menu.MenuItemBy(fileMenuSearchCriteria, closeSearchCriteria));
+            return Retry.Times(
+                () =>
+                {
+                    log.Debug(prefix, "Trying to get the 'File - Close' menu item.");
+
+                    var menuItem = menu.MenuItemBy(fileMenuSearchCriteria, closeSearchCriteria);
+                    if (menuItem == null)
+                    {
+                        log.Error(prefix, "Failed to find the 'File - Close' menu item.");
+                    }
+
+                    return menuItem;
+                });
         }
 
         /// <summary>
         /// Creates a new project via the 'File - New' menu.
         /// </summary>
         /// <param name="application">The application.</param>
+        /// <param name="log">The log object.</param>
         /// <exception cref="RegressionTestFailedException">
         ///     Thrown if the 'File - New' menu could not be invoked for some reason.
         /// </exception>
-        public static void CreateNewProjectViaFileNewMenuItem(Application application)
+        public static void CreateNewProjectViaFileNewMenuItem(Application application, Log log)
         {
-            var newMenu = GetFileNewMenuItem(application);
+            const string prefix = "Menus - New project via File menu";
+            var newMenu = GetFileNewMenuItem(application, log);
             if (newMenu == null)
             {
-                throw new RegressionTestFailedException();
+                throw new RegressionTestFailedException(prefix + ": Failed to get the 'File' menu item.");
             }
 
             try
@@ -112,7 +170,7 @@ namespace Test.Regression.Explorer.Controls
             }
             catch (Exception e)
             {
-                throw new RegressionTestFailedException("Failed to click the 'File - New' menu item.", e);
+                throw new RegressionTestFailedException(prefix + ": Failed to click the 'File - New' menu item.", e);
             }
         }
 
@@ -120,15 +178,17 @@ namespace Test.Regression.Explorer.Controls
         /// Closes the application via the 'File - Exit' menu.
         /// </summary>
         /// <param name="application">The application.</param>
+        /// <param name="log">The log object.</param>
         /// <exception cref="RegressionTestFailedException">
         ///     Thrown if the 'File - Exit' menu could not be invoked for some reason.
         /// </exception>
-        public static void CloseApplicationViaFileExitMenuItem(Application application)
+        public static void CloseApplicationViaFileExitMenuItem(Application application, Log log)
         {
-            var menu = GetMainMenu(application);
+            const string prefix = "Menus - Close application via File menu";
+            var menu = GetMainMenu(application, log);
             if (menu == null)
             {
-                throw new RegressionTestFailedException();
+                throw new RegressionTestFailedException(prefix + ": Failed to get the main menu.");
             }
 
             var fileMenuSearchCriteria = SearchCriteria.ByAutomationId(MainMenuAutomationIds.File);
@@ -136,7 +196,7 @@ namespace Test.Regression.Explorer.Controls
             var exitMenu = Retry.Times(() => menu.MenuItemBy(fileMenuSearchCriteria, exitSearchCriteria));
             if (exitMenu == null)
             {
-                throw new RegressionTestFailedException();
+                throw new RegressionTestFailedException(prefix + ": Failed to get the 'File - Exit' menu.");
             }
 
             try
@@ -146,7 +206,7 @@ namespace Test.Regression.Explorer.Controls
             }
             catch (Exception e)
             {
-                throw new RegressionTestFailedException("Failed to click the 'File - Exit' menu item.", e);
+                throw new RegressionTestFailedException(prefix + ": Failed to click the 'File - Exit' menu item.", e);
             }
         }
 
@@ -154,12 +214,14 @@ namespace Test.Regression.Explorer.Controls
         /// Opens the start page tab item via the 'View - Start page' menu.
         /// </summary>
         /// <param name="application">The application.</param>
-        public static void OpenStartPageViaViewStartPageMenuItem(Application application)
+        /// <param name="log">The log object.</param>
+        public static void OpenStartPageViaViewStartPageMenuItem(Application application, Log log)
         {
-            var menu = GetMainMenu(application);
+            const string prefix = "Menus - Open start page via View menu";
+            var menu = GetMainMenu(application, log);
             if (menu == null)
             {
-                throw new RegressionTestFailedException();
+                throw new RegressionTestFailedException(prefix + ": Failed to get the main menu.");
             }
 
             var viewMenuSearchCriteria = SearchCriteria.ByAutomationId(MainMenuAutomationIds.View);
@@ -167,7 +229,7 @@ namespace Test.Regression.Explorer.Controls
             var startMenu = Retry.Times(() => menu.MenuItemBy(viewMenuSearchCriteria, startSearchCriteria));
             if (startMenu == null)
             {
-                throw new RegressionTestFailedException();
+                throw new RegressionTestFailedException(prefix + ": Failed to get the 'View' menu.");
             }
 
             try
@@ -176,7 +238,43 @@ namespace Test.Regression.Explorer.Controls
             }
             catch (Exception e)
             {
-                throw new RegressionTestFailedException("Failed to click the 'View - Start page' menu item.", e);
+                throw new RegressionTestFailedException(
+                    prefix + ": Failed to click the 'View - Start page' menu item.", 
+                    e);
+            }
+        }
+
+        /// <summary>
+        /// Opens the start page tab item via the 'View - Start page' menu.
+        /// </summary>
+        /// <param name="application">The application.</param>
+        /// <param name="log">The log object.</param>
+        public static void OpenProjectPageViaViewStartPageMenuItem(Application application, Log log)
+        {
+            const string prefix = "Menus - Open project page via View menu";
+            var menu = GetMainMenu(application, log);
+            if (menu == null)
+            {
+                throw new RegressionTestFailedException(prefix + ": Failed to get the main menu.");
+            }
+
+            var viewMenuSearchCriteria = SearchCriteria.ByAutomationId(MainMenuAutomationIds.View);
+            var projectSearchCriteria = SearchCriteria.ByAutomationId(MainMenuAutomationIds.ViewProjects);
+            var projectMenu = Retry.Times(() => menu.MenuItemBy(viewMenuSearchCriteria, projectSearchCriteria));
+            if (projectMenu == null)
+            {
+                throw new RegressionTestFailedException(prefix + ": Failed to get the 'View - Project' menu.");
+            }
+
+            try
+            {
+                projectMenu.Click();
+            }
+            catch (Exception e)
+            {
+                throw new RegressionTestFailedException(
+                    prefix + ": Failed to click the 'View - Project' menu item.",
+                    e);
             }
         }
 
@@ -184,12 +282,14 @@ namespace Test.Regression.Explorer.Controls
         /// Opens the about dialog via the 'Help - About' menu.
         /// </summary>
         /// <param name="application">The application.</param>
-        public static void OpenAboutDialogViaHelpAboutMenuItem(Application application)
+        /// <param name="log">The log object.</param>
+        public static void OpenAboutDialogViaHelpAboutMenuItem(Application application, Log log)
         {
-            var menu = GetMainMenu(application);
+            const string prefix = "Menus - Open about dialog via Help menu";
+            var menu = GetMainMenu(application, log);
             if (menu == null)
             {
-                throw new RegressionTestFailedException();
+                throw new RegressionTestFailedException(prefix + ": Failed to get the main menu.");
             }
 
             var helpMenuSearchCriteria = SearchCriteria.ByAutomationId(MainMenuAutomationIds.Help);
@@ -197,7 +297,7 @@ namespace Test.Regression.Explorer.Controls
             var aboutMenu = Retry.Times(() => menu.MenuItemBy(helpMenuSearchCriteria, aboutSearchCriteria));
             if (aboutMenu == null)
             {
-                throw new RegressionTestFailedException();
+                throw new RegressionTestFailedException(prefix + ": Failed to get the 'Help' menu.");
             }
 
             try
@@ -206,7 +306,7 @@ namespace Test.Regression.Explorer.Controls
             }
             catch (Exception e)
             {
-                throw new RegressionTestFailedException("Failed to click the 'Help - About' menu item.", e);
+                throw new RegressionTestFailedException(prefix + ": Failed to click the 'Help - About' menu item.", e);
             }
         }
     }

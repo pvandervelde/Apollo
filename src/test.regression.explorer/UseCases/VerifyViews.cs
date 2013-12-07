@@ -26,17 +26,17 @@ namespace Test.Regression.Explorer.UseCases
         /// Returns a collection of tests that should be executed.
         /// </summary>
         /// <returns>The list of test cases that should be executed for the current verifier.</returns>
-        public IEnumerable<TestCase> TestsToExecute()
+        public IEnumerable<TestStep> TestsToExecute()
         {
-            return new List<TestCase>
+            return new List<TestStep>
                 {
-                    new TestCase("Tab behaviour", VerifyTabBehaviour),
-                    new TestCase("Welcome tab", VerifyWelcomeTab),
-                    new TestCase("Keep welcome tab open", VerifyKeepOpenCheckbox),
-                    new TestCase("Initialize show welcome page", InitializeShowWelcomePageCheckbox),
-                    new TestCase("Verify show welcome page", VerifyShowWelcomePageCheckbox),
-                    new TestCase("View menu", VerifyViewMenu),
-                    new TestCase("Help menu", VerifyHelpMenu),
+                    //// new TestStep("Tab behaviour", VerifyTabBehaviour),
+                    //// new TestStep("Welcome tab", VerifyWelcomeTab),
+                    new TestStep("Close welcome page on project open", VerifyCloseOnProjectOpenCheckbox),
+                    //// new TestStep("Initialize show welcome page", InitializeShowWelcomePageCheckbox),
+                    //// new TestStep("Verify show welcome page", VerifyShowWelcomePageCheckbox),
+                    //// new TestStep("View menu", VerifyViewMenu),
+                    //// new TestStep("Help menu", VerifyHelpMenu),
                 };
         }
 
@@ -48,33 +48,40 @@ namespace Test.Regression.Explorer.UseCases
         /// <returns>The test result for the current test case.</returns>
         private TestResult VerifyTabBehaviour(Application application, Log log)
         {
+            const string prefix = "Tabs";
             var result = new TestResult();
             var assert = new Assert(result, log);
             try
             {
-                var startPage = TabProxies.GetStartPageTabItem(application);
+                var startPage = TabProxies.GetStartPageTabItem(application, log);
                 if (startPage == null)
                 {
-                    MenuProxies.OpenStartPageViaViewStartPageMenuItem(application);
+                    log.Info(prefix, "Opening start page.");
+                    MenuProxies.OpenStartPageViaViewStartPageMenuItem(application, log);
                 }
 
-                var projectPage = TabProxies.GetProjectPageTabItem(application);
+                var projectPage = TabProxies.GetProjectPageTabItem(application, log);
                 if (projectPage == null)
                 {
-                    WelcomePageControlProxies.OpenProjectPageViaWelcomePageButton(application);
+                    log.Info(prefix, "Opening project page.");
+                    WelcomePageControlProxies.OpenProjectPageViaWelcomePageButton(application, log);
                 }
 
-                startPage = TabProxies.GetStartPageTabItem(application);
+                startPage = TabProxies.GetStartPageTabItem(application, log);
                 if (startPage == null)
                 {
-                    result.AddError("Tabs - Failed to open the start page.");
+                    var message = "Failed to open the start page.";
+                    log.Error(prefix, message);
+                    result.AddError(prefix + " - " + message);
                     return result;
                 }
 
-                projectPage = TabProxies.GetProjectPageTabItem(application);
+                projectPage = TabProxies.GetProjectPageTabItem(application, log);
                 if (projectPage == null)
                 {
-                    result.AddError("Tabs - Failed to open the project page.");
+                    var message = "Failed to open the project page.";
+                    log.Error(prefix, message);
+                    result.AddError(prefix + " - " + message);
                     return result;
                 }
 
@@ -82,41 +89,43 @@ namespace Test.Regression.Explorer.UseCases
                 {
                     if (!startPage.IsSelected)
                     {
+                        log.Info(prefix, "Setting focus to start page.");
                         startPage.Select();
                     }
                 }
                 catch (Exception e)
                 {
-                    result.AddError(
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            "Tabs - Failed to select the start page tab. Error was: {0}",
-                            e));
+                    var message = string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Failed to select the start page tab. Error was: {0}",
+                        e);
+                    log.Error(prefix, message);
+                    result.AddError(prefix + " - " + message);
 
                     return result;
                 }
 
-                assert.IsTrue(startPage.IsSelected, "Tabs - Start is selected");
-                assert.IsFalse(projectPage.IsSelected, "Tabs - Project is not selected");
+                assert.IsTrue(startPage.IsSelected, prefix + " - Start is selected");
+                assert.IsFalse(projectPage.IsSelected, prefix + " - Project is not selected");
 
-                TabProxies.SwitchToProjectPageViaTabMenu(application);
-                assert.IsFalse(startPage.IsSelected, "Tabs - Start is not selected");
-                assert.IsTrue(projectPage.IsSelected, "Tabs - Project is selected");
+                MenuProxies.OpenProjectPageViaViewStartPageMenuItem(application, log);
+                assert.IsFalse(startPage.IsSelected, prefix + " - Start is not selected");
+                assert.IsTrue(projectPage.IsSelected, prefix + " - Project is selected");
 
-                TabProxies.SwitchToStartPageViaTabMenu(application);
-                assert.IsTrue(startPage.IsSelected, "Tabs - Start is selected");
-                assert.IsFalse(projectPage.IsSelected, "Tabs - Project is not selected");
+                MenuProxies.OpenStartPageViaViewStartPageMenuItem(application, log);
+                assert.IsTrue(startPage.IsSelected, prefix + " - Start is selected");
+                assert.IsFalse(projectPage.IsSelected, prefix + " - Project is not selected");
 
-                TabProxies.CloseProjectPageTab(application);
+                TabProxies.CloseProjectPageTab(application, log);
             }
             catch (RegressionTestFailedException e)
             {
                 var message = string.Format(
                     CultureInfo.InvariantCulture,
-                    "Tabs - Failed with exception. Error: {0}",
+                    "Failed with exception. Error: {0}",
                     e);
-                log.Error(message);
-                result.AddError(message);
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
             }
 
             return result;
@@ -130,20 +139,24 @@ namespace Test.Regression.Explorer.UseCases
         /// <returns>The test result for the current test case.</returns>
         public TestResult VerifyWelcomeTab(Application application, Log log)
         {
+            const string prefix = "Welcome tab";
             var result = new TestResult();
             var assert = new Assert(result, log);
             try
             {
-                var startPage = TabProxies.GetStartPageTabItem(application);
+                var startPage = TabProxies.GetStartPageTabItem(application, log);
                 if (startPage == null)
                 {
-                    MenuProxies.OpenStartPageViaViewStartPageMenuItem(application);
+                    log.Info(prefix, "Opening start page.");
+                    MenuProxies.OpenStartPageViaViewStartPageMenuItem(application, log);
                 }
 
-                startPage = TabProxies.GetStartPageTabItem(application);
+                startPage = TabProxies.GetStartPageTabItem(application, log);
                 if (startPage == null)
                 {
-                    result.AddError("Welcome tab - Failed to get the start page.");
+                    var message = "Failed to get the start page.";
+                    log.Error(prefix, message);
+                    result.AddError(prefix + " - " + message);
                     return result;
                 }
 
@@ -151,40 +164,55 @@ namespace Test.Regression.Explorer.UseCases
                 {
                     if (!startPage.IsSelected)
                     {
+                        log.Info(prefix, "Setting focus to start page.");
                         startPage.Select();
                     }
                 }
                 catch (Exception e)
                 {
-                    result.AddError(
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            "Welcome tab - Failed to select the start page tab. Error was: {0}",
-                            e));
+                    var message = string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Failed to select the start page tab. Error was: {0}",
+                        e);
+                    log.Error(prefix, message);
+                    result.AddError(prefix + " - " + message);
 
                     return result;
                 }
 
                 var applicationNameSearchCiteria = SearchCriteria
                     .ByAutomationId(WelcomeViewAutomationIds.ApplicationName);
-                var nameLabel = Retry.Times(() => (Label)startPage.Get(applicationNameSearchCiteria));
+                var nameLabel = Retry.Times(
+                    () =>
+                    {
+                        log.Debug(prefix, "Trying to get the application name label.");
+                        var label = (Label)startPage.Get(applicationNameSearchCiteria);
+                        if (label == null)
+                        {
+                            log.Error(prefix, "Failed to find the application name label.");
+                        }
+
+                        return label;
+                    });
                 if (nameLabel == null)
                 {
-                    result.AddError("Welcome tab - Failed to get the application name label.");
+                    var message = "Failed to get the application name label.";
+                    log.Error(prefix, message);
+                    result.AddError(prefix + " - " + message);
                     return result;
                 }
 
                 var nameText = nameLabel.Text;
-                assert.AreEqual(ProductInformation.ProductName, nameText, "Welcome tab - Product Name");
+                assert.AreEqual(ProductInformation.ProductName, nameText, prefix + " - Product Name");
             }
             catch (RegressionTestFailedException e)
             {
                 var message = string.Format(
                     CultureInfo.InvariantCulture,
-                    "Welcome tab - Failed with exception. Error: {0}",
+                    "Failed with exception. Error: {0}",
                     e);
-                log.Error(message);
-                result.AddError(message);
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
             }
 
             return result;
@@ -196,22 +224,26 @@ namespace Test.Regression.Explorer.UseCases
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
         /// <returns>The test result for the current test case.</returns>
-        public TestResult VerifyKeepOpenCheckbox(Application application, Log log)
+        public TestResult VerifyCloseOnProjectOpenCheckbox(Application application, Log log)
         {
+            const string prefix = "Close welcome tab on project open";
             var result = new TestResult();
             var assert = new Assert(result, log);
             try
             {
-                var startPage = TabProxies.GetStartPageTabItem(application);
+                var startPage = TabProxies.GetStartPageTabItem(application, log);
                 if (startPage == null)
                 {
-                    MenuProxies.OpenStartPageViaViewStartPageMenuItem(application);
+                    log.Info(prefix, "Opening start page.");
+                    MenuProxies.OpenStartPageViaViewStartPageMenuItem(application, log);
                 }
 
-                startPage = TabProxies.GetStartPageTabItem(application);
+                startPage = TabProxies.GetStartPageTabItem(application, log);
                 if (startPage == null)
                 {
-                    result.AddError("Keep welcome tab open - Failed to get the start page.");
+                    var message = "Failed to get the start page.";
+                    log.Error(prefix, message);
+                    result.AddError(prefix + " - " + message);
                     return result;
                 }
 
@@ -219,73 +251,91 @@ namespace Test.Regression.Explorer.UseCases
                 {
                     if (!startPage.IsSelected)
                     {
+                        log.Info(prefix, "Setting focus to start page.");
                         startPage.Select();
                     }
                 }
                 catch (Exception e)
                 {
-                    result.AddError(
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            "Keep welcome tab open - Failed to select the start page tab. Error was: {0}",
-                            e));
+                    var message = string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Failed to select the start page tab. Error was: {0}",
+                        e);
+                    log.Error(prefix, message);
+                    result.AddError(prefix + " - " + message);
 
                     return result;
                 }
 
                 // Check 'keep open' flag
-                WelcomePageControlProxies.CheckKeepWelcomePageOpen(application);
+                WelcomePageControlProxies.UncheckCloseWelcomePageOnProjectOpen(application, log);
 
                 // New button
                 var newProjectSearchCriteria = SearchCriteria
                     .ByAutomationId(WelcomeViewAutomationIds.NewProject);
                 var newProjectButton = (Button)startPage.Get(newProjectSearchCriteria);
+                if (newProjectButton == null)
+                {
+                    var message = "Failed to get the 'New Project' button.";
+                    log.Error(prefix, message);
+                    result.AddError(prefix + " - " + message);
+                    return result;
+                }
+
                 newProjectButton.Click();
 
                 // Check that the start page hasn't been closed
-                var currentStartPage = TabProxies.GetStartPageTabItem(application);
-                assert.IsNotNull(currentStartPage, "Keep welcome tab open - Start page exists after opening project");
-                assert.IsFalse(currentStartPage.IsSelected, "Keep welcome tab open - Start page is not selected after opening project");
+                var currentStartPage = TabProxies.GetStartPageTabItem(application, log);
+                assert.IsNotNull(currentStartPage, prefix + " - Start page does not exist after opening project");
+                assert.IsFalse(currentStartPage.IsSelected, prefix + " - Start page is selected after opening project");
 
-                var currentProjectPage = TabProxies.GetProjectPageTabItem(application);
-                assert.IsNotNull(currentProjectPage, "Keep welcome tab open - Project page exists after opening project");
-                assert.IsTrue(currentProjectPage.IsSelected, "Keep welcome tab open - Project page is selected after opening project");
+                var currentProjectPage = TabProxies.GetProjectPageTabItem(application, log);
+                assert.IsNotNull(currentProjectPage, prefix + " - Project page does not exist after opening project");
+                assert.IsTrue(currentProjectPage.IsSelected, prefix + " - Project page is not selected after opening project");
 
                 // Check that File - close has been enabled
-                var fileCloseMenu = MenuProxies.GetFileCloseMenuItem(application);
-                assert.IsTrue(fileCloseMenu.Enabled, "Keep welcome tab open - File - Close menu is enabled");
+                var fileCloseMenu = MenuProxies.GetFileCloseMenuItem(application, log);
+                assert.IsTrue(fileCloseMenu.Enabled, prefix + " - File - Close menu is not enabled");
 
                 // HACK: It seems that the File menu stays open when we check the File - close menu item
-                var fileMenu = MenuProxies.GetFileMenuItem(application);
+                var fileMenu = MenuProxies.GetFileMenuItem(application, log);
+                if (fileMenu == null)
+                {
+                    var message = "Failed to get the file menu.";
+                    log.Error(prefix, message);
+                    result.AddError(prefix + " - " + message);
+                    return result;
+                }
+
                 if (fileMenu.IsFocussed)
                 {
                     fileMenu.Click();
                 }
 
                 // Close the project via the close button on the tab page
-                TabProxies.CloseProjectPageTab(application);
+                TabProxies.CloseProjectPageTab(application, log);
 
-                WelcomePageControlProxies.UncheckKeepWelcomePageOpen(application);
+                WelcomePageControlProxies.CheckCloseWelcomePageOnProjectOpen(application, log);
 
                 // New button
                 newProjectButton.Click();
 
                 // Check that the start page has been closed
-                currentStartPage = TabProxies.GetStartPageTabItem(application);
-                assert.IsNull(currentStartPage, "Keep welcome tab open - Start page exists after opening project");
+                currentStartPage = TabProxies.GetStartPageTabItem(application, log);
+                assert.IsNull(currentStartPage, prefix + " - Start page exists after opening project");
 
                 // Close the project via the close button on the tab page
-                TabProxies.CloseProjectPageTab(application);
-                WelcomePageControlProxies.CheckKeepWelcomePageOpen(application);
+                TabProxies.CloseProjectPageTab(application, log);
+                WelcomePageControlProxies.UncheckCloseWelcomePageOnProjectOpen(application, log);
             }
             catch (RegressionTestFailedException e)
             {
                 var message = string.Format(
                     CultureInfo.InvariantCulture,
-                    "Keep welcome tab open - Failed with exception. Error: {0}",
+                    "Failed with exception. Error: {0}",
                     e);
-                log.Error(message);
-                result.AddError(message);
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
             }
 
             return result;
@@ -293,19 +343,20 @@ namespace Test.Regression.Explorer.UseCases
 
         public TestResult InitializeShowWelcomePageCheckbox(Application application, Log log)
         {
+            const string prefix = "Initialize show welcome page";
             var result = new TestResult();
             try
             {
-                WelcomePageControlProxies.UncheckShowWelcomePageOnApplicationStart(application);
+                WelcomePageControlProxies.UncheckShowWelcomePageOnApplicationStart(application, log);
             }
             catch (RegressionTestFailedException e)
             {
                 var message = string.Format(
                     CultureInfo.InvariantCulture,
-                    "Initialize show welcome page - Failed with exception. Error: {0}",
+                    "Failed with exception. Error: {0}",
                     e);
-                log.Error(message);
-                result.AddError(message);
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
             }
 
             return result;
@@ -313,23 +364,24 @@ namespace Test.Regression.Explorer.UseCases
 
         public TestResult VerifyShowWelcomePageCheckbox(Application application, Log log)
         {
+            const string prefix = "Verify show welcome page";
             var result = new TestResult();
             var assert = new Assert(result, log);
             try
             {
-                var startPage = TabProxies.GetStartPageTabItem(application);
-                assert.IsNull(startPage, "Verify show welcome page - Start page was open on application start.");
+                var startPage = TabProxies.GetStartPageTabItem(application, log);
+                assert.IsNull(startPage, prefix + " - Start page was open on application start.");
 
-                WelcomePageControlProxies.CheckShowWelcomePageOnApplicationStart(application);
+                WelcomePageControlProxies.CheckShowWelcomePageOnApplicationStart(application, log);
             }
             catch (RegressionTestFailedException e)
             {
                 var message = string.Format(
                     CultureInfo.InvariantCulture,
-                    "Verify show welcome page - Failed with exception. Error: {0}",
+                    "Failed with exception. Error: {0}",
                     e);
-                log.Error(message);
-                result.AddError(message);
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
             }
 
             return result;
@@ -374,37 +426,40 @@ namespace Test.Regression.Explorer.UseCases
         /// <returns>The test result for the current test case.</returns>
         public TestResult VerifyViewMenu(Application application, Log log)
         {
+            const string prefix = "View menu";
             var result = new TestResult();
             var assert = new Assert(result, log);
             try
             {
-                var startPage = TabProxies.GetStartPageTabItem(application);
+                var startPage = TabProxies.GetStartPageTabItem(application, log);
                 if (startPage != null)
                 {
-                    TabProxies.CloseStartPageTab(application);
+                    log.Info(prefix, "Closing start page.");
+                    TabProxies.CloseStartPageTab(application, log);
                 }
 
-                var projectPage = TabProxies.GetProjectPageTabItem(application);
+                var projectPage = TabProxies.GetProjectPageTabItem(application, log);
                 if (projectPage != null)
                 {
-                    TabProxies.CloseProjectPageTab(application);
+                    log.Info(prefix, "Closing project page.");
+                    TabProxies.CloseProjectPageTab(application, log);
                 }
 
                 // Open start page via view menu
-                MenuProxies.OpenStartPageViaViewStartPageMenuItem(application);
+                MenuProxies.OpenStartPageViaViewStartPageMenuItem(application, log);
 
-                startPage = TabProxies.GetStartPageTabItem(application);
-                assert.IsNotNull(startPage, "View menu - Check start page exists after clicking start page menu item");
-                assert.IsTrue(startPage.IsSelected, "View menu - Check start page is focussed after clicking start page menu item");
+                startPage = TabProxies.GetStartPageTabItem(application, log);
+                assert.IsNotNull(startPage, prefix + " - Check start page exists after clicking start page menu item");
+                assert.IsTrue(startPage.IsSelected, prefix + " - Check start page is focussed after clicking start page menu item");
             }
             catch (RegressionTestFailedException e)
             {
                 var message = string.Format(
                     CultureInfo.InvariantCulture,
-                    "View menu - Failed with exception. Error: {0}",
+                    "Failed with exception. Error: {0}",
                     e);
-                log.Error(message);
-                result.AddError(message);
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
             }
 
             return result;
@@ -431,6 +486,7 @@ namespace Test.Regression.Explorer.UseCases
         /// <returns>The test result for the current test case.</returns>
         public TestResult VerifyHelpMenu(Application application, Log log)
         {
+            const string prefix = "Help menu";
             var result = new TestResult();
             try
             {
@@ -441,10 +497,10 @@ namespace Test.Regression.Explorer.UseCases
             {
                 var message = string.Format(
                     CultureInfo.InvariantCulture,
-                    "Help menu - Failed with exception. Error: {0}",
+                    "Failed with exception. Error: {0}",
                     e);
-                log.Error(message);
-                result.AddError(message);
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
             }
 
             return result;
@@ -458,14 +514,17 @@ namespace Test.Regression.Explorer.UseCases
         /// <param name="result">The test result for the current test.</param>
         private void VerifyAboutDialog(Application application, Log log, TestResult result)
         {
+            const string prefix = "About dialog";
             var assert = new Assert(result, log);
-            log.Info("Verifying content of about dialog ...");
+            log.Info(prefix, "Verifying content ...");
 
-            MenuProxies.OpenAboutDialogViaHelpAboutMenuItem(application);
-            var dialog = DialogProxies.AboutWindow(application);
+            MenuProxies.OpenAboutDialogViaHelpAboutMenuItem(application, log);
+            var dialog = DialogProxies.AboutWindow(application, log);
             if (dialog == null)
             {
-                result.AddError("About dialog - Failed to get dialog.");
+                var message = "Failed to get dialog.";
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
                 return;
             }
 
@@ -475,12 +534,14 @@ namespace Test.Regression.Explorer.UseCases
             var nameLabel = Retry.Times(() => (Label)dialog.Get(applicationNameSearchCiteria));
             if (nameLabel == null)
             {
-                result.AddError("About dialog - Failed to get name label.");
+                var message = "Failed to get name label.";
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
                 return;
             }
 
             var nameText = nameLabel.Text;
-            assert.AreEqual(ProductInformation.ProductName, nameText, "About dialog - Product name");
+            assert.AreEqual(ProductInformation.ProductName, nameText, prefix + " - Product name");
 
             // Check application version
             var applicationVersionSearchCriteria = SearchCriteria
@@ -488,12 +549,16 @@ namespace Test.Regression.Explorer.UseCases
             var versionLabel = Retry.Times(() => (Label)dialog.Get(applicationVersionSearchCriteria));
             if (versionLabel == null)
             {
-                result.AddError("About dialog - Failed to get version label.");
+                var message = "Failed to get version label.";
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
                 return;
             }
 
             var versionText = versionLabel.Text;
-            assert.AreEqual(Assembly.GetExecutingAssembly().GetName().Version.ToString(4), versionText, "About dialog - Product version");
+            var versionAttribute = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false);
+            var version = (versionAttribute[0] as AssemblyFileVersionAttribute).Version;
+            assert.AreEqual(version, versionText, prefix + " - Product version");
 
             // Check company name
             var companyNameSearchCriteria = SearchCriteria
@@ -501,12 +566,14 @@ namespace Test.Regression.Explorer.UseCases
             var companyLabel = Retry.Times(() => (Label)dialog.Get(companyNameSearchCriteria));
             if (companyLabel == null)
             {
-                result.AddError("About dialog - Failed to get company label.");
+                var message = "Failed to get company label.";
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
                 return;
             }
 
             var companyText = companyLabel.Text;
-            assert.AreEqual(CompanyInformation.CompanyName, companyText, "About dialog - Company name");
+            assert.AreEqual(CompanyInformation.CompanyName, companyText, prefix + " - Company name");
 
             // Check copyright
             var copyrightSearchCriteria = SearchCriteria
@@ -514,7 +581,9 @@ namespace Test.Regression.Explorer.UseCases
             var copyrightLabel = Retry.Times(() => (Label)dialog.Get(copyrightSearchCriteria));
             if (copyrightLabel == null)
             {
-                result.AddError("About dialog - Failed to get copyright label.");
+                var message = "Failed to get copyright label.";
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
                 return;
             }
 
@@ -526,7 +595,7 @@ namespace Test.Regression.Explorer.UseCases
                     CompanyInformation.CompanyName,
                     DateTimeOffset.Now.Year),
                 copyrightText,
-                "About dialog - Copyright");
+                prefix + " - Copyright");
 
             try
             {
@@ -536,10 +605,10 @@ namespace Test.Regression.Explorer.UseCases
             {
                 var message = string.Format(
                     CultureInfo.InvariantCulture,
-                    "About dialog - Failed to close the dialog. Error was: {0}",
+                    "Failed to close the dialog. Error was: {0}",
                     e);
-                log.Error(message);
-                result.AddError(message);
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
             }
         }
     }

@@ -19,9 +19,19 @@ namespace Test.Regression.Explorer.UseCases
         /// Returns a collection of tests that should be executed.
         /// </summary>
         /// <returns>The list of test cases that should be executed for the current verifier.</returns>
-        public IEnumerable<TestCase> TestsToExecute()
+        public IEnumerable<TestStep> TestsToExecute()
         {
-            throw new NotImplementedException();
+            return new List<TestStep>
+                {
+                    // new TestStep("Tab behaviour", VerifyTabBehaviour),
+                    // Create new dataset
+                    // Update project settings + undo + redo
+                    // Update dataset settings + undo + redo
+                    // Activate dataset
+                    // Deactivate dataset
+                    // Add child
+                    // Remove child
+                };
         }
     }
 }

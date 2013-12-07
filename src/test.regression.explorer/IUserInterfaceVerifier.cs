@@ -17,6 +17,6 @@ namespace Test.Regression.Explorer
         /// Returns a collection of tests that should be executed.
         /// </summary>
         /// <returns>The list of test cases that should be executed for the current verifier.</returns>
-        IEnumerable<TestCase> TestsToExecute();
+        IEnumerable<TestStep> TestsToExecute();
     }
 }

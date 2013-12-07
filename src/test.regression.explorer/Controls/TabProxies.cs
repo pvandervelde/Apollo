@@ -25,10 +25,12 @@ namespace Test.Regression.Explorer.Controls
         /// Returns the tab control in the main window of the application.
         /// </summary>
         /// <param name="application">The application.</param>
+        /// <param name="log">The log object.</param>
         /// <returns>The tab control in the main window of the application.</returns>
-        public static Tab GetMainTab(Application application)
+        public static Tab GetMainTab(Application application, Log log)
         {
-            var mainWindow = DialogProxies.MainWindow(application);
+            const string prefix = "Tabs - Get main tab control";
+            var mainWindow = DialogProxies.MainWindow(application, log);
             if (mainWindow == null)
             {
                 return null;
@@ -36,17 +38,31 @@ namespace Test.Regression.Explorer.Controls
 
             var tabSearchCriteria = SearchCriteria
                 .ByAutomationId(ShellAutomationIds.Tabs);
-            return Retry.Times(() => (Tab)mainWindow.Get(tabSearchCriteria));
+            return Retry.Times(
+                () =>
+                {
+                    log.Debug(prefix, "Trying to get the main tab control.");
+
+                    var tab = (Tab)mainWindow.Get(tabSearchCriteria);
+                    if (tab == null)
+                    {
+                        log.Error(prefix, "Failed to get the main tab control.");
+                    }
+
+                    return tab;
+                });
         }
 
         /// <summary>
         /// Returns the the start page tab item for the application.
         /// </summary>
         /// <param name="application">The application.</param>
+        /// <param name="log">The log object.</param>
         /// <returns>The start page tab item.</returns>
-        public static ITabPage GetStartPageTabItem(Application application)
+        public static ITabPage GetStartPageTabItem(Application application, Log log)
         {
-            var tab = GetMainTab(application);
+            const string prefix = "Tabs - Get start page";
+            var tab = GetMainTab(application, log);
             if (tab == null)
             {
                 return null;
@@ -54,7 +70,14 @@ namespace Test.Regression.Explorer.Controls
 
             try
             {
+                log.Debug(prefix, "Trying to get the 'Start page' tab item.");
+
                 var startPage = tab.Pages.FirstOrDefault(p => string.Equals(WelcomeViewAutomationIds.Header, p.Id));
+                if (startPage == null)
+                {
+                    log.Error(prefix, "Failed to get the 'Start page' tab item.");
+                }
+
                 return startPage;
             }
             catch (Exception)
@@ -67,10 +90,12 @@ namespace Test.Regression.Explorer.Controls
         /// Returns the project page tab item for the application.
         /// </summary>
         /// <param name="application">The application.</param>
+        /// <param name="log">The log object.</param>
         /// <returns>The project page tab item.</returns>
-        public static ITabPage GetProjectPageTabItem(Application application)
+        public static ITabPage GetProjectPageTabItem(Application application, Log log)
         {
-            var tab = GetMainTab(application);
+            const string prefix = "Tabs - Get project page";
+            var tab = GetMainTab(application, log);
             if (tab == null)
             {
                 return null;
@@ -78,7 +103,14 @@ namespace Test.Regression.Explorer.Controls
 
             try
             {
+                log.Debug(prefix, "Trying to get the 'Project' tab item.");
+
                 var projectPage = tab.Pages.FirstOrDefault(p => string.Equals(ProjectViewAutomationIds.Header, p.Id));
+                if (projectPage == null)
+                {
+                    log.Error(prefix, "Failed to get the 'Project' tab item.");
+                }
+
                 return projectPage;
             }
             catch (Exception)
@@ -91,15 +123,17 @@ namespace Test.Regression.Explorer.Controls
         /// Closes the project tab item via the close button on the tab item.
         /// </summary>
         /// <param name="application">The application.</param>
+        /// <param name="log">The log object.</param>
         /// <exception cref="RegressionTestFailedException">
         ///     Thrown if the tab could not be closed via the close button for some reason.
         /// </exception>
-        public static void CloseProjectPageTab(Application application)
+        public static void CloseProjectPageTab(Application application, Log log)
         {
-            var projectPage = GetProjectPageTabItem(application);
+            const string prefix = "Tabs - Close project tab";
+            var projectPage = GetProjectPageTabItem(application, log);
             if (projectPage == null)
             {
-                throw new RegressionTestFailedException();
+                throw new RegressionTestFailedException(prefix + ": Failed to get the project tab page.");
             }
 
             var closeTabSearchCriteria = SearchCriteria
@@ -108,7 +142,7 @@ namespace Test.Regression.Explorer.Controls
             var closeTabButton = Retry.Times(() => (Button)projectPage.Get(closeTabSearchCriteria));
             if (closeTabButton == null)
             {
-                throw new RegressionTestFailedException();
+                throw new RegressionTestFailedException(prefix + ": Failed to find the close project tab button.");
             }
 
             try
@@ -117,7 +151,7 @@ namespace Test.Regression.Explorer.Controls
             }
             catch (Exception e)
             {
-                throw new RegressionTestFailedException("Failed to close the project tab.", e);
+                throw new RegressionTestFailedException(prefix + ": Failed to close the project tab.", e);
             }
         }
 
@@ -125,15 +159,17 @@ namespace Test.Regression.Explorer.Controls
         /// Closes the start page tab item via the close button on the tab item.
         /// </summary>
         /// <param name="application">The application.</param>
+        /// <param name="log">The log object.</param>
         /// <exception cref="RegressionTestFailedException">
         ///     Thrown if the tab could not be closed via the close button for some reason.
         /// </exception>
-        public static void CloseStartPageTab(Application application)
+        public static void CloseStartPageTab(Application application, Log log)
         {
-            var startPage = GetStartPageTabItem(application);
+            const string prefix = "Tabs - Close start page tab";
+            var startPage = GetStartPageTabItem(application, log);
             if (startPage == null)
             {
-                throw new RegressionTestFailedException();
+                throw new RegressionTestFailedException(prefix + ": Failed to find the start page tab.");
             }
 
             var closeTabSearchCriteria = SearchCriteria
@@ -142,7 +178,7 @@ namespace Test.Regression.Explorer.Controls
             var closeTabButton = Retry.Times(() => (Button)startPage.Get(closeTabSearchCriteria));
             if (closeTabButton == null)
             {
-                throw new RegressionTestFailedException();
+                throw new RegressionTestFailedException(prefix + ": Failed to find the close start page tab button.");
             }
 
             try
@@ -151,91 +187,7 @@ namespace Test.Regression.Explorer.Controls
             }
             catch (Exception e)
             {
-                throw new RegressionTestFailedException("Failed to close the project tab.", e);
-            }
-        }
-        
-        /// <summary>
-        /// Switches to the project tab item via the menu on the tab control.
-        /// </summary>
-        /// <param name="application">The application.</param>
-        /// <exception cref="RegressionTestFailedException">
-        ///     Thrown if the project page could not be given focus via the tab menu.
-        /// </exception>
-        public static void SwitchToProjectPageViaTabMenu(Application application)
-        {
-            var mainWindow = DialogProxies.MainWindow(application);
-            if (mainWindow == null)
-            {
-                throw new RegressionTestFailedException();
-            }
-
-            var tabMenuSearchCriteria = SearchCriteria
-                .ByAutomationId(TabAutomationIds.TabItems)
-                .AndControlType(ControlType.Menu);
-            var menu = Retry.Times(() => (MenuBar)mainWindow.Get(tabMenuSearchCriteria));
-            if (menu == null)
-            {
-                throw new RegressionTestFailedException();
-            }
-
-            var topLevelMenuSearchCriteria = SearchCriteria.ByText(string.Empty);
-            var projectViewSearchCriteria = SearchCriteria.ByText("Project");
-            var projectViewMenu = Retry.Times(() => menu.MenuItemBy(topLevelMenuSearchCriteria, projectViewSearchCriteria));
-            if (projectViewMenu == null)
-            {
-                throw new RegressionTestFailedException();
-            }
-
-            try
-            {
-                projectViewMenu.Click();
-            }
-            catch (Exception e)
-            {
-                throw new RegressionTestFailedException("Failed to switch to project tab via the tab menu.", e);
-            }
-        }
-
-        /// <summary>
-        /// Switches to the start page tab item via the menu on the tab control.
-        /// </summary>
-        /// <param name="application">The application.</param>
-        /// <exception cref="RegressionTestFailedException">
-        ///     Thrown if the start page could not be given focus via the tab menu.
-        /// </exception>
-        public static void SwitchToStartPageViaTabMenu(Application application)
-        {
-            var mainWindow = DialogProxies.MainWindow(application);
-            if (mainWindow == null)
-            {
-                throw new RegressionTestFailedException();
-            }
-
-            var tabMenuSearchCriteria = SearchCriteria
-                .ByAutomationId(TabAutomationIds.TabItems)
-                .AndControlType(ControlType.Menu);
-            var menu = Retry.Times(() => (MenuBar)mainWindow.Get(tabMenuSearchCriteria));
-            if (menu == null)
-            {
-                throw new RegressionTestFailedException();
-            }
-
-            var topLevelMenuSearchCriteria = SearchCriteria.ByText(string.Empty);
-            var welcomeViewSearchCriteria = SearchCriteria.ByText("Start page");
-            var welcomeViewMenu = Retry.Times(() => menu.MenuItemBy(topLevelMenuSearchCriteria, welcomeViewSearchCriteria));
-            if (welcomeViewMenu == null)
-            {
-                throw new RegressionTestFailedException();
-            }
-
-            try
-            {
-                welcomeViewMenu.Click();
-            }
-            catch (Exception e)
-            {
-                throw new RegressionTestFailedException("Failed to switch to the start page tab via the tab menu.", e);
+                throw new RegressionTestFailedException(prefix + ": Failed to close the project tab.", e);
             }
         }
     }

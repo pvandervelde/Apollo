@@ -58,12 +58,11 @@ namespace Test.Regression.Explorer
             {
                 var message = string.Format(
                     CultureInfo.InvariantCulture,
-                    "{0} - Fail: Expected: {1}. Actual: {2}",
-                    location,
+                    "Fail: Expected: {0}. Actual: {1}",
                     expected,
                     actual);
-                m_Log.Error(message);
-                m_Result.AddError(message);
+                m_Log.Error(location, message);
+                m_Result.AddError(location + " - " + message);
             }
         }
 
@@ -76,12 +75,9 @@ namespace Test.Regression.Explorer
         {
             if (condition)
             {
-                var message = string.Format(
-                    CultureInfo.InvariantCulture,
-                    "{0} - Fail: Expected condition to be false, was true",
-                    location);
-                m_Log.Error(message);
-                m_Result.AddError(message);
+                var message = "Fail: Expected condition to be false, was true";
+                m_Log.Error(location, message);
+                m_Result.AddError(location + " - " + message);
             }
         }
 
@@ -94,12 +90,9 @@ namespace Test.Regression.Explorer
         {
             if (!condition)
             {
-                var message = string.Format(
-                    CultureInfo.InvariantCulture,
-                    "{0} - Fail: Expected condition to be true, was false",
-                    location);
-                m_Log.Error(message);
-                m_Result.AddError(message);
+                var message = "Fail: Expected condition to be true, was false";
+                m_Log.Error(location, message);
+                m_Result.AddError(location + " - " + message);
             }
         }
 
@@ -112,12 +105,9 @@ namespace Test.Regression.Explorer
         {
             if (ReferenceEquals(reference, null))
             {
-                var message = string.Format(
-                    CultureInfo.InvariantCulture,
-                    "{0} - Fail: Expected reference to not be NULL but was.",
-                    location);
-                m_Log.Error(message);
-                m_Result.AddError(message);
+                var message = "Fail: Expected reference to not be NULL but was NULL.";
+                m_Log.Error(location, message);
+                m_Result.AddError(location + " - " + message);
             }
         }
 
@@ -132,11 +122,10 @@ namespace Test.Regression.Explorer
             {
                 var message = string.Format(
                     CultureInfo.InvariantCulture,
-                    "{0} - Fail: Expected reference to be NULL but was: {1}",
-                    location,
+                    "Fail: Expected reference to be NULL but was: {0}",
                     reference);
-                m_Log.Error(message);
-                m_Result.AddError(message);
+                m_Log.Error(location, message);
+                m_Result.AddError(location + " - " + message);
             }
         }
     }

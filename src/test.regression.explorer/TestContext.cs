@@ -57,7 +57,7 @@ namespace Test.Regression.Explorer
                 "Started [{0}] - PID: [{1}]",
                 m_Application.Name,
                 m_Application.Process.Id);
-            log.Info(text);
+            log.Info("TestContext - Create", text);
         }
 
         /// <summary>
@@ -76,18 +76,20 @@ namespace Test.Regression.Explorer
         /// </summary>
         public void Dispose()
         {
+            const string prefix = "TestContext - Dispose";
             try
             {
-                MenuProxies.CloseApplicationViaFileExitMenuItem(m_Application);
+                MenuProxies.CloseApplicationViaFileExitMenuItem(m_Application, m_Log);
                 m_Application.Process.WaitForExit(10000);
             }
             catch (Exception e)
             {
                 m_Log.Error(
-                   string.Format(
-                       CultureInfo.InvariantCulture,
-                       "Failed to terminate application via the menu. Error was: {0}",
-                       e));
+                    prefix,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Failed to terminate application via the menu. Error was: {0}",
+                        e));
             }
 
             try
@@ -100,6 +102,7 @@ namespace Test.Regression.Explorer
             catch (Exception e)
             {
                 m_Log.Error(
+                    prefix,
                     string.Format(
                         CultureInfo.InvariantCulture,
                         "Failed to terminate application. Error was: {0}",

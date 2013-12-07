@@ -124,13 +124,17 @@
     </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="Controls\ApplicationProxies.cs" />
+    <Compile Include="Controls\ControlProxies.cs" />
     <Compile Include="Controls\DialogProxies.cs" />
     <Compile Include="Controls\MenuProxies.cs" />
     <Compile Include="Controls\TabProxies.cs" />
     <Compile Include="Controls\WelcomePageControlProxies.cs" />
     <Compile Include="DependencyInjection.cs" />
+    <Compile Include="Reporting\ConsoleReporter.cs" />
+    <Compile Include="Reporting\IReporter.cs" />
+    <Compile Include="Reporting\LogReporter.cs" />
     <Compile Include="Retry.cs" />
-    <Compile Include="TestCase.cs" />
+    <Compile Include="TestStep.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="Mono.Options\Options.cs">
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
@@ -156,6 +160,8 @@
     <Compile Include="UseCases\NewProject.cs" />
     <Compile Include="UseCases\VerifyViews.cs" />
     <Compile Include="Assert.cs" />
+    <Compile Include="WhiteLogRedirector.cs" />
+    <Compile Include="WhiteLogRedirectorFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

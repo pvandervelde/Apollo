@@ -38,33 +38,42 @@ namespace Test.Regression.Explorer
         }
 
         /// <summary>
-        /// Logs an information message.
+        /// Logs a debug message.
         /// </summary>
+        /// <param name="prefix">The prefix text for the message.</param>
         /// <param name="message">The message.</param>
-        public void Info(string message)
+        public void Debug(string prefix, string message)
         {
             m_Diagnostics.Log(
-                LevelToLog.Info, 
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    "{0} INFO - {1}",
-                    DateTimeOffset.Now,
-                    message));
+                LevelToLog.Debug, 
+                prefix,
+                message);
+        }
+
+        /// <summary>
+        /// Logs an information message.
+        /// </summary>
+        /// <param name="prefix">The prefix text for the message.</param>
+        /// <param name="message">The message.</param>
+        public void Info(string prefix, string message)
+        {
+            m_Diagnostics.Log(
+                LevelToLog.Info,
+                prefix,
+                message);
         }
 
         /// <summary>
         /// Logs an error message.
         /// </summary>
+        /// <param name="prefix">The prefix text for the message.</param>
         /// <param name="message">The message.</param>
-        public void Error(string message)
+        public void Error(string prefix, string message)
         {
             m_Diagnostics.Log(
-                LevelToLog.Error, 
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    "{0} ERROR - {1}",
-                    DateTimeOffset.Now,
-                    message));
+                LevelToLog.Error,
+                prefix,
+                message);
         }
     }
 }

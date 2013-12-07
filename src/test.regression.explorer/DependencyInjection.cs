@@ -14,6 +14,7 @@ using Nuclei;
 using Nuclei.Configuration;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
+using Test.Regression.Explorer.Reporting;
 using Test.Regression.Explorer.UseCases;
 
 namespace Test.Regression.Explorer
@@ -71,6 +72,18 @@ namespace Test.Regression.Explorer
             builder.Register(c => new Log(c.Resolve<SystemDiagnostics>()));
         }
 
+        private static void RegisterReports(ContainerBuilder builder)
+        {
+            builder.Register(c => new ConsoleReporter())
+                .As<IReporter>()
+                .SingleInstance();
+
+            builder.Register(c => new LogReporter(
+                    c.Resolve<SystemDiagnostics>()))
+                .As<IReporter>()
+                .SingleInstance();
+        }
+
         private static void RegisterTests(ContainerBuilder builder)
         {
             builder.Register(c => new VerifyViews())
@@ -95,6 +108,7 @@ namespace Test.Regression.Explorer
 
                 RegisterLoggers(builder);
                 RegisterDiagnostics(builder);
+                RegisterReports(builder);
                 RegisterTests(builder);
                 RegisterLog(builder);
             }

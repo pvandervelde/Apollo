@@ -12,7 +12,7 @@ namespace Test.Regression.Explorer
     /// <summary>
     /// Defines a single test case.
     /// </summary>
-    internal sealed class TestCase
+    internal sealed class TestStep
     {
         /// <summary>
         /// The name of the test case.
@@ -25,7 +25,7 @@ namespace Test.Regression.Explorer
         private readonly Func<Application, Log, TestResult> m_TestCase;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestCase"/> class.
+        /// Initializes a new instance of the <see cref="TestStep"/> class.
         /// </summary>
         /// <param name="name">The name of the test case.</param>
         /// <param name="testCase">The action that is executed when the test case is executed.</param>
@@ -38,7 +38,7 @@ namespace Test.Regression.Explorer
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="testCase"/> is <see langword="null" />.
         /// </exception>
-        public TestCase(string name, Func<Application, Log, TestResult> testCase)
+        public TestStep(string name, Func<Application, Log, TestResult> testCase)
         {
             {
                 Lokad.Enforce.Argument(() => name);

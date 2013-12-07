@@ -80,7 +80,8 @@ namespace Test.Regression.Explorer.Controls
             var key = Registry.LocalMachine.OpenSubKey(keyPath);
             if (key == null)
             {
-                log.Info(
+                log.Debug(
+                    "Application - Search registry",
                     string.Format(
                         CultureInfo.InvariantCulture,
                         "Failed to find registry path at: {0}.",
@@ -93,6 +94,7 @@ namespace Test.Regression.Explorer.Controls
 
         private static string FindApolloInstallDirectoryInDefaultLocation(Log log)
         {
+            const string prefix = "Application - Search install directory";
             var expectedX64Path = string.Format(
                 CultureInfo.InvariantCulture,
                 @"c:\program files\{0}\{1}\{2}",
@@ -104,7 +106,8 @@ namespace Test.Regression.Explorer.Controls
                 return expectedX64Path;
             }
 
-            log.Info(
+            log.Debug(
+                prefix,
                 string.Format(
                     CultureInfo.InvariantCulture,
                     "Failed to find application directory at: {0}.",
@@ -121,7 +124,8 @@ namespace Test.Regression.Explorer.Controls
                 return expectedX86Path;
             }
 
-            log.Info(
+            log.Debug(
+                prefix,
                 string.Format(
                     CultureInfo.InvariantCulture,
                     "Failed to find application directory at: {0}.",
@@ -140,10 +144,11 @@ namespace Test.Regression.Explorer.Controls
                 if (explorerFiles.Length == 1)
                 {
                     log.Info(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "Found apollo explorer at [{0}].",
-                        buildDirectory));
+                        "Application - Search development directory",
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Found apollo explorer at [{0}].",
+                            buildDirectory));
 
                     return Path.GetDirectoryName(explorerFiles[0]);
                 }
@@ -160,6 +165,7 @@ namespace Test.Regression.Explorer.Controls
         /// <returns>The application.</returns>
         public static Application StartApplication(string applicationPath, Log log)
         {
+            const string prefix = "Application - Start";
             if (string.IsNullOrEmpty(applicationPath))
             {
                 return null;
@@ -178,6 +184,7 @@ namespace Test.Regression.Explorer.Controls
             };
 
             log.Info(
+                prefix,
                 string.Format(
                     CultureInfo.InvariantCulture,
                     "Loading application from: {0}",
@@ -185,10 +192,10 @@ namespace Test.Regression.Explorer.Controls
 
             var application = Application.Launch(processInfo);
 
-            log.Info("Launched application, waiting for idle ...");
+            log.Info(prefix, "Launched application, waiting for idle ...");
             application.WaitWhileBusy();
 
-            log.Info("Application launched and idle");
+            log.Info(prefix, "Application launched and idle");
             return application;
         }
 
@@ -199,9 +206,10 @@ namespace Test.Regression.Explorer.Controls
         /// <param name="log">The log object.</param>
         public static void ExitApplication(Application application, Log log)
         {
+            const string prefix = "Application - Exit";
             if (application != null)
             {
-                log.Info("Closing application.");
+                log.Info(prefix, "Closing application.");
                 try
                 {
                     application.Close();
@@ -224,6 +232,7 @@ namespace Test.Regression.Explorer.Controls
                 catch (Exception e)
                 {
                     log.Error(
+                        prefix,
                         string.Format(
                             CultureInfo.InvariantCulture,
                             "Error trying to terminate application. Error was: {0}",
