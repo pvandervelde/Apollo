@@ -38,7 +38,8 @@ namespace Apollo.UI.Wpf.Commands
                 return false;
             }
 
-            return projectFacade.CanLoadProject();
+            // return projectFacade.CanLoadProject();
+            return false;
         }
 
         /// <summary>
