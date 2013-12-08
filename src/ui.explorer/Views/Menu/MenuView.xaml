@@ -10,43 +10,38 @@
                    lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Explorer"
                    lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
                    xmlns:Common="clr-namespace:Apollo.UI.Wpf;assembly=Apollo.UI.Wpf">
-    <Common:RegionView.CommandBindings>
-        <CommandBinding Command="New"
-                        CanExecute="CommandNewProjectCanExecute"
-                        Executed="CommandNewProjectExecuted" />
-        <CommandBinding Command="Open"
-                        CanExecute="CommandLoadProjectCanExecute"
-                        Executed="CommandLoadProjectExecuted" />
-        <CommandBinding Command="Save"
-                        CanExecute="CommandSaveProjectCanExecute"
-                        Executed="CommandSaveProjectExecuted" />
-        <CommandBinding Command="Close"
-                        CanExecute="CommandCloseProjectCanExecute"
-                        Executed="CommandCloseProjectExecuted" />
-    </Common:RegionView.CommandBindings>
     <Menu AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.Menu}" 
           DockPanel.Dock="Top"
           IsMainMenu="True">
         <MenuItem AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.File}"
                   Header="{lex:Loc MainWindow_Menu_File}">
             <MenuItem AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.FileNew}"
-                      Command="New">
-            </MenuItem>
+                      x:Name="miFileNew"
+                      x:FieldModifier="private"
+                      Header="{lex:Loc MainWindow_Menu_File_New}"/>
             <MenuItem AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.FileOpen}"
-                      Command="Open" />
+                      x:Name="miFileOpen"
+                      x:FieldModifier="private"
+                      Header="{lex:Loc MainWindow_Menu_File_Open}"/>
             <Separator />
             <MenuItem AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.FileClose}"
-                      Command="Close" />
+                      x:Name="miFileClose"
+                      x:FieldModifier="private"
+                      Header="{lex:Loc MainWindow_Menu_File_Close}"/>
             <MenuItem AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.FileSave}"
-                      Command="Save" />
+                      x:Name="miFileSave"
+                      x:FieldModifier="private"
+                      Header="{lex:Loc MainWindow_Menu_File_Save}"/>
             <MenuItem AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.FileSaveAs}"
-                      Command="SaveAs" />
+                      x:Name="miFileSaveAs"
+                      x:FieldModifier="private"
+                      Header="{lex:Loc MainWindow_Menu_File_SaveAs}"/>
             <Separator />
             <!-- Recent -->
             <Separator />
-            <MenuItem x:Name="miFileExit"
+            <MenuItem AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.FileExit}"
+                      x:Name="miFileExit"
                       x:FieldModifier="private"
-                      AutomationProperties.AutomationId="{x:Static infrastructure:MainMenuAutomationIds.FileExit}"
                       Header="{lex:Loc MainWindow_Menu_File_Exit}" />
         </MenuItem>
 

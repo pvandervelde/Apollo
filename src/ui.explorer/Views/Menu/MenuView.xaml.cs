@@ -15,6 +15,31 @@ namespace Apollo.UI.Explorer.Views.Menu
     internal partial class MenuView : IMenuView
     {
         /// <summary>
+        /// The routed command used to create a new project.
+        /// </summary>
+        private static readonly RoutedCommand s_NewProjectCommand = new RoutedCommand();
+
+        /// <summary>
+        /// The routed command used to open a new project.
+        /// </summary>
+        private static readonly RoutedCommand s_OpenProjectCommand = new RoutedCommand();
+
+        /// <summary>
+        /// The routed command used to close the current project.
+        /// </summary>
+        private static readonly RoutedCommand s_CloseProjectCommand = new RoutedCommand();
+
+        /// <summary>
+        /// The routed command used to save the current project.
+        /// </summary>
+        private static readonly RoutedCommand s_SaveCommand = new RoutedCommand();
+
+        /// <summary>
+        /// The routed command used to save the current project under a new name.
+        /// </summary>
+        private static readonly RoutedCommand s_SaveAsCommand = new RoutedCommand();
+
+        /// <summary>
         /// The routed command used to exit the application.
         /// </summary>
         private static readonly RoutedCommand s_ExitCommand = new RoutedCommand();
@@ -64,6 +89,76 @@ namespace Apollo.UI.Explorer.Views.Menu
 
         private void BindFileMenuCommands()
         {
+            // Bind the new command
+            {
+                var cb = new CommandBinding(s_NewProjectCommand, CommandNewProjectExecuted, CommandNewProjectCanExecute);
+                CommandBindings.Add(cb);
+
+                InputBindings.Add(new InputBinding(s_NewProjectCommand, new KeyGesture(Key.N, ModifierKeys.Control)));
+
+                // Set the command and set the command target to the control so that we don't run into focus issues
+                // as given here:
+                // http://social.msdn.microsoft.com/Forums/en-US/wpf/thread/f5de6ffc-fa03-4f08-87e9-77bbad752033
+                miFileNew.Command = s_NewProjectCommand;
+                miFileNew.CommandTarget = this;
+            }
+
+            // Bind the open command
+            {
+                var cb = new CommandBinding(s_OpenProjectCommand, CommandOpenProjectExecuted, CommandOpenProjectCanExecute);
+                CommandBindings.Add(cb);
+
+                InputBindings.Add(new InputBinding(s_OpenProjectCommand, new KeyGesture(Key.O, ModifierKeys.Control)));
+
+                // Set the command and set the command target to the control so that we don't run into focus issues
+                // as given here:
+                // http://social.msdn.microsoft.com/Forums/en-US/wpf/thread/f5de6ffc-fa03-4f08-87e9-77bbad752033
+                miFileOpen.Command = s_OpenProjectCommand;
+                miFileOpen.CommandTarget = this;
+            }
+
+            // Bind the close command
+            {
+                var cb = new CommandBinding(s_CloseProjectCommand, CommandCloseProjectExecuted, CommandCloseProjectCanExecute);
+                CommandBindings.Add(cb);
+
+                InputBindings.Add(new InputBinding(s_CloseProjectCommand, new KeyGesture(Key.W, ModifierKeys.Control)));
+
+                // Set the command and set the command target to the control so that we don't run into focus issues
+                // as given here:
+                // http://social.msdn.microsoft.com/Forums/en-US/wpf/thread/f5de6ffc-fa03-4f08-87e9-77bbad752033
+                miFileClose.Command = s_CloseProjectCommand;
+                miFileClose.CommandTarget = this;
+            }
+
+            // Bind the save command
+            {
+                var cb = new CommandBinding(s_SaveCommand, CommandSaveProjectExecuted, CommandSaveProjectCanExecute);
+                CommandBindings.Add(cb);
+
+                InputBindings.Add(new InputBinding(s_SaveCommand, new KeyGesture(Key.S, ModifierKeys.Control)));
+
+                // Set the command and set the command target to the control so that we don't run into focus issues
+                // as given here:
+                // http://social.msdn.microsoft.com/Forums/en-US/wpf/thread/f5de6ffc-fa03-4f08-87e9-77bbad752033
+                miFileSave.Command = s_SaveCommand;
+                miFileSave.CommandTarget = this;
+            }
+
+            // Bind the save-as command
+            {
+                var cb = new CommandBinding(s_SaveAsCommand, CommandSaveAsProjectExecuted, CommandSaveAsProjectCanExecute);
+                CommandBindings.Add(cb);
+
+                InputBindings.Add(new InputBinding(s_SaveAsCommand, new KeyGesture(Key.F4, ModifierKeys.Alt | ModifierKeys.Control)));
+
+                // Set the command and set the command target to the control so that we don't run into focus issues
+                // as given here:
+                // http://social.msdn.microsoft.com/Forums/en-US/wpf/thread/f5de6ffc-fa03-4f08-87e9-77bbad752033
+                miFileSaveAs.Command = s_SaveAsCommand;
+                miFileSaveAs.CommandTarget = this;
+            }
+
             // Bind the exit command
             {
                 var cb = new CommandBinding(s_ExitCommand, CommandExitExecuted, CommandExitCanExecute);
@@ -189,7 +284,7 @@ namespace Apollo.UI.Explorer.Views.Menu
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
             Justification = "This is really a CanExecute event so we probably want to preserve the semantics.")]
-        private void CommandLoadProjectCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        private void CommandOpenProjectCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.Handled = true;
             e.CanExecute = Model.OpenProjectCommand.CanExecute(null);
@@ -197,7 +292,7 @@ namespace Apollo.UI.Explorer.Views.Menu
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
             Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
-        private void CommandLoadProjectExecuted(object sender, ExecutedRoutedEventArgs e)
+        private void CommandOpenProjectExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
             Model.OpenProjectCommand.Execute(null);
@@ -214,6 +309,22 @@ namespace Apollo.UI.Explorer.Views.Menu
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
             Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
         private void CommandSaveProjectExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            Model.SaveProjectCommand.Execute(null);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a CanExecute event so we probably want to preserve the semantics.")]
+        private void CommandSaveAsProjectCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.Handled = true;
+            e.CanExecute = Model.SaveProjectCommand.CanExecute(null);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
+        private void CommandSaveAsProjectExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
             Model.SaveProjectCommand.Execute(null);

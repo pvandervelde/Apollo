@@ -229,4 +229,19 @@
   <data name="WelcomeView_ViewName" xml:space="preserve">
     <value>Start page</value>
   </data>
+  <data name="MainWindow_Menu_File_Close" xml:space="preserve">
+    <value>_Close</value>
+  </data>
+  <data name="MainWindow_Menu_File_New" xml:space="preserve">
+    <value>_New</value>
+  </data>
+  <data name="MainWindow_Menu_File_Open" xml:space="preserve">
+    <value>_Open...</value>
+  </data>
+  <data name="MainWindow_Menu_File_Save" xml:space="preserve">
+    <value>_Save</value>
+  </data>
+  <data name="MainWindow_Menu_File_SaveAs" xml:space="preserve">
+    <value>Save _as...</value>
+  </data>
 </root>
