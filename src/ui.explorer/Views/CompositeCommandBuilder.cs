@@ -24,26 +24,16 @@ namespace Apollo.UI.Explorer.Views
     {
         private sealed class CommandSwitchWrapper : DelegateCommand<object>
         {
-            private static bool CanExecute(Func<bool> shouldExecute, ICommand command)
-            {
-                if (shouldExecute())
-                {
-                    return command.CanExecute(null);
-                }
-
-                return true;
-            }
-
             private static void OnExecute(Func<bool> shouldExecute, ICommand commandToExecute)
             {
-                if (shouldExecute())
+                if (shouldExecute() && commandToExecute.CanExecute(null))
                 {
                     commandToExecute.Execute(null);
                 }
             }
 
             public CommandSwitchWrapper(Func<bool> shouldExecute, ICommand commandToExecute)
-                : base(obj => OnExecute(shouldExecute, commandToExecute), obj => CanExecute(shouldExecute, commandToExecute))
+                : base(obj => OnExecute(shouldExecute, commandToExecute))
             { 
             }
         }
