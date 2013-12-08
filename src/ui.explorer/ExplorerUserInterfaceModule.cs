@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows;
+using System.Windows.Input;
 using Apollo.Core.Host;
 using Apollo.Core.Host.UserInterfaces.Application;
 using Apollo.Core.Host.UserInterfaces.Projects;
@@ -129,13 +130,10 @@ namespace Apollo.UI.Explorer
                     .AsImplementedInterfaces();
                 builder.RegisterAssemblyTypes(commonUiAssembly)
                     .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
-                    .InstancePerDependency();
+                    .SingleInstance();
                 builder.RegisterAssemblyTypes(commonUiAssembly)
                     .Where(t => t.FullName.EndsWith("EventListener", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
                     .SingleInstance();
-                builder.RegisterAssemblyTypes(commonUiAssembly)
-                    .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
-                    .InstancePerDependency();
 
                 // Get the registrations from the current assembly
                 var localAssembly = GetType().Assembly;
