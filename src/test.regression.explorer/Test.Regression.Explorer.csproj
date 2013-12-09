@@ -127,6 +127,7 @@
     <Compile Include="Controls\ControlProxies.cs" />
     <Compile Include="Controls\DialogProxies.cs" />
     <Compile Include="Controls\MenuProxies.cs" />
+    <Compile Include="Controls\ProjectPageControlProxies.cs" />
     <Compile Include="Controls\TabProxies.cs" />
     <Compile Include="Controls\WelcomePageControlProxies.cs" />
     <Compile Include="DependencyInjection.cs" />
@@ -157,7 +158,7 @@
     <Compile Include="TestContext.cs" />
     <Compile Include="TestResult.cs" />
     <Compile Include="TestStatus.cs" />
-    <Compile Include="UseCases\NewProject.cs" />
+    <Compile Include="UseCases\VerifyProject.cs" />
     <Compile Include="UseCases\VerifyViews.cs" />
     <Compile Include="Assert.cs" />
     <Compile Include="WhiteLogRedirector.cs" />

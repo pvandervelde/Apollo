@@ -74,8 +74,9 @@ namespace Test.Regression.Explorer
                 }
 
                 // Select the type of test to execute
-                var verifier = container.ResolveKeyed<IUserInterfaceVerifier>(typeof(VerifyViews));
-                foreach (var testCase in verifier.TestsToExecute())
+                var views = container.ResolveKeyed<IUserInterfaceVerifier>(typeof(VerifyViews));
+                var projects = container.ResolveKeyed<IUserInterfaceVerifier>(typeof(VerifyProject));
+                foreach (var testCase in views.TestsToExecute().Append(projects.TestsToExecute()))
                 {
                     var message = string.Format(
                         CultureInfo.InvariantCulture,

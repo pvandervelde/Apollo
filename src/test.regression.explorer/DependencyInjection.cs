@@ -90,6 +90,11 @@ namespace Test.Regression.Explorer
                 .As<IUserInterfaceVerifier>()
                 .Keyed<IUserInterfaceVerifier>(typeof(VerifyViews))
                 .SingleInstance();
+
+            builder.Register(c => new VerifyProject())
+                .As<IUserInterfaceVerifier>()
+                .Keyed<IUserInterfaceVerifier>(typeof(VerifyProject))
+                .SingleInstance();
         }
 
         /// <summary>
