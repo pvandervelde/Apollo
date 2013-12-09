@@ -161,7 +161,7 @@ namespace Test.Regression.Explorer.Controls
             var newMenu = GetFileNewMenuItem(application, log);
             if (newMenu == null)
             {
-                throw new RegressionTestFailedException(prefix + ": Failed to get the 'File' menu item.");
+                throw new RegressionTestFailedException(prefix + ": Failed to get the 'File - New' menu item.");
             }
 
             try
@@ -171,6 +171,33 @@ namespace Test.Regression.Explorer.Controls
             catch (Exception e)
             {
                 throw new RegressionTestFailedException(prefix + ": Failed to click the 'File - New' menu item.", e);
+            }
+        }
+
+        /// <summary>
+        /// Closes a project via the 'File - Close' menu.
+        /// </summary>
+        /// <param name="application">The application.</param>
+        /// <param name="log">The log object.</param>
+        /// <exception cref="RegressionTestFailedException">
+        ///     Thrown if the 'File - Close' menu could not be invoked for some reason.
+        /// </exception>
+        public static void CloseProjectViaFileCloseMenuItem(Application application, Log log)
+        {
+            const string prefix = "Menus - Close project via File menu";
+            var closeMenu = GetFileCloseMenuItem(application, log);
+            if (closeMenu == null)
+            {
+                throw new RegressionTestFailedException(prefix + ": Failed to get the 'File - Close' menu item.");
+            }
+
+            try
+            {
+                closeMenu.Click();
+            }
+            catch (Exception e)
+            {
+                throw new RegressionTestFailedException(prefix + ": Failed to click the 'File - Close' menu item.", e);
             }
         }
 
@@ -211,11 +238,11 @@ namespace Test.Regression.Explorer.Controls
         }
 
         /// <summary>
-        /// Opens the start page tab item via the 'View - Start page' menu.
+        /// Switches to the start page tab item via the 'View - Start page' menu.
         /// </summary>
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
-        public static void OpenStartPageViaViewStartPageMenuItem(Application application, Log log)
+        public static void SwitchToStartPageViaViewStartPageMenuItem(Application application, Log log)
         {
             const string prefix = "Menus - Open start page via View menu";
             var menu = GetMainMenu(application, log);
@@ -245,11 +272,11 @@ namespace Test.Regression.Explorer.Controls
         }
 
         /// <summary>
-        /// Opens the start page tab item via the 'View - Start page' menu.
+        /// Switches to the project tab item via the 'View - Start page' menu.
         /// </summary>
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
-        public static void OpenProjectPageViaViewStartPageMenuItem(Application application, Log log)
+        public static void SwitchToProjectPageViaViewStartPageMenuItem(Application application, Log log)
         {
             const string prefix = "Menus - Open project page via View menu";
             var menu = GetMainMenu(application, log);

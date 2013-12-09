@@ -99,7 +99,7 @@ namespace Test.Regression.Explorer.Controls
             var startPage = TabProxies.GetStartPageTabItem(application, log);
             if (startPage == null)
             {
-                MenuProxies.OpenStartPageViaViewStartPageMenuItem(application, log);
+                MenuProxies.SwitchToStartPageViaViewStartPageMenuItem(application, log);
             }
 
             startPage = TabProxies.GetStartPageTabItem(application, log);
@@ -181,7 +181,7 @@ namespace Test.Regression.Explorer.Controls
             var startPage = TabProxies.GetStartPageTabItem(application, log);
             if (startPage == null)
             {
-                MenuProxies.OpenStartPageViaViewStartPageMenuItem(application, log);
+                MenuProxies.SwitchToStartPageViaViewStartPageMenuItem(application, log);
             }
 
             startPage = TabProxies.GetStartPageTabItem(application, log);
@@ -263,7 +263,7 @@ namespace Test.Regression.Explorer.Controls
             var startPage = TabProxies.GetStartPageTabItem(application, log);
             if (startPage == null)
             {
-                MenuProxies.OpenStartPageViaViewStartPageMenuItem(application, log);
+                MenuProxies.SwitchToStartPageViaViewStartPageMenuItem(application, log);
             }
 
             startPage = TabProxies.GetStartPageTabItem(application, log);
@@ -343,7 +343,7 @@ namespace Test.Regression.Explorer.Controls
             var startPage = TabProxies.GetStartPageTabItem(application, log);
             if (startPage == null)
             {
-                MenuProxies.OpenStartPageViaViewStartPageMenuItem(application, log);
+                MenuProxies.SwitchToStartPageViaViewStartPageMenuItem(application, log);
             }
 
             startPage = TabProxies.GetStartPageTabItem(application, log);

@@ -30,13 +30,14 @@ namespace Test.Regression.Explorer.UseCases
         {
             return new List<TestStep>
                 {
-                    //// new TestStep("Tab behaviour", VerifyTabBehaviour),
-                    //// new TestStep("Welcome tab", VerifyWelcomeTab),
+                    new TestStep("Tab behaviour", VerifyTabBehaviour),
+                    new TestStep("Welcome tab", VerifyWelcomeTab),
                     new TestStep("Close welcome page on project open", VerifyCloseOnProjectOpenCheckbox),
-                    //// new TestStep("Initialize show welcome page", InitializeShowWelcomePageCheckbox),
-                    //// new TestStep("Verify show welcome page", VerifyShowWelcomePageCheckbox),
-                    //// new TestStep("View menu", VerifyViewMenu),
-                    //// new TestStep("Help menu", VerifyHelpMenu),
+                    new TestStep("Initialize show welcome page", InitializeShowWelcomePageCheckbox),
+                    new TestStep("Verify show welcome page", VerifyShowWelcomePageCheckbox),
+                    new TestStep("File menu", VerifyFileMenu),
+                    new TestStep("View menu", VerifyViewMenu),
+                    new TestStep("Help menu", VerifyHelpMenu),
                 };
         }
 
@@ -57,8 +58,11 @@ namespace Test.Regression.Explorer.UseCases
                 if (startPage == null)
                 {
                     log.Info(prefix, "Opening start page.");
-                    MenuProxies.OpenStartPageViaViewStartPageMenuItem(application, log);
+                    MenuProxies.SwitchToStartPageViaViewStartPageMenuItem(application, log);
                 }
+
+                // Make sure we don't close the welcome tab upon opening the project page
+                WelcomePageControlProxies.UncheckCloseWelcomePageOnProjectOpen(application, log);
 
                 var projectPage = TabProxies.GetProjectPageTabItem(application, log);
                 if (projectPage == null)
@@ -108,11 +112,11 @@ namespace Test.Regression.Explorer.UseCases
                 assert.IsTrue(startPage.IsSelected, prefix + " - Start is selected");
                 assert.IsFalse(projectPage.IsSelected, prefix + " - Project is not selected");
 
-                MenuProxies.OpenProjectPageViaViewStartPageMenuItem(application, log);
+                MenuProxies.SwitchToProjectPageViaViewStartPageMenuItem(application, log);
                 assert.IsFalse(startPage.IsSelected, prefix + " - Start is not selected");
                 assert.IsTrue(projectPage.IsSelected, prefix + " - Project is selected");
 
-                MenuProxies.OpenStartPageViaViewStartPageMenuItem(application, log);
+                MenuProxies.SwitchToStartPageViaViewStartPageMenuItem(application, log);
                 assert.IsTrue(startPage.IsSelected, prefix + " - Start is selected");
                 assert.IsFalse(projectPage.IsSelected, prefix + " - Project is not selected");
 
@@ -148,7 +152,7 @@ namespace Test.Regression.Explorer.UseCases
                 if (startPage == null)
                 {
                     log.Info(prefix, "Opening start page.");
-                    MenuProxies.OpenStartPageViaViewStartPageMenuItem(application, log);
+                    MenuProxies.SwitchToStartPageViaViewStartPageMenuItem(application, log);
                 }
 
                 startPage = TabProxies.GetStartPageTabItem(application, log);
@@ -235,7 +239,7 @@ namespace Test.Regression.Explorer.UseCases
                 if (startPage == null)
                 {
                     log.Info(prefix, "Opening start page.");
-                    MenuProxies.OpenStartPageViaViewStartPageMenuItem(application, log);
+                    MenuProxies.SwitchToStartPageViaViewStartPageMenuItem(application, log);
                 }
 
                 startPage = TabProxies.GetStartPageTabItem(application, log);
@@ -392,30 +396,47 @@ namespace Test.Regression.Explorer.UseCases
         /// </summary>
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
-        /// <param name="assert">The object used to verify the test conditions.</param>
         /// <returns>The test result for the current test case.</returns>
-        public TestResult VerifyFileMenu(Application application, Log log, Assert assert)
+        public TestResult VerifyFileMenu(Application application, Log log)
         {
-            // If a project is open, then close it
+            const string prefix = "File menu";
+            var result = new TestResult();
+            var assert = new Assert(result, log);
+            try
+            {
+                var projectPage = TabProxies.GetProjectPageTabItem(application, log);
+                if (projectPage != null)
+                {
+                    TabProxies.CloseProjectPageTab(application, log);
+                }
 
-            // New (check that start page has closed, project page has opened, and close has been enabled)
-            // Open
-            // Exit
-            throw new NotImplementedException();
-        }
+                projectPage = TabProxies.GetProjectPageTabItem(application, log);
+                assert.IsNull(projectPage, prefix + " - The project page was not closed.");
 
-        /// <summary>
-        /// Verifies that the 'Edit' menu works as expected.
-        /// </summary>
-        /// <param name="application">The application.</param>
-        /// <param name="log">The log object.</param>
-        /// <param name="assert">The object used to verify the test conditions.</param>
-        /// <returns>The test result for the current test case.</returns>
-        public TestResult VerifyEditMenu(Application application, Log log, Assert assert)
-        {
-            // Undo
-            // Redo
-            throw new NotImplementedException();
+                MenuProxies.CreateNewProjectViaFileNewMenuItem(application, log);
+
+                projectPage = TabProxies.GetProjectPageTabItem(application, log);
+                assert.IsNotNull(projectPage, prefix + " - A new project was not created.");
+
+                var fileCloseMenu = MenuProxies.GetFileCloseMenuItem(application, log);
+                assert.IsTrue(fileCloseMenu.Enabled, prefix + " - File - Close menu is not enabled");
+
+                MenuProxies.CloseProjectViaFileCloseMenuItem(application, log);
+                
+                projectPage = TabProxies.GetProjectPageTabItem(application, log);
+                assert.IsNull(projectPage, prefix + " - The project page was not closed.");
+            }
+            catch (RegressionTestFailedException e)
+            {
+                var message = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Failed with exception. Error: {0}",
+                    e);
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -438,6 +459,9 @@ namespace Test.Regression.Explorer.UseCases
                     TabProxies.CloseStartPageTab(application, log);
                 }
 
+                // Make sure we don't close the welcome tab upon opening the project page
+                WelcomePageControlProxies.UncheckCloseWelcomePageOnProjectOpen(application, log);
+
                 var projectPage = TabProxies.GetProjectPageTabItem(application, log);
                 if (projectPage != null)
                 {
@@ -446,7 +470,7 @@ namespace Test.Regression.Explorer.UseCases
                 }
 
                 // Open start page via view menu
-                MenuProxies.OpenStartPageViaViewStartPageMenuItem(application, log);
+                MenuProxies.SwitchToStartPageViaViewStartPageMenuItem(application, log);
 
                 startPage = TabProxies.GetStartPageTabItem(application, log);
                 assert.IsNotNull(startPage, prefix + " - Check start page exists after clicking start page menu item");
