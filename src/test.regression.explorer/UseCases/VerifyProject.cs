@@ -365,6 +365,7 @@ namespace Test.Regression.Explorer.UseCases
                 isDataset2Activated = ProjectPageControlProxies.IsDatasetActivated(application, log, ids[2]);
                 assert.IsTrue(isDataset2Activated, prefix + " - Failed to activate the second dataset.");
 
+                /*
                 // Undo
                 MenuProxies.UndoViaEditMenu(application, log);
 
@@ -400,6 +401,7 @@ namespace Test.Regression.Explorer.UseCases
 
                 isDataset2Activated = ProjectPageControlProxies.IsDatasetActivated(application, log, ids[2]);
                 assert.IsTrue(isDataset2Activated, prefix + " - Did not redo the undone activation state of the second dataset.");
+                 * */
 
                 ProjectPageControlProxies.DeactivateDataset(application, log, ids[1]);
 
