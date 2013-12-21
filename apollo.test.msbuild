@@ -26,7 +26,7 @@
         <MsBuildTestRegressionConsole>$(DirWorkspace)\apollo.Test.Regression.Console.msbuild</MsBuildTestRegressionConsole>
     </PropertyGroup>
     <Target Name="_ExecuteConsoleRegressionTests" DependsOnTargets="_PrepareWorkspace">
-        <!-- <MSBuild Projects="$(MsBuildTestRegressionConsole)" /> -->
+        <MSBuild Projects="$(MsBuildTestRegressionConsole)" />
     </Target>
     
     <PropertyGroup>
