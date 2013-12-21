@@ -40,17 +40,30 @@
             Condition="Exists('$(MsBuildExtensionsPath)\TemplateFile.msbuild')"/>
     <Import Project="$(MsBuildExtensionsPath)\SherlockRegisterTest.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\SherlockRegisterTest.msbuild')"/>
+    <Import Project="$(MsBuildExtensionsPath)\Unzip.msbuild"
+            Condition="Exists('$(MsBuildExtensionsPath)\Unzip.msbuild')"/>
     
     <Import Project="$(DirWorkspace)\version.xml"
             Condition="Exists('$(DirWorkspace)\version.xml')"/>
 
-    <Target Name="Run" DependsOnTargets="_ExecuteRegressionTest;_WriteReportPath">
+    <Target Name="Run" DependsOnTargets="_UnpackTestFiles;_ExecuteRegressionTest;_WriteReportPath">
         <!-- Do nothing here -->
     </Target>
     
     <!-- Display info -->
     <Target Name="_DisplayInfo">
         <Message Text="Running regression tests for Apollo.UI.Explorer ..." />
+    </Target>
+    
+    <PropertyGroup>
+        <FileNameExplorerRegressionPackage>test.regression.explorer.zip</FileNameExplorerRegressionPackage>
+        <FileExplorerRegressionPackage>$(DirBuildDeploy)\$(FileNameExplorerRegressionPackage)</FileExplorerRegressionPackage>
+        
+        <DirBuildTempExplorerRegression>$(DirBuildTemp)\explorer.regression</DirBuildTempExplorerRegression>
+    </PropertyGroup>
+    <Target Name="_UnpackTestFiles" DependsOnTargets="_DisplayInfo">
+        <Unzip InputFileName="$(FileExplorerRegressionPackage)"
+               DestinationDirectory="$(DirBuildTempExplorerRegression)" />
     </Target>
     
     <PropertyGroup>
@@ -63,7 +76,7 @@
         <DirRemoteTest>c:\temp</DirRemoteTest>
         <DirRemoteTestFiles>$(DirRemoteTest)\testfiles</DirRemoteTestFiles>
     </PropertyGroup>
-    <Target Name="_ExecuteRegressionTest" DependsOnTargets="_DisplayInfo">
+    <Target Name="_ExecuteRegressionTest" DependsOnTargets="_DisplayInfo;_UnpackTestFiles">
         <MakeDir Directories="$(DirReportDumps)" Condition="!Exists('$(DirReportDumps)')" />
         <MakeDir Directories="$(DirSherlockReport)" Condition="!Exists('$(DirSherlockReport)')" />
         <MakeDir Directories="$(DirBuildTempTests)" Condition="!Exists('$(DirBuildTempTests)')" />
@@ -85,7 +98,7 @@
                 <ReplacementValue>$(DirRemoteTestFiles)</ReplacementValue>
             </SherlockTokens>
             <SherlockTokens Include="DirLocalTestFiles">
-                <ReplacementValue>$(DirBuildBin)</ReplacementValue>
+                <ReplacementValue>$(DirBuildTempExplorerRegression)</ReplacementValue>
             </SherlockTokens>
             
             <SherlockTokens Include="DirSherlockLog">

@@ -12,7 +12,7 @@
         <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
     </PropertyGroup>
 
-    <Target Name="Run" DependsOnTargets="_PrepareWorkspace;_CodeAnalysisCcm;_CodeAnalysisSourceMonitor;_BuildBinaries;_StripPdbPaths;_ExecuteUnitTests;_CodeAnalysisFxCop;_CodeAnalysisMoma;_BuildApiDocumentation;_PackageNuget">
+    <Target Name="Run" DependsOnTargets="_PrepareWorkspace;_CodeAnalysisCcm;_CodeAnalysisSourceMonitor;_BuildBinaries;_StripPdbPaths;_ExecuteUnitTests;_CodeAnalysisFxCop;_CodeAnalysisMoma;_BuildApiDocumentation;_PackageNuget;_PackageTests">
         <!-- Do nothing here -->
     </Target>
     
@@ -90,5 +90,12 @@
     </PropertyGroup>
     <Target Name="_PackageNuget" DependsOnTargets="_BuildBinaries">
         <MSBuild Projects="$(MsBuildPackageNuGet)" Properties="Configuration=Deploy" />
+    </Target>
+    
+    <PropertyGroup>
+        <MsBuildPackageTests>$(DirWorkspace)\apollo.Build.Package.Tests.msbuild</MsBuildPackageTests>
+    </PropertyGroup>
+    <Target Name="_PackageTests" DependsOnTargets="_BuildBinaries">
+        <MSBuild Projects="$(MsBuildPackageTests)" Properties="Configuration=Deploy" />
     </Target>
 </Project>
