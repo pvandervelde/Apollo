@@ -7,7 +7,7 @@
         <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
     </PropertyGroup>
 
-    <Target Name="Run" DependsOnTargets="_DeployNuget;_DeployMsi;_SwitchIssuesToRelease">
+    <Target Name="Run" DependsOnTargets="_DeployNuget;_DeployMsi">
         <!-- Do nothing here -->
     </Target>
     
@@ -27,12 +27,5 @@
     </PropertyGroup>
     <Target Name="_DeployMsi" DependsOnTargets="_DisplayInfo">
         <MSBuild Projects="$(MsBuildDeployMsi)" Properties="Configuration=Deploy" />
-    </Target>
-    
-    <PropertyGroup>
-        <MsBuildDeploySwitchIssuesToRelease>$(DirWorkspace)\apollo.Deploy.SwitchIssuesToRelease.msbuild</MsBuildDeploySwitchIssuesToRelease>
-    </PropertyGroup>
-    <Target Name="_SwitchIssuesToRelease" >
-        <MSBuild Projects="$(MsBuildDeploySwitchIssuesToRelease)" />
     </Target>
 </Project>

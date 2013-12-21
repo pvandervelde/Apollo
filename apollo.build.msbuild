@@ -7,13 +7,12 @@
         <ShouldClean>true</ShouldClean>
         <ShouldHaveCoverage>true</ShouldHaveCoverage>
         <ShouldCleanPackages>false</ShouldCleanPackages>
-        <ShouldSwitchIssuesToTesting>false</ShouldSwitchIssuesToTesting>
         
         <!-- Directories -->
         <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
     </PropertyGroup>
 
-    <Target Name="Run" DependsOnTargets="_PrepareWorkspace;_SwitchIssuesToTesting;_CodeAnalysisCcm;_CodeAnalysisSourceMonitor;_BuildBinaries;_StripPdbPaths;_ExecuteUnitTests;_CodeAnalysisFxCop;_CodeAnalysisMoma;_BuildApiDocumentation;_PackageNuget">
+    <Target Name="Run" DependsOnTargets="_PrepareWorkspace;_CodeAnalysisCcm;_CodeAnalysisSourceMonitor;_BuildBinaries;_StripPdbPaths;_ExecuteUnitTests;_CodeAnalysisFxCop;_CodeAnalysisMoma;_BuildApiDocumentation;_PackageNuget">
         <!-- Do nothing here -->
     </Target>
     
@@ -26,13 +25,6 @@
     </PropertyGroup>
     <Target Name="_PrepareWorkspace" DependsOnTargets="_DisplayInfo">
         <MSBuild Projects="$(MsBuildPrepareWorkspace)" Properties="ShouldClean=$(ShouldClean);ShouldCleanPackages=$(ShouldCleanPackages)" />
-    </Target>
-    
-    <PropertyGroup>
-        <MsBuildPrepareSwitchIssuesToTesting>$(DirWorkspace)\apollo.Build.SwitchIssuesToTesting.msbuild</MsBuildPrepareSwitchIssuesToTesting>
-    </PropertyGroup>
-    <Target Name="_SwitchIssuesToTesting" Condition="$(ShouldSwitchIssuesToTesting)" >
-        <MSBuild Projects="$(MsBuildPrepareSwitchIssuesToTesting)" />
     </Target>
     
     <PropertyGroup>
