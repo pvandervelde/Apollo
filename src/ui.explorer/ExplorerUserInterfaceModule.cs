@@ -130,7 +130,7 @@ namespace Apollo.UI.Explorer
                     .AsImplementedInterfaces();
                 builder.RegisterAssemblyTypes(commonUiAssembly)
                     .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
-                    .SingleInstance();
+                    .InstancePerDependency();
                 builder.RegisterAssemblyTypes(commonUiAssembly)
                     .Where(t => t.FullName.EndsWith("EventListener", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
                     .SingleInstance();
