@@ -120,6 +120,17 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         }
 
         /// <summary>
+        /// Gets the ID of the dataset.
+        /// </summary>
+        public DatasetId Id
+        {
+            get
+            {
+                return m_Dataset.Id;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating the name of the dataset.
         /// </summary>
         public string Name

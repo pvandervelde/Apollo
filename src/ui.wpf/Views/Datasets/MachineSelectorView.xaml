@@ -67,7 +67,8 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ListBox x:Name="items"
+        <ListBox AutomationProperties.AutomationId="{x:Static local:MachineSelectorViewAutomationIds.AvailableMachines}" 
+                 x:Name="items"
                  x:FieldModifier="private"
                  Grid.Row="0"
                  SelectionMode="Single"
@@ -84,13 +85,15 @@
         <StackPanel Grid.Row="1"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right">
-            <Button IsDefault="True"
+            <Button AutomationProperties.AutomationId="{x:Static local:MachineSelectorViewAutomationIds.ConfirmSelection}" 
+                    IsDefault="True"
                     Click="OnOkButtonClick"
                     Margin="3, 3, 3, 3"
                     Style="{StaticResource enableOkButton}">
                 <TextBlock Text="{lex:Loc MachineSelectorView_Ok}" />
             </Button>
-            <Button IsCancel="True"
+            <Button AutomationProperties.AutomationId="{x:Static local:MachineSelectorViewAutomationIds.CancelSelection}" 
+                    IsCancel="True"
                     Margin="3, 3 3, 3"
                     Style="{StaticResource standardButtonSize}">
                 <TextBlock Text="{lex:Loc MachineSelectorView_Cancel}" />

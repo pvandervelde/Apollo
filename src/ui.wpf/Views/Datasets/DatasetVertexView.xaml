@@ -12,6 +12,7 @@
              lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
              xmlns:pix="clr-namespace:PixelLab.Wpf;assembly=PixelLab.Wpf"
              xmlns:converters="clr-namespace:Apollo.UI.Wpf.Converters"
+             xmlns:infrastructure="clr-namespace:Apollo.UI.Wpf"
              mc:Ignorable="d"
              d:DesignWidth="450"
              d:DesignHeight="300"
@@ -69,6 +70,12 @@
                 <Button x:Name="deleteDatasetButton"
                         x:FieldModifier="private"
                         Margin="5">
+                    <AutomationProperties.AutomationId>
+                        <MultiBinding StringFormat="Button_[{0}_[{1}]]">
+                            <Binding Source="{x:Static infrastructure:DatasetViewAutomationIds.DatasetDelete}" />
+                            <Binding Path="Id" />
+                        </MultiBinding>
+                    </AutomationProperties.AutomationId>
                     <!-- Use an image that is too large so that if users zoom in, we keep fidelity of the image. -->
                     <Image Source="{lex:Loc Img_Delete_48}"
                            gi:ImageGreyer.IsGreyable="true"
@@ -81,6 +88,12 @@
                 <Button x:Name="addChildDatasetButton"
                         x:FieldModifier="private"
                         Margin="5">
+                    <AutomationProperties.AutomationId>
+                        <MultiBinding StringFormat="Button_[{0}_[{1}]]">
+                            <Binding Source="{x:Static infrastructure:DatasetViewAutomationIds.DatasetCreateChild}" />
+                            <Binding Path="Id" />
+                        </MultiBinding>
+                    </AutomationProperties.AutomationId>
                     <!-- Use an image that is too large so that if users zoom in, we keep fidelity of the image. -->
                     <Image Source="{lex:Loc Img_Add_48}"
                            gi:ImageGreyer.IsGreyable="true"
@@ -106,7 +119,14 @@
                          VerticalAlignment="Center"
                          Background="SeaShell"
                          TextBoxInfo="{lex:Loc DatasetGraphView_DatasetNameSuggestion}"
-                         Text="{Binding Path=Name}" />
+                         Text="{Binding Path=Name}">
+            <AutomationProperties.AutomationId>
+                <MultiBinding StringFormat="TextBox_[{0}_[{1}]]">
+                    <Binding Source="{x:Static infrastructure:DatasetViewAutomationIds.DatasetName}" />
+                    <Binding Path="Id" />
+                </MultiBinding>
+            </AutomationProperties.AutomationId>
+        </pix:InfoTextBox>
 
         <!-- Summary -->
         <Label Grid.Row="2"
@@ -128,9 +148,16 @@
                          VerticalScrollBarVisibility="Auto"
                          SpellCheck.IsEnabled="True"
                          TextBoxInfo="{lex:Loc DatasetGraphView_DatasetSummarySuggestion}"
-                         Text="{Binding Path=Summary}" />
+                         Text="{Binding Path=Summary}">
+            <AutomationProperties.AutomationId>
+                <MultiBinding StringFormat="TextBox_[{0}_[{1}]]">
+                    <Binding Source="{x:Static infrastructure:DatasetViewAutomationIds.DatasetSummary}" />
+                    <Binding Path="Id" />
+                </MultiBinding>
+            </AutomationProperties.AutomationId>
+        </pix:InfoTextBox>
 
-        <!-- Storage location? -->
+            <!-- Storage location? -->
         <Label Grid.Row="3"
                Grid.Column="0"
                Margin="5, 5, 5, 0"
@@ -177,13 +204,26 @@
             <TextBlock Grid.Row="0"
                        Grid.Column="0"
                        Background="SeaShell"
-                       Text="{Binding Path=RunsOn}" />
+                       Text="{Binding Path=RunsOn}">
+                <AutomationProperties.AutomationId>
+                    <MultiBinding StringFormat="TextBlock_[{0}_[{1}]]">
+                        <Binding Source="{x:Static infrastructure:DatasetViewAutomationIds.DatasetRunningOn}" />
+                        <Binding Path="Id" />
+                    </MultiBinding>
+                </AutomationProperties.AutomationId>
+            </TextBlock>
 
             <Button x:Name="activateOrDeactivateDatasetButton"
                     x:FieldModifier="private"
                     Grid.Row="0"
                     Grid.Column="1"
                     Margin="5">
+                <AutomationProperties.AutomationId>
+                    <MultiBinding StringFormat="Button_[{0}_[{1}]]">
+                        <Binding Source="{x:Static infrastructure:DatasetViewAutomationIds.DatasetActivateDeactivate}" />
+                        <Binding Path="Id" />
+                    </MultiBinding>
+                </AutomationProperties.AutomationId>
                 <Image Width="24"
                        Height="24"
                        Source="{Binding Path=IsActivated, Converter={StaticResource datasetStateToImageConverter}}" />

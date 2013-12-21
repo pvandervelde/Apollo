@@ -10,6 +10,7 @@
                         lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Wpf"
                         lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
              xmlns:pix="clr-namespace:PixelLab.Wpf;assembly=PixelLab.Wpf"
+             xmlns:infrastructure="clr-namespace:Apollo.UI.Wpf"
              mc:Ignorable="d" 
              d:DesignWidth="600"
              d:DesignHeight="250"
@@ -60,7 +61,8 @@
                                    FontWeight="Bold"/>
                     </Label>
 
-                    <pix:InfoTextBox Grid.Row="0"
+                    <pix:InfoTextBox AutomationProperties.AutomationId="{x:Static infrastructure:ProjectViewAutomationIds.ProjectName}"
+                                     Grid.Row="0"
                                      Grid.Column="1"
                                      VerticalAlignment="Center"
                                      TextBoxInfo="{lex:Loc ProjectDescriptionView_ProjectNameSuggestion}"
@@ -74,7 +76,8 @@
                                    FontWeight="Bold" />
                     </Label>
 
-                    <pix:InfoTextBox Grid.Row="1"
+                    <pix:InfoTextBox AutomationProperties.AutomationId="{x:Static infrastructure:ProjectViewAutomationIds.ProjectSummary}"
+                                     Grid.Row="1"
                                      Grid.Column="1"
                                      VerticalContentAlignment="Top"
                                      TextWrapping="WrapWithOverflow"
@@ -103,7 +106,8 @@
                                    FontWeight="Bold" />
                     </Label>
 
-                    <TextBlock Grid.Row="0"
+                    <TextBlock AutomationProperties.AutomationId="{x:Static infrastructure:ProjectViewAutomationIds.DatasetCount}"
+                               Grid.Row="0"
                                Grid.Column="1"
                                VerticalAlignment="Center"
                                Text="{Binding Path=NumberOfDatasets, Mode=OneWay}" />

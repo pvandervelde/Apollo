@@ -161,7 +161,16 @@ namespace Apollo.UI.Wpf.Views.Datasets
             set;
         }
 
-        // Start & Stop etc.
+        /// <summary>
+        /// Gets the ID of the dataset.
+        /// </summary>
+        public DatasetId Id
+        {
+            get
+            {
+                return m_Dataset.Id;
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether the new dataset can be moved from one parent

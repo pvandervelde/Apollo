@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="Apollo.UI.Wpf.Views.Datasets.DatasetGraphView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:infrastructure="clr-namespace:Apollo.UI.Wpf"
              xmlns:local="clr-namespace:Apollo.UI.Wpf.Views.Datasets"
              xmlns:graphsharp="clr-namespace:GraphSharp.Controls;assembly=GraphSharp.Controls"
              xmlns:zoom="clr-namespace:WPFExtensions.Controls;assembly=WPFExtensions"
@@ -24,7 +25,14 @@
                                 CornerRadius="10,10,10,10"
                                 Padding="{TemplateBinding Padding}"
                                 Opacity="{Binding Path=Creator, Mode=OneWay, Converter={StaticResource creatorToOpacityConverter}}">
-                            <local:DatasetVertexView DataContext="{TemplateBinding Vertex, Converter={StaticResource viewVertexConverter}}" />
+                            <local:DatasetVertexView DataContext="{TemplateBinding Vertex, Converter={StaticResource viewVertexConverter}}">
+                                <AutomationProperties.AutomationId>
+                                    <MultiBinding StringFormat="Vertex_[{0}_[{1}]]">
+                                        <Binding Source="{x:Static infrastructure:DatasetViewAutomationIds.GraphVertex}" />
+                                        <Binding Path="Id" />
+                                    </MultiBinding>
+                                </AutomationProperties.AutomationId>
+                            </local:DatasetVertexView>
 
                             <Border.Style>
                                 <Style TargetType="Border">
