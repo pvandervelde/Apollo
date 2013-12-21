@@ -7,7 +7,7 @@
         <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
     </PropertyGroup>
 
-    <Target Name="Run" DependsOnTargets="_PrepareWorkspace;_ExecuteConsoleRegressionTests;_GatherResults">
+    <Target Name="Run" DependsOnTargets="_PrepareWorkspace;_ExecuteConsoleRegressionTests;_ExecuteExplorerRegressionTests;_GatherResults">
         <!-- Do nothing here -->
     </Target>
     
@@ -26,13 +26,20 @@
         <MsBuildTestRegressionConsole>$(DirWorkspace)\apollo.Test.Regression.Console.msbuild</MsBuildTestRegressionConsole>
     </PropertyGroup>
     <Target Name="_ExecuteConsoleRegressionTests" DependsOnTargets="_PrepareWorkspace">
-        <MSBuild Projects="$(MsBuildTestRegressionConsole)" />
+        <!-- <MSBuild Projects="$(MsBuildTestRegressionConsole)" /> -->
+    </Target>
+    
+    <PropertyGroup>
+        <MsBuildTestRegressionExplorer>$(DirWorkspace)\apollo.Test.Regression.Explorer.msbuild</MsBuildTestRegressionExplorer>
+    </PropertyGroup>
+    <Target Name="_ExecuteExplorerRegressionTests" DependsOnTargets="_PrepareWorkspace">
+        <MSBuild Projects="$(MsBuildTestRegressionExplorer)" />
     </Target>
     
     <PropertyGroup>
         <MsBuildTestGatherResults>$(DirWorkspace)\apollo.Test.GatherResults.msbuild</MsBuildTestGatherResults>
     </PropertyGroup>
-    <Target Name="_GatherResults" DependsOnTargets="_PrepareWorkspace;_ExecuteConsoleRegressionTests">
+    <Target Name="_GatherResults" DependsOnTargets="_PrepareWorkspace;_ExecuteConsoleRegressionTests;_ExecuteExplorerRegressionTests">
         <MSBuild Projects="$(MsBuildTestGatherResults)" />
     </Target>
 </Project>

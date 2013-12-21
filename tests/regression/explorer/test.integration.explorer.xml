@@ -63,36 +63,33 @@
             <destination><![CDATA[${DirRemoteTestFiles}]]></destination>
             <base><![CDATA[${DirLocalTestFiles}]]></base>
             <paths>
-                <directory><![CDATA[${DirLocalTestFiles}\scripts]]></directory>
+                <file><![CDATA[${DirLocalTestFiles}\Test.Regression.Explorer.exe]]></file>
+                <file><![CDATA[${DirLocalTestFiles}\Test.Regression.Explorer.exe.config]]></file>
+                <file><![CDATA[${DirLocalTestFiles}\Autofac.dll]]></file>
+                <file><![CDATA[${DirLocalTestFiles}\Castle.Core.dll]]></file>
+                <file><![CDATA[${DirLocalTestFiles}\Lokad.Shared.dll]]></file>
+                <file><![CDATA[${DirLocalTestFiles}\NLog.dll]]></file>
+                <file><![CDATA[${DirLocalTestFiles}\Nuclei.dll]]></file>
+                <file><![CDATA[${DirLocalTestFiles}\Nuclei.Build.dll]]></file>
+                <file><![CDATA[${DirLocalTestFiles}\Nuclei.Configuration.dll]]></file>
+                <file><![CDATA[${DirLocalTestFiles}\Nuclei.Diagnostics.dll]]></file>
+                <file><![CDATA[${DirLocalTestFiles}\TestStack.White.dll]]></file>
             </paths>
             <includeinreport includesystemlog="true">
             </includeinreport>
         </xcopy>
         
-        <!-- Run the console application -->
+        <!-- Run the test application -->
         <console steporder="2" 
                  environment="Client" 
                  onfailure="Continue">
-            <exe><![CDATA[${DirInstallApollo}\Apollo.UI.Console.exe]]></exe>
+            <exe><![CDATA[${DirRemoteTestFiles}\Test.Regression.Explorer.exe]]></exe>
             <params>
-                <param><![CDATA[-script "${DirRemoteTestFiles}\scripts\project_new-save-load.py"]]></param>
             </params>
             <includeinreport includesystemlog="true">
-                <directory><![CDATA[C:\Users\Petrik\AppData\Local\P. van der Velde\Apollo.UI.Console\0.1\logs]]></directory>
-                <directory><![CDATA[C:\Users\Petrik\AppData\Local\P. van der Velde\Apollo.Core.Dataset\0.1\logs]]></directory>
-            </includeinreport>
-        </console>
-        
-        <console steporder="3" 
-                 environment="Client" 
-                 onfailure="Continue">
-            <exe><![CDATA[${DirInstallApollo}\Apollo.UI.Console.exe]]></exe>
-            <params>
-                <param><![CDATA[-script "${DirRemoteTestFiles}\scripts\dataset_new-save-load.py"]]></param>
-            </params>
-            <includeinreport includesystemlog="true">
-                <directory><![CDATA[C:\Users\Petrik\AppData\Local\P. van der Velde\Apollo.UI.Console\0.1\logs]]></directory>
-                <directory><![CDATA[C:\Users\Petrik\AppData\Local\P. van der Velde\Apollo.Core.Dataset\0.1\logs]]></directory>
+                <directory><![CDATA[C:\Users\test\AppData\Local\My Company Ltd\Apollo\0.1\logs]]></directory>
+                <directory><![CDATA[C:\Users\test\AppData\Local\My Company Ltd\Apollo.Core.Dataset\0.1\logs]]></directory>
+                <directory><![CDATA[${DirRemoteTestFiles}\test.regression.explorer.log]]></directory>
             </includeinreport>
         </console>
     </teststeps>
