@@ -238,6 +238,80 @@ namespace Test.Regression.Explorer.Controls
         }
 
         /// <summary>
+        /// Undoes the last action via the 'Edit - Undo' menu.
+        /// </summary>
+        /// <param name="application">The application.</param>
+        /// <param name="log">The log object.</param>
+        /// <exception cref="RegressionTestFailedException">
+        ///     Thrown if the 'Edit - Undo' menu could not be invoked for some reason.
+        /// </exception>
+        public static void UndoViaEditMenu(Application application, Log log)
+        {
+            const string prefix = "Menus - Undo last action via Edit menu";
+            var menu = GetMainMenu(application, log);
+            if (menu == null)
+            {
+                throw new RegressionTestFailedException(prefix + ": Failed to get the main menu.");
+            }
+
+            var editMenuSearchCriteria = SearchCriteria.ByAutomationId(MainMenuAutomationIds.Edit);
+            var undoSearchCriteria = SearchCriteria.ByAutomationId(MainMenuAutomationIds.EditUndo);
+            var undoMenu = Retry.Times(() => menu.MenuItemBy(editMenuSearchCriteria, undoSearchCriteria));
+            if (undoMenu == null)
+            {
+                throw new RegressionTestFailedException(prefix + ": Failed to get the 'Edit' menu.");
+            }
+
+            try
+            {
+                undoMenu.Click();
+            }
+            catch (Exception e)
+            {
+                throw new RegressionTestFailedException(
+                    prefix + ": Failed to click the 'Edit - Undo' menu item.",
+                    e);
+            }
+        }
+
+        /// <summary>
+        /// Redoes the last undone action via the 'Edit - Redo' menu.
+        /// </summary>
+        /// <param name="application">The application.</param>
+        /// <param name="log">The log object.</param>
+        /// <exception cref="RegressionTestFailedException">
+        ///     Thrown if the 'Edit - Redo' menu could not be invoked for some reason.
+        /// </exception>
+        public static void RedoViaEditMenu(Application application, Log log)
+        {
+            const string prefix = "Menus - Redo last undone action via Edit menu";
+            var menu = GetMainMenu(application, log);
+            if (menu == null)
+            {
+                throw new RegressionTestFailedException(prefix + ": Failed to get the main menu.");
+            }
+
+            var editMenuSearchCriteria = SearchCriteria.ByAutomationId(MainMenuAutomationIds.Edit);
+            var redoSearchCriteria = SearchCriteria.ByAutomationId(MainMenuAutomationIds.EditRedo);
+            var redoMenu = Retry.Times(() => menu.MenuItemBy(editMenuSearchCriteria, redoSearchCriteria));
+            if (redoMenu == null)
+            {
+                throw new RegressionTestFailedException(prefix + ": Failed to get the 'Edit' menu.");
+            }
+
+            try
+            {
+                redoMenu.Click();
+            }
+            catch (Exception e)
+            {
+                throw new RegressionTestFailedException(
+                    prefix + ": Failed to click the 'Edit - Redo' menu item.",
+                    e);
+            }
+        }
+
+        /// <summary>
         /// Switches to the start page tab item via the 'View - Start page' menu.
         /// </summary>
         /// <param name="application">The application.</param>

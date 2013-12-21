@@ -67,6 +67,26 @@ namespace Test.Regression.Explorer
         }
 
         /// <summary>
+        /// Verifies that the two values are equal to each other.
+        /// </summary>
+        /// <param name="expected">The expected value.</param>
+        /// <param name="actual">The actual value.</param>
+        /// <param name="location">A description of where the comparison took place.</param>
+        public void AreEqual(int expected, int actual, string location)
+        {
+            if (expected != actual)
+            {
+                var message = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Fail: Expected: {0}. Actual: {1}",
+                    expected,
+                    actual);
+                m_Log.Error(location, message);
+                m_Result.AddError(location + " - " + message);
+            }
+        }
+
+        /// <summary>
         /// Verifies that the condition that is <see langword="false" />
         /// </summary>
         /// <param name="condition">The condition that should be <see langword="false" /></param>

@@ -8,11 +8,11 @@ using System;
 using System.Linq;
 using System.Windows.Automation;
 using Apollo.UI.Explorer;
+using Apollo.UI.Wpf;
 using TestStack.White;
 using TestStack.White.UIItems;
 using TestStack.White.UIItems.Finders;
 using TestStack.White.UIItems.TabItems;
-using TestStack.White.UIItems.WindowStripControls;
 
 namespace Test.Regression.Explorer.Controls
 {

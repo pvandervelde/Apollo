@@ -82,5 +82,36 @@ namespace Test.Regression.Explorer.Controls
                     return window;
                 });
         }
+
+        public static Window DatasetMachineSelectionWindow(Application application, Log log)
+        {
+            const string prefix = "Dialogs - MachineSelectionWindow";
+            if ((application == null) || application.HasExited)
+            {
+                throw new RegressionTestFailedException(prefix + ": Application does not exist or has already exited.");
+            }
+
+            // Note that the windows can't be found through an Automation ID for some reason, hence
+            // using the title of the window.
+            var mainWindow = MainWindow(application, log);
+            if (mainWindow == null)
+            {
+                return null;
+            }
+
+            return Retry.Times(
+                () =>
+                {
+                    log.Debug(prefix, "Trying to get the machine selectino window.");
+
+                    var window = mainWindow.ModalWindow("Select a machine for the dataset");
+                    if (window == null)
+                    {
+                        log.Error(prefix, "Failed to get the machine selection window.");
+                    }
+
+                    return window;
+                });
+        }
     }
 }
