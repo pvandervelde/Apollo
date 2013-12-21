@@ -8,7 +8,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using Apollo.Core.Host.Scripting;
-using Apollo.UI.Explorer;
 using Apollo.UI.Wpf.Properties;
 
 namespace Apollo.UI.Wpf.Views.Scripting
