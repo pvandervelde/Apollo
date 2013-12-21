@@ -49,9 +49,9 @@
     <Reference Include="Mono.Cecil.Rocks, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
     </Reference>
-    <Reference Include="Nuclei.Build, Version=0.7.0.0, Culture=neutral, PublicKeyToken=ee5b68ec5ad4ef93, processorArchitecture=MSIL">
+    <Reference Include="Nuclei.Build, Version=0.7.1.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Nuclei.Build.0.7.0.0\lib\net45\Nuclei.Build.dll</HintPath>
+      <HintPath>..\..\packages\Nuclei.Build.0.7.1.0\lib\net45\Nuclei.Build.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
