@@ -78,8 +78,7 @@
                 <param><![CDATA[-script "${DirRemoteTestFiles}\scripts\project_new-save-load.py"]]></param>
             </params>
             <includeinreport includesystemlog="true">
-                <directory><![CDATA[C:\Users\Petrik\AppData\Local\P. van der Velde\Apollo.UI.Console\0.1\logs]]></directory>
-                <directory><![CDATA[C:\Users\Petrik\AppData\Local\P. van der Velde\Apollo.Core.Dataset\0.1\logs]]></directory>
+                <directory><![CDATA[C:\Users\petrik\AppData\Local\My Company Ltd\Apollo\0.1\logs]]></directory>
             </includeinreport>
         </console>
         
@@ -91,8 +90,7 @@
                 <param><![CDATA[-script "${DirRemoteTestFiles}\scripts\dataset_new-save-load.py"]]></param>
             </params>
             <includeinreport includesystemlog="true">
-                <directory><![CDATA[C:\Users\Petrik\AppData\Local\P. van der Velde\Apollo.UI.Console\0.1\logs]]></directory>
-                <directory><![CDATA[C:\Users\Petrik\AppData\Local\P. van der Velde\Apollo.Core.Dataset\0.1\logs]]></directory>
+                <directory><![CDATA[C:\Users\petrik\AppData\Local\My Company Ltd\Apollo\0.1\logs]]></directory>
             </includeinreport>
         </console>
     </teststeps>
