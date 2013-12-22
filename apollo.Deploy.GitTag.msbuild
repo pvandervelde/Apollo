@@ -29,7 +29,7 @@
     <Target Name="Run" DependsOnTargets="_DisplayInfo" Condition="Exists('$(DirGit)')" >
         <Exec Command="&quot;$(ExeGit)&quot; tag -a -m &quot;Deployed Apollo build for version $(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)&quot; &quot;$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)&quot;"
               WorkingDirectory="$(DirWorkspace)" />
-        <Exec Command="&quot;$(ExeGit)&quot; push origin -tags"
+        <Exec Command="&quot;$(ExeGit)&quot; push origin --tags"
               WorkingDirectory="$(DirWorkspace)" />
     </Target>
  </Project>
