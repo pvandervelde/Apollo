@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Host", "core.host\Apollo.Core.Host.csproj", "{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Base", "core.base\Apollo.Core.Base.csproj", "{5125E82C-2E8A-4CE4-8FA8-39AB82C9B856}"
@@ -65,6 +63,8 @@ EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Wix.Host", "wix.host\Wix.Host.wixproj", "{B8DE1DF9-52C3-4EA2-AF76-F45B35BEFEBC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Regression.Explorer", "test.regression.explorer\Test.Regression.Explorer.csproj", "{96589EDE-BE39-4FEA-8614-188DD936792A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Service.Repository.Plugins", "service.repository.plugins\Apollo.Service.Repository.Plugins.csproj", "{9598D74E-764A-4C5E-B871-273DC542DEAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -175,6 +175,12 @@ Global
 		{96589EDE-BE39-4FEA-8614-188DD936792A}.Deploy|x64.Build.0 = Deploy|x64
 		{96589EDE-BE39-4FEA-8614-188DD936792A}.Release|x64.ActiveCfg = Release|x64
 		{96589EDE-BE39-4FEA-8614-188DD936792A}.Release|x64.Build.0 = Release|x64
+		{9598D74E-764A-4C5E-B871-273DC542DEAA}.Debug|x64.ActiveCfg = Debug|x64
+		{9598D74E-764A-4C5E-B871-273DC542DEAA}.Debug|x64.Build.0 = Debug|x64
+		{9598D74E-764A-4C5E-B871-273DC542DEAA}.Deploy|x64.ActiveCfg = Deploy|x64
+		{9598D74E-764A-4C5E-B871-273DC542DEAA}.Deploy|x64.Build.0 = Deploy|x64
+		{9598D74E-764A-4C5E-B871-273DC542DEAA}.Release|x64.ActiveCfg = Release|x64
+		{9598D74E-764A-4C5E-B871-273DC542DEAA}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
