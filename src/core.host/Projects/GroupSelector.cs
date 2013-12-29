@@ -11,7 +11,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
-using Apollo.Core.Host.Plugins;
 
 namespace Apollo.Core.Host.Projects
 {

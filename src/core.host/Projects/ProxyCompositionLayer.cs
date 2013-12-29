@@ -12,7 +12,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Plugins;
-using Apollo.Core.Host.Plugins;
 using Apollo.Core.Host.Properties;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;

@@ -157,6 +157,8 @@
     <Compile Include="HostApplicationCommands.cs" />
     <Compile Include="HostConstants.cs" />
     <Compile Include="INotificationArguments.cs" />
+    <Compile Include="Plugins\PluginsModule.cs" />
+    <Compile Include="Plugins\RemotePluginRepositoryProxy.cs" />
     <Compile Include="Projects\DatasetStorageProxy.cs" />
     <Compile Include="Projects\ProxyCompositionLayer.cs" />
     <Compile Include="Projects\CompositionLayerGroupEdge.cs" />
@@ -321,9 +323,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Plugins\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
