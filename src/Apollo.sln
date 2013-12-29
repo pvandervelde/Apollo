@@ -64,7 +64,7 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Wix.Host", "wix.host\Wix.Ho
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Regression.Explorer", "test.regression.explorer\Test.Regression.Explorer.csproj", "{96589EDE-BE39-4FEA-8614-188DD936792A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Service.Repository.Plugins", "service.repository.plugins\Apollo.Service.Repository.Plugins.csproj", "{9598D74E-764A-4C5E-B871-273DC542DEAA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Service.Repository", "service.repository\Apollo.Service.Repository.csproj", "{9598D74E-764A-4C5E-B871-273DC542DEAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

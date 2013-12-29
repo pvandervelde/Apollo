@@ -5,8 +5,8 @@
     <SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">$(MSBuildProjectDirectory)\..</SolutionDir>
     <ProjectGuid>{9598D74E-764A-4C5E-B871-273DC542DEAA}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Apollo.Service.Repository.Plugins</RootNamespace>
-    <AssemblyName>Apollo.Service.Repository.Plugins</AssemblyName>
+    <RootNamespace>Apollo.Service.Repository</RootNamespace>
+    <AssemblyName>Apollo.Service.Repository</AssemblyName>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
@@ -39,6 +39,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Packages\" />
+    <Folder Include="Plugins\" />
   </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
