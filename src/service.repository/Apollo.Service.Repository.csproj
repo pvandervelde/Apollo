@@ -204,6 +204,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="RepositoryServiceConfigurationKeys.cs" />
     <Compile Include="RepositoryServiceConstants.cs" />
     <Compile Include="ServiceEntryPoint.cs" />
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">

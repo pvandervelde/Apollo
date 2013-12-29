@@ -10,8 +10,10 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using Apollo.Core.Base;
+using Apollo.Service.Repository.Plugins;
 using Apollo.Utilities;
 using Autofac;
 using NLog;
@@ -139,6 +141,43 @@ namespace Apollo.Service.Repository
         {
         }
 
+        private static void RegisterPlugins(ContainerBuilder builder)
+        {
+            builder.Register((c, p) => new AppDomainOwningPluginScanner(
+                    c.Resolve<Func<string, AppDomainPaths, AppDomain>>(),
+                    p.TypedAs<IPluginRepository>(),
+                    c.Resolve<SystemDiagnostics>()))
+                .As<IAssemblyScanner>();
+
+            builder.Register<Func<IPluginRepository, IAssemblyScanner>>(
+                    c =>
+                    {
+                        var ctx = c.Resolve<IComponentContext>();
+                        return r => ctx.Resolve<IAssemblyScanner>(new TypedParameter(typeof(IPluginRepository), r));
+                    });
+
+            builder.Register(c => new PluginDetector(
+                    c.Resolve<IPluginRepository>(),
+                    c.Resolve<Func<IPluginRepository, IAssemblyScanner>>(),
+                    c.Resolve<IFileSystem>(),
+                    c.Resolve<SystemDiagnostics>()))
+                .As<PluginDetector>();
+
+            builder.Register(c => new GroupImportEngine(
+                    c.Resolve<ISatisfyPluginRequests>(),
+                    c.Resolve<IConnectParts>()))
+                .As<IConnectGroups>();
+
+            builder.Register(c => new PartImportEngine(
+                    c.Resolve<ISatisfyPluginRequests>()))
+                .As<IConnectParts>();
+
+            builder.Register(c => new PluginRepository())
+                .As<IPluginRepository>()
+                .As<ISatisfyPluginRequests>()
+                .SingleInstance();
+        }
+
         /// <summary>
         /// Creates the DI container for the application.
         /// </summary>
@@ -179,6 +218,8 @@ namespace Apollo.Service.Repository
                 RegisterLoggers(builder);
                 RegisterProfiler(builder);
                 RegisterDiagnostics(builder);
+
+                RegisterPlugins(builder);
             }
 
             var result = builder.Build();

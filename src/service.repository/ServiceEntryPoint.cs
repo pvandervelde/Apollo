@@ -5,8 +5,12 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Apollo.Service.Repository.Plugins;
 using Apollo.Service.Repository.Properties;
 using Autofac;
+using Nuclei.Configuration;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 
@@ -30,6 +34,11 @@ namespace Apollo.Service.Repository
         private SystemDiagnostics m_Diagnostics;
 
         /// <summary>
+        /// The task that is used to handle plugin discovery.
+        /// </summary>
+        private Task m_PluginDiscoveryTask;
+
+        /// <summary>
         /// A flag that indicates that the application has been stopped.
         /// </summary>
         private volatile bool m_HasBeenStopped;
@@ -47,8 +56,34 @@ namespace Apollo.Service.Repository
         /// </summary>
         public void OnStart()
         {
-            m_Container = DependencyInjection.CreateContainer();
-            m_Diagnostics = m_Container.Resolve<SystemDiagnostics>();
+            lock(m_Lock)
+            {
+                m_Container = DependencyInjection.CreateContainer();
+                m_Diagnostics = m_Container.Resolve<SystemDiagnostics>();
+
+                m_PluginDiscoveryTask = Task.Factory.StartNew(DiscoverPlugins);
+            }
+
+            // Start the communication layer
+
+            // Start the package repository stuff
+        }
+
+        private void DiscoverPlugins()
+        {
+            var configuration = m_Container.Resolve<IConfiguration>();
+            if (!configuration.HasValueFor(RepositoryServiceConfigurationKeys.PluginLocation))
+            {
+                return;
+            }
+
+            var pluginDirectories = configuration.Value<List<string>>(RepositoryServiceConfigurationKeys.PluginLocation);
+
+            var detector = m_Container.Resolve<PluginDetector>();
+            foreach (var dir in pluginDirectories)
+            {
+                detector.SearchDirectory(dir);
+            }
         }
 
         /// <summary>
@@ -71,15 +106,23 @@ namespace Apollo.Service.Repository
 
             try
             {
-                m_Diagnostics.Log(
-                    LevelToLog.Info,
-                    RepositoryServiceConstants.LogPrefix,
-                    Resources.Log_Messages_ServiceStopped);
-
-                if (m_Container != null)
+                lock(m_Lock)
                 {
-                    m_Container.Dispose();
-                    m_Container = null;
+                    if (!m_PluginDiscoveryTask.IsCompleted)
+                    {
+                        // Cancel the task here ..
+                    }
+
+                    m_Diagnostics.Log(
+                        LevelToLog.Info,
+                        RepositoryServiceConstants.LogPrefix,
+                        Resources.Log_Messages_ServiceStopped);
+
+                    if (m_Container != null)
+                    {
+                        m_Container.Dispose();
+                        m_Container = null;
+                    }
                 }
             }
             finally
