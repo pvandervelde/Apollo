@@ -56,15 +56,13 @@ namespace Apollo.Service.Repository
         /// </summary>
         public void OnStart()
         {
-            lock(m_Lock)
+            lock (m_Lock)
             {
                 m_Container = DependencyInjection.CreateContainer();
                 m_Diagnostics = m_Container.Resolve<SystemDiagnostics>();
 
                 m_PluginDiscoveryTask = Task.Factory.StartNew(DiscoverPlugins);
             }
-
-            // Start the communication layer
 
             // Start the package repository stuff
         }
@@ -106,7 +104,7 @@ namespace Apollo.Service.Repository
 
             try
             {
-                lock(m_Lock)
+                lock (m_Lock)
                 {
                     if (!m_PluginDiscoveryTask.IsCompleted)
                     {
