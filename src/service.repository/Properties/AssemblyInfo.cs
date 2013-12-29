@@ -21,4 +21,3 @@ using System.Resources;
 
 // Indicate that the neutral language resources are in the assembly.
 [assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]
-

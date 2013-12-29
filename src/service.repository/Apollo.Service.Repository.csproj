@@ -7,18 +7,148 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Apollo.Service.Repository</RootNamespace>
     <AssemblyName>Apollo.Service.Repository</AssemblyName>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\packages\Autofac.3.3.0\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\packages\Castle.Core.3.2.2\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.ActionPolicy">
+      <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.ActionPolicy.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Logging">
+      <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Quality">
+      <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.Quality.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Shared">
+      <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Stack">
+      <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.Stack.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Testing">
+      <HintPath>..\..\packages\Lokad.Shared.1.5.181.0\lib\Lokad.Testing.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\..\packages\NLog.2.1.0\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclei">
+      <HintPath>..\..\packages\Nuclei.0.7.1.0\lib\net45\Nuclei.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclei.Build">
+      <HintPath>..\..\packages\Nuclei.Build.0.7.1.0\lib\net45\Nuclei.Build.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclei.Communication">
+      <HintPath>..\..\packages\Nuclei.Communication.0.7.1.0\lib\net45\Nuclei.Communication.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclei.Configuration">
+      <HintPath>..\..\packages\Nuclei.Configuration.0.7.1.0\lib\net45\Nuclei.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclei.Diagnostics">
+      <HintPath>..\..\packages\Nuclei.Diagnostics.0.7.1.0\lib\net45\Nuclei.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph">
+      <HintPath>..\..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph.Data">
+      <HintPath>..\..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph.Graphviz">
+      <HintPath>..\..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.Graphviz.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph.Serialization">
+      <HintPath>..\..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.Serialization.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Reactive.Core">
+      <HintPath>..\..\packages\Rx-Core.2.2.2\lib\net45\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces">
+      <HintPath>..\..\packages\Rx-Interfaces.2.2.2\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq">
+      <HintPath>..\..\packages\Rx-Linq.2.2.2\lib\net45\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices">
+      <HintPath>..\..\packages\Rx-PlatformServices.2.2.2\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Topshelf">
+      <HintPath>..\..\packages\Topshelf.3.1.2\lib\net40-full\Topshelf.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Nuclei\AppDomains\AppDomainBuilder.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Nuclei\AppDomains\AppDomainBuilder.DirectoryBasedResolver.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Nuclei\AppDomains\AppDomainBuilder.FileBasedResolver.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Nuclei\AppDomains\AppDomainResolutionPaths.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Nuclei\AppDomains\IAppDomainAssemblyResolver.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Nuclei\ExceptionHandling\EventType.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Nuclei\ExceptionHandling\EventTypeToEventCategoryMap.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Nuclei\ExceptionHandling\ExceptionFilter.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Nuclei\ExceptionHandling\ExceptionHandler.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Nuclei\ExceptionHandling\ExceptionProcessor.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Nuclei\ExceptionHandling\ExceptionTypeToEventIdMap.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Nuclei\ExceptionHandling\GuardResult.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Nuclei\ExceptionHandling\TopLevelExceptionGuard.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Nuclei\Fusion\AssemblyNameElements.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Nuclei\Fusion\FusionHelper.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\..\build\temp\AssemblyInfo.Base.cs">
@@ -36,6 +166,7 @@
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -43,6 +174,12 @@
   <ItemGroup>
     <Folder Include="Packages\" />
     <Folder Include="Plugins\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
+      <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>
+      <Name>SolutionLevel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
