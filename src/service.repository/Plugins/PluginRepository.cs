@@ -11,10 +11,11 @@ using System.Linq;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Host.Properties;
+using Apollo.Service.Repository.Plugins;
 using QuickGraph;
 using QuickGraph.Algorithms.RankedShortestPath;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Service.Repository.Plugins
 {
     /// <summary>
     /// Stores information about all the known type, part and group definitions.

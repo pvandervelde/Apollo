@@ -11,7 +11,7 @@ using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
 using Nuclei.Diagnostics;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Service.Repository.Plugins
 {
     /// <summary>
     /// Provides an <see cref="IAssemblyScanner"/> wrapper that loads the actual scanner into a <c>AppDomain</c>, provides the data

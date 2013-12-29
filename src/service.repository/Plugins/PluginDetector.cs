@@ -14,7 +14,7 @@ using Apollo.Core.Host.Properties;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Service.Repository.Plugins
 {
     /// <summary>
     /// Provides the methods to find and scan plugins available in assembly files.

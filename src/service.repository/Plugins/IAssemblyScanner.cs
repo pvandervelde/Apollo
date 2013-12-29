@@ -7,7 +7,7 @@
 using System.Collections.Generic;
 using Apollo.Core.Base.Plugins;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Service.Repository.Plugins
 {
     /// <summary>
     /// Defines the interface for objects that perform scanning of plugin assemblies.

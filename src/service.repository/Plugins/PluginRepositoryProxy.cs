@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Service.Repository.Plugins
 {
     /// <summary>
     /// Defines a proxy for <see cref="IPluginRepository"/> objects.

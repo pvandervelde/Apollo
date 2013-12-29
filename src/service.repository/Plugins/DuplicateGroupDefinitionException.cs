@@ -8,7 +8,7 @@ using System;
 using System.Runtime.Serialization;
 using Apollo.Core.Host.Properties;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Service.Repository.Plugins
 {
     /// <summary>
     /// An exception thrown when the user tries to add a group definition to the repository that is already registered.

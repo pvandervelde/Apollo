@@ -12,7 +12,7 @@ using Apollo.Utilities;
 using Autofac;
 using Nuclei.Diagnostics.Logging;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Service.Repository.Plugins
 {
     /// <summary>
     /// Defines methods to load an <see cref="IAssemblyScanner"/> object into a remote <c>AppDomain</c>.

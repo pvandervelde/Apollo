@@ -8,43 +8,43 @@ using System;
 using System.Runtime.Serialization;
 using Apollo.Core.Host.Properties;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Service.Repository.Plugins
 {
     /// <summary>
-    /// An exception thrown when the user tries to get a part definition from the repository with a type identity that does not exist.
+    /// An exception thrown when the user tries to add a type definition to the repository that is already registered.
     /// </summary>
     [Serializable]
-    public sealed class UnknownPartDefinitionException : Exception
+    public sealed class DuplicateTypeDefinitionException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnknownPartDefinitionException"/> class.
+        /// Initializes a new instance of the <see cref="DuplicateTypeDefinitionException"/> class.
         /// </summary>
-        public UnknownPartDefinitionException()
-            : this(Resources.Exceptions_Messages_UnknownPartDefinition)
+        public DuplicateTypeDefinitionException()
+            : this(Resources.Exceptions_Messages_DuplicateTypeDefinition)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnknownPartDefinitionException"/> class.
+        /// Initializes a new instance of the <see cref="DuplicateTypeDefinitionException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public UnknownPartDefinitionException(string message) 
+        public DuplicateTypeDefinitionException(string message) 
             : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnknownPartDefinitionException"/> class.
+        /// Initializes a new instance of the <see cref="DuplicateTypeDefinitionException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
-        public UnknownPartDefinitionException(string message, Exception innerException)
+        public DuplicateTypeDefinitionException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnknownPartDefinitionException"/> class.
+        /// Initializes a new instance of the <see cref="DuplicateTypeDefinitionException"/> class.
         /// </summary>
         /// <param name="info">
         ///     The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object
@@ -60,7 +60,7 @@ namespace Apollo.Core.Host.Plugins
         /// <exception cref="T:System.Runtime.Serialization.SerializationException">
         /// The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
         /// </exception>
-        private UnknownPartDefinitionException(SerializationInfo info, StreamingContext context)
+        private DuplicateTypeDefinitionException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

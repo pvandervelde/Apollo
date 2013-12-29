@@ -8,7 +8,7 @@ using System;
 using System.Runtime.Serialization;
 using Apollo.Core.Host.Properties;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Service.Repository.Plugins
 {
     /// <summary>
     /// An exception thrown when the user tries to add an import to a group definition with a contract name that is

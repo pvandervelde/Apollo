@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Service.Repository.Plugins
 {
     /// <summary>
     /// Describes the location and last write time for a plugin assembly.

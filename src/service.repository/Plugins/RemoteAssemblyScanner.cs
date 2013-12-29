@@ -20,12 +20,13 @@ using System.Threading.Tasks;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
-using Apollo.Core.Host.Properties;
+using Apollo.Service.Repository.Plugins;
+using Apollo.Service.Repository.Properties;
 using Apollo.Utilities;
 using Nuclei;
 using Nuclei.Diagnostics.Logging;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Service.Repository.Plugins
 {
     /// <summary>
     /// Performs assembly scanning in search for plugin information.

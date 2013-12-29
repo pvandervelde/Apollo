@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Apollo.Core.Base.Plugins;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Service.Repository.Plugins
 {
     /// <summary>
     /// Defines a method for the creation of a function that creates <see cref="TypeIdentity"/> objects.

@@ -8,43 +8,43 @@ using System;
 using System.Runtime.Serialization;
 using Apollo.Core.Host.Properties;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Service.Repository.Plugins
 {
     /// <summary>
-    /// An exception thrown when the user tries to get a group definition from the repository with an ID that does not exist.
+    /// An exception thrown when the user tries to add a part definition to the repository that is already registered.
     /// </summary>
     [Serializable]
-    public sealed class UnknownGroupDefinitionException : Exception
+    public sealed class DuplicatePartDefinitionException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnknownGroupDefinitionException"/> class.
+        /// Initializes a new instance of the <see cref="DuplicatePartDefinitionException"/> class.
         /// </summary>
-        public UnknownGroupDefinitionException()
-            : this(Resources.Exceptions_Messages_UnknownGroupDefinition)
+        public DuplicatePartDefinitionException()
+            : this(Resources.Exceptions_Messages_DuplicatePartDefinition)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnknownGroupDefinitionException"/> class.
+        /// Initializes a new instance of the <see cref="DuplicatePartDefinitionException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public UnknownGroupDefinitionException(string message) 
+        public DuplicatePartDefinitionException(string message) 
             : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnknownGroupDefinitionException"/> class.
+        /// Initializes a new instance of the <see cref="DuplicatePartDefinitionException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
-        public UnknownGroupDefinitionException(string message, Exception innerException)
+        public DuplicatePartDefinitionException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnknownGroupDefinitionException"/> class.
+        /// Initializes a new instance of the <see cref="DuplicatePartDefinitionException"/> class.
         /// </summary>
         /// <param name="info">
         ///     The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object
@@ -60,7 +60,7 @@ namespace Apollo.Core.Host.Plugins
         /// <exception cref="T:System.Runtime.Serialization.SerializationException">
         /// The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
         /// </exception>
-        private UnknownGroupDefinitionException(SerializationInfo info, StreamingContext context)
+        private DuplicatePartDefinitionException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
