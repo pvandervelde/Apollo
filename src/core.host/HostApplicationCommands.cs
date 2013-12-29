@@ -86,7 +86,6 @@ namespace Apollo.Core.Host
             return Task<UploadToken>.Factory.StartNew(
                 () =>
                 {
-                    // @Todo: Note that these paths are defined in Apollo.ProjectExplorer.Utilities.UtilitiesModule
                     if (!m_Configuration.HasValueFor(CoreConfigurationKeys.PluginLocation))
                     {
                         throw new FileNotFoundException();
