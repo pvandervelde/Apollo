@@ -362,6 +362,7 @@ namespace Apollo.Core.Dataset
                         new List<CommunicationSubject>
                             {
                                 CommunicationSubjects.Dataset,
+                                CommunicationSubjects.Plugins,
                             },
                         new[]
                             {
