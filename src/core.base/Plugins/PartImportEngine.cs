@@ -8,14 +8,13 @@ using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Apollo.Core.Base.Plugins;
 
-namespace Apollo.Service.Repository.Plugins
+namespace Apollo.Core.Base.Plugins
 {
     /// <summary>
     /// Provides helper methods used to match part imports with part exports.
     /// </summary>
-    internal sealed class PartImportEngine : IConnectParts
+    public sealed class PartImportEngine : IConnectParts
     {
         private static TypeIdentity ExportedType(SerializableExportDefinition exportDefinition)
         {

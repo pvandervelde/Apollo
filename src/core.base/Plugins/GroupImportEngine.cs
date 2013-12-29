@@ -8,15 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
 
-namespace Apollo.Service.Repository.Plugins
+namespace Apollo.Core.Base.Plugins
 {
     /// <summary>
     /// Provides helper method used to match group imports with group exports.
     /// </summary>
-    internal sealed class GroupImportEngine : IConnectGroups
+    public sealed class GroupImportEngine : IConnectGroups
     {
         /// <summary>
         /// The object that stores information about all the available parts and part groups.

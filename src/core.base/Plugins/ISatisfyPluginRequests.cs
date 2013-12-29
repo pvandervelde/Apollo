@@ -6,15 +6,14 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
 
-namespace Apollo.Service.Repository.Plugins
+namespace Apollo.Core.Base.Plugins
 {
     /// <summary>
     /// Defines the interface for objects that handle plugin requests.
     /// </summary>
-    internal interface ISatisfyPluginRequests
+    public interface ISatisfyPluginRequests
     {
         /// <summary>
         /// Returns a value indicating if the repository contains a <see cref="TypeDefinition"/>

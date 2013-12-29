@@ -6,14 +6,13 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Base.Plugins;
 
-namespace Apollo.Service.Repository.Plugins
+namespace Apollo.Core.Base.Plugins
 {
     /// <summary>
     /// Defines the interface for objects that assist in connecting part groups.
     /// </summary>
-    internal interface IConnectGroups
+    public interface IConnectGroups
     {
         /// <summary>
         /// Returns a value indicating if the given import would accept the given export.
