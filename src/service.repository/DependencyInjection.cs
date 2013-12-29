@@ -13,6 +13,7 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using Apollo.Core.Base;
+using Apollo.Core.Base.Plugins;
 using Apollo.Service.Repository.Plugins;
 using Apollo.Utilities;
 using Autofac;
