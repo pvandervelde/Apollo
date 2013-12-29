@@ -20,7 +20,7 @@ using Nuclei;
 using NUnit.Framework;
 using Test.Mocks;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Service.Repository.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

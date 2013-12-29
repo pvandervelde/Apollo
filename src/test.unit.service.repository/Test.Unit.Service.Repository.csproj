@@ -2,10 +2,10 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">$(MSBuildProjectDirectory)\..</SolutionDir>
-    <ProjectGuid>{BC56ED6A-6780-4162-9B68-4B2D8013ECDC}</ProjectGuid>
+    <ProjectGuid>{01C1B10D-9365-442B-B3C5-779488FD1301}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Apollo.Core.Host</RootNamespace>
-    <AssemblyName>Test.Unit.Core.Host</AssemblyName>
+    <RootNamespace>Apollo.Service.Repository</RootNamespace>
+    <AssemblyName>Test.Unit.Service.Repository</AssemblyName>
     <ShouldDoDocumentation>false</ShouldDoDocumentation>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -163,9 +163,9 @@
       <Project>{ee14fafe-8e78-11e1-b5d3-6df7bbe59b18}</Project>
       <Name>Apollo.Core.Extensions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\core.scripting\Apollo.Core.Scripting.csproj">
-      <Project>{626db086-d3e7-47a6-92b5-2afc58e8e18e}</Project>
-      <Name>Apollo.Core.Scripting</Name>
+    <ProjectReference Include="..\service.repository\Apollo.Service.Repository.csproj">
+      <Project>{9598d74e-764a-4c5e-b871-273dc542deaa}</Project>
+      <Name>Apollo.Service.Repository</Name>
     </ProjectReference>
     <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
       <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>
@@ -174,10 +174,6 @@
     <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
       <Project>{5125E82C-2E8A-4CE4-8FA8-39AB82C9B856}</Project>
       <Name>Apollo.Core.Base</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\core.host\Apollo.Core.Host.csproj">
-      <Project>{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}</Project>
-      <Name>Apollo.Core.Host</Name>
     </ProjectReference>
     <ProjectReference Include="..\utilities\Apollo.Utilities.csproj">
       <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
@@ -209,30 +205,22 @@
     <Compile Include="..\test.srconly\Mocks\MockPath.cs">
       <Link>Mocks\MockPath.cs</Link>
     </Compile>
-    <Compile Include="CannotUninstallNonequivalentServiceExceptionTest.cs" />
-    <Compile Include="CoreProxyTest.cs" />
-    <Compile Include="HostApplicationCommandsTest.cs" />
-    <Compile Include="KernelNotInInstallReadyStateExceptionTest.cs" />
-    <Compile Include="KernelServiceStartupFailedExceptionTest.cs" />
-    <Compile Include="KernelStartupFailedExceptionTest.cs" />
-    <Compile Include="KernelTest.cs" />
-    <Compile Include="MissingServiceDependencyExceptionTest.cs" />
-    <Compile Include="NotificationNameTest.cs" />
-    <Compile Include="Projects\CompositionLayerProxyTest.cs" />
-    <Compile Include="Projects\GroupSelectorTest.cs" />
-    <Compile Include="Projects\CannotCreateDatasetWithoutCreatorExceptionTest.cs" />
-    <Compile Include="Projects\CannotCreateProjectWithoutDatasetDistributorExceptionTest.cs" />
-    <Compile Include="Projects\CannotCreateProjectWithoutTimelineExceptionTest.cs" />
-    <Compile Include="Projects\CannotDeleteDatasetException.cs" />
-    <Compile Include="Projects\CannotActivateDatasetWithoutDistributionLocationExceptionTest.cs" />
-    <Compile Include="Projects\CannotUseProjectAfterClosingItExceptionTest.cs" />
-    <Compile Include="Projects\DatasetIdTest.cs" />
-    <Compile Include="Projects\DatasetNotActivatedExceptionTest.cs" />
-    <Compile Include="Projects\DatasetProxyTest.cs" />
-    <Compile Include="Projects\ProjectBuilderTest.cs" />
-    <Compile Include="Projects\ProjectServiceTest.cs" />
-    <Compile Include="Projects\ProjectTest.cs" />
-    <Compile Include="Projects\UnknownDatasetExceptionTest.cs" />
+    <Compile Include="Plugins\DuplicateContractNameExceptionTest.cs" />
+    <Compile Include="Plugins\DuplicateGroupDefinitionExceptionTest.cs" />
+    <Compile Include="Plugins\DuplicatePartDefinitionExceptionTest.cs" />
+    <Compile Include="Plugins\DuplicateTypeDefinitionExceptionTest.cs" />
+    <Compile Include="Plugins\GroupDefinitionBuilderTest.cs" />
+    <Compile Include="Plugins\GroupExportMapTest.cs" />
+    <Compile Include="Plugins\GroupImportEngineTest.cs" />
+    <Compile Include="Plugins\GroupImportMapTest.cs" />
+    <Compile Include="Plugins\PartImportEngineTest.cs" />
+    <Compile Include="Plugins\PluginDetectorTest.cs" />
+    <Compile Include="Plugins\PluginRepositoryTest.cs" />
+    <Compile Include="Plugins\RemoteAssemblyScannerTest.cs" />
+    <Compile Include="Plugins\ScheduleDefinitionBuilderTest.cs" />
+    <Compile Include="Plugins\UnknownGroupDefinitionExceptionTest.cs" />
+    <Compile Include="Plugins\UnknownPartDefinitionExceptionTest.cs" />
+    <Compile Include="Plugins\UnknownTypeDefinitionExceptionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\..\build\temp\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
@@ -243,44 +231,6 @@
     <Compile Include="..\..\build\temp\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
-    <Compile Include="Scripting\Projects\ScriptBackEndDatasetFacadeTest.cs" />
-    <Compile Include="Scripting\Projects\ScriptBackEndProjectFacadeTest.cs" />
-    <Compile Include="Scripting\Projects\ScriptBackEndProjectHubTest.cs" />
-    <Compile Include="ServiceCannotDependOnGenericKernelServiceExceptionTest.cs" />
-    <Compile Include="ServiceCannotDependOnItselfExceptionTest.cs" />
-    <Compile Include="ServiceTypeAlreadyInstalledExceptionTest.cs" />
-    <Compile Include="ShutdownApplicationCommandTest.cs" />
-    <Compile Include="StartupProgressEventArgsTest.cs" />
-    <Compile Include="UnknownKernelServiceTypeExceptionTest.cs" />
-    <Compile Include="UserInterfaces\Application\ApplicationFacadeTest.cs" />
-    <Compile Include="UserInterfaces\Application\SystemInformationStorageTest.cs" />
-    <Compile Include="UserInterfaces\Application\SystemInformationTest.cs" />
-    <Compile Include="UserInterfaces\MissingNotificationActionExceptionTest.cs" />
-    <Compile Include="UserInterfaces\Projects\CannotCreateNewProjectExceptionTest.cs" />
-    <Compile Include="UserInterfaces\Projects\CannotLoadProjectExceptionTest.cs" />
-    <Compile Include="UserInterfaces\Projects\CannotUnloadProjectExceptionTest.cs" />
-    <Compile Include="UserInterfaces\Projects\CreateProjectCommandTest.cs" />
-    <Compile Include="UserInterfaces\Projects\DatasetFacadeTest.cs" />
-    <Compile Include="UserInterfaces\Projects\FailedToCreateProjectExceptionTest.cs" />
-    <Compile Include="UserInterfaces\Projects\FailedToLoadProjectExceptionTest.cs" />
-    <Compile Include="UserInterfaces\Projects\LoadProjectCommandTest.cs" />
-    <Compile Include="UserInterfaces\Projects\NoCurrentProjectExceptionTest.cs" />
-    <Compile Include="UserInterfaces\Projects\ProjectFacadeTest.cs" />
-    <Compile Include="UserInterfaces\Projects\ProjectHubTest.cs" />
-    <Compile Include="UserInterfaces\Projects\UnloadProjectCommandTest.cs" />
-    <Compile Include="Scripting\CancelScriptTokenTest.cs" />
-    <Compile Include="Scripting\CannotInterruptRunningScriptExceptionTest.cs" />
-    <Compile Include="Scripting\Projects\ScriptFrontEndDatasetFacadeTest.cs" />
-    <Compile Include="Scripting\InvalidScriptLanguageExceptionTest.cs" />
-    <Compile Include="Scripting\Projects\ScriptFrontEndProjectFacadeTest.cs" />
-    <Compile Include="Scripting\Projects\ScriptFrontEndProjectHubTest.cs" />
-    <Compile Include="Scripting\RemoteScriptRunnerTest.cs" />
-    <Compile Include="Scripting\ScriptErrorInformationTest.cs" />
-    <Compile Include="Scripting\ScriptExecutionFailureExceptionTest.cs" />
-    <Compile Include="Scripting\ScriptHostTest.cs" />
-    <Compile Include="Scripting\ScriptOutputPipeTest.cs" />
-    <Compile Include="Scripting\SourceErrorListenerTest.cs" />
-    <Compile Include="UserInterfaces\UserInterfaceServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">

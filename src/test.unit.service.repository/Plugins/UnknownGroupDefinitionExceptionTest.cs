@@ -8,12 +8,12 @@ using System.Diagnostics.CodeAnalysis;
 using Nuclei.Nunit.Extensions;
 using NUnit.Framework;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Service.Repository.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class DuplicateGroupDefinitionExceptionTest : ExceptionContractVerifier<DuplicateContractNameException>
+    public sealed class UnknownGroupDefinitionExceptionTest : ExceptionContractVerifier<UnknownGroupDefinitionException>
     {
     }
 }

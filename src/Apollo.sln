@@ -66,6 +66,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Regression.Explorer", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Service.Repository", "service.repository\Apollo.Service.Repository.csproj", "{9598D74E-764A-4C5E-B871-273DC542DEAA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Service.Repository", "test.unit.service.repository\Test.Unit.Service.Repository.csproj", "{01C1B10D-9365-442B-B3C5-779488FD1301}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -181,6 +183,12 @@ Global
 		{9598D74E-764A-4C5E-B871-273DC542DEAA}.Deploy|x64.Build.0 = Deploy|x64
 		{9598D74E-764A-4C5E-B871-273DC542DEAA}.Release|x64.ActiveCfg = Release|x64
 		{9598D74E-764A-4C5E-B871-273DC542DEAA}.Release|x64.Build.0 = Release|x64
+		{01C1B10D-9365-442B-B3C5-779488FD1301}.Debug|x64.ActiveCfg = Debug|x64
+		{01C1B10D-9365-442B-B3C5-779488FD1301}.Debug|x64.Build.0 = Debug|x64
+		{01C1B10D-9365-442B-B3C5-779488FD1301}.Deploy|x64.ActiveCfg = Deploy|x64
+		{01C1B10D-9365-442B-B3C5-779488FD1301}.Deploy|x64.Build.0 = Deploy|x64
+		{01C1B10D-9365-442B-B3C5-779488FD1301}.Release|x64.ActiveCfg = Release|x64
+		{01C1B10D-9365-442B-B3C5-779488FD1301}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
