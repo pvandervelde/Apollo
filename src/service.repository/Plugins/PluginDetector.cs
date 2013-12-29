@@ -10,7 +10,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
-using Apollo.Core.Host.Properties;
+using Apollo.Service.Repository.Properties;
 using Nuclei.Diagnostics;
 using Nuclei.Diagnostics.Logging;
 
@@ -98,7 +98,7 @@ namespace Apollo.Service.Repository.Plugins
 
             m_Diagnostics.Log(
                 LevelToLog.Info,
-                HostConstants.LogPrefix,
+                RepositoryServiceConstants.LogPrefix,
                 string.Format(
                     CultureInfo.InvariantCulture,
                     Resources.Plugins_LogMessage_Detector_FileScanStarted_WithDirectory,
@@ -115,7 +115,7 @@ namespace Apollo.Service.Repository.Plugins
                 // so we just exit to prevent any issues from occuring.
                 m_Diagnostics.Log(
                     LevelToLog.Error,
-                    HostConstants.LogPrefix,
+                    RepositoryServiceConstants.LogPrefix,
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Resources.Plugins_LogMessage_Detector_FileScanFailed_WithDirectoryAndException,
@@ -130,7 +130,7 @@ namespace Apollo.Service.Repository.Plugins
                 // so we just exit to prevent any issues from occuring.
                 m_Diagnostics.Log(
                     LevelToLog.Error,
-                    HostConstants.LogPrefix,
+                    RepositoryServiceConstants.LogPrefix,
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Resources.Plugins_LogMessage_Detector_FileScanFailed_WithDirectoryAndException,
@@ -157,7 +157,7 @@ namespace Apollo.Service.Repository.Plugins
 
             m_Diagnostics.Log(
                 LevelToLog.Info,
-                HostConstants.LogPrefix,
+                RepositoryServiceConstants.LogPrefix,
                 string.Format(
                     CultureInfo.InvariantCulture,
                     Resources.Plugins_LogMessage_Detector_FileScanCompleted,

@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
-using Apollo.Core.Base.Plugins;
 
 namespace Apollo.Service.Repository.Plugins
 {

@@ -10,8 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
-using Apollo.Core.Host.Properties;
-using Apollo.Service.Repository.Plugins;
+using Apollo.Service.Repository.Properties;
 using QuickGraph;
 using QuickGraph.Algorithms.RankedShortestPath;
 

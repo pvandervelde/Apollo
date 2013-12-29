@@ -6,7 +6,7 @@
 
 using System;
 using System.Runtime.Serialization;
-using Apollo.Core.Host.Properties;
+using Apollo.Service.Repository.Properties;
 
 namespace Apollo.Service.Repository.Plugins
 {

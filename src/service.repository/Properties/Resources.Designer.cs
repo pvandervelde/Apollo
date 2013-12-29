@@ -61,11 +61,164 @@ namespace Apollo.Service.Repository.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The given contract name is already registered..
+        /// </summary>
+        internal static string Exceptions_Messages_DuplicateContractName {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_DuplicateContractName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A group with the given ID has already been registered..
+        /// </summary>
+        internal static string Exceptions_Messages_DuplicateGroupDefinition {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_DuplicateGroupDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A part with the given type identity is already registered..
+        /// </summary>
+        internal static string Exceptions_Messages_DuplicatePartDefinition {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_DuplicatePartDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A type with the given type identity is already registered..
+        /// </summary>
+        internal static string Exceptions_Messages_DuplicateTypeDefinition {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_DuplicateTypeDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The requested group definition is not registered..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownGroupDefinition {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownGroupDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The requested part definition is not registered..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownPartDefinition {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownPartDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given ID does not belong to a known part group..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownPartGroup {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownPartGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The requested type definition is not registered..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownTypeDefinition {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownTypeDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Service stopped.
         /// </summary>
         internal static string Log_Messages_ServiceStopped {
             get {
                 return ResourceManager.GetString("Log_Messages_ServiceStopped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin location process completed..
+        /// </summary>
+        internal static string Plugins_LogMessage_Detector_FileScanCompleted {
+            get {
+                return ResourceManager.GetString("Plugins_LogMessage_Detector_FileScanCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locating all the files in {0} failed due to an exception. Exception information is: {1}.
+        /// </summary>
+        internal static string Plugins_LogMessage_Detector_FileScanFailed_WithDirectoryAndException {
+            get {
+                return ResourceManager.GetString("Plugins_LogMessage_Detector_FileScanFailed_WithDirectoryAndException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locating plugins in {0}..
+        /// </summary>
+        internal static string Plugins_LogMessage_Detector_FileScanStarted_WithDirectory {
+            get {
+                return ResourceManager.GetString("Plugins_LogMessage_Detector_FileScanStarted_WithDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The loading of the plugin assembly {0} failed. Exception information is: {1}.
+        /// </summary>
+        internal static string Plugins_LogMessage_Scanner_AssemblyLoadFailed_WithNameAndException {
+            get {
+                return ResourceManager.GetString("Plugins_LogMessage_Scanner_AssemblyLoadFailed_WithNameAndException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extracting information from Assembly {0} failed. Exception information is: {1}.
+        /// </summary>
+        internal static string Plugins_LogMessage_Scanner_TypeScanFailed_WithAssemblyAndException {
+            get {
+                return ResourceManager.GetString("Plugins_LogMessage_Scanner_TypeScanFailed_WithAssemblyAndException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apollo plugin scan AppDomain.
+        /// </summary>
+        internal static string Plugins_PluginScanDomainName {
+            get {
+                return ResourceManager.GetString("Plugins_PluginScanDomainName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adding new part [{0}] to repository..
+        /// </summary>
+        internal static string RemoteAssemblyScanner_LogMessage_AddingPartToRepository_WithPartInformation {
+            get {
+                return ResourceManager.GetString("RemoteAssemblyScanner_LogMessage_AddingPartToRepository_WithPartInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registering groups via exporter of type [{0}]..
+        /// </summary>
+        internal static string RemoteAssemblyScanner_LogMessage_RegisteringGroupsViaExporter_WithExporterType {
+            get {
+                return ResourceManager.GetString("RemoteAssemblyScanner_LogMessage_RegisteringGroupsViaExporter_WithExporterType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scanning assembly [{0}] for plugins..
+        /// </summary>
+        internal static string RemoteAssemblyScanner_LogMessage_ScanningAssembly_WithName {
+            get {
+                return ResourceManager.GetString("RemoteAssemblyScanner_LogMessage_ScanningAssembly_WithName", resourceCulture);
             }
         }
         

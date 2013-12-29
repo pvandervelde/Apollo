@@ -20,7 +20,6 @@ using System.Threading.Tasks;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
-using Apollo.Service.Repository.Plugins;
 using Apollo.Service.Repository.Properties;
 using Apollo.Utilities;
 using Nuclei;
@@ -377,7 +376,7 @@ namespace Apollo.Service.Repository.Plugins
                 foreach (var export in part.ExportDefinitions)
                 {
                     var memberInfo = ReflectionModelServices.GetExportingMember(export);
-                    SerializableExportDefinition exportDefinition = null;
+                    SerializableExportDefinition exportDefinition;
                     switch (memberInfo.MemberType)
                     {
                         case MemberTypes.Method:

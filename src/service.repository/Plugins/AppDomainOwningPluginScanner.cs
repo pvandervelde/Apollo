@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Apollo.Core.Host.Properties;
+using Apollo.Service.Repository.Properties;
 using Apollo.Utilities;
 using Nuclei.Diagnostics;
 

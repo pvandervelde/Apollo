@@ -117,8 +117,59 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Exceptions_Messages_DuplicateContractName" xml:space="preserve">
+    <value>The given contract name is already registered.</value>
+  </data>
+  <data name="Exceptions_Messages_DuplicateGroupDefinition" xml:space="preserve">
+    <value>A group with the given ID has already been registered.</value>
+  </data>
+  <data name="Exceptions_Messages_DuplicatePartDefinition" xml:space="preserve">
+    <value>A part with the given type identity is already registered.</value>
+  </data>
+  <data name="Exceptions_Messages_DuplicateTypeDefinition" xml:space="preserve">
+    <value>A type with the given type identity is already registered.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownGroupDefinition" xml:space="preserve">
+    <value>The requested group definition is not registered.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownPartDefinition" xml:space="preserve">
+    <value>The requested part definition is not registered.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownPartGroup" xml:space="preserve">
+    <value>The given ID does not belong to a known part group.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownTypeDefinition" xml:space="preserve">
+    <value>The requested type definition is not registered.</value>
+  </data>
   <data name="Log_Messages_ServiceStopped" xml:space="preserve">
     <value>Service stopped</value>
+  </data>
+  <data name="Plugins_LogMessage_Detector_FileScanCompleted" xml:space="preserve">
+    <value>Plugin location process completed.</value>
+  </data>
+  <data name="Plugins_LogMessage_Detector_FileScanFailed_WithDirectoryAndException" xml:space="preserve">
+    <value>Locating all the files in {0} failed due to an exception. Exception information is: {1}</value>
+  </data>
+  <data name="Plugins_LogMessage_Detector_FileScanStarted_WithDirectory" xml:space="preserve">
+    <value>Locating plugins in {0}.</value>
+  </data>
+  <data name="Plugins_LogMessage_Scanner_AssemblyLoadFailed_WithNameAndException" xml:space="preserve">
+    <value>The loading of the plugin assembly {0} failed. Exception information is: {1}</value>
+  </data>
+  <data name="Plugins_LogMessage_Scanner_TypeScanFailed_WithAssemblyAndException" xml:space="preserve">
+    <value>Extracting information from Assembly {0} failed. Exception information is: {1}</value>
+  </data>
+  <data name="Plugins_PluginScanDomainName" xml:space="preserve">
+    <value>Apollo plugin scan AppDomain</value>
+  </data>
+  <data name="RemoteAssemblyScanner_LogMessage_AddingPartToRepository_WithPartInformation" xml:space="preserve">
+    <value>Adding new part [{0}] to repository.</value>
+  </data>
+  <data name="RemoteAssemblyScanner_LogMessage_RegisteringGroupsViaExporter_WithExporterType" xml:space="preserve">
+    <value>Registering groups via exporter of type [{0}].</value>
+  </data>
+  <data name="RemoteAssemblyScanner_LogMessage_ScanningAssembly_WithName" xml:space="preserve">
+    <value>Scanning assembly [{0}] for plugins.</value>
   </data>
   <data name="Service_Description" xml:space="preserve">
     <value>The service that provides the NuGet packages and plugins for Apollo.</value>
