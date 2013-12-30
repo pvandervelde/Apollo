@@ -133,6 +133,10 @@
       <Project>{ee14fafe-8e78-11e1-b5d3-6df7bbe59b18}</Project>
       <Name>Apollo.Core.Extensions</Name>
     </ProjectReference>
+    <ProjectReference Include="..\service.repository\Apollo.Service.Repository.csproj">
+      <Project>{9598d74e-764a-4c5e-b871-273dc542deaa}</Project>
+      <Name>Apollo.Service.Repository</Name>
+    </ProjectReference>
     <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
       <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>
       <Name>SolutionLevel</Name>
@@ -143,6 +147,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\test.srconly\mocks\Actions.cs">
+      <Link>Mocks\Actions.cs</Link>
+    </Compile>
+    <Compile Include="..\test.srconly\mocks\Conditions.cs">
+      <Link>Mocks\Conditions.cs</Link>
+    </Compile>
+    <Compile Include="..\test.srconly\mocks\Exports.cs">
+      <Link>Mocks\Exports.cs</Link>
+    </Compile>
+    <Compile Include="..\test.srconly\mocks\GroupExporter.cs">
+      <Link>Mocks\GroupExporter.cs</Link>
+    </Compile>
+    <Compile Include="..\test.srconly\mocks\Imports.cs">
+      <Link>Mocks\Imports.cs</Link>
+    </Compile>
     <Compile Include="DatasetCannotBecomeParentExceptionTest.cs" />
     <Compile Include="DatasetIdTest.cs" />
     <Compile Include="DatasetOnlineInformationTest.cs" />
@@ -156,7 +175,9 @@
     <Compile Include="Loaders\RemoteDatasetDistributorTest.cs" />
     <Compile Include="Plugins\AssemblyDefinitionTest.cs" />
     <Compile Include="Plugins\ConstructorDefinitionTest.cs" />
+    <Compile Include="Plugins\GroupImportEngineTest.cs" />
     <Compile Include="Plugins\MethodBasedExportDefinitionTest.cs" />
+    <Compile Include="Plugins\PartImportEngineTest.cs" />
     <Compile Include="Plugins\PropertyBasedExportDefinitionTest.cs" />
     <Compile Include="Plugins\TypeBasedExportDefinitionTest.cs" />
     <Compile Include="Plugins\GroupExportDefinitionTest.cs" />

@@ -12,16 +12,16 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using Apollo.Core.Base.Plugins;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
+using Apollo.Service.Repository.Plugins;
 using Apollo.Utilities;
 using Moq;
 using Nuclei;
 using NUnit.Framework;
 using Test.Mocks;
 
-namespace Apollo.Service.Repository.Plugins
+namespace Apollo.Core.Base.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

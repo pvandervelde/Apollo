@@ -211,9 +211,7 @@
     <Compile Include="Plugins\DuplicateTypeDefinitionExceptionTest.cs" />
     <Compile Include="Plugins\GroupDefinitionBuilderTest.cs" />
     <Compile Include="Plugins\GroupExportMapTest.cs" />
-    <Compile Include="Plugins\GroupImportEngineTest.cs" />
     <Compile Include="Plugins\GroupImportMapTest.cs" />
-    <Compile Include="Plugins\PartImportEngineTest.cs" />
     <Compile Include="Plugins\PluginDetectorTest.cs" />
     <Compile Include="Plugins\PluginRepositoryTest.cs" />
     <Compile Include="Plugins\RemoteAssemblyScannerTest.cs" />
