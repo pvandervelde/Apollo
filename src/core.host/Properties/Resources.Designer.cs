@@ -664,6 +664,15 @@ namespace Apollo.Core.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The given ID does not belong to a known part group..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownPartGroup {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownPartGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The license verification has failed. Please contact your vendor..
         /// </summary>
         internal static string Exceptions_Messages_VerificationFailure {

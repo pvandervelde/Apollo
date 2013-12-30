@@ -453,4 +453,7 @@
   <data name="UserInterface_LogMessage_ShuttingDown" xml:space="preserve">
     <value>Received request to shut down application.</value>
   </data>
+  <data name="Exceptions_Messages_UnknownPartGroup" xml:space="preserve">
+    <value>The given ID does not belong to a known part group.</value>
+  </data>
 </root>
