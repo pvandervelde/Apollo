@@ -217,97 +217,11 @@ namespace Apollo.Core.Dataset.Scheduling
             Justification = "There is no point in letting this exception escape. We will report back in a different way.")]
         private void ExecuteSchedule()
         {
-            ScheduleExecutionState state = ScheduleExecutionState.Executing;
+            var state = ScheduleExecutionState.Executing;
             m_Schedule.TraverseSchedule(
                 m_Schedule.Start,
-                current =>
-                {
-                    if (m_ExecutionInfo.Cancellation.IsCancellationRequested)
-                    {
-                        state = ScheduleExecutionState.Canceled;
-                        return false;
-                    }
-
-                    // If we need to pause we do it here
-                    m_ExecutionInfo.PauseHandler.WaitForUnPause(m_ExecutionInfo.Cancellation);
-
-                    // Get the executor for the current node type and run it
-                    // on the current node. If we fail then we exit the loop
-                    {
-                        var type = current.GetType();
-                        if (!m_Executors.ContainsKey(type))
-                        {
-                            state = ScheduleExecutionState.NoProcessorForVertex;
-                            return false;
-                        }
-
-                        RaiseOnVertexProcess(Schedule, current.Index);
-                        var processor = m_Executors[type];
-                        try
-                        {
-                            ScheduleExecutionState shouldContinue = processor.Process(current, m_ExecutionInfo);
-                            if (shouldContinue != ScheduleExecutionState.Executing)
-                            {
-                                state = shouldContinue;
-                                return false;
-                            }
-
-                            RaiseOnExecutionProgress(-1, Resources.Progress_ExecutingSchedule, false);
-                        }
-                        catch (Exception)
-                        {
-                            state = ScheduleExecutionState.UnhandledException;
-                            return false;
-                        }
-
-                        return true;
-                    }
-                },
-                availableNodes =>
-                {
-                    IScheduleVertex nextVertex = null;
-                    foreach (var pair in availableNodes)
-                    {
-                        if (m_ExecutionInfo.Cancellation.IsCancellationRequested)
-                        {
-                            state = ScheduleExecutionState.Canceled;
-                            break;
-                        }
-
-                        // If we need to pause we do it here
-                        m_ExecutionInfo.PauseHandler.WaitForUnPause(m_ExecutionInfo.Cancellation);
-
-                        bool canTraverse = true;
-                        if (pair.Item1 != null)
-                        {
-                            Debug.Assert(m_Conditions.Contains(pair.Item1), "The traversing condition for the edge does not exist");
-                            var condition = m_Conditions.Condition(pair.Item1);
-                            try
-                            {
-                                canTraverse = condition.CanTraverse(m_ExecutionInfo.Cancellation);
-                            }
-                            catch (Exception)
-                            {
-                                state = ScheduleExecutionState.UnhandledException;
-                                break;
-                            }
-                        }
-
-                        if (canTraverse)
-                        {
-                            nextVertex = pair.Item2;
-                            break;
-                        }
-                    }
-
-                    // If we get here then there were no edges we could traverse. Fail the execution
-                    if ((nextVertex == null) && (state == ScheduleExecutionState.Executing))
-                    {
-                        state = ScheduleExecutionState.NoTraversableEdgeFound;
-                    }
-
-                    return nextVertex;
-                });
+                current => ProcessScheduleStep(current, ref state),
+                availableNodes => DetermineNextScheduleStep(availableNodes, ref state));
 
             RaiseOnFinish(state);
 
@@ -318,6 +232,98 @@ namespace Apollo.Core.Dataset.Scheduling
                 m_ExecutionTask = null;
                 m_Parameters = null;
             }
+        }
+
+        private bool ProcessScheduleStep(IScheduleVertex current, ref ScheduleExecutionState state)
+        {
+            if (m_ExecutionInfo.Cancellation.IsCancellationRequested)
+            {
+                state = ScheduleExecutionState.Canceled;
+                return false;
+            }
+
+            // If we need to pause we do it here
+            m_ExecutionInfo.PauseHandler.WaitForUnPause(m_ExecutionInfo.Cancellation);
+
+            // Get the executor for the current node type and run it
+            // on the current node. If we fail then we exit the loop
+            {
+                var type = current.GetType();
+                if (!m_Executors.ContainsKey(type))
+                {
+                    state = ScheduleExecutionState.NoProcessorForVertex;
+                    return false;
+                }
+
+                RaiseOnVertexProcess(Schedule, current.Index);
+                var processor = m_Executors[type];
+                try
+                {
+                    ScheduleExecutionState shouldContinue = processor.Process(current, m_ExecutionInfo);
+                    if (shouldContinue != ScheduleExecutionState.Executing)
+                    {
+                        state = shouldContinue;
+                        return false;
+                    }
+
+                    RaiseOnExecutionProgress(-1, Resources.Progress_ExecutingSchedule, false);
+                }
+                catch (Exception)
+                {
+                    state = ScheduleExecutionState.UnhandledException;
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
+        private IScheduleVertex DetermineNextScheduleStep(
+            IEnumerable<Tuple<ScheduleElementId, IScheduleVertex>> availableNodes, 
+            ref ScheduleExecutionState state)
+        {
+            IScheduleVertex nextVertex = null;
+            foreach (var pair in availableNodes)
+            {
+                if (m_ExecutionInfo.Cancellation.IsCancellationRequested)
+                {
+                    state = ScheduleExecutionState.Canceled;
+                    break;
+                }
+
+                // If we need to pause we do it here
+                m_ExecutionInfo.PauseHandler.WaitForUnPause(m_ExecutionInfo.Cancellation);
+
+                bool canTraverse = true;
+                if (pair.Item1 != null)
+                {
+                    Debug.Assert(m_Conditions.Contains(pair.Item1), "The traversing condition for the edge does not exist");
+                    var condition = m_Conditions.Condition(pair.Item1);
+                    try
+                    {
+                        canTraverse = condition.CanTraverse(m_ExecutionInfo.Cancellation);
+                    }
+                    catch (Exception)
+                    {
+                        state = ScheduleExecutionState.UnhandledException;
+                        break;
+                    }
+                }
+
+                if (canTraverse)
+                {
+                    nextVertex = pair.Item2;
+                    break;
+                }
+            }
+
+            // If we get here then there were no edges we could traverse. Fail the execution
+            if ((nextVertex == null) && (state == ScheduleExecutionState.Executing))
+            {
+                state = ScheduleExecutionState.NoTraversableEdgeFound;
+            }
+
+            return nextVertex;
         }
 
         /// <summary>

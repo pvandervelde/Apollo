@@ -13,7 +13,6 @@ using System.Linq;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Dataset.Properties;
 using Apollo.Core.Extensions.Scheduling;
-using Apollo.Utilities;
 using Apollo.Utilities.History;
 
 namespace Apollo.Core.Dataset.Scheduling

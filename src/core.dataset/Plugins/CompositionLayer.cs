@@ -356,7 +356,7 @@ namespace Apollo.Core.Dataset.Plugins
                     {
                         if (instance.Change == InstanceChange.Removed)
                         {
-                            var updatedInfo = m_Parts.Where(p => instance.Instance.Equals(p.Value.Instance)).FirstOrDefault();
+                            var updatedInfo = m_Parts.FirstOrDefault(p => instance.Instance.Equals(p.Value.Instance));
                             updatedInfo.Value.Instance = null;
                         }
                     }
