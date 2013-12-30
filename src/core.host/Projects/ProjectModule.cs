@@ -7,7 +7,6 @@
 using Apollo.Core.Base;
 using Apollo.Core.Base.Activation;
 using Apollo.Core.Base.Plugins;
-using Apollo.Core.Host.Plugins;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
 using Autofac;

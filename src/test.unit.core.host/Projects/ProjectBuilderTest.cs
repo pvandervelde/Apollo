@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Activation;
+using Apollo.Core.Base.Plugins;
 using Apollo.Core.Host.Plugins;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
