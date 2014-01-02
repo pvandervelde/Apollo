@@ -176,6 +176,9 @@
     <Compile Include="Plugins\ICompositionLayer.cs" />
     <Compile Include="Plugins\IConnectGroups.cs" />
     <Compile Include="Plugins\IConnectParts.cs" />
+    <Compile Include="Plugins\INotifyOfPluginInformationChanges.cs" />
+    <Compile Include="Plugins\IPluginInformationCommands.cs" />
+    <Compile Include="Plugins\IProvideConnectionToRepositories.cs" />
     <Compile Include="Plugins\ISatisfyPluginRequests.cs" />
     <Compile Include="Plugins\MethodBasedExportDefinition.cs" />
     <Compile Include="Plugins\MethodBasedScheduleConditionDefinition.cs" />
@@ -185,6 +188,7 @@
     <Compile Include="Plugins\PartExtensions.cs" />
     <Compile Include="Plugins\PartImportEngine.cs" />
     <Compile Include="Plugins\PartImportToPartExportMap.cs" />
+    <Compile Include="Plugins\PluginRepositoryId.cs" />
     <Compile Include="Plugins\PropertyBasedExportDefinition.cs" />
     <Compile Include="Plugins\PropertyBasedImportDefinition.cs" />
     <Compile Include="Plugins\PropertyBasedScheduleConditionDefinition.cs" />
