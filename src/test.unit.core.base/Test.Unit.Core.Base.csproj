@@ -193,6 +193,9 @@
     <Compile Include="Plugins\ScheduleDefinitionTest.cs" />
     <Compile Include="Plugins\TypeDefinitionTest.cs" />
     <Compile Include="Plugins\TypeIdentityTest.cs" />
+    <Compile Include="Plugins\UnknownGroupDefinitionExceptionTest.cs" />
+    <Compile Include="Plugins\UnknownPartDefinitionExceptionTest.cs" />
+    <Compile Include="Plugins\UnknownTypeDefinitionExceptionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduling\ScheduleEdgeTest.cs" />
     <Compile Include="Scheduling\EditableScheduleTest.cs" />

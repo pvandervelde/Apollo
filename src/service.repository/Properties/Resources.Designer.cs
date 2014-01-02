@@ -106,33 +106,6 @@ namespace Apollo.Service.Repository.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The requested part definition is not registered..
-        /// </summary>
-        internal static string Exceptions_Messages_UnknownPartDefinition {
-            get {
-                return ResourceManager.GetString("Exceptions_Messages_UnknownPartDefinition", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The given ID does not belong to a known part group..
-        /// </summary>
-        internal static string Exceptions_Messages_UnknownPartGroup {
-            get {
-                return ResourceManager.GetString("Exceptions_Messages_UnknownPartGroup", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The requested type definition is not registered..
-        /// </summary>
-        internal static string Exceptions_Messages_UnknownTypeDefinition {
-            get {
-                return ResourceManager.GetString("Exceptions_Messages_UnknownTypeDefinition", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Service stopped.
         /// </summary>
         internal static string Log_Messages_ServiceStopped {

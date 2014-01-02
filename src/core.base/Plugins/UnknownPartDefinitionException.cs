@@ -6,45 +6,45 @@
 
 using System;
 using System.Runtime.Serialization;
-using Apollo.Service.Repository.Properties;
+using Apollo.Core.Base.Properties;
 
-namespace Apollo.Service.Repository.Plugins
+namespace Apollo.Core.Base.Plugins
 {
     /// <summary>
-    /// An exception thrown when the user tries to get a type definition from the repository with a type identity that does not exist.
+    /// An exception thrown when the user tries to get a part definition from the repository with a type identity that does not exist.
     /// </summary>
     [Serializable]
-    public sealed class UnknownTypeDefinitionException : Exception
+    public sealed class UnknownPartDefinitionException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnknownTypeDefinitionException"/> class.
+        /// Initializes a new instance of the <see cref="UnknownPartDefinitionException"/> class.
         /// </summary>
-        public UnknownTypeDefinitionException()
-            : this(Resources.Exceptions_Messages_UnknownTypeDefinition)
+        public UnknownPartDefinitionException()
+            : this(Resources.Exceptions_Messages_UnknownPartDefinition)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnknownTypeDefinitionException"/> class.
+        /// Initializes a new instance of the <see cref="UnknownPartDefinitionException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public UnknownTypeDefinitionException(string message) 
+        public UnknownPartDefinitionException(string message) 
             : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnknownTypeDefinitionException"/> class.
+        /// Initializes a new instance of the <see cref="UnknownPartDefinitionException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
-        public UnknownTypeDefinitionException(string message, Exception innerException)
+        public UnknownPartDefinitionException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnknownTypeDefinitionException"/> class.
+        /// Initializes a new instance of the <see cref="UnknownPartDefinitionException"/> class.
         /// </summary>
         /// <param name="info">
         ///     The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object
@@ -60,7 +60,7 @@ namespace Apollo.Service.Repository.Plugins
         /// <exception cref="T:System.Runtime.Serialization.SerializationException">
         /// The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
         /// </exception>
-        private UnknownTypeDefinitionException(SerializationInfo info, StreamingContext context)
+        private UnknownPartDefinitionException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

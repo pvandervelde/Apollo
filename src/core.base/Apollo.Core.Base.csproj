@@ -198,6 +198,9 @@
     <Compile Include="Plugins\TypeDefinition.cs" />
     <Compile Include="Plugins\TypeIdentity.cs" />
     <Compile Include="Plugins\TypeExtensions.cs" />
+    <Compile Include="Plugins\UnknownGroupDefinitionException.cs" />
+    <Compile Include="Plugins\UnknownPartDefinitionException.cs" />
+    <Compile Include="Plugins\UnknownTypeDefinitionException.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

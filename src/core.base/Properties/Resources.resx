@@ -333,11 +333,20 @@
   <data name="Exceptions_Messages_UnknownEndpointIdFormat" xml:space="preserve">
     <value>The given endpoint had an unsupported format.</value>
   </data>
+  <data name="Exceptions_Messages_UnknownPartDefinition" xml:space="preserve">
+    <value>The requested part definition is not registered.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownPartGroup" xml:space="preserve">
+    <value>The given ID does not belong to a known part group.</value>
+  </data>
   <data name="Exceptions_Messages_UnknownSchedule" xml:space="preserve">
     <value>The specified schedule ID does not map to a known schedule.</value>
   </data>
   <data name="Exceptions_Messages_UnknownScheduleVertex" xml:space="preserve">
     <value>The specified vertex does not belong to the current schedule.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownTypeDefinition" xml:space="preserve">
+    <value>The requested type definition is not registered.</value>
   </data>
   <data name="Exceptions_Messages_UploadNotDeregistered" xml:space="preserve">
     <value>An upload for the given token already exists.</value>

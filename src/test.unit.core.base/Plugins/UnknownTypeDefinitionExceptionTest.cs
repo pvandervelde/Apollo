@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using Nuclei.Nunit.Extensions;
 using NUnit.Framework;
 
-namespace Apollo.Service.Repository.Plugins
+namespace Apollo.Core.Base.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

@@ -177,9 +177,6 @@
     <Compile Include="Plugins\RemoteAssemblyScanner.cs" />
     <Compile Include="Plugins\ScheduleDefinitionBuilder.cs" />
     <Compile Include="Plugins\TypeIdentityBuilder.cs" />
-    <Compile Include="Plugins\UnknownGroupDefinitionException.cs" />
-    <Compile Include="Plugins\UnknownPartDefinitionException.cs" />
-    <Compile Include="Plugins\UnknownTypeDefinitionException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\..\build\temp\AssemblyInfo.Base.cs">
