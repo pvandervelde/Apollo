@@ -189,6 +189,7 @@
     <Compile Include="Plugins\PartExtensions.cs" />
     <Compile Include="Plugins\PartImportEngine.cs" />
     <Compile Include="Plugins\PartImportToPartExportMap.cs" />
+    <Compile Include="Plugins\PluginRepositoryConnector.cs" />
     <Compile Include="Plugins\PluginRepositoryId.cs" />
     <Compile Include="Plugins\PropertyBasedExportDefinition.cs" />
     <Compile Include="Plugins\PropertyBasedImportDefinition.cs" />
