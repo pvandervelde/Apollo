@@ -6,20 +6,19 @@
 
 using System;
 using System.Collections.Generic;
-using Apollo.Core.Base.Activation;
 using Apollo.Utilities;
 using Autofac;
 using Nuclei.Communication;
 using Nuclei.Configuration;
 using Nuclei.Diagnostics;
 
-namespace Apollo.Core.Base
+namespace Apollo.Core.Base.Activation
 {
     /// <summary>
     /// Handles the component registrations for the loader components that
     /// are used by applications that start dataset applications.
     /// </summary>
-    public sealed class BaseModuleForActivators : Module
+    public sealed class ActivatorModule : Module
     {
         private static void RegisterDistributors(ContainerBuilder builder)
         {

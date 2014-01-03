@@ -4,24 +4,20 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.Core.Base.Scheduling;
 using Autofac;
 
-namespace Apollo.Core.Base
+namespace Apollo.Core.Base.Plugins
 {
     /// <summary>
-    /// Handles the component registrations for the scheduling components.
+    /// Handles the component registrations for the plug-in components.
     /// </summary>
-    public sealed class BaseModuleForScheduling : Module
+    public sealed class PluginsModule : Module
     {
-        private static void RegisterSchedules(ContainerBuilder builder)
+        private static void RegisterConnector(ContainerBuilder builder)
         {
-            builder.Register(c => new FixedScheduleBuilder())
-                .As<IBuildFixedSchedules>();
-
-            builder.Register(c => new ScheduleVerifier(
-                    c.Resolve<IStoreSchedules>()))
-                .As<IVerifyScheduleIntegrity>();
+            builder.Register(c => new PluginRepositoryConnector())
+                .As<IProvideConnectionToRepositories>()
+                .SingleInstance();
         }
 
         /// <summary>
@@ -32,7 +28,7 @@ namespace Apollo.Core.Base
         {
             base.Load(builder);
 
-            RegisterSchedules(builder);
+            RegisterConnector(builder);
         }
     }
 }

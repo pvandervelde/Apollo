@@ -127,8 +127,9 @@
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
     <Compile Include="BaseConstants.cs" />
-    <Compile Include="BaseModuleForActivators.cs" />
-    <Compile Include="BaseModuleForScheduling.cs" />
+    <Compile Include="Activation\ActivatorModule.cs" />
+    <Compile Include="Plugins\PluginsModule.cs" />
+    <Compile Include="Scheduling\SchedulingModule.cs" />
     <Compile Include="CommunicationSubjects.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="IHostApplicationCommands.cs" />
