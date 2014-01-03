@@ -346,9 +346,11 @@ namespace Apollo.Service.Repository.Plugins
         {
             var algorithm = new HoffmanPavleyRankedShortestPathAlgorithm<TypeIdentity, Edge<TypeIdentity>>(
                 m_TypeGraph,
-                e => 1.0);
+                e => 1.0)
+                {
+                    ShortestPathCount = 10
+                };
 
-            algorithm.ShortestPathCount = 10;
             algorithm.Compute(child, parent);
             return algorithm.ComputedShortestPathCount > 0;
         }
