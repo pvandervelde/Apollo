@@ -333,6 +333,9 @@
   <data name="Exceptions_Messages_UnknownEndpointIdFormat" xml:space="preserve">
     <value>The given endpoint had an unsupported format.</value>
   </data>
+  <data name="Exceptions_Messages_UnknownGroupDefinition" xml:space="preserve">
+    <value>The requested group definition is not registered.</value>
+  </data>
   <data name="Exceptions_Messages_UnknownPartDefinition" xml:space="preserve">
     <value>The requested part definition is not registered.</value>
   </data>

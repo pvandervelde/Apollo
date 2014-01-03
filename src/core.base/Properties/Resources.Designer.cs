@@ -714,6 +714,15 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The requested group definition is not registered..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownGroupDefinition {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownGroupDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The requested part definition is not registered..
         /// </summary>
         internal static string Exceptions_Messages_UnknownPartDefinition {
