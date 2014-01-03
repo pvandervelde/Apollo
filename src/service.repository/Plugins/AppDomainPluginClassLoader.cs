@@ -6,7 +6,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Base;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Utilities;
@@ -35,7 +34,7 @@ namespace Apollo.Service.Repository.Plugins
             {
                 var builder = new ContainerBuilder();
                 {
-                    builder.RegisterModule(new BaseModuleForScheduling());
+                    builder.RegisterModule(new SchedulingModule());
 
                     builder.Register(c => new PartImportEngine(
                             c.Resolve<ISatisfyPluginRequests>()))

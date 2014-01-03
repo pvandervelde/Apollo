@@ -17,7 +17,7 @@ namespace Apollo.Core.Base.Plugins
         /// <summary>
         /// Returns a value indicating whether the specified repository can be contacted.
         /// </summary>
-        /// <param name="id">The ID of the repository</param>
+        /// <param name="id">The ID of the repository.</param>
         /// <returns>
         /// <see langword="true" /> if the specified repository can be contacted; otherwise, <see langword="false" />.
         /// </returns>

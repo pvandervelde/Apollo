@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using Apollo.Core.Base.Plugins;
 using Autofac;
 
@@ -34,7 +35,9 @@ namespace Apollo.Core.Host.Plugins
                     c.Resolve<ISatisfyPluginRequests>()))
                 .As<IConnectParts>();
 
-            builder.Register(c => new RemotePluginRepositoryProxy())
+            builder.Register(c => new RemotePluginRepositoryProxy(
+                    c.Resolve<IProvideConnectionToRepositories>(),
+                    () => DateTimeOffset.Now))
                 .As<ISatisfyPluginRequests>()
                 .SingleInstance();
         }
