@@ -128,7 +128,9 @@
     </Compile>
     <Compile Include="BaseConstants.cs" />
     <Compile Include="Activation\ActivatorModule.cs" />
+    <Compile Include="Plugins\PluginRepositoryEventArgs.cs" />
     <Compile Include="Plugins\PluginsModule.cs" />
+    <Compile Include="Plugins\RepositoryPluginInformation.cs" />
     <Compile Include="Scheduling\SchedulingModule.cs" />
     <Compile Include="CommunicationSubjects.cs" />
     <Compile Include="Globals.cs" />
