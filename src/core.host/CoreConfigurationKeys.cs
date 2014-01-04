@@ -19,5 +19,12 @@ namespace Apollo.Core.Host
         /// </summary>
         public static readonly ConfigurationKey PluginLocation
             = new ConfigurationKey("PluginLocation", typeof(string));
+
+        /// <summary>
+        /// The <see cref="ConfigurationKey"/> that is used to retrieve the maximum time plug-in information
+        /// may be cached without getting updates from a plug-in repository.
+        /// </summary>
+        public static readonly ConfigurationKey RepositoryCacheExpirationTimeInMilliSeconds
+            = new ConfigurationKey("RepositoryCacheExpirationTimeInMilliSeconds", typeof(int));
     }
 }

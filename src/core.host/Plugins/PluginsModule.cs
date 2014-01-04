@@ -7,6 +7,7 @@
 using System;
 using Apollo.Core.Base.Plugins;
 using Autofac;
+using Nuclei.Configuration;
 
 namespace Apollo.Core.Host.Plugins
 {
@@ -26,6 +27,8 @@ namespace Apollo.Core.Host.Plugins
         /// </remarks>
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterModule(new Base.Plugins.PluginsModule());
+
             builder.Register(c => new GroupImportEngine( 
                     c.Resolve<ISatisfyPluginRequests>(),
                     c.Resolve<IConnectParts>()))
@@ -37,6 +40,7 @@ namespace Apollo.Core.Host.Plugins
 
             builder.Register(c => new RemotePluginRepositoryProxy(
                     c.Resolve<IProvideConnectionToRepositories>(),
+                    c.Resolve<IConfiguration>(),
                     () => DateTimeOffset.Now))
                 .As<ISatisfyPluginRequests>()
                 .SingleInstance();
