@@ -178,6 +178,8 @@
     <Compile Include="Plugins\GroupImportEngineTest.cs" />
     <Compile Include="Plugins\MethodBasedExportDefinitionTest.cs" />
     <Compile Include="Plugins\PartImportEngineTest.cs" />
+    <Compile Include="Plugins\PluginRepositoryConnectorTest.cs" />
+    <Compile Include="Plugins\PluginRepositoryIdTest.cs" />
     <Compile Include="Plugins\PropertyBasedExportDefinitionTest.cs" />
     <Compile Include="Plugins\TypeBasedExportDefinitionTest.cs" />
     <Compile Include="Plugins\GroupExportDefinitionTest.cs" />
