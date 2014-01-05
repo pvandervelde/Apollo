@@ -167,6 +167,10 @@
       <Project>{626db086-d3e7-47a6-92b5-2afc58e8e18e}</Project>
       <Name>Apollo.Core.Scripting</Name>
     </ProjectReference>
+    <ProjectReference Include="..\service.repository\Apollo.Service.Repository.csproj">
+      <Project>{9598d74e-764a-4c5e-b871-273dc542deaa}</Project>
+      <Name>Apollo.Service.Repository</Name>
+    </ProjectReference>
     <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
       <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>
       <Name>SolutionLevel</Name>
@@ -218,6 +222,7 @@
     <Compile Include="KernelTest.cs" />
     <Compile Include="MissingServiceDependencyExceptionTest.cs" />
     <Compile Include="NotificationNameTest.cs" />
+    <Compile Include="Plugins\RemotePluginRepositoryProxyTest.cs" />
     <Compile Include="Projects\CompositionLayerProxyTest.cs" />
     <Compile Include="Projects\GroupSelectorTest.cs" />
     <Compile Include="Projects\CannotCreateDatasetWithoutCreatorExceptionTest.cs" />

@@ -31,8 +31,8 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// The cache that contains all the loaded types and their definitions.
         /// </summary>
-        private readonly Dictionary<TypeIdentity, Tuple<TypeDefinition, PluginRepositoryId>> m_TypeCache
-            = new Dictionary<TypeIdentity, Tuple<TypeDefinition, PluginRepositoryId>>();
+        private readonly Dictionary<TypeIdentity, Tuple<TypeDefinition, List<PluginRepositoryId>>> m_TypeCache
+            = new Dictionary<TypeIdentity, Tuple<TypeDefinition, List<PluginRepositoryId>>>();
 
         /// <summary>
         /// The graph that links the different types according to their inheritance order.
@@ -124,7 +124,7 @@ namespace Apollo.Core.Host.Plugins
             m_CurrentTime = currentTime;
 
             m_CacheExpirationTime = configuration.HasValueFor(CoreConfigurationKeys.RepositoryCacheExpirationTimeInMilliSeconds)
-                ? new TimeSpan(configuration.Value<int>(CoreConfigurationKeys.RepositoryCacheExpirationTimeInMilliSeconds))
+                ? TimeSpan.FromMilliseconds(configuration.Value<int>(CoreConfigurationKeys.RepositoryCacheExpirationTimeInMilliSeconds))
                 : s_DefaultCacheExpirationTime;
         }
 
@@ -179,7 +179,7 @@ namespace Apollo.Core.Host.Plugins
                 if (m_TypeCache.ContainsKey(type))
                 {
                     var pair = m_TypeCache[type];
-                    suggestedRepository = pair.Item2;
+                    suggestedRepository = pair.Item2[0];
                     if (!HasRepositoryInformationExpired(suggestedRepository))
                     {
                         return true;
@@ -270,7 +270,19 @@ namespace Apollo.Core.Host.Plugins
                     {
                         if (!m_TypeCache.ContainsKey(type.Identity))
                         {
-                            m_TypeCache.Add(type.Identity, new Tuple<TypeDefinition, PluginRepositoryId>(type, repositoryToQuery));
+                            m_TypeCache.Add(
+                                type.Identity, 
+                                new Tuple<TypeDefinition, List<PluginRepositoryId>>(
+                                    type,
+                                    new List<PluginRepositoryId> { repositoryToQuery }));
+                        }
+                        else
+                        {
+                            var pair = m_TypeCache[type.Identity];
+                            if (!pair.Item2.Contains(repositoryToQuery))
+                            {
+                                pair.Item2.Add(repositoryToQuery);
+                            }
                         }
 
                         m_TypesPerRepository[repositoryToQuery].Add(type.Identity);
@@ -340,13 +352,18 @@ namespace Apollo.Core.Host.Plugins
 
                 foreach (var item in types)
                 {
-                    if (m_PartCache.ContainsKey(item))
+                    var pair = m_TypeCache[item];
+                    pair.Item2.Remove(repositoryToQuery);
+                    if (pair.Item2.Count == 0)
                     {
-                        m_PartCache.Remove(item);
-                    }
+                        if (m_PartCache.ContainsKey(item))
+                        {
+                            m_PartCache.Remove(item);
+                        }
 
-                    m_TypeGraph.RemoveVertex(item);
-                    m_TypeCache.Remove(item);
+                        m_TypeGraph.RemoveVertex(item);
+                        m_TypeCache.Remove(item);
+                    }
                 }
             }
         }
@@ -445,7 +462,7 @@ namespace Apollo.Core.Host.Plugins
                 if (item != null)
                 {
                     var pair = m_TypeCache[item];
-                    suggestedRepository = pair.Item2;
+                    suggestedRepository = pair.Item2[0];
                     if (!HasRepositoryInformationExpired(suggestedRepository))
                     {
                         return true;
@@ -491,7 +508,7 @@ namespace Apollo.Core.Host.Plugins
                 if (item != null)
                 {
                     var pair = m_TypeCache[item];
-                    suggestedRepository = pair.Item2;
+                    suggestedRepository = pair.Item2[0];
                     if (!HasRepositoryInformationExpired(suggestedRepository))
                     {
                         return item;
