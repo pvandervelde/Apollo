@@ -35,6 +35,7 @@ newname = 'project_newname'
 newproject.Name = newname
 if newproject.Name != newname:
     print 'Fail: Project name was not updated'
+    sys.exit(1)
 else:
     print 'Pass: Project name updated successfully'
 
@@ -43,6 +44,7 @@ newsummary = 'project_newsummary'
 newproject.Summary = newsummary
 if newproject.Summary != newsummary:
     print 'Fail: Project summary was not updated'
+    sys.exit(1)
 else:
     print 'Pass: Project summary updated successfully'
 
