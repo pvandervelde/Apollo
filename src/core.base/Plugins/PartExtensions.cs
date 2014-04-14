@@ -26,10 +26,7 @@ namespace Apollo.Core.Base.Plugins
             this IEnumerable<GroupPartDefinition> partDefinitions,
             ExportRegistrationId exportRegistration)
         {
-            var part = partDefinitions
-                .Where(o => o.RegisteredExports.Contains(exportRegistration))
-                .FirstOrDefault();
-
+            var part = partDefinitions.FirstOrDefault(o => o.RegisteredExports.Contains(exportRegistration));
             if (part == null)
             {
                 throw new UnknownExportDefinitionException();
@@ -90,10 +87,7 @@ namespace Apollo.Core.Base.Plugins
             this IEnumerable<GroupPartDefinition> partDefinitions,
             ImportRegistrationId importRegistration)
         {
-            var part = partDefinitions
-                .Where(o => o.RegisteredImports.Contains(importRegistration))
-                .FirstOrDefault();
-
+            var part = partDefinitions.FirstOrDefault(o => o.RegisteredImports.Contains(importRegistration));
             if (part == null)
             {
                 throw new UnknownImportDefinitionException();

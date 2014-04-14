@@ -12,7 +12,6 @@ using System.Globalization;
 using System.Linq;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Scheduling;
-using Apollo.Utilities;
 
 namespace Apollo.Core.Dataset.Scheduling
 {
