@@ -18,6 +18,7 @@ namespace Test.Mocks
     {
     }
 
+    [Export(typeof(IExportingInterface))]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
@@ -26,6 +27,7 @@ namespace Test.Mocks
     { 
     }
 
+    [Export(typeof(IExportingInterface))]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
