@@ -67,6 +67,7 @@ namespace Apollo.UI.Console
                         new List<CommunicationSubject>
                             {
                                 CommunicationSubjects.Dataset,
+                                CommunicationSubjects.Plugins,
                             }, 
                         new[]
                             {

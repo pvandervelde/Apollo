@@ -77,6 +77,7 @@ namespace Apollo.UI.Explorer
                         new List<CommunicationSubject>
                             {
                                 CommunicationSubjects.Dataset,
+                                CommunicationSubjects.Plugins,
                             },
                         new[]
                             {

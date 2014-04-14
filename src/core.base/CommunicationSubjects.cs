@@ -21,5 +21,13 @@ namespace Apollo.Core.Base
             Justification = "ConfigurationKey is immutable")]
         public static readonly CommunicationSubject Dataset
             = new CommunicationSubject("Apollo.Subject: Dataset");
+
+        /// <summary>
+        /// The communication subject for Apollo applications that deal with plugin information.
+        /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
+            Justification = "ConfigurationKey is immutable")]
+        public static readonly CommunicationSubject Plugins
+            = new CommunicationSubject("Apollo.Subject: Plugin");
     }
 }
