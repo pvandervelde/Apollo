@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Apollo.Core.Base;
+using Apollo.Core.Base.Activation;
 using Apollo.Core.Host;
 using Autofac;
 using Autofac.Core;
@@ -73,7 +74,7 @@ namespace Apollo.UI.Console
                                 ChannelType.TcpIP, 
                             },
                         true),
-                    new BaseModuleForActivators(),
+                    new ActivatorModule(),
                 };
         }
 

@@ -4,15 +4,14 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.Core.Base.Scheduling;
 using Autofac;
 
-namespace Apollo.Core.Base
+namespace Apollo.Core.Base.Scheduling
 {
     /// <summary>
     /// Handles the component registrations for the scheduling components.
     /// </summary>
-    public sealed class BaseModuleForScheduling : Module
+    public sealed class SchedulingModule : Module
     {
         private static void RegisterSchedules(ContainerBuilder builder)
         {
