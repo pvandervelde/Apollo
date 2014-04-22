@@ -23,7 +23,7 @@
  <Targets>
   <AssemblyReferenceDirectories>
    <Directory>C:/Program Files (x86)/Reference Assemblies/Microsoft/WindowsPowerShell/3.0/</Directory>
-   <Directory>C:/Program Files/Microsoft Silverlight/5.1.20913.0/</Directory>
+   <Directory>C:\Program Files\Microsoft Silverlight\5.1.30214.0</Directory>
    <Directory>$(ProjectDir)/packages/Microsoft.Net.Http.2.0.20710.0/lib/net40/</Directory>
   </AssemblyReferenceDirectories>
   <Target Name="$(ProjectDir)/build/bin/x64/Release/Apollo.Core.Base.dll" Analyze="True" AnalyzeAllChildren="True" />
