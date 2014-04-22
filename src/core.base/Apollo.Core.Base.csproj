@@ -128,9 +128,8 @@
     <Compile Include="..\..\build\temp\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
+    <Compile Include="Activation\ActivatorModule.cs" />
     <Compile Include="BaseConstants.cs" />
-    <Compile Include="BaseModuleForActivators.cs" />
-    <Compile Include="BaseModuleForScheduling.cs" />
     <Compile Include="CommunicationSubjects.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="IHostApplicationCommands.cs" />
@@ -218,6 +217,7 @@
     <Compile Include="Scheduling\ScheduleExecutionState.cs" />
     <Compile Include="Scheduling\ScheduleInformation.cs" />
     <Compile Include="Scheduling\ScheduleVerifier.cs" />
+    <Compile Include="Scheduling\SchedulingModule.cs" />
     <Compile Include="Scheduling\UnknownScheduleException.cs" />
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>

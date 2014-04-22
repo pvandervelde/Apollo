@@ -34,7 +34,7 @@ namespace Apollo.Core.Host.Plugins
             {
                 var builder = new ContainerBuilder();
                 {
-                    builder.RegisterModule(new BaseModuleForScheduling());
+                    builder.RegisterModule(new SchedulingModule());
 
                     builder.Register(c => new PartImportEngine(
                             c.Resolve<ISatisfyPluginRequests>()))
