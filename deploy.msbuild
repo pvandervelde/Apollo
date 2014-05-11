@@ -16,14 +16,14 @@
     </Target>
     
     <PropertyGroup>
-        <MsBuildDeployNuGet>$(DirWorkspace)\apollo.Deploy.NuGet.msbuild</MsBuildDeployNuGet>
+        <MsBuildDeployNuGet>$(DirWorkspace)\deploy.nuget.msbuild</MsBuildDeployNuGet>
     </PropertyGroup>
     <Target Name="_DeployNuget" DependsOnTargets="_DisplayInfo">
         <MSBuild Projects="$(MsBuildDeployNuGet)" Properties="Configuration=Deploy" />
     </Target>
     
     <PropertyGroup>
-        <MsBuildDeployMsi>$(DirWorkspace)\apollo.Deploy.FileServer.msbuild</MsBuildDeployMsi>
+        <MsBuildDeployMsi>$(DirWorkspace)\deploy.fileserver.msbuild</MsBuildDeployMsi>
     </PropertyGroup>
     <Target Name="_DeployMsi" DependsOnTargets="_DisplayInfo">
         <MSBuild Projects="$(MsBuildDeployMsi)" Properties="Configuration=Deploy" />
