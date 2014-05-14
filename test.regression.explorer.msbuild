@@ -27,24 +27,20 @@
         <DirReportDumps Condition=" '$(DirReportDumps)' == '' ">$(DirTestReports)\apollo\regression</DirReportDumps>
         
         <!-- Version number -->
-        <VersionMajor>0</VersionMajor>
-        <VersionMinor>0</VersionMinor>
-        <VersionBuild>0</VersionBuild>
-        <VersionRevision>0</VersionRevision>
+        <VersionSemantic>0</VersionSemantic>
         
         <!-- Tools -->
         <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
     </PropertyGroup>
     
+    <Import Project="$(MsBuildExtensionsPath)\GetSemanticVersion.msbuild" 
+            Condition="Exists('$(MsBuildExtensionsPath)\GetSemanticVersion.msbuild')" />
     <Import Project="$(MsBuildExtensionsPath)\TemplateFile.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\TemplateFile.msbuild')"/>
     <Import Project="$(MsBuildExtensionsPath)\SherlockRegisterTest.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\SherlockRegisterTest.msbuild')"/>
     <Import Project="$(MsBuildExtensionsPath)\Unzip.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\Unzip.msbuild')"/>
-    
-    <Import Project="$(DirWorkspace)\version.xml"
-            Condition="Exists('$(DirWorkspace)\version.xml')"/>
 
     <Target Name="Run" DependsOnTargets="_UnpackTestFiles;_ExecuteRegressionTest;_WriteReportPath">
         <!-- Do nothing here -->
@@ -53,6 +49,15 @@
     <!-- Display info -->
     <Target Name="_DisplayInfo">
         <Message Text="Running regression tests for Apollo.UI.Explorer ..." />
+    </Target>
+    
+    <PropertyGroup>
+        <FileSemanticVersion>$(DirBuildTemp)\semantic_version.json</FileSemanticVersion>
+    </PropertyGroup>
+    <Target Name="_GetSemanticVersion" DependsOnTargets="_DisplayInfo;">
+        <GetSemanticVersion VersionFile="$(FileSemanticVersion)">
+            <Output TaskParameter="VersionSemantic" PropertyName="VersionSemantic" />
+        </GetSemanticVersion>
     </Target>
     
     <PropertyGroup>
@@ -76,7 +81,7 @@
         <DirRemoteTest>c:\temp</DirRemoteTest>
         <DirRemoteTestFiles>$(DirRemoteTest)\testfiles</DirRemoteTestFiles>
     </PropertyGroup>
-    <Target Name="_ExecuteRegressionTest" DependsOnTargets="_DisplayInfo;_UnpackTestFiles">
+    <Target Name="_ExecuteRegressionTest" DependsOnTargets="_DisplayInfo;_UnpackTestFiles;_GetSemanticVersion">
         <MakeDir Directories="$(DirReportDumps)" Condition="!Exists('$(DirReportDumps)')" />
         <MakeDir Directories="$(DirSherlockReport)" Condition="!Exists('$(DirSherlockReport)')" />
         <MakeDir Directories="$(DirBuildTempTests)" Condition="!Exists('$(DirBuildTempTests)')" />
@@ -87,7 +92,7 @@
                 <ReplacementValue>Apollo</ReplacementValue>
             </SherlockTokens>
             <SherlockTokens Include="ProductVersion">
-                <ReplacementValue>$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</ReplacementValue>
+                <ReplacementValue>$(VersionSemantic)</ReplacementValue>
             </SherlockTokens>
             
             <SherlockTokens Include="FileApolloInstaller">

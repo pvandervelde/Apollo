@@ -20,12 +20,12 @@ using System.Reflection;
 //      Minor Version 
 //      Build Number
 //      Revision
-//
-// Defining the assembly version to be hard coded to 0 for the build and revision
-// numbers so that plug-ins keep working between minor updates (as they should).
+// You can specify all the values or you can default the Build and Revision Numbers 
+// by using the '*' as shown below:
+// [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("${Major}.${Minor}.0.0")]
-[assembly: AssemblyFileVersion("${Major}.${Minor}.${Build}.${Revision}")]
+[assembly: AssemblyFileVersion("${Major}.${Minor}.${Patch}.${Build}")]
 
 // The AssemblyInformationalVersion stores the version that will be displayed in
 // Windows explorer.
-[assembly: AssemblyInformationalVersion("${Major}.${Minor}.${Build}.${Revision}")]
+[assembly: AssemblyInformationalVersion("${SemanticFull}")]

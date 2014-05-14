@@ -10,7 +10,9 @@
     
         <!-- Directories -->
         <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
+        <DirTools>$(DirWorkspace)\tools</DirTools>
         <DirBuild>$(DirWorkspace)\build</DirBuild>
+        <DirBuildTemp>$(DirBuild)\temp</DirBuildTemp>
         <DirBuildDeploy>$(DirBuild)\deploy</DirBuildDeploy>
         
         <!-- File server -->
@@ -18,14 +20,14 @@
         <ServerDeployPath Condition=" '$(ServerDeployPath)' == '' "></ServerDeployPath>
         
         <!-- Version number -->
-        <VersionMajor>0</VersionMajor>
-        <VersionMinor>0</VersionMinor>
-        <VersionBuild>0</VersionBuild>
-        <VersionRevision>0</VersionRevision>
+        <VersionSemantic>0</VersionSemantic>
+        
+        <!-- Tools -->
+        <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
     </PropertyGroup>
     
-    <Import Project="$(DirWorkspace)\version.xml"
-            Condition="Exists('$(DirWorkspace)\version.xml')"/>
+    <Import Project="$(MsBuildExtensionsPath)\GetSemanticVersion.msbuild" 
+            Condition="Exists('$(MsBuildExtensionsPath)\GetSemanticVersion.msbuild')" />
     
     <Target Name="Run" DependsOnTargets="_DisplayInfo;_DeployToFileServer;" />
     
@@ -36,10 +38,19 @@
     </Target>
     
     <PropertyGroup>
-        <PathRemoteDeploy>$(ServerDeployPath)\apollo\$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</PathRemoteDeploy>
+        <FileSemanticVersion>$(DirBuildTemp)\semantic_version.json</FileSemanticVersion>
+    </PropertyGroup>
+    <Target Name="_GetSemanticVersion" DependsOnTargets="_DisplayInfo;">
+        <GetSemanticVersion VersionFile="$(FileSemanticVersion)">
+            <Output TaskParameter="VersionSemantic" PropertyName="VersionSemantic" />
+        </GetSemanticVersion>
+    </Target>
+    
+    <PropertyGroup>
+        <PathRemoteDeploy>$(ServerDeployPath)\apollo\$(VersionSemantic)</PathRemoteDeploy>
         <PathRemoteDeployX64>$(PathRemoteDeploy)\x64</PathRemoteDeployX64>
     </PropertyGroup>
-    <Target Name="_DeployToFileServer" DependsOnTargets="_DisplayInfo;" Condition=" '$(ServerDeployPath)' != ''">
+    <Target Name="_DeployToFileServer" DependsOnTargets="_DisplayInfo;_GetSemanticVersion" Condition=" '$(ServerDeployPath)' != ''">
         <ItemGroup>
             <X64MsiFiles Include="$(DirBuildDeploy)\x64\*.msi" />
         </ItemGroup>
