@@ -64,12 +64,15 @@
     <FileGeneratedWixProduct>$(DirBuildTemp)\ProductIncludes.wxi</FileGeneratedWixProduct>
     <FileGeneratedWixVersion>$(DirBuildTemp)\VersionNumber.wxi</FileGeneratedWixVersion>
     <FileGeneratedLicenses>$(DirBuildTemp)\licenses.xml</FileGeneratedLicenses>
+    <FileGeneratedSemanticVersion>$(DirBuildTemp)\semantic_version.json</FileGeneratedSemanticVersion>
     <!-- Version number -->
     <VersionMajor>0</VersionMajor>
     <VersionMinor>0</VersionMinor>
+    <VersionPatch>0</VersionPatch>
     <VersionBuild>0</VersionBuild>
-    <VersionRevision>0</VersionRevision>
-    <!-- Jenkins, the build system adds the BUILD_NUMBER environment variable so we can get that here -->
+    <VersionSemantic>0</VersionSemantic>
+    <VersionSemanticFull>0</VersionSemanticFull>
+    <!-- TeamCity, the build system adds the BUILD_NUMBER environment variable so we can get that here -->
     <BuildNumber>$(BUILD_NUMBER)</BuildNumber>
     <BuildNumber Condition=" '$(BuildNumber)' == '' ">0</BuildNumber>
     <!-- Todays dates -->
@@ -79,12 +82,13 @@
   </PropertyGroup>
   <Import Project="$(MsBuildExtensionsPath)\TemplateFile.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\TemplateFile.msbuild')" />
   <Import Project="$(MsBuildExtensionsPath)\FindToolFromPackages.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\FindToolFromPackages.msbuild')" />
+  <Import Project="$(MsBuildExtensionsPath)\CalculateSemanticVersion.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\CalculateSemanticVersion.msbuild')" />
+  <Import Project="$(MsBuildExtensionsPath)\GetSemanticVersion.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\GetSemanticVersion.msbuild')" />
   <Import Project="$(MsBuildExtensionsPath)\GitCommitHash.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\GitCommitHash.msbuild')" />
   <Import Project="$(MsBuildExtensionsPath)\PublicKeySignatureFromAssembly.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\PublicKeySignatureFromAssembly.msbuild')" />
   <Import Project="$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild')" />
   <Import Project="$(DirWorkspace)\company.xml" Condition="Exists('$(DirWorkspace)\company.xml')" />
   <Import Project="$(DirWorkspace)\product.xml" Condition="Exists('$(DirWorkspace)\product.xml')" />
-  <Import Project="$(DirWorkspace)\version.xml" Condition="Exists('$(DirWorkspace)\version.xml')" />
   <Target Name="_PrepareBuildEnvironment">
     <MakeDir Directories="$(DirBuild);" Condition="!Exists('$(DirBuild)')" />
     <MakeDir Directories="$(DirBuildTemp)" Condition="!Exists('$(DirBuildTemp)')" />
@@ -98,6 +102,7 @@
   </PropertyGroup>
   <Target Name="CleanGeneratedFiles">
     <ItemGroup>
+      <GeneratedFiles Include="$(FileGeneratedSemanticVersion)" />
       <GeneratedFiles Include="$(FileGeneratedAssemblyBase)" />
       <GeneratedFiles Include="$(FileGeneratedAssemblyVersion)" />
       <GeneratedFiles Include="$(FileGeneratedAssemblyBuildInfo)" />
@@ -115,6 +120,7 @@
   <!-- Just before we start building we'll generate the AssemblyInfo.XX.cs files-->
   <PropertyGroup>
     <BuildDependsOn>
+      GetSemanticVersion;
       GenerateAssemblyInfoBase;
       GenerateAssemblyInfoVersionNumber;
       GenerateAssemblyInfoBuildInfo;
@@ -128,6 +134,25 @@
       $(BuildDependsOn);
     </BuildDependsOn>
   </PropertyGroup>
+  <PropertyGroup>
+    <FileGitVersionExe>GitHubFlowVersion.exe</FileGitVersionExe>
+  </PropertyGroup>
+  <Target Name="GetSemanticVersion">
+    <FindToolFromPackages PackagesDir="$(DirPackages)" FileToLocate="$(FileGitVersionExe)">
+      <Output TaskParameter="Path" PropertyName="PathGitVersionExe" />
+    </FindToolFromPackages>
+    
+    <CalculateSemanticVersion ExePath="$(PathGitVersionExe)" VersionFile="$(FileGeneratedSemanticVersion)" Condition="!Exists('$(FileGeneratedSemanticVersion)')" />
+    
+    <GetSemanticVersion VersionFile="$(FileGeneratedSemanticVersion)">
+        <Output TaskParameter="VersionMajor" PropertyName="VersionMajor" />
+        <Output TaskParameter="VersionMinor" PropertyName="VersionMinor" />
+        <Output TaskParameter="VersionPatch" PropertyName="VersionPatch" />
+        <Output TaskParameter="VersionBuild" PropertyName="VersionBuild" />
+        <Output TaskParameter="VersionSemantic" PropertyName="VersionSemantic" />
+        <Output TaskParameter="VersionSemanticFull" PropertyName="VersionSemanticFull" />
+    </GetSemanticVersion>
+  </Target>
   <Target Name="GenerateAssemblyInfoBase" DependsOnTargets="_PrepareBuildEnvironment">
     <!-- Generate the version number file -->
     <ItemGroup>
@@ -146,11 +171,14 @@
       <VersionCsTokens Include="Minor">
         <ReplacementValue>$(VersionMinor)</ReplacementValue>
       </VersionCsTokens>
+      <VersionCsTokens Include="Patch">
+        <ReplacementValue>$(VersionPatch)</ReplacementValue>
+      </VersionCsTokens>
       <VersionCsTokens Include="Build">
         <ReplacementValue>$(VersionBuild)</ReplacementValue>
       </VersionCsTokens>
-      <VersionCsTokens Include="Revision">
-        <ReplacementValue>$(VersionRevision)</ReplacementValue>
+      <VersionCsTokens Include="SemanticFull">
+        <ReplacementValue>$(VersionSemanticFull)</ReplacementValue>
       </VersionCsTokens>
     </ItemGroup>
     <TemplateFile Template="$(FileTemplateAssemblyVersion)" OutputFileName="$(FileGeneratedAssemblyVersion)" Tokens="@(VersionCsTokens)" />
@@ -299,11 +327,14 @@
       <VersionWixTokens Include="Minor">
         <ReplacementValue>$(VersionMinor)</ReplacementValue>
       </VersionWixTokens>
+      <VersionWixTokens Include="Patch">
+        <ReplacementValue>$(VersionPatch)</ReplacementValue>
+      </VersionWixTokens>
       <VersionWixTokens Include="Build">
         <ReplacementValue>$(VersionBuild)</ReplacementValue>
       </VersionWixTokens>
-      <VersionWixTokens Include="Revision">
-        <ReplacementValue>$(VersionRevision)</ReplacementValue>
+      <VersionWixTokens Include="SemanticFull">
+        <ReplacementValue>$(VersionSemanticFull)</ReplacementValue>
       </VersionWixTokens>
     </ItemGroup>
     <TemplateFile Template="$(FileTemplateWixVersion)" OutputFileName="$(FileGeneratedWixVersion)" Tokens="@(VersionWixTokens)" />

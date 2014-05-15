@@ -20,15 +20,14 @@
         <DirTools>$(DirWorkspace)\tools</DirTools>
         
         <!-- Version number -->
-        <VersionMajor>0</VersionMajor>
-        <VersionMinor>0</VersionMinor>
-        <VersionBuild>0</VersionBuild>
-        <VersionRevision>0</VersionRevision>
+        <VersionSemantic>0</VersionSemantic>
         
         <!-- Tools -->
         <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
     </PropertyGroup>
     
+    <Import Project="$(MsBuildExtensionsPath)\GetSemanticVersion.msbuild" 
+            Condition="Exists('$(MsBuildExtensionsPath)\GetSemanticVersion.msbuild')" />
     <Import Project="$(MsBuildExtensionsPath)\NugetGatherDependencies.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\NugetGatherDependencies.msbuild')"/>
     <Import Project="$(MsBuildExtensionsPath)\NugetPack.msbuild"
@@ -48,9 +47,18 @@
     </Target>
     
     <PropertyGroup>
-        <FileReleaseNotes>$(DirBuildTemp)\releasenotes.txt</FileReleaseNotes>
+        <FileSemanticVersion>$(DirBuildTemp)\semantic_version.json</FileSemanticVersion>
     </PropertyGroup>
-    <Target Name="_GatherReleaseNotes">
+    <Target Name="_GetSemanticVersion" DependsOnTargets="_DisplayInfo;">
+        <GetSemanticVersion VersionFile="$(FileSemanticVersion)">
+            <Output TaskParameter="VersionSemantic" PropertyName="VersionSemantic" />
+        </GetSemanticVersion>
+    </Target>
+    
+    <PropertyGroup>
+        <FileReleaseNotes>$(DirBuildTemp)\releasenotes_full.md</FileReleaseNotes>
+    </PropertyGroup>
+    <Target Name="_GatherReleaseNotes" Condition=" '$(GitHubUserName)' != '' AND '$(GitHubToken)' != '' ">
         <CreateProperty Condition="Exists('$(FileReleaseNotes)')" Value="$([System.IO.File]::ReadAllText('$(FileReleaseNotes)'))">
             <Output TaskParameter="Value" PropertyName="ReleaseNotes" />
         </CreateProperty>
@@ -64,7 +72,7 @@
         <FileNuSpec>$(DirBuildTemp)\nuget.nuspec</FileNuSpec>
         <FileReleaseNotes>$(DirBuildTemp)\releasenotes.txt</FileReleaseNotes>
     </PropertyGroup>
-    <Target Name="_BuildNugetPackage" DependsOnTargets="_DisplayInfo;_GatherReleaseNotes">
+    <Target Name="_BuildNugetPackage" DependsOnTargets="_DisplayInfo;_GetSemanticVersion;_GatherReleaseNotes">
         <MakeDir Directories="$(DirBuildTemp)" Condition="!Exists('$(DirBuildTemp)')" />
         <MakeDir Directories="$(DirBuildDeploy)" Condition="!Exists('$(DirBuildDeploy)')" />
 
@@ -78,7 +86,7 @@
 
         <ItemGroup>
             <NuSpecTokens Include="Version">
-                <ReplacementValue>$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</ReplacementValue>
+                <ReplacementValue>$(VersionSemantic)</ReplacementValue>
             </NuSpecTokens>
             <NuSpecTokens Include="DirBin">
                 <ReplacementValue>$(DirBuildBin)</ReplacementValue>

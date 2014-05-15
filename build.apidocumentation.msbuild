@@ -20,10 +20,7 @@
         <DirBuildTemp>$(DirBuild)\temp</DirBuildTemp>
         
         <!-- Version number -->
-        <VersionMajor>0</VersionMajor>
-        <VersionMinor>0</VersionMinor>
-        <VersionBuild>0</VersionBuild>
-        <VersionRevision>0</VersionRevision>
+        <VersionSemantic>0</VersionSemantic>
         
         <!-- Tools -->
         <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
@@ -31,13 +28,12 @@
     
     <Import Project="$(MsBuildExtensionsPath)\FindToolDirectoryFromPackages.msbuild" 
             Condition="Exists('$(MsBuildExtensionsPath)\FindToolDirectoryFromPackages.msbuild')" />
+    <Import Project="$(MsBuildExtensionsPath)\GetSemanticVersion.msbuild" 
+            Condition="Exists('$(MsBuildExtensionsPath)\GetSemanticVersion.msbuild')" />
     <Import Project="$(MsBuildExtensionsPath)\SetEnvironmentVariable.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\SetEnvironmentVariable.msbuild')"/>
     <Import Project="$(MsBuildExtensionsPath)\TemplateFile.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\TemplateFile.msbuild')"/>
-            
-    <Import Project="$(DirWorkspace)\version.xml"
-            Condition="Exists('$(DirWorkspace)\version.xml')"/>
 
     <!-- Display info -->
     <Target Name="_DisplayInfo">
@@ -50,6 +46,15 @@
     <!-- Display info -->
     <Target Name="_DisplayInfo">
         <Message Text="Building API documentation ..." />
+    </Target>
+    
+    <PropertyGroup>
+        <FileSemanticVersion>$(DirBuildTemp)\semantic_version.json</FileSemanticVersion>
+    </PropertyGroup>
+    <Target Name="_GetSemanticVersion" DependsOnTargets="_DisplayInfo;">
+        <GetSemanticVersion VersionFile="$(FileSemanticVersion)">
+            <Output TaskParameter="VersionSemantic" PropertyName="VersionSemantic" />
+        </GetSemanticVersion>
     </Target>
     
     <PropertyGroup>
@@ -70,7 +75,7 @@
         <FileTemplateSandcastle>$(DirTemplates)\sandcastle.shfbproj.in</FileTemplateSandcastle>
         <FileGeneratedSandcastle>$(DirBuildTemp)\sandcastle.shfbproj</FileGeneratedSandcastle>
     </PropertyGroup>
-    <Target Name="_GenerateTemplate" DependsOnTargets="_DisplayInfo;_FindInstalledSandcastle">
+    <Target Name="_GenerateTemplate" DependsOnTargets="_DisplayInfo;_GetSemanticVersion;_FindInstalledSandcastle">
         <ItemGroup>
             <SandcastleTokens Include="DirShfbRoot">
                 <ReplacementValue>$(DirSandcastleHelpFileBuilder)</ReplacementValue>
@@ -88,7 +93,7 @@
                 <ReplacementValue>$(DirBuildBin)</ReplacementValue>
             </SandcastleTokens>
             <SandcastleTokens Include="Version">
-                <ReplacementValue>$(VersionMajor).$(VersionMinor).$(VersionBuild).$(BuildNumber)</ReplacementValue>
+                <ReplacementValue>$(VersionSemantic)</ReplacementValue>
             </SandcastleTokens>
         </ItemGroup>
         <TemplateFile Template="$(FileTemplateSandcastle)" OutputFileName="$(FileGeneratedSandcastle)" Tokens="@(SandcastleTokens)" />
