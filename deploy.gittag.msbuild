@@ -5,18 +5,23 @@
     <PropertyGroup>
         <!-- Directories -->
         <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
+        <DirTools>$(DirWorkspace)\tools</DirTools>
         <DirBuild>$(DirWorkspace)\build</DirBuild>
         <DirBuildTemp>$(DirBuild)\temp</DirBuildTemp>
         
         <!-- Version number -->
-        <VersionMajor>0</VersionMajor>
-        <VersionMinor>0</VersionMinor>
-        <VersionBuild>0</VersionBuild>
-        <VersionRevision>0</VersionRevision>
+        <VersionSemantic>0</VersionSemantic>
+        
+        <!-- Tools -->
+        <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
     </PropertyGroup>
     
-    <Import Project="$(DirWorkspace)\version.xml"
-            Condition="Exists('$(DirWorkspace)\version.xml')"/>
+    <Import Project="$(MsBuildExtensionsPath)\FindToolFromPackages.msbuild" 
+            Condition="Exists('$(MsBuildExtensionsPath)\FindToolFromPackages.msbuild')" />
+    <Import Project="$(MsBuildExtensionsPath)\GetSemanticVersion.msbuild" 
+            Condition="Exists('$(MsBuildExtensionsPath)\GetSemanticVersion.msbuild')" />
+    
+    <Target Name="Run" DependsOnTargets="_DisplayInfo;_TagRelease;" />
     
     <!-- Display info -->
     <Target Name="_DisplayInfo">
@@ -24,10 +29,28 @@
     </Target>
     
     <PropertyGroup>
+        <FileSemanticVersion>$(DirBuildTemp)\semantic_version.json</FileSemanticVersion>
+    </PropertyGroup>
+    <Target Name="_GetSemanticVersion" DependsOnTargets="_DisplayInfo;">
+        <GetSemanticVersion VersionFile="$(FileSemanticVersion)">
+            <Output TaskParameter="VersionSemantic" PropertyName="VersionSemantic" />
+        </GetSemanticVersion>
+    </Target>
+    
+    <PropertyGroup>
+        <FileReleaseNotes>$(DirBuildTemp)\releasenotes_short.md</FileReleaseNotes>
+    </PropertyGroup>
+    <Target Name="_LoadReleaseNotes" DependsOnTargets="_DisplayInfo;_GetSemanticVersion">
+        <CreateProperty Condition="Exists('$(FileReleaseNotes)')" Value="$([System.IO.File]::ReadAllText('$(FileReleaseNotes)'))">
+            <Output TaskParameter="Value" PropertyName="ReleaseNotes" />
+        </CreateProperty>
+    </Target>
+    
+    <PropertyGroup>
         <ExeGit>$(DirGit)\git.exe</ExeGit>
     </PropertyGroup>
-    <Target Name="Run" DependsOnTargets="_DisplayInfo" Condition="Exists('$(DirGit)')" >
-        <Exec Command="&quot;$(ExeGit)&quot; tag -a -m &quot;Deployed Apollo build for version $(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)&quot; &quot;$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)&quot;"
+    <Target Name="_TagRelease" DependsOnTargets="_DisplayInfo;_GetSemanticVersion" Condition="Exists('$(DirGit)')" >
+        <Exec Command="&quot;$(ExeGit)&quot; tag -a -m &quot;$(ReleaseNotes)&quot; &quot;$(VersionSemantic)&quot;"
               WorkingDirectory="$(DirWorkspace)" />
         <Exec Command="&quot;$(ExeGit)&quot; push origin --tags"
               WorkingDirectory="$(DirWorkspace)" />

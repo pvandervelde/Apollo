@@ -12,7 +12,7 @@
         <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
     </PropertyGroup>
 
-    <Target Name="Run" DependsOnTargets="_PrepareWorkspace;_CodeAnalysisCcm;_CodeAnalysisSourceMonitor;_BuildBinaries;_ExecuteUnitTests;_CodeAnalysisFxCop;_CodeAnalysisMoma;_BuildApiDocumentation;_PackageNuget;_PackageTests">
+    <Target Name="Run" DependsOnTargets="_PrepareWorkspace;_GatherReleaseNotes;_CodeAnalysisCcm;_CodeAnalysisSourceMonitor;_BuildBinaries;_ExecuteUnitTests;_CodeAnalysisFxCop;_CodeAnalysisMoma;_BuildApiDocumentation;_PackageNuget;_PackageTests">
         <!-- Do nothing here -->
     </Target>
     
@@ -27,24 +27,32 @@
         <MSBuild Projects="$(MsBuildPrepareWorkspace)" Properties="ShouldClean=$(ShouldClean);ShouldCleanPackages=$(ShouldCleanPackages)" />
     </Target>
     
+    <!-- Gather release notes -->
+    <PropertyGroup>
+        <MsBuildGatherReleaseNotes>$(DirWorkspace)\build.gatherreleasenotes.msbuild</MsBuildGatherReleaseNotes>
+    </PropertyGroup>
+    <Target Name="_GatherReleaseNotes" DependsOnTargets="_PrepareWorkspace">
+        <MSBuild Projects="$(MsBuildGatherReleaseNotes)" Properties="ShouldClean=$(ShouldClean);ShouldCleanPackages=$(ShouldCleanPackages)" />
+    </Target>
+    
     <PropertyGroup>
         <MsBuildAnalyzeCcm>$(DirWorkspace)\build.analyze.ccm.msbuild</MsBuildAnalyzeCcm>
     </PropertyGroup>
-    <Target Name="_CodeAnalysisCcm" DependsOnTargets="_PrepareWorkspace">
+    <Target Name="_CodeAnalysisCcm" DependsOnTargets="_PrepareWorkspace;_GatherReleaseNotes">
         <MSBuild Projects="$(MsBuildAnalyzeCcm)" />
     </Target>
     
     <PropertyGroup>
         <MsBuildAnalyzeSourceMonitor>$(DirWorkspace)\build.analyze.sourcemonitor.msbuild</MsBuildAnalyzeSourceMonitor>
     </PropertyGroup>
-    <Target Name="_CodeAnalysisSourceMonitor" DependsOnTargets="_PrepareWorkspace">
+    <Target Name="_CodeAnalysisSourceMonitor" DependsOnTargets="_PrepareWorkspace;_GatherReleaseNotes">
         <MSBuild Projects="$(MsBuildAnalyzeSourceMonitor)" />
     </Target>
     
     <PropertyGroup>
         <MsBuildBuildBinaries>$(DirWorkspace)\build.binaries.msbuild</MsBuildBuildBinaries>
     </PropertyGroup>
-    <Target Name="_BuildBinaries" DependsOnTargets="_PrepareWorkspace">
+    <Target Name="_BuildBinaries" DependsOnTargets="_PrepareWorkspace;_GatherReleaseNotes">
         <MSBuild Projects="$(MsBuildBuildBinaries)" Properties="Configuration=Release" />
         <MSBuild Projects="$(MsBuildBuildBinaries)" Properties="Configuration=Deploy" />
     </Target>

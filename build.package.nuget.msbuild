@@ -58,7 +58,7 @@
     <PropertyGroup>
         <FileReleaseNotes>$(DirBuildTemp)\releasenotes_full.md</FileReleaseNotes>
     </PropertyGroup>
-    <Target Name="_GatherReleaseNotes">
+    <Target Name="_GatherReleaseNotes" Condition=" '$(GitHubUserName)' != '' AND '$(GitHubToken)' != '' ">
         <CreateProperty Condition="Exists('$(FileReleaseNotes)')" Value="$([System.IO.File]::ReadAllText('$(FileReleaseNotes)'))">
             <Output TaskParameter="Value" PropertyName="ReleaseNotes" />
         </CreateProperty>
