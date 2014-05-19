@@ -24,8 +24,10 @@
     
     <Import Project="$(MsBuildExtensionsPath)\NugetRestore.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\NugetRestore.msbuild')"/>    
+    <Import Project="$(MsBuildExtensionsPath)\GitHasMasterBranch.msbuild"
+            Condition="Exists('$(MsBuildExtensionsPath)\GitHasMasterBranch.msbuild')"/>    
             
-    <Target Name="Run" DependsOnTargets="_RestorePackages">
+    <Target Name="Run" DependsOnTargets="_DisplayInfo;_FetchOriginMasterIfNotExists;_Clean;_RestorePackages">
         <!-- Do nothing here -->
     </Target>
     
@@ -34,8 +36,23 @@
         <Message Text="Preparing workspace ..." />
     </Target>
     
+    <PropertyGroup>
+        <ExeGit>$(DirGit)\git.exe</ExeGit>
+    </PropertyGroup>
+    <Target Name="_FetchOriginMasterIfNotExists" DependsOnTargets="_DisplayInfo">
+        <GitHasMasterBranch LocalPath="$(DirWorkspace)">
+            <Output TaskParameter="HasMaster" PropertyName="HasMaster" />
+        </GitHasMasterBranch>
+    
+        <Message Text="Not fetching master branch because it already exists" Condition="($(HasMaster))" />
+        <Message Text="Fetching master branch because it does not exist" Condition="(!$(HasMaster))" />
+        <Exec Command="&quot;$(ExeGit)&quot; fetch origin origin/master"
+              WorkingDirectory="$(DirWorkspace)"
+              Condition="(!$(HasMaster))"/>
+    </Target>
+    
     <!-- Clean -->
-    <Target Name="_Clean" DependsOnTargets="_DisplayInfo" Condition="$(ShouldClean)">
+    <Target Name="_Clean" DependsOnTargets="_DisplayInfo;_FetchOriginMasterIfNotExists" Condition="$(ShouldClean)">
         <!-- 
             Don't try to delete the directory because that fails randomly because
             some file is being locked. This then leads to a failing task, but ..
