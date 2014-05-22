@@ -27,6 +27,8 @@
         <DirReportDumps Condition=" '$(DirReportDumps)' == '' ">$(DirTestReports)\apollo\regression</DirReportDumps>
         
         <!-- Version number -->
+        <VersionMajor>0</VersionMajor>
+        <VersionMinor>0</VersionMinor>
         <VersionSemantic>0</VersionSemantic>
         
         <!-- Tools -->
@@ -42,7 +44,12 @@
     <Import Project="$(MsBuildExtensionsPath)\Unzip.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\Unzip.msbuild')"/>
 
-    <Target Name="Run" DependsOnTargets="_UnpackTestFiles;_ExecuteRegressionTest;_WriteReportPath">
+    <Import Project="$(DirWorkspace)\company.xml"
+            Condition="Exists('$(DirWorkspace)\company.xml')"/>
+    <Import Project="$(DirWorkspace)\product.xml"
+            Condition="Exists('$(DirWorkspace)\product.xml')"/>
+    
+    <Target Name="Run" DependsOnTargets="_DisplayInfo;_GetSemanticVersion;_UnpackTestFiles;_ExecuteRegressionTest;_WriteReportPath">
         <!-- Do nothing here -->
     </Target>
     
@@ -56,8 +63,18 @@
     </PropertyGroup>
     <Target Name="_GetSemanticVersion" DependsOnTargets="_DisplayInfo;">
         <GetSemanticVersion VersionFile="$(FileSemanticVersion)">
+            <Output TaskParameter="VersionMajor" PropertyName="VersionMajor" />
+            <Output TaskParameter="VersionMinor" PropertyName="VersionMinor" />
             <Output TaskParameter="VersionSemantic" PropertyName="VersionSemantic" />
         </GetSemanticVersion>
+        
+        <Message Text="Major version: $(VersionMajor)" />
+        <Message Text="Minor version: $(VersionMinor)" />
+        <Message Text="Semantic version: $(VersionSemantic)" />
+        
+        <CreateProperty Value="$(DirReportDumps)\explorer\$(VersionSemantic)">
+            <Output TaskParameter="Value" PropertyName="DirSherlockReport" />
+        </CreateProperty>
     </Target>
     
     <PropertyGroup>
@@ -67,13 +84,16 @@
         <DirBuildTempExplorerRegression>$(DirBuildTemp)\explorer.regression</DirBuildTempExplorerRegression>
     </PropertyGroup>
     <Target Name="_UnpackTestFiles" DependsOnTargets="_DisplayInfo">
+        <ItemGroup>
+            <ExplorerRegressionFilesToDelete Include="$(DirBuildTempExplorerRegression)\**\*.*"/>
+        </ItemGroup>
+        <Delete Files="@(ExplorerRegressionFilesToDelete)" />
+
         <Unzip InputFileName="$(FileExplorerRegressionPackage)"
                DestinationDirectory="$(DirBuildTempExplorerRegression)" />
     </Target>
     
     <PropertyGroup>
-        <DirSherlockReport>$(DirReportDumps)\explorer\$(VersionSemantic)</DirSherlockReport>
-        
         <FileTemplateSherlockConfiguration>$(DirTestRegressionExplorer)\test.integration.explorer.xml</FileTemplateSherlockConfiguration>
         <FileSherlockConfiguration>$(DirBuildTempTests)\apollo.explorer.sherlock.xml</FileSherlockConfiguration>
         
@@ -89,7 +109,7 @@
         <!-- Generate the Sherlock file -->
         <ItemGroup>
             <SherlockTokens Include="ProductName">
-                <ReplacementValue>Apollo</ReplacementValue>
+                <ReplacementValue>$(ProductName)</ReplacementValue>
             </SherlockTokens>
             <SherlockTokens Include="ProductVersion">
                 <ReplacementValue>$(VersionSemantic)</ReplacementValue>
@@ -104,6 +124,16 @@
             </SherlockTokens>
             <SherlockTokens Include="DirLocalTestFiles">
                 <ReplacementValue>$(DirBuildTempExplorerRegression)</ReplacementValue>
+            </SherlockTokens>
+            
+            <SherlockTokens Include="CompanyName">
+                <ReplacementValue>$(CompanyName)</ReplacementValue>
+            </SherlockTokens>
+            <SherlockTokens Include="VersionMajor">
+                <ReplacementValue>$(VersionMajor)</ReplacementValue>
+            </SherlockTokens>
+            <SherlockTokens Include="VersionMinor">
+                <ReplacementValue>$(VersionMinor)</ReplacementValue>
             </SherlockTokens>
             
             <SherlockTokens Include="DirSherlockLog">
