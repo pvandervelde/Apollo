@@ -58,7 +58,7 @@
     </Target>
     
     <PropertyGroup>
-        <DirSherlockReport>$(DirReportDumps)\console\$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</DirSherlockReport>
+        <DirSherlockReport>$(DirReportDumps)\console\$(VersionSemantic)</DirSherlockReport>
         <DirLocalTestFiles>$(DirBuildTempTests)\testfiles</DirLocalTestFiles>
         
         <FileTemplateSherlockConfiguration>$(DirTestRegressionConsole)\test.integration.console.xml</FileTemplateSherlockConfiguration>

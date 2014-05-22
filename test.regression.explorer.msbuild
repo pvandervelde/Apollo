@@ -72,7 +72,7 @@
     </Target>
     
     <PropertyGroup>
-        <DirSherlockReport>$(DirReportDumps)\explorer\$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</DirSherlockReport>
+        <DirSherlockReport>$(DirReportDumps)\explorer\$(VersionSemantic)</DirSherlockReport>
         
         <FileTemplateSherlockConfiguration>$(DirTestRegressionExplorer)\test.integration.explorer.xml</FileTemplateSherlockConfiguration>
         <FileSherlockConfiguration>$(DirBuildTempTests)\apollo.explorer.sherlock.xml</FileSherlockConfiguration>
