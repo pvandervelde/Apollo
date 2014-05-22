@@ -649,6 +649,23 @@ namespace Test.Regression.Explorer.Controls
             var item = list.Items.Find(i => string.Equals(Environment.MachineName, i.Text));
             if (item == null)
             {
+                log.Debug(
+                    prefix, 
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Expected machine with name [{0}] but found following machines: [{1}]",
+                        Environment.MachineName,
+                        list.Items.Aggregate(
+                            string.Empty,
+                            (c, i) =>
+                            {
+                                var next = string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    "; [{0}]",
+                                    i.Text);
+                                return c + next;
+                            })));
+
                 throw new RegressionTestFailedException(prefix + " - Failed to get the item for the current machine.");
             }
 
