@@ -87,8 +87,8 @@
             <params>
             </params>
             <includeinreport includesystemlog="true">
-                <directory><![CDATA[C:\Users\petrik\AppData\Local\My Company Ltd\Apollo\0.1\logs]]></directory>
-                <directory><![CDATA[${DirRemoteTestFiles}\test.regression.explorer.log]]></directory>
+                <directory><![CDATA[C:\Users\petrik\AppData\Local\${CompanyName}\${ProductName}\${VersionMajor}.${VersionMinor}\logs]]></directory>
+                <file><![CDATA[${DirRemoteTestFiles}\test.regression.explorer.log]]></file>
             </includeinreport>
         </console>
     </teststeps>
