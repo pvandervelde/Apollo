@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Rakon static code analysis rule set." Description="This rule set contains all rules that are deemed useful for use at Rakon." ToolsVersion="10.0">
+  <IncludeAll Action="Error" />
+  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <!-- CA1021: Avoid out parameters -->
+    <Rule Id="CA1021" Action="None" />
+    <!-- CA1062: Validate arguments of public methods -->
+    <Rule Id="CA1062" Action="None" />
+    <!-- CA2210: Assemblies should have valid strong names -->
+    <Rule Id="CA2210" Action="None" />
+  </Rules>
+</RuleSet>
