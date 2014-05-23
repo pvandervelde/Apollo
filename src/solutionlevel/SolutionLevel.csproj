@@ -7,6 +7,7 @@
     <RootNamespace>SolutionLevel</RootNamespace>
     <AssemblyName>SolutionLevel</AssemblyName>
     <RestorePackages>true</RestorePackages>
+    <ShouldDoCodeAnalysis>false</ShouldDoCodeAnalysis>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>

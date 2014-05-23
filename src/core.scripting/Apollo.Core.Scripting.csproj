@@ -81,6 +81,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
+      <Link>CustomDictionary.xml</Link>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
       <Project>{5125e82c-2e8a-4ce4-8fa8-39ab82c9b856}</Project>
       <Name>Apollo.Core.Base</Name>

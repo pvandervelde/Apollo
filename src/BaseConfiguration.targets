@@ -25,8 +25,12 @@
         <Prefer32Bit>false</Prefer32Bit>
 
         <!-- Flags -->
+        <ShouldDoCodeAnalysis Condition=" '$(ShouldDoCodeAnalysis)' == '' ">true</ShouldDoCodeAnalysis>
         <ShouldDoDocumentation Condition=" '$(ShouldDoDocumentation)' == '' ">true</ShouldDoDocumentation>
         <ShouldSign Condition=" '$(ShouldSign)' == '' ">true</ShouldSign>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(ShouldDoCodeAnalysis)">
+        <CodeAnalysisRuleSet>$(SolutionDir)\codeanalysis.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
     <PropertyGroup Condition="$(ShouldDoDocumentation)">
         <DocumentationFile>$(OutputPath)\$(AssemblyName).XML</DocumentationFile>
@@ -41,16 +45,19 @@
         <DebugType>full</DebugType>
         <Optimize>false</Optimize>
         <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS;IN_VS_SOLUTION</DefineConstants>
+        <RunCodeAnalysis Condition="$(ShouldDoCodeAnalysis)">true</RunCodeAnalysis>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
         <DebugType>pdbonly</DebugType>
         <Optimize>true</Optimize>
         <DefineConstants>TRACE;CODE_ANALYSIS;IN_VS_SOLUTION</DefineConstants>
+        <RunCodeAnalysis Condition="$(ShouldDoCodeAnalysis)">true</RunCodeAnalysis>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Deploy|x64' ">
         <DebugType>pdbonly</DebugType>
         <Optimize>true</Optimize>
         <DefineConstants>TRACE;IN_VS_SOLUTION</DefineConstants>
+        <RunCodeAnalysis>false</RunCodeAnalysis>
     </PropertyGroup>
     <PropertyGroup>
         <DirWorkspace>$(SolutionDir)\..</DirWorkspace>

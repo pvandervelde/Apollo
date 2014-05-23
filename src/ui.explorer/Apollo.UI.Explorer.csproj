@@ -440,6 +440,11 @@
   <ItemGroup>
     <Content Include="README.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
+      <Link>CustomDictionary.xml</Link>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
   <ItemGroup />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Import Project="$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild')" />
