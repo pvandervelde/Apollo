@@ -10,8 +10,14 @@
         
         <!-- Directories -->
         <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
+        <DirBuild>$(DirWorkspace)\build</DirBuild>
+        <DirBuildBin>$(DirBuild)\bin\$(PlatformTranslated)\$(Configuration)</DirBuildBin>
+        <DirBuildLogs>$(DirBuild)\logs</DirBuildLogs>
         <DirSrc>$(DirWorkspace)\src</DirSrc>
     </PropertyGroup>
+    
+    <Target Name="Run" DependsOnTargets="_DisplayInfo;_Build;_CopyLogs">
+    </Target>
    
     <!-- Display info -->
     <Target Name="_DisplayInfo">
@@ -22,7 +28,19 @@
     <PropertyGroup>
         <FileSln>$(DirSrc)\apollo.sln</FileSln>
     </PropertyGroup>
-    <Target Name="Run" DependsOnTargets="_DisplayInfo">
+    <Target Name="_Build" DependsOnTargets="_DisplayInfo">
         <MSBuild Projects="$(FileSln)" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+    </Target>
+    
+    <!-- Copy code analysis logs -->
+    <Target Name="_CopyLogs" DependsOnTargets="_DisplayInfo;_Build">
+        <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
+        
+        <ItemGroup>
+            <LogFiles Include="$(DirBuildBin)\*.CodeAnalysisLog.xml" />
+        </ItemGroup>
+        
+        <Copy SourceFiles="@(LogFiles)" 
+              DestinationFolder="$(DirBuildLogs)" />
     </Target>
  </Project>
