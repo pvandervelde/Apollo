@@ -580,8 +580,8 @@ namespace Test.Regression.Explorer.UseCases
             }
 
             var versionText = versionLabel.Text;
-            var versionAttribute = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false);
-            var version = (versionAttribute[0] as AssemblyFileVersionAttribute).Version;
+            var versionAttribute = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false);
+            var version = (versionAttribute[0] as AssemblyInformationalVersionAttribute).InformationalVersion;
             assert.AreEqual(version, versionText, prefix + " - Product version");
 
             // Check company name

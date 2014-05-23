@@ -102,7 +102,7 @@ namespace Test.Regression.Explorer.Controls
             return Retry.Times(
                 () =>
                 {
-                    log.Debug(prefix, "Trying to get the machine selectino window.");
+                    log.Debug(prefix, "Trying to get the machine selection window.");
 
                     var window = mainWindow.ModalWindow("Select a machine for the dataset");
                     if (window == null)

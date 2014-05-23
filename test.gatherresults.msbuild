@@ -54,7 +54,7 @@
     
     <Target Name="_CopyReports">
         <ItemGroup>
-            <SherlockReportFiles Include="$([System.IO.Path]::GetFullPath('%(SherlockReportDirectories.Identity)'))\**\*" />
+            <SherlockReportFiles Include="$([System.IO.Path]::GetFullPath('$(DirReportDumps)'))\**\*" />
         </ItemGroup>
         
         <Copy SourceFiles="@(SherlockReportFiles)" 

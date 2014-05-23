@@ -26,6 +26,8 @@
         <DirReportDumps Condition=" '$(DirReportDumps)' == '' ">$(DirTestReports)\apollo\regression</DirReportDumps>
         
         <!-- Version number -->
+        <VersionMajor>0</VersionMajor>
+        <VersionMinor>0</VersionMinor>
         <VersionSemantic>0</VersionSemantic>
         
         <!-- Tools -->
@@ -38,8 +40,13 @@
             Condition="Exists('$(MsBuildExtensionsPath)\TemplateFile.msbuild')"/>
     <Import Project="$(MsBuildExtensionsPath)\SherlockRegisterTest.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\SherlockRegisterTest.msbuild')"/>
+            
+    <Import Project="$(DirWorkspace)\company.xml"
+            Condition="Exists('$(DirWorkspace)\company.xml')"/>
+    <Import Project="$(DirWorkspace)\product.xml"
+            Condition="Exists('$(DirWorkspace)\product.xml')"/>
 
-    <Target Name="Run" DependsOnTargets="_ExecuteRegressionTest;_WriteReportPath">
+    <Target Name="Run" DependsOnTargets="_DisplayInfo;_GetSemanticVersion;_ExecuteRegressionTest;_WriteReportPath">
         <!-- Do nothing here -->
     </Target>
     
@@ -53,12 +60,21 @@
     </PropertyGroup>
     <Target Name="_GetSemanticVersion" DependsOnTargets="_DisplayInfo;">
         <GetSemanticVersion VersionFile="$(FileSemanticVersion)">
+            <Output TaskParameter="VersionMajor" PropertyName="VersionMajor" />
+            <Output TaskParameter="VersionMinor" PropertyName="VersionMinor" />
             <Output TaskParameter="VersionSemantic" PropertyName="VersionSemantic" />
         </GetSemanticVersion>
+        
+        <Message Text="Major version: $(VersionMajor)" />
+        <Message Text="Minor version: $(VersionMinor)" />
+        <Message Text="Semantic version: $(VersionSemantic)" />
+        
+        <CreateProperty Value="$(DirReportDumps)\console\$(VersionSemantic)">
+            <Output TaskParameter="Value" PropertyName="DirSherlockReport" />
+        </CreateProperty>
     </Target>
     
     <PropertyGroup>
-        <DirSherlockReport>$(DirReportDumps)\console\$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</DirSherlockReport>
         <DirLocalTestFiles>$(DirBuildTempTests)\testfiles</DirLocalTestFiles>
         
         <FileTemplateSherlockConfiguration>$(DirTestRegressionConsole)\test.integration.console.xml</FileTemplateSherlockConfiguration>
@@ -82,7 +98,7 @@
         <!-- Generate the Sherlock file -->
         <ItemGroup>
             <SherlockTokens Include="ProductName">
-                <ReplacementValue>Apollo</ReplacementValue>
+                <ReplacementValue>$(ProductName)</ReplacementValue>
             </SherlockTokens>
             <SherlockTokens Include="ProductVersion">
                 <ReplacementValue>$(VersionSemantic)</ReplacementValue>
@@ -100,7 +116,17 @@
             </SherlockTokens>
             
             <SherlockTokens Include="DirInstallApollo">
-                <ReplacementValue>c:\Program Files\MyCompany\Apollo\$(VersionMajor).$(VersionMinor)</ReplacementValue>
+                <ReplacementValue>c:\Program Files\$(CompanyPathName)\$(ProductName)\$(VersionMajor).$(VersionMinor)</ReplacementValue>
+            </SherlockTokens>
+            
+            <SherlockTokens Include="CompanyName">
+                <ReplacementValue>$(CompanyName)</ReplacementValue>
+            </SherlockTokens>
+            <SherlockTokens Include="VersionMajor">
+                <ReplacementValue>$(VersionMajor)</ReplacementValue>
+            </SherlockTokens>
+            <SherlockTokens Include="VersionMinor">
+                <ReplacementValue>$(VersionMinor)</ReplacementValue>
             </SherlockTokens>
             
             <SherlockTokens Include="DirSherlockLog">
