@@ -4,10 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Core.Extensions.Scheduling
 {
@@ -17,6 +14,8 @@ namespace Apollo.Core.Extensions.Scheduling
     /// <remarks>
     /// Note that variables must be serializable because they may be transported to an external data set application.
     /// </remarks>
+    [SuppressMessage("Microsoft.Design", "CA1040:AvoidEmptyInterfaces",
+        Justification = "This interface is waiting implementation.")]
     public interface IScheduleVariable
     {
     }
