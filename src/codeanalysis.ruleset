@@ -14,6 +14,8 @@
     <Rule Id="CA1030" Action="None" />
     <!-- CA1303: Do not pass literals as localized parameters -->
     <Rule Id="CA1303" Action="None" />
+    <!-- CA1502: Avoid excessive complexity -->
+    <Rule Id="CA1502" Action="None" />
     <!-- CA1506: Avoid excessive class coupling -->
     <Rule Id="CA1506" Action="None" />
   </Rules>

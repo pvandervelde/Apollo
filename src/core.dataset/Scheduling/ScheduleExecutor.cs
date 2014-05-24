@@ -234,6 +234,8 @@ namespace Apollo.Core.Dataset.Scheduling
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "The schedule is stopped when an exception occurs but we don't want it to crash.")]
         private bool ProcessScheduleStep(IScheduleVertex current, ref ScheduleExecutionState state)
         {
             if (m_ExecutionInfo.Cancellation.IsCancellationRequested)
@@ -278,6 +280,8 @@ namespace Apollo.Core.Dataset.Scheduling
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "The schedule is stopped following an exception but we don't want a crash.")]
         private IScheduleVertex DetermineNextScheduleStep(
             IEnumerable<Tuple<ScheduleElementId, IScheduleVertex>> availableNodes, 
             ref ScheduleExecutionState state)

@@ -13,7 +13,6 @@ using System.Globalization;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using Apollo.Core.Base;
@@ -337,12 +336,6 @@ namespace Apollo.Core.Dataset
             IContainer result = null;
             var builder = new ContainerBuilder();
             {
-                builder.Register(c => new ApplicationConstants())
-                   .As<ApplicationConstants>();
-
-                builder.Register(c => new FileConstants(c.Resolve<ApplicationConstants>()))
-                    .As<FileConstants>();
-
                 builder.Register(c => new XmlConfiguration(
                         CommunicationConfigurationKeys.ToCollection()
                             .Append(DiagnosticsConfigurationKeys.ToCollection())
@@ -378,6 +371,7 @@ namespace Apollo.Core.Dataset
 
                 builder.Register(c => context)
                     .As<ApplicationContext>()
+                    .As<IDisposable>()
                     .ExternallyOwned();
 
                 RegisterLoggers(builder);

@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,12 +26,12 @@ namespace Apollo.Core.Dataset.Scheduling
         private readonly TaskScheduler m_Scheduler;
 
         /// <summary>
-        /// The token that is used to indicate if the local schedule execution has been cancelled.
+        /// The token that is used to indicate if the local schedule execution has been canceled.
         /// </summary>
         private readonly CancellationTokenSource m_LocalCancellationSource;
 
         /// <summary>
-        /// The token that is used to indicate if the local schedule or any of it's parents has been cancelled.
+        /// The token that is used to indicate if the local schedule or any of it's parents has been canceled.
         /// </summary>
         private readonly CancellationTokenSource m_CombinedCancellationSource;
 
@@ -108,7 +107,7 @@ namespace Apollo.Core.Dataset.Scheduling
         }
 
         /// <summary>
-        /// Sends the message that the schedule execution should be cancelled.
+        /// Sends the message that the schedule execution should be canceled.
         /// </summary>
         public void CancelScheduleExecution()
         {
@@ -117,13 +116,13 @@ namespace Apollo.Core.Dataset.Scheduling
         }
 
         /// <summary>
-        /// Gets the token that is used to indicate if the schedule execution should be cancelled.
+        /// Gets the token that is used to indicate if the schedule execution should be canceled.
         /// </summary>
         public CancellationToken Cancellation
         {
             get
             {
-                // We want to cancel the schedule execution even if the parent gets cancelled
+                // We want to cancel the schedule execution even if the parent gets canceled
                 return m_CombinedCancellationSource.Token;
             }
         }

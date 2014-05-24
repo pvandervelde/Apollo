@@ -48,6 +48,8 @@ namespace Apollo.Core.Dataset
         /// The array containing the start-up arguments for the application.
         /// </param>
         /// <returns>A value indicating if the process exited normally (0) or abnormally (&gt; 0).</returns>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", 
+            Justification = "The ApplicationContext object is disposed by the container.")]
         [STAThread]
         static int Main(string[] args)
         {
