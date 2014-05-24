@@ -22,11 +22,11 @@ namespace Apollo.Utilities
             var applicationConstants = new ApplicationConstants();
             var constants = new FileConstants(applicationConstants);
 
-            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), applicationConstants.CompanyName);
-            path = Path.Combine(path, applicationConstants.ApplicationName);
-            path = Path.Combine(path, applicationConstants.ApplicationCompatibilityVersion.ToString(2));
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ApplicationConstants.CompanyName);
+            path = Path.Combine(path, ApplicationConstants.ApplicationName);
+            path = Path.Combine(path, ApplicationConstants.ApplicationCompatibilityVersion.ToString(2));
 
-            Assert.AreEqual(path, constants.ProductSettingsUserPath());
+            Assert.AreEqual(path, FileConstants.ProductSettingsUserPath());
         }
 
         [Test]
@@ -35,12 +35,12 @@ namespace Apollo.Utilities
             var applicationConstants = new ApplicationConstants();
             var constants = new FileConstants(applicationConstants);
 
-            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), applicationConstants.CompanyName);
-            path = Path.Combine(path, applicationConstants.ApplicationName);
-            path = Path.Combine(path, applicationConstants.ApplicationCompatibilityVersion.ToString(2));
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ApplicationConstants.CompanyName);
+            path = Path.Combine(path, ApplicationConstants.ApplicationName);
+            path = Path.Combine(path, ApplicationConstants.ApplicationCompatibilityVersion.ToString(2));
             path = Path.Combine(path, "logs");
 
-            Assert.AreEqual(path, constants.LogPath());
+            Assert.AreEqual(path, FileConstants.LogPath());
         }
     }
 }

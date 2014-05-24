@@ -32,8 +32,15 @@ namespace Apollo.Utilities
         /// are being tracked.
         /// </summary>
         /// <param name="reporterToAdd">The reporter.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="reporterToAdd"/> is <see langword="null" />.
+        /// </exception>
         public void AddReporter(ITrackProgress reporterToAdd)
         {
+            {
+                Lokad.Enforce.Argument(() => reporterToAdd);
+            }
+
             lock (m_Lock)
             {
                 if (m_ReporterToProgressMap.ContainsKey(reporterToAdd))
@@ -146,8 +153,15 @@ namespace Apollo.Utilities
         /// that are being tracked.
         /// </summary>
         /// <param name="reporterToRemove">The reporter.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="reporterToRemove"/> is <see langword="null" />.
+        /// </exception>
         public void RemoveReporter(ITrackProgress reporterToRemove)
         {
+            {
+                Lokad.Enforce.Argument(() => reporterToRemove);
+            }
+
             lock (m_Lock)
             {
                 if (!m_ReporterToProgressMap.ContainsKey(reporterToRemove))

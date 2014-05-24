@@ -27,7 +27,7 @@ namespace Apollo.Utilities.History
         /// <returns>The value of <typeparamref name="T"/> stored by the <paramref name="storage"/> object.</returns>
         public static implicit operator T(HistoryObjectValueHistory<T> storage)
         {
-            return storage.Current;
+            return (storage != null) ? storage.Current : null;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Apollo.Utilities.History
             Justification = "FxCop wants it otherwise we get CA2225 but then it doesn't want static and generic.")]
         public static T FromStorage(HistoryObjectValueHistory<T> storage)
         {
-            return storage.Current;
+            return (storage != null) ? storage.Current : null;
         }
 
         /// <summary>

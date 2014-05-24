@@ -4,8 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace Apollo.Utilities.History
 {
@@ -46,9 +46,15 @@ namespace Apollo.Utilities.History
             /// Applies the changes in the current change to the given history object.
             /// </summary>
             /// <param name="historyObject">The object to which the changes should be applied.</param>
+            /// <exception cref="ArgumentNullException">
+            ///     Thrown if <paramref name="historyObject"/> is <see langword="null" />.
+            /// </exception>
             public void ApplyTo(List<TStorage> historyObject)
             {
-                Debug.Assert(historyObject != null, "This change can only be applied to a List<T> collection.");
+                {
+                    Lokad.Enforce.Argument(() => historyObject);
+                }
+
                 historyObject.Insert(m_Index, m_Value);
             }
         }
@@ -62,9 +68,15 @@ namespace Apollo.Utilities.History
             /// Applies the changes in the current change to the given history object.
             /// </summary>
             /// <param name="historyObject">The object to which the changes should be applied.</param>
+            /// <exception cref="ArgumentNullException">
+            ///     Thrown if <paramref name="historyObject"/> is <see langword="null" />.
+            /// </exception>
             public void ApplyTo(List<TStorage> historyObject)
             {
-                Debug.Assert(historyObject != null, "This change can only be applied to a List<T> collection.");
+                {
+                    Lokad.Enforce.Argument(() => historyObject);
+                }
+
                 historyObject.Clear();
             }
         }
@@ -92,9 +104,15 @@ namespace Apollo.Utilities.History
             /// Applies the changes in the current change to the given history object.
             /// </summary>
             /// <param name="historyObject">The object to which the changes should be applied.</param>
+            /// <exception cref="ArgumentNullException">
+            ///     Thrown if <paramref name="historyObject"/> is <see langword="null" />.
+            /// </exception>
             public void ApplyTo(List<TStorage> historyObject)
             {
-                Debug.Assert(historyObject != null, "This change can only be applied to a List<T> collection.");
+                {
+                    Lokad.Enforce.Argument(() => historyObject);
+                }
+
                 historyObject.RemoveAt(m_Index);
             }
         }
@@ -130,9 +148,15 @@ namespace Apollo.Utilities.History
             /// Applies the changes in the current change to the given history object.
             /// </summary>
             /// <param name="historyObject">The object to which the changes should be applied.</param>
+            /// <exception cref="ArgumentNullException">
+            ///     Thrown if <paramref name="historyObject"/> is <see langword="null" />.
+            /// </exception>
             public void ApplyTo(List<TStorage> historyObject)
             {
-                Debug.Assert(historyObject != null, "This change can only be applied to a List<T> collection.");
+                {
+                    Lokad.Enforce.Argument(() => historyObject);
+                }
+
                 historyObject[m_Index] = m_Value;
             }
         }

@@ -64,8 +64,8 @@ namespace Apollo.UI.Console
                 // - In the machine location for plugins (i.e. <COMMON_APPLICATION_DATA>\<COMPANY>\plugins)
                 // - In the user location for plugins (i.e. <LOCAL_APPLICATION_DATA>\<COMPANY>\plugins)
                 directoryPaths.Add(Path.Combine(Assembly.GetExecutingAssembly().LocalDirectoryPath(), PluginsDirectoryName));
-                directoryPaths.Add(Path.Combine(fileConstants.CompanyCommonPath(), PluginsDirectoryName));
-                directoryPaths.Add(Path.Combine(fileConstants.CompanyUserPath(), PluginsDirectoryName));
+                directoryPaths.Add(Path.Combine(FileConstants.CompanyCommonPath(), PluginsDirectoryName));
+                directoryPaths.Add(Path.Combine(FileConstants.CompanyUserPath(), PluginsDirectoryName));
             }
 
             return AppDomainResolutionPaths.WithFilesAndDirectories(
@@ -130,7 +130,7 @@ namespace Apollo.UI.Console
         private static void RegisterLoggers(ContainerBuilder builder)
         {
             builder.Register(c => LoggerBuilder.ForFile(
-                    Path.Combine(c.Resolve<FileConstants>().LogPath(), DefaultInfoFileName),
+                    Path.Combine(FileConstants.LogPath(), DefaultInfoFileName),
                     new DebugLogTemplate(
                         c.Resolve<IConfiguration>(),
                         () => DateTimeOffset.Now)))
@@ -155,7 +155,7 @@ namespace Apollo.UI.Console
                             // been removed yet.
                             Func<Stream> factory =
                                 () => new FileStream(
-                                    Path.Combine(new FileConstants(new ApplicationConstants()).LogPath(), DefaultProfilerFileName),
+                                    Path.Combine(FileConstants.LogPath(), DefaultProfilerFileName),
                                     FileMode.Append,
                                     FileAccess.Write,
                                     FileShare.Read);

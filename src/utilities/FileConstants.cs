@@ -6,39 +6,19 @@
 
 using System;
 using System.IO;
-using Lokad;
 
 namespace Apollo.Utilities
 {
     /// <summary>
     /// Defines a set of values related to files and file paths.
     /// </summary>
-    [Serializable]
-    public sealed class FileConstants
+    public static class FileConstants
     {
-        /// <summary>
-        /// The object that stores constant values for the application.
-        /// </summary>
-        private readonly ApplicationConstants m_Constants;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FileConstants"/> class.
-        /// </summary>
-        /// <param name="constants">The object that stores constant values for the application.</param>
-        public FileConstants(ApplicationConstants constants)
-        {
-            {
-                Enforce.Argument(() => constants);
-            }
-
-            m_Constants = constants;
-        }
-
         /// <summary>
         /// Gets the extension for an assembly file.
         /// </summary>
         /// <value>The extension for an assembly file.</value>
-        public string AssemblyExtension
+        public static string AssemblyExtension
         {
             get
             {
@@ -50,7 +30,7 @@ namespace Apollo.Utilities
         /// Gets the extension for a log file.
         /// </summary>
         /// <value>The extension for a log file.</value>
-        public string LogExtension
+        public static string LogExtension
         {
             get
             {
@@ -61,7 +41,7 @@ namespace Apollo.Utilities
         /// <summary>
         /// Gets the extension for a feedback file.
         /// </summary>
-        public string FeedbackReportExtension
+        public static string FeedbackReportExtension
         {
             get
             {
@@ -76,10 +56,10 @@ namespace Apollo.Utilities
         /// <returns>
         /// The full path for the AppData directory for the current company.
         /// </returns>
-        public string CompanyCommonPath()
+        public static string CompanyCommonPath()
         {
             var appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-            var companyDirectory = Path.Combine(appDataDir, m_Constants.CompanyName);
+            var companyDirectory = Path.Combine(appDataDir, ApplicationConstants.CompanyName);
 
             return companyDirectory;
         }
@@ -91,10 +71,10 @@ namespace Apollo.Utilities
         /// <returns>
         /// The full path for the AppData directory for the current company.
         /// </returns>
-        public string CompanyUserPath()
+        public static string CompanyUserPath()
         {
             var appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var companyDirectory = Path.Combine(appDataDir, m_Constants.CompanyName);
+            var companyDirectory = Path.Combine(appDataDir, ApplicationConstants.CompanyName);
 
             return companyDirectory;
         }
@@ -107,11 +87,11 @@ namespace Apollo.Utilities
         /// The full path for the directory where the global settings
         /// for the product are written to.
         /// </returns>
-        public string ProductSettingsCommonPath()
+        public static string ProductSettingsCommonPath()
         {
             var companyDirectory = CompanyCommonPath();
-            var productDirectory = Path.Combine(companyDirectory, m_Constants.ApplicationName);
-            var versionDirectory = Path.Combine(productDirectory, m_Constants.ApplicationCompatibilityVersion.ToString(2));
+            var productDirectory = Path.Combine(companyDirectory, ApplicationConstants.ApplicationName);
+            var versionDirectory = Path.Combine(productDirectory, ApplicationConstants.ApplicationCompatibilityVersion.ToString(2));
 
             return versionDirectory;
         }
@@ -124,11 +104,11 @@ namespace Apollo.Utilities
         /// The full path for the directory where the global settings
         /// for the product are written to.
         /// </returns>
-        public string ProductSettingsUserPath()
+        public static string ProductSettingsUserPath()
         {
             var companyDirectory = CompanyUserPath();
-            var productDirectory = Path.Combine(companyDirectory, m_Constants.ApplicationName);
-            var versionDirectory = Path.Combine(productDirectory, m_Constants.ApplicationCompatibilityVersion.ToString(2));
+            var productDirectory = Path.Combine(companyDirectory, ApplicationConstants.ApplicationName);
+            var versionDirectory = Path.Combine(productDirectory, ApplicationConstants.ApplicationCompatibilityVersion.ToString(2));
 
             return versionDirectory;
         }
@@ -140,7 +120,7 @@ namespace Apollo.Utilities
         /// <returns>
         /// The full path for the directory where the log files are written to.
         /// </returns>
-        public string LogPath()
+        public static string LogPath()
         {
             var versionDirectory = ProductSettingsUserPath();
             var logDirectory = Path.Combine(versionDirectory, "logs");

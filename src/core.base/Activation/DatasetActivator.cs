@@ -196,9 +196,9 @@ namespace Apollo.Core.Base.Activation
 
         private string DeployLocation()
         {
-            var companyPath = Path.Combine(Path.GetTempPath(), m_ApplicationConstants.CompanyName);
-            var productPath = Path.Combine(companyPath, m_ApplicationConstants.ApplicationName);
-            var versionPath = Path.Combine(productPath, m_ApplicationConstants.ApplicationCompatibilityVersion.ToString(2));
+            var companyPath = Path.Combine(Path.GetTempPath(), ApplicationConstants.CompanyName);
+            var productPath = Path.Combine(companyPath, ApplicationConstants.ApplicationName);
+            var versionPath = Path.Combine(productPath, ApplicationConstants.ApplicationCompatibilityVersion.ToString(2));
             if (!Directory.Exists(versionPath))
             {
                 Directory.CreateDirectory(versionPath);

@@ -94,7 +94,7 @@ namespace Apollo.Core.Dataset
         {
             builder.Register(c => LoggerBuilder.ForFile(
                     Path.Combine(
-                        c.Resolve<FileConstants>().LogPath(),
+                        FileConstants.LogPath(),
                         string.Format(
                             CultureInfo.InvariantCulture,
                             DefaultInfoFileName,
@@ -126,7 +126,7 @@ namespace Apollo.Core.Dataset
                                 // been removed yet.
                                 Func<Stream> factory =
                                     () => new FileStream(
-                                        Path.Combine(new FileConstants(new ApplicationConstants()).LogPath(), DefaultProfilerFileName),
+                                        Path.Combine(FileConstants.LogPath(), DefaultProfilerFileName),
                                         FileMode.OpenOrCreate,
                                         FileAccess.Write,
                                         FileShare.Read);

@@ -70,13 +70,13 @@ namespace Apollo.UI.Wpf.Feedback
         {
             try
             {
-                var path = m_FileConstants.CompanyUserPath();
+                var path = FileConstants.CompanyUserPath();
                 return m_FileSystem.Directory.GetFiles(
                     path,
                     string.Format(
                         CultureInfo.InvariantCulture,
                         "*.{0}",
-                        m_FileConstants.FeedbackReportExtension),
+                        FileConstants.FeedbackReportExtension),
                     SearchOption.AllDirectories);
             }
             catch (UnauthorizedAccessException)

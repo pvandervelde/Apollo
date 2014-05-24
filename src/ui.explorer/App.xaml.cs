@@ -58,7 +58,7 @@ namespace Apollo.UI.Explorer
 
             using (var processor = new LogBasedExceptionProcessor(
                 LoggerBuilder.ForFile(
-                    Path.Combine(new FileConstants(new ApplicationConstants()).LogPath(), DefaultErrorFileName),
+                    Path.Combine(FileConstants.LogPath(), DefaultErrorFileName),
                     new DebugLogTemplate(new NullConfiguration(), () => DateTimeOffset.Now))))
             {
                 var result = TopLevelExceptionGuard.RunGuarded(
