@@ -43,17 +43,33 @@ namespace Apollo.Core.Base.Activation
         private static readonly DatasetTrackingJob s_ProcessTrackingJob
             = new DatasetTrackingJob();
 
+        private static string DeployLocation()
+        {
+            var companyPath = Path.Combine(Path.GetTempPath(), ApplicationConstants.CompanyName);
+            var productPath = Path.Combine(companyPath, ApplicationConstants.ApplicationName);
+            var versionPath = Path.Combine(productPath, ApplicationConstants.ApplicationCompatibilityVersion.ToString(2));
+            if (!Directory.Exists(versionPath))
+            {
+                Directory.CreateDirectory(versionPath);
+            }
+
+            var deployPath = versionPath;
+            while (Directory.Exists(deployPath))
+            {
+                var subPath = Path.GetRandomFileName();
+                deployPath = Path.Combine(versionPath, subPath);
+            }
+
+            Directory.CreateDirectory(deployPath);
+            return deployPath;
+        }
+
         /// <summary>
         /// The collection that contains the file paths for all the local assemblies on which 
         /// the dataset application depends.
         /// </summary>
         private readonly List<string> m_DatasetApplicationDependencies
             = new List<string>();
-
-        /// <summary>
-        /// The object that stores the application wide constants.
-        /// </summary>
-        private readonly ApplicationConstants m_ApplicationConstants;
 
         /// <summary>
         /// The object that provides the diagnostics methods for the system.
@@ -63,22 +79,16 @@ namespace Apollo.Core.Base.Activation
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetActivator"/> class.
         /// </summary>
-        /// <param name="applicationConstants">The object that stores the application wide constants.</param>
         /// <param name="diagnostics">The object that provides the diagnostics methods for the system.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="applicationConstants"/> is <see langword="null" />.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
         /// </exception>
-        public DatasetActivator(ApplicationConstants applicationConstants, SystemDiagnostics diagnostics)
+        public DatasetActivator(SystemDiagnostics diagnostics)
         {
             {
-                Lokad.Enforce.Argument(() => applicationConstants);
                 Lokad.Enforce.Argument(() => diagnostics);
             }
 
-            m_ApplicationConstants = applicationConstants;
             m_Diagnostics = diagnostics;
 
             LoadDatasetDependencies();
@@ -184,37 +194,18 @@ namespace Apollo.Core.Base.Activation
                 WorkingDirectory = deploymentDir,
             };
 
-            var exec = new Process();
-            exec.StartInfo = startInfo;
-            exec.Start();
+            using (var exec = new Process())
+            {
+                exec.StartInfo = startInfo;
+                exec.Start();
 
-            // Link to the current process so that the datasets die if we die
-            s_ProcessTrackingJob.LinkChildProcessToJob(exec);
+                // Link to the current process so that the datasets die if we die
+                s_ProcessTrackingJob.LinkChildProcessToJob(exec);
 
-            return exec.CreateEndpointIdForProcess();
+                return exec.CreateEndpointIdForProcess();
+            }
         }
 
-        private string DeployLocation()
-        {
-            var companyPath = Path.Combine(Path.GetTempPath(), ApplicationConstants.CompanyName);
-            var productPath = Path.Combine(companyPath, ApplicationConstants.ApplicationName);
-            var versionPath = Path.Combine(productPath, ApplicationConstants.ApplicationCompatibilityVersion.ToString(2));
-            if (!Directory.Exists(versionPath))
-            {
-                Directory.CreateDirectory(versionPath);
-            }
-
-            string deployPath = versionPath;
-            while (Directory.Exists(deployPath))
-            {
-                var subPath = Path.GetRandomFileName();
-                deployPath = Path.Combine(versionPath, subPath);
-            }
-
-            Directory.CreateDirectory(deployPath);
-            return deployPath;
-        }
-        
         /// <summary>
         /// Copy the dataset application to a temporary directory so that it can have it's own set of plugins and those
         /// plugins won't collide with other plugins of the same name but a different version.

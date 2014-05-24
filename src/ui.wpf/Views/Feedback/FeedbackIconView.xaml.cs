@@ -96,7 +96,7 @@ namespace Apollo.UI.Wpf.Views.Feedback
         {
             e.Handled = true;
 
-            using (m_Diagnostics.Profiler.Measure(Globals.TimingGroup, "Sending feedback report"))
+            using (m_Diagnostics.Profiler.Measure(BaseConstants.TimingGroup, "Sending feedback report"))
             {
                 Model.SendReport();
             }

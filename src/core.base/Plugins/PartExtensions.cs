@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Apollo.Core.Extensions.Plugins;
@@ -41,9 +42,16 @@ namespace Apollo.Core.Base.Plugins
         /// <param name="partDefinition">The part definition that owns the export.</param>
         /// <param name="exportRegistration">The ID of the export.</param>
         /// <returns>The requested export definition.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="partDefinition"/> is <see langword="null" />.
+        /// </exception>
         /// <exception cref="UnknownExportDefinitionException">Thrown when the part does not define an export with the given ID.</exception>
         public static SerializableExportDefinition PartExportById(this GroupPartDefinition partDefinition, ExportRegistrationId exportRegistration)
         {
+            {
+                Lokad.Enforce.Argument(() => partDefinition);
+            }
+
             if (!partDefinition.RegisteredExports.Contains(exportRegistration))
             {
                 throw new UnknownExportDefinitionException();
@@ -102,9 +110,16 @@ namespace Apollo.Core.Base.Plugins
         /// <param name="partDefinition">The part definition that owns the import.</param>
         /// <param name="importRegistration">The ID of the import.</param>
         /// <returns>The requested import definition.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="partDefinition"/> is <see langword="null" />.
+        /// </exception>
         /// <exception cref="UnknownImportDefinitionException">Thrown when the part does not define an import with the given ID.</exception>
         public static SerializableImportDefinition PartImportById(this GroupPartDefinition partDefinition, ImportRegistrationId importRegistration)
         {
+            {
+                Lokad.Enforce.Argument(() => partDefinition);
+            }
+
             if (partDefinition.RegisteredImports.Contains(importRegistration))
             {
                 throw new UnknownImportDefinitionException();

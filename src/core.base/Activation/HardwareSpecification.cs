@@ -51,18 +51,17 @@ namespace Apollo.Core.Base.Activation
         {
             try
             {
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher(
-                    "root\\CIMV2",
-                    "SELECT * FROM CIM_OperatingSystem");
-
                 ulong maxPerProcess = 0;
                 ulong totalPhysical = 0;
                 ulong totalVirtual = 0;
-                foreach (ManagementObject queryObj in searcher.Get())
+                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM CIM_OperatingSystem"))
                 {
-                    maxPerProcess += (ulong)queryObj["MaxProcessMemorySize"];
-                    totalPhysical += (ulong)queryObj["TotalVisibleMemorySize"];
-                    totalVirtual += (ulong)queryObj["TotalVirtualMemorySize"];
+                    foreach (ManagementObject queryObj in searcher.Get())
+                    {
+                        maxPerProcess += (ulong)queryObj["MaxProcessMemorySize"];
+                        totalPhysical += (ulong)queryObj["TotalVisibleMemorySize"];
+                        totalVirtual += (ulong)queryObj["TotalVirtualMemorySize"];
+                    }
                 }
 
                 return new MemoryInformation

@@ -8,7 +8,7 @@ namespace Apollo.Core.Base.Activation
 {
     /// <summary>
     /// Stores a selected distribution plan and indicates if the
-    /// selection process was cancelled at some point.
+    /// selection process was canceled at some point.
     /// </summary>
     public sealed class SelectedProposal
     {

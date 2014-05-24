@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using Apollo.Utilities;
 using Autofac;
 using Nuclei.Communication;
 using Nuclei.Configuration;
@@ -83,7 +82,6 @@ namespace Apollo.Core.Base.Activation
             RegisterDistributors(builder);
 
             builder.Register(c => new DatasetActivator(
-                    c.Resolve<ApplicationConstants>(),
                     c.Resolve<SystemDiagnostics>()))
                 .As<IDatasetActivator>();
 

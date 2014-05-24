@@ -131,7 +131,6 @@
     <Compile Include="Activation\ActivatorModule.cs" />
     <Compile Include="BaseConstants.cs" />
     <Compile Include="CommunicationSubjects.cs" />
-    <Compile Include="Globals.cs" />
     <Compile Include="IHostApplicationCommands.cs" />
     <Compile Include="Activation\DatasetTrackingJob.cs" />
     <Compile Include="IDatasetApplicationCommands.cs" />

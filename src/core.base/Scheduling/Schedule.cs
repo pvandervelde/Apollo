@@ -176,9 +176,16 @@ namespace Apollo.Core.Base.Scheduling
         /// </summary>
         /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> to populate with data.</param>
         /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext"/>) for this serialization.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="info"/> is <see langword="null" />.
+        /// </exception>
         /// <exception cref="T:System.Security.SecurityException">The caller does not have the required permission.</exception>
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+            {
+                Lokad.Enforce.Argument(() => info);
+            }
+
             // Split the graph into parts
             var vertices = m_Graph.Vertices.ToList();
             var connections = new List<Tuple<int, int, ScheduleElementId>>();

@@ -113,6 +113,8 @@ namespace Apollo.Core.Base.Activation
         /// The handle for the job that links all the child processes to the current
         /// process.
         /// </summary>
+        [SuppressMessage("Microsoft.Reliability", "CA2006:UseSafeHandleToEncapsulateNativeResources",
+            Justification = "To be implemented.")]
         private IntPtr m_Handle;
 
         /// <summary>
