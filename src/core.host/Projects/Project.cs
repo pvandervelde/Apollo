@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -37,6 +38,27 @@ namespace Apollo.Core.Host.Projects
         private static void CloseOnlineDataset(DatasetProxy info)
         {
             info.Deactivate();
+        }
+
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "persistenceInfo",
+            Justification = "Parameter will be used at a later stage.")]
+        private static DatasetId RestoreFromStore(IPersistenceInformation persistenceInfo)
+        {
+            // Restore the dataset here ...
+            // Probably needs to be version safe etc.
+            // Note that we also need to store the stream somewhere 
+            // so that we always have access to it (which will probably be on disk)
+            // this may cause all kinds of untold chaos, e.g.
+            // - disk full / not big enough
+            // - The stream is a remote stream and cuts out half way (i.e we don't consume it on time)
+            //
+            //
+            // When creating a dataset check:
+            // - The root must not have parents
+            // - Adding the dataset should not create any cycles
+            // - No parent may become a child of a child node
+            //   OR better yet, no node may become a child after it is inserted
+            return new DatasetId();
         }
 
         /// <summary>
@@ -246,25 +268,6 @@ namespace Apollo.Core.Host.Projects
         {
             ReloadProjectInformation();
             ReloadProxiesDueToHistoryChange();
-        }
-
-        private DatasetId RestoreFromStore(IPersistenceInformation persistenceInfo)
-        {
-            // Restore the dataset here ...
-            // Probably needs to be version safe etc.
-            // Note that we also need to store the stream somewhere 
-            // so that we always have access to it (which will probably be on disk)
-            // this may cause all kinds of untold chaos, e.g.
-            // - disk full / not big enough
-            // - The stream is a remote stream and cuts out half way (i.e we don't consume it on time)
-            //
-            //
-            // When creating a dataset check:
-            // - The root must not have parents
-            // - Adding the dataset should not create any cycles
-            // - No parent may become a child of a child node
-            //   OR better yet, no node may become a child after it is inserted
-            return new DatasetId();
         }
 
         /// <summary>

@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Activation;
 using Apollo.Core.Host.Projects;
@@ -335,14 +336,15 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         /// only a suggestion. The activator may decide to ignore the suggestion if there is a distribution
         /// plan that is better suited to the contents of the dataset.
         /// </remarks>
+        /// <returns>A task that will complete when the activation of the dataset is completed.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "To select an appropriate machine we need a function which requires nested generics.")]
-        public void Activate(
+        public Task Activate(
             DistributionLocations preferredLocation,
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
             CancellationToken token)
         {
-            m_Dataset.Activate(preferredLocation, machineSelector, token);
+            return m_Dataset.Activate(preferredLocation, machineSelector, token);
         }
 
         /// <summary>
@@ -379,7 +381,7 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         /// </summary>
         public void Deactivate()
         {
-            m_Dataset.Deactivate();
+            m_Dataset.Deactivate().Wait();
         }
 
         /// <summary>

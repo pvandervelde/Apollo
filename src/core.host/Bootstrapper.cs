@@ -120,6 +120,18 @@ namespace Apollo.Core.Host
         }
 
         /// <summary>
+        /// Creates the given service type.
+        /// </summary>
+        /// <param name="serviceType">Type of the service.</param>
+        /// <param name="kernel">The kernel.</param>
+        /// <param name="container">The IOC container that contains all the references.</param>
+        private static void CreateService(Type serviceType, IKernel kernel, IContainer container)
+        {
+            var service = container.Resolve(serviceType) as KernelService;
+            kernel.Install(service);
+        }
+
+        /// <summary>
         /// The event that is used to signal the application that it is safe to shut down.
         /// </summary>
         private readonly AutoResetEvent m_ShutdownEvent;
@@ -170,18 +182,6 @@ namespace Apollo.Core.Host
             kernel.Install(userInterfaceService);
 
             kernel.Start();
-        }
-
-        /// <summary>
-        /// Creates the given service type.
-        /// </summary>
-        /// <param name="serviceType">Type of the service.</param>
-        /// <param name="kernel">The kernel.</param>
-        /// <param name="container">The IOC container that contains all the references.</param>
-        private void CreateService(Type serviceType, IKernel kernel, IContainer container)
-        {
-            var service = container.Resolve(serviceType) as KernelService;
-            kernel.Install(service);
         }
 
         /// <summary>

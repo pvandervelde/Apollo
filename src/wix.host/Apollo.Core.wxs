@@ -59,6 +59,16 @@
                       Source="$(var.BinFolder)\Microsoft.Scripting.dll"
                       KeyPath="yes" />
             </Component>
+
+            <!-- ParallelExtensionsExtras.dll -->
+            <Component Id="C.ParallelExtensionsExtras.dll"
+                       Guid="{14423A31-6B6F-42F9-9A26-0EB948098BA9}">
+                <File Id="File.ParallelExtensionsExtras.dll"
+                      Name="ParallelExtensionsExtras.dll"
+                      DiskId="1"
+                      Source="$(var.BinFolder)\ParallelExtensionsExtras.dll"
+                      KeyPath="yes" />
+            </Component>
         </DirectoryRef>
 
         <ComponentGroup Id="CGroup.Apollo.Core.Host">
@@ -68,6 +78,7 @@
             <ComponentRef Id="C.IronPython.dll" />
             <ComponentRef Id="C.IronPython.Modules.dll" />
             <ComponentRef Id="C.Microsoft.Scripting.dll" />
+            <ComponentRef Id="C.ParallelExtensionsExtras.dll" />
 
             <ComponentGroupRef Id="CGroup.Apollo.Base" />
             <ComponentGroupRef Id="CGroup.Apollo.Core.Dataset" />

@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Activation;
 using Apollo.Utilities;
@@ -63,7 +64,7 @@ namespace Apollo.Core.Host.Projects
         NetworkIdentifier RunsOn();
 
         /// <summary>
-        /// Activates the dataset.
+        /// Activates the dataset in an asynchronous manner.
         /// </summary>
         /// <param name="preferredLocation">
         /// Indicates a preferred machine location for the dataset to be activated onto.
@@ -77,7 +78,10 @@ namespace Apollo.Core.Host.Projects
         /// only a suggestion. The activator may decide to ignore the suggestion if there is a distribution
         /// plan that is better suited to the contents of the dataset.
         /// </remarks>
-        void Activate(
+        /// <returns>
+        ///     A <see cref="Task"/> that completes when the dataset is activated.
+        /// </returns>
+        Task Activate(
             DistributionLocations preferredLocation,
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
             CancellationToken token);
@@ -85,7 +89,10 @@ namespace Apollo.Core.Host.Projects
         /// <summary>
         /// Deactivates the dataset.
         /// </summary>
-        void Deactivate();
+        /// <returns>
+        ///     A <see cref="Task"/> that completes when the dataset is deactivated.
+        /// </returns>
+        Task Deactivate();
 
         /// <summary>
         /// Returns the collection of sub-datasets.

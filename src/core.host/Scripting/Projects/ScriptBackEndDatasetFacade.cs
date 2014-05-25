@@ -344,7 +344,8 @@ namespace Apollo.Core.Host.Scripting.Projects
 
             // CancellationToken is not serializable hence ...
             var token = new CancellationTokenSource();
-            m_Dataset.Activate(preferredLocation, func, token.Token);
+            m_Dataset.Activate(preferredLocation, func, token.Token)
+                .ContinueWith(t => token.Dispose());
         }
 
         /// <summary>
@@ -437,18 +438,6 @@ namespace Apollo.Core.Host.Scripting.Projects
         public ScriptBackEndDatasetFacade AddChild()
         {
             return new ScriptBackEndDatasetFacade(m_Dataset.AddChild());
-        }
-
-        /// <summary>
-        /// Adds a new child.
-        /// </summary>
-        /// <param name="filePath">The path to the file that stores the dataset that should be copied.</param>
-        /// <returns>
-        /// The newly created dataset.
-        /// </returns>
-        public IDatasetScriptFacade AddChild(string filePath)
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>

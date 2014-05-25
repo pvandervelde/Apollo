@@ -10,8 +10,11 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Activation;
 using Apollo.Core.Host.Properties;
@@ -341,12 +344,14 @@ namespace Apollo.Core.Host.Projects
                             return new SelectedProposal(plan);
                         };
 
-                    Activate(
+                    var source = new CancellationTokenSource();
+                    var activationTask = Activate(
                         DistributionLocations.All,
                         selector,
                         m_Notifications,
-                        new CancellationTokenSource().Token,
+                        source.Token,
                         false);
+                    activationTask.ContinueWith(t => source.Dispose());
                 }
             }
             else
@@ -615,7 +620,7 @@ namespace Apollo.Core.Host.Projects
         }
 
         /// <summary>
-        /// Activates the dataset.
+        /// Activates the dataset in an asynchronous manner.
         /// </summary>
         /// <param name="preferredLocation">
         /// Indicates a preferred machine location for the dataset to be distributed to.
@@ -629,6 +634,9 @@ namespace Apollo.Core.Host.Projects
         /// only a suggestion. The activator may decide to ignore the suggestion if there is a distribution
         /// plan that is better suited to the contents of the dataset.
         /// </remarks>
+        /// <returns>
+        ///     A <see cref="Task"/> that completes when the dataset is activated.
+        /// </returns>
         /// <exception cref="ArgumentException">
         ///     Thrown when the project that owns this dataset has been closed.
         /// </exception>
@@ -638,7 +646,7 @@ namespace Apollo.Core.Host.Projects
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="machineSelector"/> is <see langword="null" />.
         /// </exception>
-        public void Activate(
+        public Task Activate(
             DistributionLocations preferredLocation,
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
             CancellationToken token)
@@ -653,10 +661,10 @@ namespace Apollo.Core.Host.Projects
                 Lokad.Enforce.Argument(() => machineSelector);
             }
 
-            Activate(preferredLocation, machineSelector, m_Notifications, token, true);
+            return Activate(preferredLocation, machineSelector, m_Notifications, token, true);
         }
 
-        private void Activate(
+        private Task Activate(
             DistributionLocations preferredLocation,
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
             ICollectNotifications notifications,
@@ -668,9 +676,28 @@ namespace Apollo.Core.Host.Projects
                 Debug.Assert(preferredLocation != DistributionLocations.None, "A distribution location should be specified.");
             }
 
-            if (IsActivated || m_IsActivating)
+            if (IsActivated)
             {
-                return;
+                return Task.Factory.StartNew(
+                    () => { },
+                    token,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler());
+            }
+
+            if (m_IsActivating)
+            {
+                var onActivated = Observable.FromEventPattern<EventArgs>(
+                    h => OnActivated += h,
+                    h => OnActivated -= h)
+                    .Take(1);
+                var onDeactivated = Observable.FromEventPattern<EventArgs>(
+                    h => OnDeactivated += h,
+                    h => OnDeactivated -= h)
+                    .Take(1);
+
+                return Observable.Amb(onActivated, onDeactivated)
+                    .ToTask(token);
             }
 
             m_Diagnostics.Log(
@@ -702,12 +729,16 @@ namespace Apollo.Core.Host.Projects
                 var selectedPlan = machineSelector(selection);
                 if (token.IsCancellationRequested || selectedPlan.WasSelectionCanceled)
                 {
-                    return;
+                    return Task.Factory.StartNew(
+                        () => { },
+                        token,
+                        TaskCreationOptions.None,
+                        new CurrentThreadTaskScheduler());
                 }
 
                 RaiseOnProgressOfCurrentAction(0, Resources.Progress_ActivatingDataset, false);
                 var task = selectedPlan.Plan.Accept(token, RaiseOnProgressOfCurrentAction);
-                task.ContinueWith(
+                var continuationTask = task.ContinueWith(
                     t =>
                     {
                         try
@@ -759,6 +790,8 @@ namespace Apollo.Core.Host.Projects
                         }
                     },
                     TaskContinuationOptions.ExecuteSynchronously);
+
+                return continuationTask;
             }
             catch (Exception)
             {
@@ -781,9 +814,12 @@ namespace Apollo.Core.Host.Projects
         /// <summary>
         /// Unloads the dataset from the machine it is currently loaded onto.
         /// </summary>
-        public void Deactivate()
+        /// <returns>
+        ///     A <see cref="Task"/> that completes when the dataset is deactivated.
+        /// </returns>
+        public Task Deactivate()
         {
-            Deactivate(true);
+            return Task.Factory.StartNew(() => Deactivate(true));
         }
 
         private void Deactivate(bool storeUnloadData)

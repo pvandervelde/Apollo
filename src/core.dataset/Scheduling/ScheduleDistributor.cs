@@ -265,7 +265,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// The token that is related to the execution of the given schedule.
         /// </returns>
         /// <remarks>
-        /// For local schedules the cancellation token is checked regularly and the schedule execution is canceled on request. For
+        /// For local schedules the cancellation token is checked regularly and the schedule execution is cancelled on request. For
         /// remote schedule execution setting the cancellation token means that a termination signal is send to the remote
         /// application.
         /// </remarks>
