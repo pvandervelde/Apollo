@@ -47,7 +47,7 @@ namespace Apollo.UI.Explorer
         /// </summary>
         private const string PluginsDirectoryName = "plugins";
 
-        private static AppDomainResolutionPaths AppDomainResolutionPathsFor(FileConstants fileConstants, AppDomainPaths paths)
+        private static AppDomainResolutionPaths AppDomainResolutionPathsFor(AppDomainPaths paths)
         {
             List<string> filePaths = new List<string>();
             List<string> directoryPaths = new List<string>();
@@ -81,12 +81,11 @@ namespace Apollo.UI.Explorer
                 {
                     // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
                     // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
-                    var ctx = c.Resolve<IComponentContext>();
                     Func<string, AppDomainPaths, AppDomain> result = (name, paths) =>
                     {
                         return AppDomainBuilder.Assemble(
                             name,
-                            AppDomainResolutionPathsFor(ctx.Resolve<FileConstants>(), paths));
+                            AppDomainResolutionPathsFor(paths));
                     };
 
                     return result;
@@ -209,12 +208,6 @@ namespace Apollo.UI.Explorer
             // Register the global application objects
             {
                 // Utilities
-                builder.Register(c => new ApplicationConstants())
-                   .As<ApplicationConstants>();
-
-                builder.Register(c => new FileConstants(c.Resolve<ApplicationConstants>()))
-                    .As<FileConstants>();
-
                 builder.Register((c, p) => new ExceptionHandler(
                         p.TypedAs<ExceptionProcessor[]>()))
                     .As<ExceptionHandler>();

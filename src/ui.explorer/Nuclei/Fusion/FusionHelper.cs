@@ -79,7 +79,7 @@ namespace Apollo.UI.Explorer.Nuclei.Fusion
 
             return input
                 .Substring(
-                    input.IndexOf(AssemblyNameElements.KeyValueSeparator, StringComparison.OrdinalIgnoreCase) 
+                    input.IndexOf(AssemblyNameElements.KeyValueSeparator, StringComparison.OrdinalIgnoreCase)
                     + AssemblyNameElements.KeyValueSeparator.Length)
                 .Trim();
         }
@@ -165,19 +165,40 @@ namespace Apollo.UI.Explorer.Nuclei.Fusion
                     }
                 }
 
-                if ((!string.IsNullOrEmpty(publicKey)) 
+                if ((!string.IsNullOrEmpty(publicKey))
                     && (!publicKey.Equals(AssemblyNameElements.NullString, StringComparison.OrdinalIgnoreCase)))
                 {
                     var actualPublicKeyToken = assemblyName.GetPublicKeyToken();
                     var str = actualPublicKeyToken.Aggregate(
-                        string.Empty, 
+                        string.Empty,
                         (current, value) => current + value.ToString("x2", CultureInfo.InvariantCulture));
-                    
+
                     return str.Equals(publicKey, StringComparison.OrdinalIgnoreCase);
                 }
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Turns the module name into a qualified file name by adding the default assembly extension.
+        /// </summary>
+        /// <param name="moduleName">Name of the module.</param>
+        /// <returns>
+        /// The expected name of the assembly file that contains the module.
+        /// </returns>
+        private static string MakeModuleNameQualifiedFileName(string moduleName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(moduleName), "The assembly file name should not be empty.");
+
+            return (moduleName.IndexOf(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        ".{0}",
+                        AssemblyExtension),
+                    StringComparison.OrdinalIgnoreCase) < 0)
+                ? string.Format(CultureInfo.InvariantCulture, "{0}.{1}", moduleName, AssemblyExtension)
+                : moduleName;
         }
 
         /// <summary>
@@ -211,7 +232,7 @@ namespace Apollo.UI.Explorer.Nuclei.Fusion
         /// </summary>
         private Func<IEnumerable<string>> FileEnumerator
         {
-            get 
+            get
             {
                 return m_FileEnumerator;
             }
@@ -224,16 +245,13 @@ namespace Apollo.UI.Explorer.Nuclei.Fusion
         /// The assembly loader should also deal with NGEN-ed assemblies. This means that using
         /// Assembly.LoadFrom is not the best choice.
         /// </todo>
-        internal Func<string, Assembly> AssemblyLoader 
+        [SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFrom",
+            Justification = "The whole point of this class is to load specific assemblies in order to find the right ones.")]
+        private Func<string, Assembly> AssemblyLoader
         {
-            private get
+            get
             {
-                return m_AssemblyLoader ?? (m_AssemblyLoader = path => Assembly.LoadFrom(path));
-            }
-
-            set 
-            {
-                m_AssemblyLoader = value;
+                return m_AssemblyLoader ?? (m_AssemblyLoader = Assembly.LoadFrom);
             }
         }
 
@@ -307,27 +325,6 @@ namespace Apollo.UI.Explorer.Nuclei.Fusion
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Turns the module name into a qualified file name by adding the default assembly extension.
-        /// </summary>
-        /// <param name="moduleName">Name of the module.</param>
-        /// <returns>
-        /// The expected name of the assembly file that contains the module.
-        /// </returns>
-        private string MakeModuleNameQualifiedFileName(string moduleName)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(moduleName), "The assembly file name should not be empty.");
-
-            return (moduleName.IndexOf(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        ".{0}",
-                        AssemblyExtension), 
-                    StringComparison.OrdinalIgnoreCase) < 0) 
-                ? string.Format(CultureInfo.InvariantCulture, "{0}.{1}", moduleName, AssemblyExtension) 
-                : moduleName;
         }
     }
 }
