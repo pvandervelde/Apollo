@@ -109,7 +109,7 @@ namespace Apollo.Core.Base.Plugins
         }
 
         [Test]
-        public void RoundTripSerialise()
+        public void RoundtripSerialize()
         {
             var original = PropertyBasedScheduleConditionDefinition.CreateDefinition("a", GetPropertyForString());
             var copy = AssertExtensions.RoundTripSerialize(original);

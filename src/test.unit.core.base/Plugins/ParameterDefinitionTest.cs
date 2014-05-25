@@ -113,7 +113,7 @@ namespace Apollo.Core.Base.Plugins
         }
 
         [Test]
-        public void RoundTripSerialise()
+        public void RoundtripSerialize()
         {
             var original = ParameterDefinition.CreateDefinition(ParameterFromInt());
             var copy = AssertExtensions.RoundTripSerialize(original);

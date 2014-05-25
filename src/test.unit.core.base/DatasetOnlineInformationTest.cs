@@ -24,38 +24,56 @@ namespace Apollo.Core.Base
             Justification = "Unit tests do not need documentation.")]
     public sealed class DatasetOnlineInformationTest
     {
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible",
+            Justification = "Type has to be public for it to be used for mocking.")]
         public interface IMockCommandSetWithTaskReturn : ICommandSet
         {
             Task MyMethod(int input);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible",
+            Justification = "Type has to be public for it to be used for mocking.")]
         public interface IMockCommandSetWithTypedTaskReturn : ICommandSet
         {
             Task<int> MyMethod(int input);
         }
 
         [InternalCommand]
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible",
+            Justification = "Type has to be public for it to be used for mocking.")]
         public interface IMockCommandSetForInternalUse : ICommandSet
         {
             Task MyInternalMethod();
         }
 
+        [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix",
+            Justification = "Using EventHandler at the end to indicate what kind of interface this is.")]
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible",
+            Justification = "Type has to be public for it to be used for mocking.")]
         public interface IMockNotificationSetWithEventHandler : INotificationSet
         {
             event EventHandler OnMyEvent;
         }
 
         [Serializable]
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible",
+            Justification = "Type has to be public for it to be used for mocking.")]
         public class MySerializableEventArgs : EventArgs
         {
         }
 
+        [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix",
+            Justification = "Using EventHandler at the end to indicate what kind of interface this is.")]
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible",
+            Justification = "Type has to be public for it to be used for mocking.")]
         public interface IMockNotificationSetWithTypedEventHandler : INotificationSet
         {
             event EventHandler<MySerializableEventArgs> OnMyEvent;
         }
 
         [InternalNotification]
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible",
+            Justification = "Type has to be public for it to be used for mocking.")]
         public interface IMockNotificationSetForInternalUse : INotificationSet
         {
             event EventHandler<MySerializableEventArgs> OnMyEvent;

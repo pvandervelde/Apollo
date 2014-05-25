@@ -123,13 +123,8 @@ namespace Apollo.Core.Base.Plugins
             return typeof(int).GetMethod("CompareTo", new[] { typeof(int) });
         }
 
-        private static MethodInfo GetMethodForDouble()
-        {
-            return typeof(double).GetMethod("CompareTo", new[] { typeof(double) });
-        }
-
         [Test]
-        public void RoundTripSerialise()
+        public void RoundtripSerialize()
         {
             var original = MethodBasedExportDefinition.CreateDefinition("B", GetMethodForInt());
             var copy = AssertExtensions.RoundTripSerialize(original);
@@ -141,7 +136,6 @@ namespace Apollo.Core.Base.Plugins
         public void Create()
         {
             var obj = MethodBasedExportDefinition.CreateDefinition("B", GetMethodForInt());
-            var method = GetMethodForInt();
 
             Assert.AreEqual("B", obj.ContractName);
             Assert.AreEqual(TypeIdentity.CreateDefinition(typeof(int)), obj.DeclaringType);

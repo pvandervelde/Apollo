@@ -426,7 +426,6 @@ namespace Apollo.Core.Base.Scheduling
         {
             var builder = new FixedScheduleBuilder();
             var insertVertex = builder.AddInsertPoint();
-            var otherVertex = new InsertVertex(10);
             Assert.Throws<CannotLinkAVertexToItselfException>(() => builder.LinkTo(insertVertex, insertVertex));
         }
 

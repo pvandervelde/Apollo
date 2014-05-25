@@ -105,13 +105,8 @@ namespace Apollo.Core.Base.Plugins
             return typeof(int).GetMethod("CompareTo", new[] { typeof(int) });
         }
 
-        private static MethodInfo GetMethodForDouble()
-        {
-            return typeof(double).GetMethod("CompareTo", new[] { typeof(double) });
-        }
-
         [Test]
-        public void RoundTripSerialise()
+        public void RoundtripSerialize()
         {
             var original = MethodDefinition.CreateDefinition(GetMethodForInt());
             var copy = AssertExtensions.RoundTripSerialize(original);

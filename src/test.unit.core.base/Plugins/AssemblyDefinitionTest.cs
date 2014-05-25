@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -100,7 +101,7 @@ namespace Apollo.Core.Base.Plugins
         }
 
         [Test]
-        public void RoundTripSerialise()
+        public void RoundtripSerialize()
         {
             var original = AssemblyDefinition.CreateDefinition(typeof(string).Assembly);
             var copy = AssertExtensions.RoundTripSerialize(original);
@@ -121,7 +122,7 @@ namespace Apollo.Core.Base.Plugins
             var token = new StringBuilder();
             foreach (var bit in bits)
             {
-                token.Append(bit.ToString("x2"));
+                token.Append(bit.ToString("x2", CultureInfo.InvariantCulture));
             }
 
             Assert.AreEqual(token.ToString(), obj.PublicKeyToken);

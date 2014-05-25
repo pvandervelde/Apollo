@@ -17,7 +17,7 @@ namespace Apollo.Core.Base.Scheduling
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class ScheduleVertifierTest
+    public sealed class ScheduleVerifierTest
     {
         [Test]
         public void StartVertexWithInboundEdges()

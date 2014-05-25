@@ -106,7 +106,7 @@ namespace Apollo.Core.Base.Plugins
         }
 
         [Test]
-        public void RoundTripSerialise()
+        public void RoundtripSerialize()
         {
             var original = PropertyDefinition.CreateDefinition(GetPropertyForString());
             var copy = AssertExtensions.RoundTripSerialize(original);
