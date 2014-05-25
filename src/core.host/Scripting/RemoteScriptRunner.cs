@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using Apollo.Core.Host.Properties;
@@ -62,6 +63,8 @@ namespace Apollo.Core.Host.Scripting
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="engine"/> is <see langword="null" />.
         /// </exception>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
+            Justification = "The streams should be disposed just before the AppDomain is terminated.")]
         public RemoteScriptRunner(ILinkScriptsToProjects projects, TextWriter writer, ScriptEngine engine)
         {
             {
