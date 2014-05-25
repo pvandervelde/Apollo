@@ -181,6 +181,27 @@ namespace Apollo.UI.Console.Nuclei.Fusion
         }
 
         /// <summary>
+        /// Turns the module name into a qualified file name by adding the default assembly extension.
+        /// </summary>
+        /// <param name="moduleName">Name of the module.</param>
+        /// <returns>
+        /// The expected name of the assembly file that contains the module.
+        /// </returns>
+        private static string MakeModuleNameQualifiedFileName(string moduleName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(moduleName), "The assembly file name should not be empty.");
+
+            return (moduleName.IndexOf(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        ".{0}",
+                        AssemblyExtension),
+                    StringComparison.OrdinalIgnoreCase) < 0)
+                ? string.Format(CultureInfo.InvariantCulture, "{0}.{1}", moduleName, AssemblyExtension)
+                : moduleName;
+        }
+
+        /// <summary>
         /// The delegate which is used to return a file enumerator based on a specific directory.
         /// </summary>
         private readonly Func<IEnumerable<string>> m_FileEnumerator;
@@ -224,16 +245,13 @@ namespace Apollo.UI.Console.Nuclei.Fusion
         /// The assembly loader should also deal with NGEN-ed assemblies. This means that using
         /// Assembly.LoadFrom is not the best choice.
         /// </todo>
-        internal Func<string, Assembly> AssemblyLoader 
+        [SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFrom",
+            Justification = "The whole point of this class is to load specific assemblies in order to find the right ones.")]
+        private Func<string, Assembly> AssemblyLoader 
         {
-            private get
+            get
             {
-                return m_AssemblyLoader ?? (m_AssemblyLoader = path => Assembly.LoadFrom(path));
-            }
-
-            set 
-            {
-                m_AssemblyLoader = value;
+                return m_AssemblyLoader ?? (m_AssemblyLoader = Assembly.LoadFrom);
             }
         }
 
@@ -307,27 +325,6 @@ namespace Apollo.UI.Console.Nuclei.Fusion
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Turns the module name into a qualified file name by adding the default assembly extension.
-        /// </summary>
-        /// <param name="moduleName">Name of the module.</param>
-        /// <returns>
-        /// The expected name of the assembly file that contains the module.
-        /// </returns>
-        private string MakeModuleNameQualifiedFileName(string moduleName)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(moduleName), "The assembly file name should not be empty.");
-
-            return (moduleName.IndexOf(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        ".{0}",
-                        AssemblyExtension), 
-                    StringComparison.OrdinalIgnoreCase) < 0) 
-                ? string.Format(CultureInfo.InvariantCulture, "{0}.{1}", moduleName, AssemblyExtension) 
-                : moduleName;
         }
     }
 }
