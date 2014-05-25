@@ -19,9 +19,6 @@ namespace Apollo.Utilities
         [Test]
         public void ProductSettingsPath()
         {
-            var applicationConstants = new ApplicationConstants();
-            var constants = new FileConstants(applicationConstants);
-
             var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ApplicationConstants.CompanyName);
             path = Path.Combine(path, ApplicationConstants.ApplicationName);
             path = Path.Combine(path, ApplicationConstants.ApplicationCompatibilityVersion.ToString(2));
@@ -32,9 +29,6 @@ namespace Apollo.Utilities
         [Test]
         public void LogPath()
         {
-            var applicationConstants = new ApplicationConstants();
-            var constants = new FileConstants(applicationConstants);
-
             var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ApplicationConstants.CompanyName);
             path = Path.Combine(path, ApplicationConstants.ApplicationName);
             path = Path.Combine(path, ApplicationConstants.ApplicationCompatibilityVersion.ToString(2));

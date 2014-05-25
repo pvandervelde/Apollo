@@ -33,14 +33,12 @@ namespace Apollo.Utilities
         [Test]
         public void CompanyName()
         {
-            var constants = new ApplicationConstants();
             Assert.AreEqual(CompanyInformation.CompanyName, ApplicationConstants.CompanyName);
         }
 
         [Test]
         public void ApplicationName()
         {
-            var constants = new ApplicationConstants();
             Assert.AreEqual(ProductInformation.ProductName, ApplicationConstants.ApplicationName);
         }
 
@@ -50,7 +48,6 @@ namespace Apollo.Utilities
             var assembly = GetAssembly();
             var version = assembly.GetName().Version;
 
-            var constants = new ApplicationConstants();
             Assert.AreEqual(version, ApplicationConstants.ApplicationVersion);
         }
 
@@ -60,7 +57,6 @@ namespace Apollo.Utilities
             var assembly = GetAssembly();
             var version = assembly.GetName().Version;
 
-            var constants = new ApplicationConstants();
             Assert.AreEqual(new Version(version.Major, version.Minor), ApplicationConstants.ApplicationCompatibilityVersion);
         }
     }

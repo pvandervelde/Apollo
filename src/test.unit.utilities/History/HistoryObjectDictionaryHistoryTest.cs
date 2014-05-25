@@ -79,11 +79,6 @@ namespace Apollo.Utilities.History
                 m_Id = new HistoryId(id);
             }
 
-            public MockHistoryObject(HistoryId id)
-            {
-                m_Id = id;
-            }
-
             public HistoryId HistoryId
             {
                 get

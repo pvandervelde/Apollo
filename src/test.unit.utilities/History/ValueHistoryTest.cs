@@ -35,7 +35,7 @@ namespace Apollo.Utilities.History
         }
 
         [Test]
-        public void RollBackToToCurrentValue()
+        public void RollBackToCurrentValue()
         {
             var storage = new ValueHistory<int>();
 
