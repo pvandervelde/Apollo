@@ -12,6 +12,8 @@
     <Rule Id="CA1026" Action="None" />
     <!-- CA1030: Use events where appropriate -->
     <Rule Id="CA1030" Action="None" />
+    <!-- CA1060: Move P/Invokes to NativeMethods class -->
+    <Rule Id="CA1060" Action="None" />
     <!-- CA1303: Do not pass literals as localized parameters -->
     <Rule Id="CA1303" Action="None" />
     <!-- CA1502: Avoid excessive complexity -->

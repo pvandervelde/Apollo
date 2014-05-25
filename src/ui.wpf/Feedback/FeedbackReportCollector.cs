@@ -25,30 +25,19 @@ namespace Apollo.UI.Wpf.Feedback
         private readonly IFileSystem m_FileSystem;
 
         /// <summary>
-        /// The object that holds the constant values that describe the application files and file paths.
-        /// </summary>
-        private readonly FileConstants m_FileConstants;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="FeedbackReportCollector"/> class.
         /// </summary>
         /// <param name="fileSystem">The object that provides access to the file system.</param>
-        /// <param name="fileConstants">The object that holds the constant values that describe the application files and file paths.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="fileSystem"/> is <see langword="null" />.
         /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="fileConstants"/> is <see langword="null" />.
-        /// </exception>
-        public FeedbackReportCollector(IFileSystem fileSystem, FileConstants fileConstants)
+        public FeedbackReportCollector(IFileSystem fileSystem)
         {
             {
                 Lokad.Enforce.Argument(() => fileSystem);
-                Lokad.Enforce.Argument(() => fileConstants);
             }
 
             m_FileSystem = fileSystem;
-            m_FileConstants = fileConstants;
         }
 
         /// <summary>

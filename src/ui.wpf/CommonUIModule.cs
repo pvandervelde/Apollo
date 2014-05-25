@@ -44,8 +44,7 @@ namespace Apollo.UI.Wpf
                     .As<IDependencyInjectionProxy>();
 
                 builder.Register(c => new FeedbackReportCollector(
-                        c.Resolve<IFileSystem>(),
-                        c.Resolve<FileConstants>()))
+                        c.Resolve<IFileSystem>()))
                    .As<ICollectFeedbackReports>();
 
                 builder.Register(c => new FeedbackReportTransmitter(

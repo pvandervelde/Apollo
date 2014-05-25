@@ -208,8 +208,15 @@ namespace Apollo.UI.Wpf.Utilities
         /// (i.e. 0.4 would mean that 40% of the control is visible, the remaining
         /// 60% will overflow into the right invisible portion of the panel.</para>
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="child"/> is <see langword="null" />.
+        /// </exception>
         public double PartlyVisiblePortionOverflowToRight(UIElement child)
         {
+            {
+                Lokad.Enforce.Argument(() => child);
+            }
+
             var rctIntersect = GetIntersectionRectangle(child);
             double dblVisiblePortion = 1;
             if (!(rctIntersect == Rect.Empty)
@@ -236,8 +243,15 @@ namespace Apollo.UI.Wpf.Utilities
         /// (i.e. 0.4 would mean that 40% of the control is visible, the remaining
         /// 60% will overflow into the left invisible portion of the panel.</para>
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="child"/> is <see langword="null" />.
+        /// </exception>
         public double PartlyVisiblePortionOverflowToLeft(UIElement child)
         {
+            {
+                Lokad.Enforce.Argument(() => child);
+            }
+
             var rctIntersect = GetIntersectionRectangle(child);
             double dblVisiblePortion = 1;
             if (!(rctIntersect == Rect.Empty)

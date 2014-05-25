@@ -51,7 +51,7 @@ namespace Apollo.UI.Wpf.Commands
             }
 
             // the only catch is that the Shutdown method will return before
-            // we know if the shutdown will be canceled?
+            // we know if the shutdown will be cancelled?
             applicationFacade.Shutdown();
         }
 

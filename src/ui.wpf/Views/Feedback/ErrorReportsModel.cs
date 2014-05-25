@@ -100,8 +100,15 @@ namespace Apollo.UI.Wpf.Views.Feedback
         /// Sends the reports to the remote server.
         /// </summary>
         /// <param name="reportFiles">The collection that holds the reports that should be send.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="reportFiles"/> is <see langword="null" />.
+        /// </exception>
         public void SendReports(IEnumerable<FeedbackFileModel> reportFiles)
         {
+            {
+                Lokad.Enforce.Argument(() => reportFiles);
+            }
+
             foreach (var report in reportFiles)
             {
                 try
