@@ -27,27 +27,35 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         public void ProcessWithIncorrectVertexType()
         {
             var processor = new InsertVertexProcessor();
-            var state = processor.Process(new StartVertex(1), new ScheduleExecutionInfo());
-            Assert.AreEqual(ScheduleExecutionState.IncorrectProcessorForVertex, state);
+            using (var info = new ScheduleExecutionInfo())
+            {
+                var state = processor.Process(new StartVertex(1), info);
+                Assert.AreEqual(ScheduleExecutionState.IncorrectProcessorForVertex, state);
+            }
         }
 
         [Test]
         public void ProcessWithCancellation()
         {
-            var info = new ScheduleExecutionInfo();
-            info.CancelScheduleExecution();
+            using (var info = new ScheduleExecutionInfo())
+            {
+                info.CancelScheduleExecution();
 
-            var processor = new InsertVertexProcessor();
-            var state = processor.Process(new InsertVertex(1), info);
-            Assert.AreEqual(ScheduleExecutionState.Canceled, state);
+                var processor = new InsertVertexProcessor();
+                var state = processor.Process(new InsertVertex(1), info);
+                Assert.AreEqual(ScheduleExecutionState.Canceled, state);
+            }
         }
 
         [Test]
         public void Process()
         {
             var processor = new InsertVertexProcessor();
-            var state = processor.Process(new InsertVertex(1), new ScheduleExecutionInfo());
-            Assert.AreEqual(ScheduleExecutionState.Executing, state);
+            using (var info = new ScheduleExecutionInfo())
+            {
+                var state = processor.Process(new InsertVertex(1), info);
+                Assert.AreEqual(ScheduleExecutionState.Executing, state);
+            }
         }
     }
 }

@@ -18,6 +18,8 @@ namespace Test.Mocks
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
     public sealed class ImportOnConstructorWithName
     {
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "input",
+            Justification = "Parameter is used by reflection")]
         [ImportingConstructor]
         public ImportOnConstructorWithName([Import("ImportOnConstructor")]IExportingInterface input)
         { 
@@ -31,6 +33,8 @@ namespace Test.Mocks
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
     public sealed class ImportOnConstructorWithType
     {
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "input",
+            Justification = "Parameter is used by reflection")]
         [ImportingConstructor]
         public ImportOnConstructorWithType([Import(typeof(IExportingInterface))]IExportingInterface input)
         { 
@@ -44,6 +48,8 @@ namespace Test.Mocks
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
     public sealed class ImportOnConstructor
     {
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "input",
+            Justification = "Parameter is used by reflection")]
         [ImportingConstructor]
         public ImportOnConstructor([Import]IExportingInterface input)
         {
@@ -57,6 +63,8 @@ namespace Test.Mocks
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
     public sealed class ImportOnConstructorWithEnumerable
     {
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "input",
+            Justification = "Parameter is used by reflection")]
         [ImportingConstructor]
         public ImportOnConstructorWithEnumerable([Import("ContractName")]IEnumerable<IExportingInterface> input)
         {
@@ -70,6 +78,8 @@ namespace Test.Mocks
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
     public sealed class ImportOnConstructorWithLazy
     {
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "input",
+            Justification = "Parameter is used by reflection")]
         [ImportingConstructor]
         public ImportOnConstructorWithLazy([Import("ContractName")]Lazy<IExportingInterface> input)
         {
@@ -83,6 +93,8 @@ namespace Test.Mocks
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
     public sealed class ImportOnConstructorWithFunc
     {
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "input",
+            Justification = "Parameter is used by reflection")]
         [ImportingConstructor]
         public ImportOnConstructorWithFunc([Import("ContractName")]Func<IExportingInterface> input)
         {
@@ -94,10 +106,12 @@ namespace Test.Mocks
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public sealed class ImportOnConstructorWithMultiParameterFunc
+    public sealed class ImportOnConstructorWithFuncWithMultipleParameters
     {
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "input",
+            Justification = "Parameter is used by reflection")]
         [ImportingConstructor]
-        public ImportOnConstructorWithMultiParameterFunc([Import("ContractName")]Func<IExportingInterface, bool, bool> input)
+        public ImportOnConstructorWithFuncWithMultipleParameters([Import("ContractName")]Func<IExportingInterface, bool, bool> input)
         {
         }
     }
@@ -109,6 +123,8 @@ namespace Test.Mocks
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
     public sealed class ImportOnConstructorWithCollectionOfLazy
     {
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "input",
+            Justification = "Parameter is used by reflection")]
         [ImportingConstructor]
         public ImportOnConstructorWithCollectionOfLazy([Import("ContractName")]IEnumerable<Lazy<IExportingInterface>> input)
         {
@@ -122,6 +138,8 @@ namespace Test.Mocks
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
     public sealed class ImportOnConstructorWithCollectionOfFunc
     {
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "input",
+            Justification = "Parameter is used by reflection")]
         [ImportingConstructor]
         public ImportOnConstructorWithCollectionOfFunc([Import("ContractName")]IEnumerable<Func<IExportingInterface>> input)
         {
@@ -223,7 +241,7 @@ namespace Test.Mocks
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public sealed class ImportOnPropertyWithMultiParameterFunc
+    public sealed class ImportOnPropertyWithFuncWithMultipleParameters
     {
         [Import("ContractName")]
         public Func<IExportingInterface, bool, bool> ImportingProperty

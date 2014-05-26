@@ -31,20 +31,25 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         {
             var distributor = new Mock<IDistributeScheduleExecutions>();
             var processor = new SubScheduleVertexProcessor(distributor.Object);
-            var state = processor.Process(new StartVertex(1), new ScheduleExecutionInfo());
-            Assert.AreEqual(ScheduleExecutionState.IncorrectProcessorForVertex, state);
+            using (var info = new ScheduleExecutionInfo())
+            {
+                var state = processor.Process(new StartVertex(1), info);
+                Assert.AreEqual(ScheduleExecutionState.IncorrectProcessorForVertex, state);
+            }
         }
 
         [Test]
         public void ProcessWithCancellation()
         {
             var distributor = new Mock<IDistributeScheduleExecutions>();
-            var info = new ScheduleExecutionInfo();
-            info.CancelScheduleExecution();
+            using (var info = new ScheduleExecutionInfo())
+            {
+                info.CancelScheduleExecution();
 
-            var processor = new SubScheduleVertexProcessor(distributor.Object);
-            var state = processor.Process(new SubScheduleVertex(1, new ScheduleId()), info);
-            Assert.AreEqual(ScheduleExecutionState.Canceled, state);
+                var processor = new SubScheduleVertexProcessor(distributor.Object);
+                var state = processor.Process(new SubScheduleVertex(1, new ScheduleId()), info);
+                Assert.AreEqual(ScheduleExecutionState.Canceled, state);
+            }
         }
 
         [Test]
@@ -77,15 +82,18 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
             var id = new ScheduleId();
 
             var processor = new SubScheduleVertexProcessor(distributor.Object);
-            var state = processor.Process(new SubScheduleVertex(1, id), new ScheduleExecutionInfo());
-            Assert.AreEqual(ScheduleExecutionState.Executing, state);
-            distributor.Verify(
-                d => d.Execute(
-                    It.Is<ScheduleId>(incoming => incoming.Equals(id)),
-                    It.IsAny<IEnumerable<IScheduleVariable>>(),
-                    It.IsAny<ScheduleExecutionInfo>(),
-                    It.IsAny<bool>()),
-                Times.Once());
+            using (var info = new ScheduleExecutionInfo())
+            {
+                var state = processor.Process(new SubScheduleVertex(1, id), info);
+                Assert.AreEqual(ScheduleExecutionState.Executing, state);
+                distributor.Verify(
+                    d => d.Execute(
+                        It.Is<ScheduleId>(incoming => incoming.Equals(id)),
+                        It.IsAny<IEnumerable<IScheduleVariable>>(),
+                        It.IsAny<ScheduleExecutionInfo>(),
+                        It.IsAny<bool>()),
+                    Times.Once());
+            }
         }
     }
 }

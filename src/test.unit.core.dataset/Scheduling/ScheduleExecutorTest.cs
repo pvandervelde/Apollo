@@ -86,28 +86,32 @@ namespace Apollo.Core.Dataset.Scheduling
         public void RunWithMissingProcessors()
         {
             var schedule = BuildThreeVertexSchedule(new InsertVertex(3));
-            var executor = new ScheduleExecutor(
-                new List<IProcesExecutableScheduleVertices> 
-                    { 
-                        new StartVertexProcessor(),
-                        new EndVertexProcessor(),
-                    },
-                ScheduleConditionStorage.CreateInstanceWithoutTimeline(),
-                schedule,
-                new ScheduleId(),
-                new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
+            using (var info = new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()))
+            {
+                using (var executor = new ScheduleExecutor(
+                    new List<IProcesExecutableScheduleVertices> 
+                        { 
+                            new StartVertexProcessor(),
+                            new EndVertexProcessor(),
+                        },
+                    ScheduleConditionStorage.CreateInstanceWithoutTimeline(),
+                    schedule,
+                    new ScheduleId(),
+                    info))
+                {
+                    var state = ScheduleExecutionState.None;
+                    executor.OnFinish += (s, e) => { state = e.State; };
 
-            var state = ScheduleExecutionState.None;
-            executor.OnFinish += (s, e) => { state = e.State; };
-
-            executor.Start();
-            Assert.AreEqual(ScheduleExecutionState.NoProcessorForVertex, state);
+                    executor.Start();
+                    Assert.AreEqual(ScheduleExecutionState.NoProcessorForVertex, state);
+                }
+            }
         }
 
         [Test]
         [Ignore("not implemented yet")]
         public void CancelRun()
-        { 
+        {
         }
 
         [Test]
@@ -121,29 +125,33 @@ namespace Apollo.Core.Dataset.Scheduling
 
             var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var info = collection.Add(
-                action.Object, 
-                "a", 
+                action.Object,
+                "a",
                 "b");
 
             var schedule = BuildThreeVertexSchedule(new ExecutingActionVertex(3, info.Id));
-            var executor = new ScheduleExecutor(
-                new List<IProcesExecutableScheduleVertices> 
-                    { 
-                        new StartVertexProcessor(),
-                        new EndVertexProcessor(),
-                        new ActionVertexProcessor(collection),
-                    },
-                ScheduleConditionStorage.CreateInstanceWithoutTimeline(),
-                schedule,
-                new ScheduleId(),
-                new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
+            using (var executionInfo = new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()))
+            {
+                using (var executor = new ScheduleExecutor(
+                    new List<IProcesExecutableScheduleVertices> 
+                        { 
+                            new StartVertexProcessor(),
+                            new EndVertexProcessor(),
+                            new ActionVertexProcessor(collection),
+                        },
+                    ScheduleConditionStorage.CreateInstanceWithoutTimeline(),
+                    schedule,
+                    new ScheduleId(),
+                    executionInfo))
+                {
+                    var state = ScheduleExecutionState.None;
+                    executor.OnFinish += (s, e) => { state = e.State; };
 
-            var state = ScheduleExecutionState.None;
-            executor.OnFinish += (s, e) => { state = e.State; };
-
-            executor.Start();
-            Assert.AreEqual(ScheduleExecutionState.Completed, state);
-            action.Verify(a => a.Execute(It.IsAny<CancellationToken>()), Times.Once());
+                    executor.Start();
+                    Assert.AreEqual(ScheduleExecutionState.Completed, state);
+                    action.Verify(a => a.Execute(It.IsAny<CancellationToken>()), Times.Once());
+                }
+            }
         }
 
         [Test]
@@ -158,24 +166,28 @@ namespace Apollo.Core.Dataset.Scheduling
 
             TimeMarker storedMarker = null;
             var schedule = BuildThreeVertexSchedule(new MarkHistoryVertex(3));
-            var executor = new ScheduleExecutor(
-                new List<IProcesExecutableScheduleVertices> 
-                    { 
-                        new StartVertexProcessor(),
-                        new EndVertexProcessor(),
-                        new MarkHistoryVertexProcessor(timeline.Object, m => storedMarker = m),
-                    },
-                ScheduleConditionStorage.CreateInstanceWithoutTimeline(),
-                schedule,
-                new ScheduleId(),
-                new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
+            using (var info = new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()))
+            {
+                using (var executor = new ScheduleExecutor(
+                    new List<IProcesExecutableScheduleVertices> 
+                        { 
+                            new StartVertexProcessor(),
+                            new EndVertexProcessor(),
+                            new MarkHistoryVertexProcessor(timeline.Object, m => storedMarker = m),
+                        },
+                    ScheduleConditionStorage.CreateInstanceWithoutTimeline(),
+                    schedule,
+                    new ScheduleId(),
+                    info))
+                {
+                    var state = ScheduleExecutionState.None;
+                    executor.OnFinish += (s, e) => { state = e.State; };
 
-            var state = ScheduleExecutionState.None;
-            executor.OnFinish += (s, e) => { state = e.State; };
-
-            executor.Start();
-            Assert.AreEqual(ScheduleExecutionState.Completed, state);
-            Assert.AreEqual(marker, storedMarker);
+                    executor.Start();
+                    Assert.AreEqual(ScheduleExecutionState.Completed, state);
+                    Assert.AreEqual(marker, storedMarker);
+                }
+            }
         }
 
         [Test]
@@ -200,46 +212,54 @@ namespace Apollo.Core.Dataset.Scheduling
 
             var id = new ScheduleId();
             var schedule = BuildThreeVertexSchedule(new SubScheduleVertex(3, id));
-            var executor = new ScheduleExecutor(
-                new List<IProcesExecutableScheduleVertices> 
-                    { 
-                        new StartVertexProcessor(),
-                        new EndVertexProcessor(),
-                        new SubScheduleVertexProcessor(distributor.Object),
-                    },
-                ScheduleConditionStorage.CreateInstanceWithoutTimeline(),
-                schedule,
-                new ScheduleId(),
-                new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
+            using (var info = new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()))
+            {
+                using (var executor = new ScheduleExecutor(
+                    new List<IProcesExecutableScheduleVertices> 
+                        { 
+                            new StartVertexProcessor(),
+                            new EndVertexProcessor(),
+                            new SubScheduleVertexProcessor(distributor.Object),
+                        },
+                    ScheduleConditionStorage.CreateInstanceWithoutTimeline(),
+                    schedule,
+                    new ScheduleId(),
+                    info))
+                {
+                    var state = ScheduleExecutionState.None;
+                    executor.OnFinish += (s, e) => { state = e.State; };
 
-            var state = ScheduleExecutionState.None;
-            executor.OnFinish += (s, e) => { state = e.State; };
-
-            executor.Start();
-            Assert.AreEqual(ScheduleExecutionState.Completed, state);
+                    executor.Start();
+                    Assert.AreEqual(ScheduleExecutionState.Completed, state);
+                }
+            }
         }
 
         [Test]
         public void RunWithNoOpVertex()
         {
             var schedule = BuildThreeVertexSchedule(new InsertVertex(3));
-            var executor = new ScheduleExecutor(
-                new List<IProcesExecutableScheduleVertices> 
-                    { 
-                        new StartVertexProcessor(),
-                        new EndVertexProcessor(),
-                        new InsertVertexProcessor(),
-                    },
-                ScheduleConditionStorage.CreateInstanceWithoutTimeline(),
-                schedule,
-                new ScheduleId(),
-                new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
+            using (var info = new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()))
+            {
+                using (var executor = new ScheduleExecutor(
+                    new List<IProcesExecutableScheduleVertices> 
+                        { 
+                            new StartVertexProcessor(),
+                            new EndVertexProcessor(),
+                            new InsertVertexProcessor(),
+                        },
+                    ScheduleConditionStorage.CreateInstanceWithoutTimeline(),
+                    schedule,
+                    new ScheduleId(),
+                    info))
+                {
+                    var state = ScheduleExecutionState.None;
+                    executor.OnFinish += (s, e) => { state = e.State; };
 
-            var state = ScheduleExecutionState.None;
-            executor.OnFinish += (s, e) => { state = e.State; };
-
-            executor.Start();
-            Assert.AreEqual(ScheduleExecutionState.Completed, state);
+                    executor.Start();
+                    Assert.AreEqual(ScheduleExecutionState.Completed, state);
+                }
+            }
         }
 
         [Test]
@@ -278,23 +298,27 @@ namespace Apollo.Core.Dataset.Scheduling
                 schedule = new Schedule(graph, start, end);
             }
 
-            var executor = new ScheduleExecutor(
-                new List<IProcesExecutableScheduleVertices> 
-                    { 
-                        new StartVertexProcessor(),
-                        new EndVertexProcessor(),
-                        new InsertVertexProcessor(),
-                    },
-                conditionStorage,
-                schedule,
-                new ScheduleId(),
-                new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
+            using (var info = new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()))
+            {
+                using (var executor = new ScheduleExecutor(
+                    new List<IProcesExecutableScheduleVertices> 
+                        { 
+                            new StartVertexProcessor(),
+                            new EndVertexProcessor(),
+                            new InsertVertexProcessor(),
+                        },
+                    conditionStorage,
+                    schedule,
+                    new ScheduleId(),
+                    info))
+                {
+                    var executionOrder = new List<int>();
+                    executor.OnVertexProcess += (s, e) => executionOrder.Add(e.Vertex);
 
-            var executionOrder = new List<int>();
-            executor.OnVertexProcess += (s, e) => executionOrder.Add(e.Vertex);
-
-            executor.Start();
-            Assert.That(executionOrder, Is.EquivalentTo(new[] { 1, 4, 2 }));
+                    executor.Start();
+                    Assert.That(executionOrder, Is.EquivalentTo(new[] { 1, 4, 2 }));
+                }
+            }
         }
 
         [Test]
@@ -333,23 +357,27 @@ namespace Apollo.Core.Dataset.Scheduling
                 schedule = new Schedule(graph, start, end);
             }
 
-            var executor = new ScheduleExecutor(
-                new List<IProcesExecutableScheduleVertices> 
-                    { 
-                        new StartVertexProcessor(),
-                        new EndVertexProcessor(),
-                        new InsertVertexProcessor(),
-                    },
-                conditionStorage,
-                schedule,
-                new ScheduleId(),
-                new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
+            using (var info = new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()))
+            {
+                using (var executor = new ScheduleExecutor(
+                    new List<IProcesExecutableScheduleVertices> 
+                        { 
+                            new StartVertexProcessor(),
+                            new EndVertexProcessor(),
+                            new InsertVertexProcessor(),
+                        },
+                    conditionStorage,
+                    schedule,
+                    new ScheduleId(),
+                    info))
+                {
+                    var executionOrder = new List<int>();
+                    executor.OnVertexProcess += (s, e) => executionOrder.Add(e.Vertex);
 
-            var executionOrder = new List<int>();
-            executor.OnVertexProcess += (s, e) => executionOrder.Add(e.Vertex);
-
-            executor.Start();
-            Assert.That(executionOrder, Is.EquivalentTo(new[] { 1, 3, 2 }));
+                    executor.Start();
+                    Assert.That(executionOrder, Is.EquivalentTo(new[] { 1, 3, 2 }));
+                }
+            }
         }
 
         [Test]
@@ -373,8 +401,8 @@ namespace Apollo.Core.Dataset.Scheduling
 
             var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var info = collection.Add(
-                action.Object, 
-                "a", 
+                action.Object,
+                "a",
                 "b");
 
             // Making a schedule that looks like:
@@ -410,24 +438,28 @@ namespace Apollo.Core.Dataset.Scheduling
                 schedule = new Schedule(graph, start, end);
             }
 
-            var executor = new ScheduleExecutor(
-                new List<IProcesExecutableScheduleVertices> 
-                    { 
-                        new StartVertexProcessor(),
-                        new EndVertexProcessor(),
-                        new InsertVertexProcessor(),
-                        new ActionVertexProcessor(collection),
-                    },
-                conditionStorage,
-                schedule,
-                new ScheduleId(),
-                new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
+            using (var executionInfo = new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()))
+            {
+                using (var executor = new ScheduleExecutor(
+                    new List<IProcesExecutableScheduleVertices> 
+                        { 
+                            new StartVertexProcessor(),
+                            new EndVertexProcessor(),
+                            new InsertVertexProcessor(),
+                            new ActionVertexProcessor(collection),
+                        },
+                    conditionStorage,
+                    schedule,
+                    new ScheduleId(),
+                    executionInfo))
+                {
+                    var executionOrder = new List<int>();
+                    executor.OnVertexProcess += (s, e) => executionOrder.Add(e.Vertex);
 
-            var executionOrder = new List<int>();
-            executor.OnVertexProcess += (s, e) => executionOrder.Add(e.Vertex);
-
-            executor.Start();
-            Assert.That(executionOrder, Is.EquivalentTo(new[] { 1, 3, 4, 5, 3, 4, 2 }));
+                    executor.Start();
+                    Assert.That(executionOrder, Is.EquivalentTo(new[] { 1, 3, 4, 5, 3, 4, 2 }));
+                }
+            }
         }
 
         [Test]
@@ -449,12 +481,12 @@ namespace Apollo.Core.Dataset.Scheduling
 
             var conditionStorage = ScheduleConditionStorage.CreateInstanceWithoutTimeline();
             var outerLoopConditionInfo = conditionStorage.Add(
-                outerLoopCondition.Object, 
-                "a", 
+                outerLoopCondition.Object,
+                "a",
                 "b");
             var innerLoopConditionInfo = conditionStorage.Add(
-                innerLoopCondition.Object, 
-                "a", 
+                innerLoopCondition.Object,
+                "a",
                 "b");
 
             var outerLoopAction = new Mock<IScheduleAction>();
@@ -471,12 +503,12 @@ namespace Apollo.Core.Dataset.Scheduling
 
             var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var outerLoopInfo = collection.Add(
-                outerLoopAction.Object, 
-                "a", 
+                outerLoopAction.Object,
+                "a",
                 "b");
             var innerLoopInfo = collection.Add(
-                innerLoopAction.Object, 
-                "a", 
+                innerLoopAction.Object,
+                "a",
                 "b");
 
             // Making a schedule that looks like:
@@ -492,30 +524,34 @@ namespace Apollo.Core.Dataset.Scheduling
                 schedule = CreateScheduleGraphWithOuterAndInnerLoop(outerLoopConditionInfo, innerLoopConditionInfo, outerLoopInfo, innerLoopInfo);
             }
 
-            var executor = new ScheduleExecutor(
-                new List<IProcesExecutableScheduleVertices> 
+            using (var info = new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()))
+            {
+                using (var executor = new ScheduleExecutor(
+                    new List<IProcesExecutableScheduleVertices> 
                     { 
                         new StartVertexProcessor(),
                         new EndVertexProcessor(),
                         new InsertVertexProcessor(),
                         new ActionVertexProcessor(collection),
                     },
-                conditionStorage,
-                schedule,
-                new ScheduleId(),
-                new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
+                    conditionStorage,
+                    schedule,
+                    new ScheduleId(),
+                    info))
+                {
+                    var executionOrder = new List<int>();
+                    executor.OnVertexProcess += (s, e) => executionOrder.Add(e.Vertex);
 
-            var executionOrder = new List<int>();
-            executor.OnVertexProcess += (s, e) => executionOrder.Add(e.Vertex);
-
-            executor.Start();
-            Assert.That(executionOrder, Is.EquivalentTo(new[] { 1, 3, 4, 5, 6, 7, 5, 3, 4, 2 }));
+                    executor.Start();
+                    Assert.That(executionOrder, Is.EquivalentTo(new[] { 1, 3, 4, 5, 6, 7, 5, 3, 4, 2 }));
+                }
+            }
         }
 
         [Test]
         [Ignore("Not implemented yet")]
         public void RunWithPause()
-        { 
+        {
         }
 
         [Test]
@@ -554,23 +590,27 @@ namespace Apollo.Core.Dataset.Scheduling
                 schedule = new Schedule(graph, start, end);
             }
 
-            var executor = new ScheduleExecutor(
-                new List<IProcesExecutableScheduleVertices> 
+            using (var info = new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()))
+            {
+                using (var executor = new ScheduleExecutor(
+                    new List<IProcesExecutableScheduleVertices> 
                     { 
                         new StartVertexProcessor(),
                         new EndVertexProcessor(),
                         new InsertVertexProcessor(),
                     },
-                conditionStorage,
-                schedule,
-                new ScheduleId(),
-                new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
+                    conditionStorage,
+                    schedule,
+                    new ScheduleId(),
+                    info))
+                {
+                    var state = ScheduleExecutionState.None;
+                    executor.OnFinish += (s, e) => { state = e.State; };
 
-            var state = ScheduleExecutionState.None;
-            executor.OnFinish += (s, e) => { state = e.State; };
-
-            executor.Start();
-            Assert.AreEqual(ScheduleExecutionState.NoTraversableEdgeFound, state);
+                    executor.Start();
+                    Assert.AreEqual(ScheduleExecutionState.NoTraversableEdgeFound, state);
+                }
+            }
         }
     }
 }

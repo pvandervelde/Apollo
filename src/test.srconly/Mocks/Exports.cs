@@ -10,6 +10,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Test.Mocks
 {
+    [SuppressMessage("Microsoft.Design", "CA1040:AvoidEmptyInterfaces",
+        Justification = "Need an exporting interface but we never use any of the members.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
@@ -181,10 +183,14 @@ namespace Test.Mocks
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
         Justification = "These classes are only here for testing purposes so there's little point in having them in a separate file each.")]
-    public sealed class ExportOnMultiParameterMethod
+    public sealed class ExportOnMethodWithMultipleParameters
     {
         private IExportingInterface m_Value = new MockExportingInterfaceImplementation();
 
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "input1",
+            Justification = "Parameter is used by reflection")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "input2",
+            Justification = "Parameter is used by reflection")]
         [Export]
         public IExportingInterface ExportingMethod(bool input1, bool input2)
         {

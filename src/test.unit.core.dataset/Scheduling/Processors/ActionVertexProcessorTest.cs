@@ -31,8 +31,11 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         {
             var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var processor = new ActionVertexProcessor(collection);
-            var state = processor.Process(new StartVertex(1), new ScheduleExecutionInfo());
-            Assert.AreEqual(ScheduleExecutionState.IncorrectProcessorForVertex, state);
+            using (var info = new ScheduleExecutionInfo())
+            {
+                var state = processor.Process(new StartVertex(1), info);
+                Assert.AreEqual(ScheduleExecutionState.IncorrectProcessorForVertex, state);
+            }
         }
 
         [Test]
@@ -46,16 +49,18 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
 
             var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var info = collection.Add(
-                action.Object, 
-                "a", 
+                action.Object,
+                "a",
                 "b");
 
-            var executionInfo = new ScheduleExecutionInfo();
-            executionInfo.CancelScheduleExecution();
+            using (var executionInfo = new ScheduleExecutionInfo())
+            {
+                executionInfo.CancelScheduleExecution();
 
-            var processor = new ActionVertexProcessor(collection);
-            var state = processor.Process(new ExecutingActionVertex(1, info.Id), executionInfo);
-            Assert.AreEqual(ScheduleExecutionState.Canceled, state);
+                var processor = new ActionVertexProcessor(collection);
+                var state = processor.Process(new ExecutingActionVertex(1, info.Id), executionInfo);
+                Assert.AreEqual(ScheduleExecutionState.Canceled, state);
+            }
         }
 
         [Test]
@@ -75,14 +80,17 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
 
             var collection = ScheduleActionStorage.CreateInstanceWithoutTimeline();
             var info = collection.Add(
-                action.Object, 
-                "a", 
+                action.Object,
+                "a",
                 "b");
 
             var processor = new ActionVertexProcessor(collection);
-            var state = processor.Process(new ExecutingActionVertex(1, info.Id), new ScheduleExecutionInfo());
-            Assert.AreEqual(ScheduleExecutionState.Executing, state);
-            action.Verify(a => a.Execute(It.IsAny<CancellationToken>()), Times.Once());
+            using (var executionInfo = new ScheduleExecutionInfo())
+            {
+                var state = processor.Process(new ExecutingActionVertex(1, info.Id), executionInfo);
+                Assert.AreEqual(ScheduleExecutionState.Executing, state);
+                action.Verify(a => a.Execute(It.IsAny<CancellationToken>()), Times.Once());
+            }
         }
     }
 }

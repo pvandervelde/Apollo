@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Abstractions;
 using System.Security.AccessControl;
@@ -18,6 +19,8 @@ namespace Test.Mocks
         private readonly Dictionary<string, string> m_Content
             = new Dictionary<string, string>();
 
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "This method may be used in other projects.")]
         public MockFile(string path, string content)
         {
             m_Content.Add(path, content);
@@ -158,6 +161,8 @@ namespace Test.Mocks
             return Open(path, mode, access, FileShare.ReadWrite);
         }
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
+            Justification = "Disposing of the output stream should be done by the caller.")]
         public override Stream Open(string path, FileMode mode, FileAccess access, FileShare share)
         {
             var output = new MemoryStream();
