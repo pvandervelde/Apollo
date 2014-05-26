@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using System.Linq;
-using Apollo.Utilities;
 using Moq;
 using NUnit.Framework;
 using Test.Mocks;
@@ -34,9 +33,7 @@ namespace Apollo.UI.Wpf.Feedback
                     .Returns(mockDirectory);
             }
 
-            var fileConstants = new FileConstants(new ApplicationConstants());
-
-            var collector = new FeedbackReportCollector(fileSystem.Object, fileConstants);
+            var collector = new FeedbackReportCollector(fileSystem.Object);
             var reports = collector.LocateFeedbackReports();
 
             Assert.That(

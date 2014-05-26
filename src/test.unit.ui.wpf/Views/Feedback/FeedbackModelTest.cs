@@ -127,48 +127,51 @@ namespace Apollo.UI.Wpf.Views.Feedback
                     .Verifiable();
             }
 
-            var level = FeedbackLevel.Good;
-            var text = "a";
-            var builder = new Mock<IBuildReports>();
+            using (var stream = new MemoryStream())
             {
-                builder.Setup(b => b.AtTime(It.IsAny<DateTimeOffset>(), It.IsAny<TimeZoneInfo>()))
-                    .Returns(builder.Object);
-                builder.Setup(b => b.InApplication(It.IsAny<ApplicationData>()))
-                    .Returns(builder.Object);
-                builder.Setup(b => b.OnMachine(It.IsAny<MachineData>()))
-                    .Returns(builder.Object);
-                builder.Setup(b => b.OnOperatingSystem(It.IsAny<OperatingSystemData>()))
-                    .Callback<OperatingSystemData>(
-                        o =>
-                        {
-                            Assert.AreEqual(Environment.OSVersion.Platform.ToString(), o.Name);
-                            Assert.AreEqual(Environment.OSVersion.Version, o.PlatformVersion);
-                        })
-                    .Returns(builder.Object);
-                builder.Setup(b => b.WithFeedback(It.IsAny<FeedbackData>()))
-                    .Callback<FeedbackData>(
-                        f =>
-                        {
-                            Assert.AreEqual(level, f.Level);
-                            Assert.AreEqual(text, f.Description);
-                        })
-                    .Returns(builder.Object);
-                builder.Setup(b => b.ToReport())
-                    .Returns(new MemoryStream());
+                var level = FeedbackLevel.Good;
+                var text = "a";
+                var builder = new Mock<IBuildReports>();
+                {
+                    builder.Setup(b => b.AtTime(It.IsAny<DateTimeOffset>(), It.IsAny<TimeZoneInfo>()))
+                        .Returns(builder.Object);
+                    builder.Setup(b => b.InApplication(It.IsAny<ApplicationData>()))
+                        .Returns(builder.Object);
+                    builder.Setup(b => b.OnMachine(It.IsAny<MachineData>()))
+                        .Returns(builder.Object);
+                    builder.Setup(b => b.OnOperatingSystem(It.IsAny<OperatingSystemData>()))
+                        .Callback<OperatingSystemData>(
+                            o =>
+                            {
+                                Assert.AreEqual(Environment.OSVersion.Platform.ToString(), o.Name);
+                                Assert.AreEqual(Environment.OSVersion.Version, o.PlatformVersion);
+                            })
+                        .Returns(builder.Object);
+                    builder.Setup(b => b.WithFeedback(It.IsAny<FeedbackData>()))
+                        .Callback<FeedbackData>(
+                            f =>
+                            {
+                                Assert.AreEqual(level, f.Level);
+                                Assert.AreEqual(text, f.Description);
+                            })
+                        .Returns(builder.Object);
+                    builder.Setup(b => b.ToReport())
+                        .Returns(stream);
+                }
+
+                Func<IBuildReports> builderFunc = () => builder.Object;
+
+                var model = new FeedbackModel(context.Object, command.Object, builderFunc);
+                model.Level = level;
+                model.Description = text;
+                model.SendReport();
+
+                command.Verify(c => c.Execute(It.IsAny<object>()), Times.Once());
+
+                Assert.AreEqual(FeedbackLevel.None, model.Level);
+                Assert.AreEqual(string.Empty, model.Description);
+                Assert.IsFalse(model.CanSendReport);
             }
-
-            Func<IBuildReports> builderFunc = () => builder.Object;
-
-            var model = new FeedbackModel(context.Object, command.Object, builderFunc);
-            model.Level = level;
-            model.Description = text;
-            model.SendReport();
-
-            command.Verify(c => c.Execute(It.IsAny<object>()), Times.Once());
-
-            Assert.AreEqual(FeedbackLevel.None, model.Level);
-            Assert.AreEqual(string.Empty, model.Description);
-            Assert.IsFalse(model.CanSendReport);
         }
 
         [Test]
@@ -182,48 +185,51 @@ namespace Apollo.UI.Wpf.Views.Feedback
                     .Verifiable();
             }
 
-            var level = FeedbackLevel.Good;
-            var text = "a";
-            var builder = new Mock<IBuildReports>();
+            using (var stream = new MemoryStream())
             {
-                builder.Setup(b => b.AtTime(It.IsAny<DateTimeOffset>(), It.IsAny<TimeZoneInfo>()))
-                    .Returns(builder.Object);
-                builder.Setup(b => b.InApplication(It.IsAny<ApplicationData>()))
-                    .Returns(builder.Object);
-                builder.Setup(b => b.OnMachine(It.IsAny<MachineData>()))
-                    .Returns(builder.Object);
-                builder.Setup(b => b.OnOperatingSystem(It.IsAny<OperatingSystemData>()))
-                    .Callback<OperatingSystemData>(
-                        o =>
-                        {
-                            Assert.AreEqual(Environment.OSVersion.Platform.ToString(), o.Name);
-                            Assert.AreEqual(Environment.OSVersion.Version, o.PlatformVersion);
-                        })
-                    .Returns(builder.Object);
-                builder.Setup(b => b.WithFeedback(It.IsAny<FeedbackData>()))
-                    .Callback<FeedbackData>(
-                        f =>
-                        {
-                            Assert.AreEqual(level, f.Level);
-                            Assert.AreEqual(text, f.Description);
-                        })
-                    .Returns(builder.Object);
-                builder.Setup(b => b.ToReport())
-                    .Returns(new MemoryStream());
+                var level = FeedbackLevel.Good;
+                var text = "a";
+                var builder = new Mock<IBuildReports>();
+                {
+                    builder.Setup(b => b.AtTime(It.IsAny<DateTimeOffset>(), It.IsAny<TimeZoneInfo>()))
+                        .Returns(builder.Object);
+                    builder.Setup(b => b.InApplication(It.IsAny<ApplicationData>()))
+                        .Returns(builder.Object);
+                    builder.Setup(b => b.OnMachine(It.IsAny<MachineData>()))
+                        .Returns(builder.Object);
+                    builder.Setup(b => b.OnOperatingSystem(It.IsAny<OperatingSystemData>()))
+                        .Callback<OperatingSystemData>(
+                            o =>
+                            {
+                                Assert.AreEqual(Environment.OSVersion.Platform.ToString(), o.Name);
+                                Assert.AreEqual(Environment.OSVersion.Version, o.PlatformVersion);
+                            })
+                        .Returns(builder.Object);
+                    builder.Setup(b => b.WithFeedback(It.IsAny<FeedbackData>()))
+                        .Callback<FeedbackData>(
+                            f =>
+                            {
+                                Assert.AreEqual(level, f.Level);
+                                Assert.AreEqual(text, f.Description);
+                            })
+                        .Returns(builder.Object);
+                    builder.Setup(b => b.ToReport())
+                        .Returns(stream);
+                }
+
+                Func<IBuildReports> builderFunc = () => builder.Object;
+
+                var model = new FeedbackModel(context.Object, command.Object, builderFunc);
+                model.Level = level;
+                model.Description = text;
+                model.SendReport();
+
+                command.Verify(c => c.Execute(It.IsAny<object>()), Times.Once());
+
+                Assert.AreEqual(FeedbackLevel.None, model.Level);
+                Assert.AreEqual(string.Empty, model.Description);
+                Assert.IsFalse(model.CanSendReport);
             }
-
-            Func<IBuildReports> builderFunc = () => builder.Object;
-
-            var model = new FeedbackModel(context.Object, command.Object, builderFunc);
-            model.Level = level;
-            model.Description = text;
-            model.SendReport();
-
-            command.Verify(c => c.Execute(It.IsAny<object>()), Times.Once());
-
-            Assert.AreEqual(FeedbackLevel.None, model.Level);
-            Assert.AreEqual(string.Empty, model.Description);
-            Assert.IsFalse(model.CanSendReport);
         }
     }
 }

@@ -66,7 +66,7 @@ namespace Apollo.UI.Wpf.Commands
         }
 
         [Test]
-        public void CanActivateWithNonActivatableDataset()
+        public void CanActivateWithDatasetThatCannotBeActivated()
         {
             var project = new Mock<ILinkToProjects>();
 

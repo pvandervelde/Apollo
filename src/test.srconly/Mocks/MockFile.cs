@@ -26,6 +26,8 @@ namespace Test.Mocks
             m_Content.Add(path, content);
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "This method may be used in other projects.")]
         public MockFile(Dictionary<string, string> files)
         {
             m_Content = files;

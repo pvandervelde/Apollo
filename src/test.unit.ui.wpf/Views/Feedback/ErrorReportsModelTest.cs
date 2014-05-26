@@ -210,7 +210,7 @@ namespace Apollo.UI.Wpf.Views.Feedback
         }
 
         [Test]
-        public void SendReportsWithIoException()
+        public void SendReportsWithIOException()
         {
             var context = new Mock<IContextAware>();
             {

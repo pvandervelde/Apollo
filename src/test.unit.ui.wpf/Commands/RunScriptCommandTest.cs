@@ -43,26 +43,32 @@ namespace Apollo.UI.Wpf.Commands
         [Test]
         public void CancelScriptRun()
         {
-            var tuple = new Tuple<Task, CancellationTokenSource>(new Task(() => { }), new CancellationTokenSource());
-            var scriptHost = new Mock<IHostScripts>();
+            using (var task = new Task(() => { }))
             {
-                scriptHost.Setup(s => s.Execute(It.IsAny<ScriptLanguage>(), It.IsAny<string>(), It.IsAny<TextWriter>()))
-                    .Returns(tuple);
-            }
-
-            var command = new RunScriptCommand(scriptHost.Object);
-            Assert.IsTrue(command.CanExecute(null));
-
-            var info = new ScriptRunInformation
+                using (var source = new CancellationTokenSource())
                 {
-                    Language = ScriptLanguage.IronPython,
-                    Script = "a",
-                    ScriptOutput = new ScriptOutputPipe(),
-                };
-            command.Execute(info);
+                    var tuple = new Tuple<Task, CancellationTokenSource>(task, source);
+                    var scriptHost = new Mock<IHostScripts>();
+                    {
+                        scriptHost.Setup(s => s.Execute(It.IsAny<ScriptLanguage>(), It.IsAny<string>(), It.IsAny<TextWriter>()))
+                            .Returns(tuple);
+                    }
 
-            Assert.AreSame(tuple.Item1, info.ScriptRunningTask);
-            Assert.AreSame(tuple.Item2, info.CancellationToken);
+                    var command = new RunScriptCommand(scriptHost.Object);
+                    Assert.IsTrue(command.CanExecute(null));
+
+                    var info = new ScriptRunInformation
+                    {
+                        Language = ScriptLanguage.IronPython,
+                        Script = "a",
+                        ScriptOutput = new ScriptOutputPipe(),
+                    };
+                    command.Execute(info);
+
+                    Assert.AreSame(tuple.Item1, info.ScriptRunningTask);
+                    Assert.AreSame(tuple.Item2, info.CancellationToken);
+                }
+            }
         }
     }
 }
