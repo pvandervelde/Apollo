@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using TestStack.White;
 using TestStack.White.Factory;
 using TestStack.White.UIItems.WindowItems;
@@ -21,6 +22,8 @@ namespace Test.Regression.Explorer.Controls
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
         /// <returns>The main window of the application.</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "MainWindow",
+            Justification = "MainWindow is the default spelling for the main window.")]
         public static Window MainWindow(Application application, Log log)
         {
             const string prefix = "Dialogs - MainWindow";
@@ -52,6 +55,8 @@ namespace Test.Regression.Explorer.Controls
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
         /// <returns>The about window of the application.</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "AboutWindow",
+            Justification = "AboutWindow is the default spelling for the about window.")]
         public static Window AboutWindow(Application application, Log log)
         {
             const string prefix = "Dialogs - AboutWindow";
@@ -83,6 +88,8 @@ namespace Test.Regression.Explorer.Controls
                 });
         }
 
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "MachineSelectionWindow",
+            Justification = "MachineSelectionWindow is the default spelling for the machine selection window.")]
         public static Window DatasetMachineSelectionWindow(Application application, Log log)
         {
             const string prefix = "Dialogs - MachineSelectionWindow";

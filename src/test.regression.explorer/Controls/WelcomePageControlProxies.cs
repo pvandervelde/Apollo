@@ -362,7 +362,7 @@ namespace Test.Regression.Explorer.Controls
             }
             catch (Exception e)
             {
-                throw new RegressionTestFailedException(prefix + "Failed to select the start page", e);
+                throw new RegressionTestFailedException(prefix + " - Failed to select the start page", e);
             }
 
             // Check 'Show welcome page on application start' flag
@@ -404,7 +404,7 @@ namespace Test.Regression.Explorer.Controls
             catch (Exception e)
             {
                 throw new RegressionTestFailedException(
-                    prefix + "Failed to uncheck the 'Show welcome page on application start' checkbox.", 
+                    prefix + " - Failed to uncheck the 'Show welcome page on application start' checkbox.", 
                     e);
             }
         }

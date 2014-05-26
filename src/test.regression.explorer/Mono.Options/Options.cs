@@ -128,6 +128,7 @@
 //
 
 using System;
+using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -153,6 +154,7 @@ namespace NDesk.Options
 namespace Mono.Options
 #endif
 {
+    [GeneratedCode("NuGet", "1.1")]
     internal static class StringCoda
     {
 
@@ -242,6 +244,7 @@ namespace Mono.Options
         }
     }
 
+    [GeneratedCode("NuGet", "1.1")]
     internal class OptionValueCollection : IList, IList<string>
     {
 
@@ -336,6 +339,7 @@ namespace Mono.Options
         }
     }
 
+    [GeneratedCode("NuGet", "1.1")]
     internal class OptionContext
     {
         private Option option;
@@ -379,6 +383,7 @@ namespace Mono.Options
         }
     }
 
+    [GeneratedCode("NuGet", "1.1")]
     internal enum OptionValueType
     {
         None,
@@ -386,6 +391,7 @@ namespace Mono.Options
         Required,
     }
 
+    [GeneratedCode("NuGet", "1.1")]
     internal abstract class Option
     {
         string prototype, description;
@@ -587,6 +593,7 @@ namespace Mono.Options
         }
     }
 
+    [GeneratedCode("NuGet", "1.1")]
     internal abstract class ArgumentSource
     {
 
@@ -663,6 +670,7 @@ namespace Mono.Options
         }
     }
 
+    [GeneratedCode("NuGet", "1.1")]
     internal class ResponseFileSource : ArgumentSource
     {
 
@@ -689,6 +697,7 @@ namespace Mono.Options
     }
 
     [Serializable]
+    [GeneratedCode("NuGet", "1.1")]
     internal class OptionException : Exception
     {
         private string option;
@@ -728,8 +737,10 @@ namespace Mono.Options
         }
     }
 
+    [GeneratedCode("NuGet", "1.1")]
     internal delegate void OptionAction<TKey, TValue>(TKey key, TValue value);
 
+    [GeneratedCode("NuGet", "1.1")]
     internal class OptionSet : KeyedCollection<string, Option>
     {
         public OptionSet()

@@ -47,22 +47,6 @@ namespace Test.Regression.Explorer
         /// <summary>
         /// Initializes a new instance of the <see cref="WhiteLogRedirector"/> class.
         /// </summary>
-        /// <param name="diagnostics">The object that provides the logging for the application.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
-        /// </exception>
-        public WhiteLogRedirector(SystemDiagnostics diagnostics)
-        {
-            {
-                Lokad.Enforce.Argument(() => diagnostics);
-            }
-
-            m_Diagnostics = diagnostics;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WhiteLogRedirector"/> class.
-        /// </summary>
         /// <param name="name">The name for the logger.</param>
         /// <param name="diagnostics">The object that provides the logging for the application.</param>
         /// <exception cref="ArgumentNullException">
@@ -70,24 +54,6 @@ namespace Test.Regression.Explorer
         /// </exception>
         public WhiteLogRedirector(string name, SystemDiagnostics diagnostics)
             : base(name)
-        {
-            {
-                Lokad.Enforce.Argument(() => diagnostics);
-            }
-
-            m_Diagnostics = diagnostics;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WhiteLogRedirector"/> class.
-        /// </summary>
-        /// <param name="level">The default log level.</param>
-        /// <param name="diagnostics">The object that provides the logging for the application.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
-        /// </exception>
-        public WhiteLogRedirector(LoggerLevel level, SystemDiagnostics diagnostics)
-            : base(level)
         {
             {
                 Lokad.Enforce.Argument(() => diagnostics);

@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -206,6 +207,8 @@ namespace Test.Regression.Explorer.Controls
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
         /// <returns>The text contained in the project name text control; or <see langword="null"/> if the read failed.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "This is a regression test which should always finish normally.")]
         public static string ProjectName(Application application, Log log)
         {
             const string prefix = "Project page - Get project name";
@@ -265,6 +268,8 @@ namespace Test.Regression.Explorer.Controls
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
         /// <returns>The text contained in the project summary text control; or <see langword="null"/> if the read failed.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "This is a regression test which should always finish normally.")]
         public static string ProjectSummary(Application application, Log log)
         {
             const string prefix = "Project page - Get project summary";
@@ -307,7 +312,7 @@ namespace Test.Regression.Explorer.Controls
 
             try
             {
-                return int.Parse(label.Text);
+                return int.Parse(label.Text, CultureInfo.CurrentCulture);
             }
             catch (Exception e)
             {
@@ -461,6 +466,8 @@ namespace Test.Regression.Explorer.Controls
         /// <param name="log">The log object.</param>
         /// <param name="id">The ID of the dataset.</param>
         /// <returns>The text contained in the project name text control; or <see langword="null"/> if the read failed.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "This is a regression test which should always finish normally.")]
         public static string DatasetName(Application application, Log log, int id)
         {
             const string prefix = "Project page - Get dataset name";
@@ -522,6 +529,8 @@ namespace Test.Regression.Explorer.Controls
         /// <param name="log">The log object.</param>
         /// <param name="id">The ID of the dataset.</param>
         /// <returns>The text contained in the project summary text control; or <see langword="null"/> if the read failed.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "This is a regression test which should always finish normally.")]
         public static string DatasetSummary(Application application, Log log, int id)
         {
             const string prefix = "Project page - Get dataset summary";
@@ -703,10 +712,12 @@ namespace Test.Regression.Explorer.Controls
             }
             catch (Exception e)
             {
-                throw new RegressionTestFailedException(prefix + "Failed to confirm the machine selection.", e);
+                throw new RegressionTestFailedException(prefix + " - Failed to confirm the machine selection.", e);
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "This is a regression test which should always finish normally.")]
         private static void WaitForDatasetActivation(Application application, Log log, int id)
         {
             const string prefix = "Project page - Wait for dataset activation";
@@ -755,6 +766,8 @@ namespace Test.Regression.Explorer.Controls
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "This is a regression test which should always finish normally.")]
         public static bool IsDatasetActivated(Application application, Log log, int id)
         {
             const string prefix = "Project page - Wait for dataset deactivation";
@@ -849,6 +862,8 @@ namespace Test.Regression.Explorer.Controls
             WaitForDatasetDeactivation(application, log, id);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "This is a regression test which should always finish normally.")]
         private static void WaitForDatasetDeactivation(Application application, Log log, int id)
         {
             const string prefix = "Project page - Wait for dataset deactivation";
