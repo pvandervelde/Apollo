@@ -20,14 +20,16 @@ namespace Apollo.Core.Host.Scripting
         {
             var value = false;
             bool eventWasRaised = false;
-            var pipe = new ScriptOutputPipe();
-            pipe.OnScriptOutput +=
-                (s, e) =>
-                {
-                    eventWasRaised = true;
-                    Assert.AreEqual(value.ToString(), e.Text);
-                };
-            pipe.Write(value);
+            using (var pipe = new ScriptOutputPipe())
+            {
+                pipe.OnScriptOutput +=
+                    (s, e) =>
+                    {
+                        eventWasRaised = true;
+                        Assert.AreEqual(value.ToString(CultureInfo.InvariantCulture), e.Text);
+                    };
+                pipe.Write(value);
+            }
 
             Assert.IsTrue(eventWasRaised);
         }
@@ -37,14 +39,16 @@ namespace Apollo.Core.Host.Scripting
         {
             var value = 'c';
             bool eventWasRaised = false;
-            var pipe = new ScriptOutputPipe();
-            pipe.OnScriptOutput +=
-                (s, e) =>
-                {
-                    eventWasRaised = true;
-                    Assert.AreEqual(value.ToString(), e.Text);
-                };
-            pipe.Write(value);
+            using (var pipe = new ScriptOutputPipe())
+            {
+                pipe.OnScriptOutput +=
+                    (s, e) =>
+                    {
+                        eventWasRaised = true;
+                        Assert.AreEqual(value.ToString(CultureInfo.InvariantCulture), e.Text);
+                    };
+                pipe.Write(value);
+            }
 
             Assert.IsTrue(eventWasRaised);
         }
@@ -52,17 +56,19 @@ namespace Apollo.Core.Host.Scripting
         [Test]
         public void WriteCharacterArray()
         {
-            var value = new char[] { 'a', 'b', 'c' };
+            var value = new[] { 'a', 'b', 'c' };
 
             bool eventWasRaised = false;
-            var pipe = new ScriptOutputPipe();
-            pipe.OnScriptOutput +=
-                (s, e) =>
-                {
-                    eventWasRaised = true;
-                    Assert.AreEqual("abc", e.Text);
-                };
-            pipe.Write(value);
+            using (var pipe = new ScriptOutputPipe())
+            {
+                pipe.OnScriptOutput +=
+                    (s, e) =>
+                    {
+                        eventWasRaised = true;
+                        Assert.AreEqual("abc", e.Text);
+                    };
+                pipe.Write(value);
+            }
 
             Assert.IsTrue(eventWasRaised);
         }
@@ -70,17 +76,19 @@ namespace Apollo.Core.Host.Scripting
         [Test]
         public void WritePartOfCharacterArray()
         {
-            var value = new char[] { 'a', 'b', 'c' };
+            var value = new[] { 'a', 'b', 'c' };
 
             bool eventWasRaised = false;
-            var pipe = new ScriptOutputPipe();
-            pipe.OnScriptOutput +=
-                (s, e) =>
-                {
-                    eventWasRaised = true;
-                    Assert.AreEqual("b", e.Text);
-                };
-            pipe.Write(value, 1, 1);
+            using (var pipe = new ScriptOutputPipe())
+            {
+                pipe.OnScriptOutput +=
+                    (s, e) =>
+                    {
+                        eventWasRaised = true;
+                        Assert.AreEqual("b", e.Text);
+                    };
+                pipe.Write(value, 1, 1);
+            }
 
             Assert.IsTrue(eventWasRaised);
         }
@@ -90,14 +98,16 @@ namespace Apollo.Core.Host.Scripting
         {
             var value = 2.5M;
             bool eventWasRaised = false;
-            var pipe = new ScriptOutputPipe();
-            pipe.OnScriptOutput +=
-                (s, e) =>
-                {
-                    eventWasRaised = true;
-                    Assert.AreEqual(value.ToString(), e.Text);
-                };
-            pipe.Write(value);
+            using (var pipe = new ScriptOutputPipe())
+            {
+                pipe.OnScriptOutput +=
+                    (s, e) =>
+                    {
+                        eventWasRaised = true;
+                        Assert.AreEqual(value.ToString(CultureInfo.InvariantCulture), e.Text);
+                    };
+                pipe.Write(value);
+            }
 
             Assert.IsTrue(eventWasRaised);
         }
@@ -107,14 +117,16 @@ namespace Apollo.Core.Host.Scripting
         {
             var value = 2.5;
             bool eventWasRaised = false;
-            var pipe = new ScriptOutputPipe();
-            pipe.OnScriptOutput +=
-                (s, e) =>
-                {
-                    eventWasRaised = true;
-                    Assert.AreEqual(value.ToString(), e.Text);
-                };
-            pipe.Write(value);
+            using (var pipe = new ScriptOutputPipe())
+            {
+                pipe.OnScriptOutput +=
+                    (s, e) =>
+                    {
+                        eventWasRaised = true;
+                        Assert.AreEqual(value.ToString(CultureInfo.InvariantCulture), e.Text);
+                    };
+                pipe.Write(value);
+            }
 
             Assert.IsTrue(eventWasRaised);
         }
@@ -124,14 +136,16 @@ namespace Apollo.Core.Host.Scripting
         {
             var value = 2.5F;
             bool eventWasRaised = false;
-            var pipe = new ScriptOutputPipe();
-            pipe.OnScriptOutput +=
-                (s, e) =>
-                {
-                    eventWasRaised = true;
-                    Assert.AreEqual(value.ToString(), e.Text);
-                };
-            pipe.Write(value);
+            using (var pipe = new ScriptOutputPipe())
+            {
+                pipe.OnScriptOutput +=
+                    (s, e) =>
+                    {
+                        eventWasRaised = true;
+                        Assert.AreEqual(value.ToString(CultureInfo.InvariantCulture), e.Text);
+                    };
+                pipe.Write(value);
+            }
 
             Assert.IsTrue(eventWasRaised);
         }
@@ -141,14 +155,16 @@ namespace Apollo.Core.Host.Scripting
         {
             var value = 10;
             bool eventWasRaised = false;
-            var pipe = new ScriptOutputPipe();
-            pipe.OnScriptOutput +=
-                (s, e) =>
-                {
-                    eventWasRaised = true;
-                    Assert.AreEqual(value.ToString(), e.Text);
-                };
-            pipe.Write(value);
+            using (var pipe = new ScriptOutputPipe())
+            {
+                pipe.OnScriptOutput +=
+                    (s, e) =>
+                    {
+                        eventWasRaised = true;
+                        Assert.AreEqual(value.ToString(CultureInfo.InvariantCulture), e.Text);
+                    };
+                pipe.Write(value);
+            }
 
             Assert.IsTrue(eventWasRaised);
         }
@@ -158,14 +174,16 @@ namespace Apollo.Core.Host.Scripting
         {
             var value = 10L;
             bool eventWasRaised = false;
-            var pipe = new ScriptOutputPipe();
-            pipe.OnScriptOutput +=
-                (s, e) =>
-                {
-                    eventWasRaised = true;
-                    Assert.AreEqual(value.ToString(), e.Text);
-                };
-            pipe.Write(value);
+            using (var pipe = new ScriptOutputPipe())
+            {
+                pipe.OnScriptOutput +=
+                    (s, e) =>
+                    {
+                        eventWasRaised = true;
+                        Assert.AreEqual(value.ToString(CultureInfo.InvariantCulture), e.Text);
+                    };
+                pipe.Write(value);
+            }
 
             Assert.IsTrue(eventWasRaised);
         }
@@ -175,14 +193,16 @@ namespace Apollo.Core.Host.Scripting
         {
             var value = new object();
             bool eventWasRaised = false;
-            var pipe = new ScriptOutputPipe();
-            pipe.OnScriptOutput +=
-                (s, e) =>
-                {
-                    eventWasRaised = true;
-                    Assert.AreEqual(value.ToString(), e.Text);
-                };
-            pipe.Write(value);
+            using (var pipe = new ScriptOutputPipe())
+            {
+                pipe.OnScriptOutput +=
+                    (s, e) =>
+                    {
+                        eventWasRaised = true;
+                        Assert.AreEqual(value.ToString(), e.Text);
+                    };
+                pipe.Write(value);
+            }
 
             Assert.IsTrue(eventWasRaised);
         }
@@ -194,19 +214,21 @@ namespace Apollo.Core.Host.Scripting
             var arg1 = 10;
 
             bool eventWasRaised = false;
-            var pipe = new ScriptOutputPipe();
-            pipe.OnScriptOutput +=
-                (s, e) =>
-                {
-                    eventWasRaised = true;
-                    Assert.AreEqual(
-                        string.Format(
-                            CultureInfo.CurrentCulture,
-                            value,
-                            arg1), 
-                        e.Text);
-                };
-            pipe.Write(value, arg1);
+            using (var pipe = new ScriptOutputPipe())
+            {
+                pipe.OnScriptOutput +=
+                    (s, e) =>
+                    {
+                        eventWasRaised = true;
+                        Assert.AreEqual(
+                            string.Format(
+                                CultureInfo.CurrentCulture,
+                                value,
+                                arg1), 
+                            e.Text);
+                    };
+                pipe.Write(value, arg1);
+            }
 
             Assert.IsTrue(eventWasRaised);
         }
@@ -219,20 +241,22 @@ namespace Apollo.Core.Host.Scripting
             var arg2 = 5;
 
             bool eventWasRaised = false;
-            var pipe = new ScriptOutputPipe();
-            pipe.OnScriptOutput +=
-                (s, e) =>
-                {
-                    eventWasRaised = true;
-                    Assert.AreEqual(
-                        string.Format(
-                            CultureInfo.CurrentCulture,
-                            value,
-                            arg1,
-                            arg2),
-                        e.Text);
-                };
-            pipe.Write(value, arg1, arg2);
+            using (var pipe = new ScriptOutputPipe())
+            {
+                pipe.OnScriptOutput +=
+                    (s, e) =>
+                    {
+                        eventWasRaised = true;
+                        Assert.AreEqual(
+                            string.Format(
+                                CultureInfo.CurrentCulture,
+                                value,
+                                arg1,
+                                arg2),
+                            e.Text);
+                    };
+                pipe.Write(value, arg1, arg2);
+            }
 
             Assert.IsTrue(eventWasRaised);
         }
@@ -246,21 +270,23 @@ namespace Apollo.Core.Host.Scripting
             var arg3 = 7;
 
             bool eventWasRaised = false;
-            var pipe = new ScriptOutputPipe();
-            pipe.OnScriptOutput +=
-                (s, e) =>
-                {
-                    eventWasRaised = true;
-                    Assert.AreEqual(
-                        string.Format(
-                            CultureInfo.CurrentCulture,
-                            value,
-                            arg1,
-                            arg2,
-                            arg3),
-                        e.Text);
-                };
-            pipe.Write(value, arg1, arg2, arg3);
+            using (var pipe = new ScriptOutputPipe())
+            {
+                pipe.OnScriptOutput +=
+                    (s, e) =>
+                    {
+                        eventWasRaised = true;
+                        Assert.AreEqual(
+                            string.Format(
+                                CultureInfo.CurrentCulture,
+                                value,
+                                arg1,
+                                arg2,
+                                arg3),
+                            e.Text);
+                    };
+                pipe.Write(value, arg1, arg2, arg3);
+            }
 
             Assert.IsTrue(eventWasRaised);
         }
@@ -275,22 +301,24 @@ namespace Apollo.Core.Host.Scripting
             var arg4 = 40;
 
             bool eventWasRaised = false;
-            var pipe = new ScriptOutputPipe();
-            pipe.OnScriptOutput +=
-                (s, e) =>
-                {
-                    eventWasRaised = true;
-                    Assert.AreEqual(
-                        string.Format(
-                            CultureInfo.CurrentCulture,
-                            value,
-                            arg1,
-                            arg2,
-                            arg3,
-                            arg4),
-                        e.Text);
-                };
-            pipe.Write(value, arg1, arg2, arg3, arg4);
+            using (var pipe = new ScriptOutputPipe())
+            {
+                pipe.OnScriptOutput +=
+                    (s, e) =>
+                    {
+                        eventWasRaised = true;
+                        Assert.AreEqual(
+                            string.Format(
+                                CultureInfo.CurrentCulture,
+                                value,
+                                arg1,
+                                arg2,
+                                arg3,
+                                arg4),
+                            e.Text);
+                    };
+                pipe.Write(value, arg1, arg2, arg3, arg4);
+            }
 
             Assert.IsTrue(eventWasRaised);
         }
@@ -300,14 +328,16 @@ namespace Apollo.Core.Host.Scripting
         {
             var value = "string";
             bool eventWasRaised = false;
-            var pipe = new ScriptOutputPipe();
-            pipe.OnScriptOutput +=
-                (s, e) =>
-                {
-                    eventWasRaised = true;
-                    Assert.AreEqual(value.ToString(), e.Text);
-                };
-            pipe.Write(value);
+            using (var pipe = new ScriptOutputPipe())
+            {
+                pipe.OnScriptOutput +=
+                    (s, e) =>
+                    {
+                        eventWasRaised = true;
+                        Assert.AreEqual(value.ToString(CultureInfo.InvariantCulture), e.Text);
+                    };
+                pipe.Write(value);
+            }
 
             Assert.IsTrue(eventWasRaised);
         }
@@ -317,14 +347,16 @@ namespace Apollo.Core.Host.Scripting
         {
             var value = 10U;
             bool eventWasRaised = false;
-            var pipe = new ScriptOutputPipe();
-            pipe.OnScriptOutput +=
-                (s, e) =>
-                {
-                    eventWasRaised = true;
-                    Assert.AreEqual(value.ToString(), e.Text);
-                };
-            pipe.Write(value);
+            using (var pipe = new ScriptOutputPipe())
+            {
+                pipe.OnScriptOutput +=
+                    (s, e) =>
+                    {
+                        eventWasRaised = true;
+                        Assert.AreEqual(value.ToString(CultureInfo.InvariantCulture), e.Text);
+                    };
+                pipe.Write(value);
+            }
 
             Assert.IsTrue(eventWasRaised);
         }
@@ -334,14 +366,16 @@ namespace Apollo.Core.Host.Scripting
         {
             var value = 10UL;
             bool eventWasRaised = false;
-            var pipe = new ScriptOutputPipe();
-            pipe.OnScriptOutput +=
-                (s, e) =>
-                {
-                    eventWasRaised = true;
-                    Assert.AreEqual(value.ToString(), e.Text);
-                };
-            pipe.Write(value);
+            using (var pipe = new ScriptOutputPipe())
+            {
+                pipe.OnScriptOutput +=
+                    (s, e) =>
+                    {
+                        eventWasRaised = true;
+                        Assert.AreEqual(value.ToString(CultureInfo.InvariantCulture), e.Text);
+                    };
+                pipe.Write(value);
+            }
 
             Assert.IsTrue(eventWasRaised);
         }

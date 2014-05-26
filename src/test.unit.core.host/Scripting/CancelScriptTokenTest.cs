@@ -18,13 +18,15 @@ namespace Apollo.Core.Host.Scripting
         [Test]
         public void CreateWithCancellationToken()
         {
-            var source = new CancellationTokenSource();
-            var token = new CancelScriptToken(source.Token);
+            using (var source = new CancellationTokenSource())
+            {
+                var token = new CancelScriptToken(source.Token);
 
-            Assert.IsFalse(token.IsCancellationRequested);
+                Assert.IsFalse(token.IsCancellationRequested);
 
-            source.Cancel();
-            Assert.IsTrue(token.IsCancellationRequested);
+                source.Cancel();
+                Assert.IsTrue(token.IsCancellationRequested);
+            }
         }
     }
 }

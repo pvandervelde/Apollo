@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Apollo.Core.Base.Plugins;
@@ -102,6 +103,7 @@ namespace Apollo.Core.Host.Plugins
             {
                 Trace.WriteLine(
                     string.Format(
+                        CultureInfo.InvariantCulture,
                         "Exception in RemoteAssemblyScannerTest.Setup: {0}",
                         e));
 

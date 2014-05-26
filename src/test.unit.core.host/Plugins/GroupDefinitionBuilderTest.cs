@@ -189,7 +189,7 @@ namespace Apollo.Core.Host.Plugins
         }
 
         [Test]
-        public void ConnectWithNonMatchingExport()
+        public void ConnectWithNonmatchingExport()
         {
             var plugins = CreatePluginTypes();
             var repository = new Mock<IPluginRepository>();
@@ -437,7 +437,7 @@ namespace Apollo.Core.Host.Plugins
                 identityGenerator, 
                 scheduleBuilder,
                 new PluginFileInfo("a", DateTimeOffset.Now));
-            var firstInfo = builder.RegisterObject(typeof(ImportOnProperty));
+            builder.RegisterObject(typeof(ImportOnProperty));
 
             var registrator = builder.RegisterSchedule();
             var vertex = registrator.AddInsertPoint();

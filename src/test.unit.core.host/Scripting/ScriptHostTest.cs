@@ -24,18 +24,21 @@ namespace Apollo.Core.Host.Scripting
             var projects = new Mock<ILinkToProjects>();
             Func<string, AppDomainPaths, AppDomain> builder = (s, p) => AppDomain.CurrentDomain;
 
-            var host = new ScriptHost(projects.Object, builder);
-
-            var output = string.Empty;
-            var writer = new ScriptOutputPipe();
-            writer.OnScriptOutput += (s, e) => output += e.Text;
-            var tuple = host.Execute(ScriptLanguage.IronPython, "print \"hello\"", writer);
+            using (var host = new ScriptHost(projects.Object, builder))
+            {
+                var output = string.Empty;
+                using (var writer = new ScriptOutputPipe())
+                {
+                    writer.OnScriptOutput += (s, e) => output += e.Text;
+                    var tuple = host.Execute(ScriptLanguage.IronPython, "print \"hello\"", writer);
             
-            Assert.IsTrue(host.IsExecutingScript);
+                    Assert.IsTrue(host.IsExecutingScript);
             
-            tuple.Item1.Wait();
-            Assert.IsFalse(host.IsExecutingScript);
-            Assert.AreEqual("hello" + Environment.NewLine, output);
+                    tuple.Item1.Wait();
+                    Assert.IsFalse(host.IsExecutingScript);
+                    Assert.AreEqual("hello" + Environment.NewLine, output);
+                }
+            }
         }
     }
 }

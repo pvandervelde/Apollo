@@ -165,7 +165,7 @@ namespace Apollo.Core.Host.Projects
             var distributor = new Mock<IHelpDistributingDatasets>();
 
             var project = new Mock<IProject>();
-            var closable = project.As<ICanClose>();
+            project.As<ICanClose>();
             var builder = new Mock<IBuildProjects>();
             {
                 builder.Setup(b => b.Define())
@@ -257,7 +257,7 @@ namespace Apollo.Core.Host.Projects
             var distributor = new Mock<IHelpDistributingDatasets>();
 
             var project = new Mock<IProject>();
-            var closable = project.As<ICanClose>();
+            project.As<ICanClose>();
             var builder = new Mock<IBuildProjects>();
             {
                 builder.Setup(b => b.Define())

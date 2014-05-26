@@ -104,7 +104,7 @@ namespace Apollo.Core.Host.Plugins
         }
 
         [Test]
-        public void RoundTripSerialise()
+        public void RoundtripSerialize()
         {
             var original = new GroupImportMap(
                 "c",
