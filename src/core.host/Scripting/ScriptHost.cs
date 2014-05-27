@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -115,6 +116,8 @@ namespace Apollo.Core.Host.Scripting
         /// <see cref="CancellationTokenSource"/> object that can be used to cancel the 
         /// running task.
         /// </returns>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
+            Justification = "The CancellationTokenSource is being disposed after the script execution is done.")]
         public System.Tuple<Task, CancellationTokenSource> Execute(ScriptLanguage language, string scriptCode, TextWriter outputChannel)
         {
             // If there is an existing runner then nuke that one
@@ -149,7 +152,11 @@ namespace Apollo.Core.Host.Scripting
                     finally
                     {
                         m_CurrentlyRunningScript = null;
-                        m_CurrentToken = null;
+                        if (m_CurrentToken != null)
+                        {
+                            m_CurrentToken.Dispose();
+                            m_CurrentToken = null;
+                        }
                     }
                 },
                 source.Token,
@@ -203,6 +210,8 @@ namespace Apollo.Core.Host.Scripting
         /// <returns>
         ///     The object that verifies script syntax.
         /// </returns>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
+            Justification = "ScriptOutputPipe.Dispose() is inheritted from TextWriter which doesn't do anything in the dispose.")]
         public ISyntaxVerifier VerifySyntax(ScriptLanguage language)
         {
             var scriptDomain = m_AppDomainBuilder("ScriptVerificationDomain", AppDomainPaths.Core);

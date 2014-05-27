@@ -22,7 +22,7 @@ namespace Apollo.Core.Host.Plugins
     public sealed class PluginRepositoryTest
     {
         [Test]
-        public void AddTypeWithStandAloneClassType()
+        public void AddTypeWithStandaloneClassType()
         {
             var repository = new PluginRepository();
 
@@ -38,7 +38,7 @@ namespace Apollo.Core.Host.Plugins
         }
 
         [Test]
-        public void AddTypeWithStandAloneGenericClassType()
+        public void AddTypeWithStandaloneGenericClassType()
         {
             var repository = new PluginRepository();
 
@@ -54,7 +54,7 @@ namespace Apollo.Core.Host.Plugins
         }
 
         [Test]
-        public void AddTypeWithStandAloneInterfaceType()
+        public void AddTypeWithStandaloneInterfaceType()
         {
             var repository = new PluginRepository();
 
@@ -70,7 +70,7 @@ namespace Apollo.Core.Host.Plugins
         }
 
         [Test]
-        public void AddTypeWithStandAloneGenericInterfaceType()
+        public void AddTypeWithStandaloneGenericInterfaceType()
         {
             var repository = new PluginRepository();
 

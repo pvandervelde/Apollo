@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -204,6 +205,8 @@ namespace Test.Regression.Explorer.Controls
         /// </summary>
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "This is a regression test which should always finish normally.")]
         public static void ExitApplication(Application application, Log log)
         {
             const string prefix = "Application - Exit";

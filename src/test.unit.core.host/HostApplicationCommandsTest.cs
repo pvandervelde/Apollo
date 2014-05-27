@@ -37,7 +37,7 @@ namespace Apollo.Core.Host
         }
 
         [Test]
-        public void PreparePluginContainerForTransferWithUknownName()
+        public void PreparePluginContainerForTransferWithUnknownName()
         {
             var fileSystem = new Mock<IFileSystem>();
             var uploads = new Mock<IStoreUploads>();

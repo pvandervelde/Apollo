@@ -106,7 +106,7 @@ namespace Apollo.Core.Base.Plugins
         }
 
         [Test]
-        public void RoundTripSerialise()
+        public void RoundtripSerialize()
         {
             var original = ScheduleActionDefinition.CreateDefinition("a", GetMethodForInt());
             var copy = AssertExtensions.RoundTripSerialize(original);
@@ -118,7 +118,6 @@ namespace Apollo.Core.Base.Plugins
         public void Create()
         {
             var obj = ScheduleActionDefinition.CreateDefinition("a", GetMethodForInt());
-            var method = GetMethodForInt();
 
             Assert.AreEqual("a", obj.ContractName);
             Assert.AreEqual(MethodDefinition.CreateDefinition(GetMethodForInt()), obj.Method);

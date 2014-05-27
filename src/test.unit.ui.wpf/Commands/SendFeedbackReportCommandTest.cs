@@ -21,7 +21,10 @@ namespace Apollo.UI.Wpf.Commands
         public void CanSendWithoutSender()
         {
             var command = new SendFeedbackReportCommand(null);
-            Assert.IsFalse(command.CanExecute(new MemoryStream()));
+            using (var stream = new MemoryStream())
+            {
+                Assert.IsFalse(command.CanExecute(stream));
+            }
         }
 
         [Test]
@@ -43,9 +46,11 @@ namespace Apollo.UI.Wpf.Commands
             }
 
             var command = new SendFeedbackReportCommand(sender.Object);
-            command.Execute(new MemoryStream());
-
-            sender.Verify(s => s.Send(It.IsAny<Stream>()), Times.Once());
+            using (var stream = new MemoryStream())
+            {
+                command.Execute(stream);
+                sender.Verify(s => s.Send(It.IsAny<Stream>()), Times.Once());
+            }
         }
     }
 }

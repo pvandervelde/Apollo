@@ -509,10 +509,11 @@ namespace Apollo.Core.Host.Projects
             bool wasLoaded = false;
             dataset.OnActivated += (s, e) => wasLoaded = true;
 
-            var source = new CancellationTokenSource();
-            dataset.Activate(DistributionLocations.All, selector, source.Token);
-
-            Assert.IsFalse(wasLoaded);
+            using (var source = new CancellationTokenSource())
+            {
+                dataset.Activate(DistributionLocations.All, selector, source.Token);
+                Assert.IsFalse(wasLoaded);
+            }
         }
 
         [Test]
@@ -663,7 +664,8 @@ namespace Apollo.Core.Host.Projects
 
             bool wasUnloaded = false;
             dataset.OnDeactivated += (s, e) => wasUnloaded = true;
-            dataset.Deactivate();
+            var task = dataset.Deactivate();
+            task.Wait();
 
             Assert.IsFalse(dataset.IsActivated);
             Assert.IsTrue(wasUnloaded);
@@ -1183,8 +1185,7 @@ namespace Apollo.Core.Host.Projects
                 LoadFrom = new Mock<IPersistenceInformation>().Object,
             };
 
-            var child2 = child1.CreateNewChild(creationInformation);
-
+            child1.CreateNewChild(creationInformation);
             Assert.Throws<CannotDeleteDatasetException>(() => child1.Delete());
         }
 

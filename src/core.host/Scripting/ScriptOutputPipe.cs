@@ -72,6 +72,11 @@ namespace Apollo.Core.Host.Scripting
         /// <param name="count">The number of characters to write.</param>
         public override void Write(char[] buffer, int index, int count)
         {
+            if (buffer == null)
+            {
+                return;
+            }
+
             var input = new StringBuilder();
             for (int i = index; i < index + count; i++)
             {
@@ -132,6 +137,11 @@ namespace Apollo.Core.Host.Scripting
         /// <param name="value">The object to write.</param>
         public override void Write(object value)
         {
+            if (value == null)
+            {
+                return;
+            }
+
             RaiseOnScriptOutput(value.ToString());
         }
 

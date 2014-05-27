@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
+using Apollo.Core.Base.Properties;
 using Nuclei;
 
 namespace Apollo.Core.Base.Plugins
@@ -49,7 +50,12 @@ namespace Apollo.Core.Base.Plugins
         internal GroupCompositionId(Guid id)
             : base(id)
         {
-            Debug.Assert(id != s_InvalidId, "The ID number should not be invalid"); 
+            if (id.Equals(s_InvalidId))
+            {
+                throw new ArgumentException(
+                    Resources.Exceptions_Messages_GroupCompositionIdCannotBeTheInvalidId,
+                    "id");
+            }
         }
 
         /// <summary>

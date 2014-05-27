@@ -182,12 +182,24 @@ namespace Apollo.Utilities.History
                 () =>
                 {
                     var result = list[-1];
+
+                    // We're not expecting to get this far but code analysis says that
+                    // we shouldn't have unused locals, unfortunately the compiler doesn't
+                    // like it when we remove the local, so ..
+                    Assert.IsNull(result);
+                    Assert.Fail();
                 });
 
             Assert.Throws<ArgumentOutOfRangeException>(
                 () =>
                 {
                     var result = list[list.Count];
+
+                    // We're not expecting to get this far but code analysis says that
+                    // we shouldn't have unused locals, unfortunately the compiler doesn't
+                    // like it when we remove the local, so ..
+                    Assert.IsNull(result);
+                    Assert.Fail();
                 });
         }
 

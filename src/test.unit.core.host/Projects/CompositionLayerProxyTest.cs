@@ -30,34 +30,37 @@ namespace Apollo.Core.Host.Projects
         {
             GroupCompositionId storedId = null;
             GroupDefinition storedDefinition = null;
-            var commands = new Mock<ICompositionCommands>();
+            using (var source = new CancellationTokenSource())
             {
-                commands.Setup(c => c.Add(It.IsAny<GroupCompositionId>(), It.IsAny<GroupDefinition>()))
-                    .Callback<GroupCompositionId, GroupDefinition>(
-                        (id, def) =>
-                        {
-                            storedId = id;
-                            storedDefinition = def;
-                        })
-                    .Returns(
-                        Task.Factory.StartNew(
-                            () => { },
-                            new CancellationTokenSource().Token,
-                            TaskCreationOptions.None,
-                            new CurrentThreadTaskScheduler()));
+                var commands = new Mock<ICompositionCommands>();
+                {
+                    commands.Setup(c => c.Add(It.IsAny<GroupCompositionId>(), It.IsAny<GroupDefinition>()))
+                        .Callback<GroupCompositionId, GroupDefinition>(
+                            (id, def) =>
+                            {
+                                storedId = id;
+                                storedDefinition = def;
+                            })
+                        .Returns(
+                            Task.Factory.StartNew(
+                                () => { },
+                                source.Token,
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler()));
+                }
+
+                var connector = new Mock<IConnectGroups>();
+                var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+                var layer = new ProxyCompositionLayer(commands.Object, connector.Object, systemDiagnostics);
+
+                var definition = new GroupDefinition("Group1");
+                var task = layer.Add(definition);
+                task.Wait();
+
+                Assert.AreSame(storedId, task.Result);
+                Assert.AreSame(definition, storedDefinition);
+                Assert.IsTrue(layer.Contains(task.Result));
             }
-
-            var connector = new Mock<IConnectGroups>();
-            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            var layer = new ProxyCompositionLayer(commands.Object, connector.Object, systemDiagnostics);
-
-            var definition = new GroupDefinition("Group1");
-            var task = layer.Add(definition);
-            task.Wait();
-
-            Assert.AreSame(storedId, task.Result);
-            Assert.AreSame(definition, storedDefinition);
-            Assert.IsTrue(layer.Contains(task.Result));
         }
 
         [Test]
@@ -65,392 +68,413 @@ namespace Apollo.Core.Host.Projects
         {
             GroupCompositionId storedId = null;
             GroupDefinition storedDefinition = null;
-            var commands = new Mock<ICompositionCommands>();
+            using (var source = new CancellationTokenSource())
             {
-                commands.Setup(c => c.Add(It.IsAny<GroupCompositionId>(), It.IsAny<GroupDefinition>()))
-                    .Callback<GroupCompositionId, GroupDefinition>(
-                        (id, def) =>
-                        {
-                            storedId = id;
-                            storedDefinition = def;
-                        })
-                    .Returns(
-                        Task.Factory.StartNew(
-                            () => { },
-                            new CancellationTokenSource().Token,
-                            TaskCreationOptions.None,
-                            new CurrentThreadTaskScheduler()));
+                var commands = new Mock<ICompositionCommands>();
+                {
+                    commands.Setup(c => c.Add(It.IsAny<GroupCompositionId>(), It.IsAny<GroupDefinition>()))
+                        .Callback<GroupCompositionId, GroupDefinition>(
+                            (id, def) =>
+                            {
+                                storedId = id;
+                                storedDefinition = def;
+                            })
+                        .Returns(
+                            Task.Factory.StartNew(
+                                () => { },
+                                source.Token,
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler()));
 
-                commands.Setup(c => c.Remove(It.IsAny<GroupCompositionId>()))
-                    .Callback<GroupCompositionId>(id => storedId = id)
-                    .Returns(
-                        Task.Factory.StartNew(
-                            () => { },
-                            new CancellationTokenSource().Token,
-                            TaskCreationOptions.None,
-                            new CurrentThreadTaskScheduler()));
+                    commands.Setup(c => c.Remove(It.IsAny<GroupCompositionId>()))
+                        .Callback<GroupCompositionId>(id => storedId = id)
+                        .Returns(
+                            Task.Factory.StartNew(
+                                () => { },
+                                source.Token,
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler()));
+                }
+
+                var connector = new Mock<IConnectGroups>();
+                var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+                var layer = new ProxyCompositionLayer(commands.Object, connector.Object, systemDiagnostics);
+
+                var definition = new GroupDefinition("Group1");
+                var task = layer.Add(definition);
+                task.Wait();
+
+                Assert.AreSame(storedId, task.Result);
+                Assert.AreSame(definition, storedDefinition);
+                Assert.IsTrue(layer.Contains(task.Result));
+
+                var otherTask = layer.Remove(task.Result);
+                otherTask.Wait();
+
+                Assert.AreSame(task.Result, storedId);
+                Assert.IsFalse(layer.Contains(task.Result));
             }
-
-            var connector = new Mock<IConnectGroups>();
-            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            var layer = new ProxyCompositionLayer(commands.Object, connector.Object, systemDiagnostics);
-
-            var definition = new GroupDefinition("Group1");
-            var task = layer.Add(definition);
-            task.Wait();
-
-            Assert.AreSame(storedId, task.Result);
-            Assert.AreSame(definition, storedDefinition);
-            Assert.IsTrue(layer.Contains(task.Result));
-
-            var otherTask = layer.Remove(task.Result);
-            otherTask.Wait();
-
-            Assert.AreSame(task.Result, storedId);
-            Assert.IsFalse(layer.Contains(task.Result));
         }
 
         [Test]
         public void RemoveWhileConnected()
         {
-            var commands = new Mock<ICompositionCommands>();
+            using (var source = new CancellationTokenSource())
             {
-                commands.Setup(c => c.Add(It.IsAny<GroupCompositionId>(), It.IsAny<GroupDefinition>()))
-                    .Returns(
-                        Task.Factory.StartNew(
-                            () => { },
-                            new CancellationTokenSource().Token,
-                            TaskCreationOptions.None,
-                            new CurrentThreadTaskScheduler()));
+                var commands = new Mock<ICompositionCommands>();
+                {
+                    commands.Setup(c => c.Add(It.IsAny<GroupCompositionId>(), It.IsAny<GroupDefinition>()))
+                        .Returns(
+                            Task.Factory.StartNew(
+                                () => { },
+                                source.Token,
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler()));
 
-                commands.Setup(c => c.Remove(It.IsAny<GroupCompositionId>()))
-                    .Returns(
-                        Task.Factory.StartNew(
-                            () => { },
-                            new CancellationTokenSource().Token,
-                            TaskCreationOptions.None,
-                            new CurrentThreadTaskScheduler()));
+                    commands.Setup(c => c.Remove(It.IsAny<GroupCompositionId>()))
+                        .Returns(
+                            Task.Factory.StartNew(
+                                () => { },
+                                source.Token,
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler()));
 
-                commands.Setup(c => c.Connect(It.IsAny<GroupConnection>()))
-                    .Returns(
-                        Task.Factory.StartNew(
-                            () => { },
-                            new CancellationTokenSource().Token,
-                            TaskCreationOptions.None,
-                            new CurrentThreadTaskScheduler()));
+                    commands.Setup(c => c.Connect(It.IsAny<GroupConnection>()))
+                        .Returns(
+                            Task.Factory.StartNew(
+                                () => { },
+                                source.Token,
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler()));
+                }
+
+                var connector = new Mock<IConnectGroups>();
+                {
+                    connector.Setup(
+                        c => c.GenerateConnectionFor(
+                            It.IsAny<GroupDefinition>(),
+                            It.IsAny<GroupImportDefinition>(),
+                            It.IsAny<GroupDefinition>()))
+                        .Callback<GroupDefinition, GroupImportDefinition, GroupDefinition>(
+                            (importingGroup, importDef, exportingGroup) => { })
+                        .Returns(Enumerable.Empty<PartImportToPartExportMap>());
+                }
+
+                var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+                var layer = new ProxyCompositionLayer(commands.Object, connector.Object, systemDiagnostics);
+
+                var exportingDefinition = new GroupDefinition("Group1");
+                var addTask = layer.Add(exportingDefinition);
+                var exportingId = addTask.Result;
+
+                var importingDefinition = new GroupDefinition("Group2");
+                addTask = layer.Add(importingDefinition);
+                var importingId = addTask.Result;
+
+                var importDefinition = GroupImportDefinition.CreateDefinition(
+                    "a",
+                    new GroupRegistrationId("b"),
+                    null,
+                    Enumerable.Empty<ImportRegistrationId>());
+                var connectTask = layer.Connect(importingId, importDefinition, exportingId);
+                connectTask.Wait();
+
+                Assert.IsTrue(layer.IsConnected(importingId, importDefinition));
+                Assert.IsTrue(layer.IsConnected(importingId, importDefinition, exportingId));
+                Assert.AreEqual(exportingId, layer.ConnectedTo(importingId, importDefinition));
+
+                var removeTask = layer.Remove(exportingId);
+                removeTask.Wait();
+
+                Assert.IsTrue(layer.Contains(importingId));
+                Assert.IsFalse(layer.Contains(exportingId));
+                Assert.IsFalse(layer.IsConnected(importingId, importDefinition));
+                Assert.IsFalse(layer.IsConnected(importingId, importDefinition, exportingId));
+                Assert.IsNull(layer.ConnectedTo(importingId, importDefinition));
             }
-
-            var connector = new Mock<IConnectGroups>();
-            {
-                connector.Setup(
-                    c => c.GenerateConnectionFor(
-                        It.IsAny<GroupDefinition>(),
-                        It.IsAny<GroupImportDefinition>(),
-                        It.IsAny<GroupDefinition>()))
-                    .Callback<GroupDefinition, GroupImportDefinition, GroupDefinition>(
-                        (importingGroup, importDef, exportingGroup) => { })
-                    .Returns(Enumerable.Empty<PartImportToPartExportMap>());
-            }
-
-            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            var layer = new ProxyCompositionLayer(commands.Object, connector.Object, systemDiagnostics);
-
-            var exportingDefinition = new GroupDefinition("Group1");
-            var addTask = layer.Add(exportingDefinition);
-            var exportingId = addTask.Result;
-
-            var importingDefinition = new GroupDefinition("Group2");
-            addTask = layer.Add(importingDefinition);
-            var importingId = addTask.Result;
-
-            var importDefinition = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-            var connectTask = layer.Connect(importingId, importDefinition, exportingId);
-            connectTask.Wait();
-
-            Assert.IsTrue(layer.IsConnected(importingId, importDefinition));
-            Assert.IsTrue(layer.IsConnected(importingId, importDefinition, exportingId));
-            Assert.AreEqual(exportingId, layer.ConnectedTo(importingId, importDefinition));
-
-            var removeTask = layer.Remove(exportingId);
-            removeTask.Wait();
-
-            Assert.IsTrue(layer.Contains(importingId));
-            Assert.IsFalse(layer.Contains(exportingId));
-            Assert.IsFalse(layer.IsConnected(importingId, importDefinition));
-            Assert.IsFalse(layer.IsConnected(importingId, importDefinition, exportingId));
-            Assert.IsNull(layer.ConnectedTo(importingId, importDefinition));
         }
 
         [Test]
         public void ConnectWithUnknownImportingGroup()
         {
-            var commands = new Mock<ICompositionCommands>();
+            using (var source = new CancellationTokenSource())
             {
-                commands.Setup(c => c.Add(It.IsAny<GroupCompositionId>(), It.IsAny<GroupDefinition>()))
-                    .Returns(
-                        Task.Factory.StartNew(
-                            () => { },
-                            new CancellationTokenSource().Token,
-                            TaskCreationOptions.None,
-                            new CurrentThreadTaskScheduler()));
+                var commands = new Mock<ICompositionCommands>();
+                {
+                    commands.Setup(c => c.Add(It.IsAny<GroupCompositionId>(), It.IsAny<GroupDefinition>()))
+                        .Returns(
+                            Task.Factory.StartNew(
+                                () => { },
+                                source.Token,
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler()));
+                }
+
+                var connector = new Mock<IConnectGroups>();
+                var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+                var layer = new ProxyCompositionLayer(commands.Object, connector.Object, systemDiagnostics);
+
+                var exportingGroup = new GroupDefinition("Group1");
+                var task = layer.Add(exportingGroup);
+                task.Wait();
+
+                var importDefinition = GroupImportDefinition.CreateDefinition(
+                    "a",
+                    new GroupRegistrationId("b"),
+                    null,
+                    Enumerable.Empty<ImportRegistrationId>());
+                Assert.Throws<UnknownPartGroupException>(() => layer.Connect(new GroupCompositionId(), importDefinition, task.Result));
             }
-
-            var connector = new Mock<IConnectGroups>();
-            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            var layer = new ProxyCompositionLayer(commands.Object, connector.Object, systemDiagnostics);
-
-            var exportingGroup = new GroupDefinition("Group1");
-            var task = layer.Add(exportingGroup);
-            task.Wait();
-
-            var importDefinition = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-            Assert.Throws<UnknownPartGroupException>(() => layer.Connect(new GroupCompositionId(), importDefinition, task.Result));
         }
 
         [Test]
         public void ConnectWithUnknownExportingGroup()
         {
-            var commands = new Mock<ICompositionCommands>();
+            using (var source = new CancellationTokenSource())
             {
-                commands.Setup(c => c.Add(It.IsAny<GroupCompositionId>(), It.IsAny<GroupDefinition>()))
-                    .Returns(
-                        Task.Factory.StartNew(
-                            () => { },
-                            new CancellationTokenSource().Token,
-                            TaskCreationOptions.None,
-                            new CurrentThreadTaskScheduler()));
+                var commands = new Mock<ICompositionCommands>();
+                {
+                    commands.Setup(c => c.Add(It.IsAny<GroupCompositionId>(), It.IsAny<GroupDefinition>()))
+                        .Returns(
+                            Task.Factory.StartNew(
+                                () => { },
+                                source.Token,
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler()));
+                }
+
+                var connector = new Mock<IConnectGroups>();
+                var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+                var layer = new ProxyCompositionLayer(commands.Object, connector.Object, systemDiagnostics);
+
+                var exportingGroup = new GroupDefinition("Group1");
+                var task = layer.Add(exportingGroup);
+                task.Wait();
+
+                var importDefinition = GroupImportDefinition.CreateDefinition(
+                    "a",
+                    new GroupRegistrationId("b"),
+                    null,
+                    Enumerable.Empty<ImportRegistrationId>());
+                Assert.Throws<UnknownPartGroupException>(() => layer.Connect(task.Result, importDefinition, new GroupCompositionId()));
             }
-
-            var connector = new Mock<IConnectGroups>();
-            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            var layer = new ProxyCompositionLayer(commands.Object, connector.Object, systemDiagnostics);
-
-            var exportingGroup = new GroupDefinition("Group1");
-            var task = layer.Add(exportingGroup);
-            task.Wait();
-
-            var importDefinition = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-            Assert.Throws<UnknownPartGroupException>(() => layer.Connect(task.Result, importDefinition, new GroupCompositionId()));
         }
 
         [Test]
         public void Connect()
         {
-            var commands = new Mock<ICompositionCommands>();
+            using (var source = new CancellationTokenSource())
             {
-                commands.Setup(c => c.Add(It.IsAny<GroupCompositionId>(), It.IsAny<GroupDefinition>()))
-                    .Returns(
-                        Task.Factory.StartNew(
-                            () => { },
-                            new CancellationTokenSource().Token,
-                            TaskCreationOptions.None,
-                            new CurrentThreadTaskScheduler()));
+                var commands = new Mock<ICompositionCommands>();
+                {
+                    commands.Setup(c => c.Add(It.IsAny<GroupCompositionId>(), It.IsAny<GroupDefinition>()))
+                        .Returns(
+                            Task.Factory.StartNew(
+                                () => { },
+                                source.Token,
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler()));
 
-                commands.Setup(c => c.Connect(It.IsAny<GroupConnection>()))
-                    .Returns(
-                        Task.Factory.StartNew(
-                            () => { },
-                            new CancellationTokenSource().Token,
-                            TaskCreationOptions.None,
-                            new CurrentThreadTaskScheduler()));
+                    commands.Setup(c => c.Connect(It.IsAny<GroupConnection>()))
+                        .Returns(
+                            Task.Factory.StartNew(
+                                () => { },
+                                source.Token,
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler()));
+                }
+
+                var connector = new Mock<IConnectGroups>();
+                {
+                    connector.Setup(
+                        c => c.GenerateConnectionFor(
+                            It.IsAny<GroupDefinition>(),
+                            It.IsAny<GroupImportDefinition>(),
+                            It.IsAny<GroupDefinition>()))
+                        .Callback<GroupDefinition, GroupImportDefinition, GroupDefinition>(
+                            (importingGroup, importDef, exportingGroup) => { })
+                        .Returns(Enumerable.Empty<PartImportToPartExportMap>());
+                }
+
+                var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+                var layer = new ProxyCompositionLayer(commands.Object, connector.Object, systemDiagnostics);
+
+                var exportingDefinition = new GroupDefinition("Group1");
+                var addTask = layer.Add(exportingDefinition);
+                var exportingId = addTask.Result;
+
+                var importingDefinition = new GroupDefinition("Group2");
+                addTask = layer.Add(importingDefinition);
+                var importingId = addTask.Result;
+
+                var importDefinition = GroupImportDefinition.CreateDefinition(
+                    "a",
+                    new GroupRegistrationId("b"),
+                    null,
+                    Enumerable.Empty<ImportRegistrationId>());
+                var connectTask = layer.Connect(importingId, importDefinition, exportingId);
+                connectTask.Wait();
+
+                Assert.IsTrue(layer.IsConnected(importingId, importDefinition));
+                Assert.IsTrue(layer.IsConnected(importingId, importDefinition, exportingId));
+                Assert.AreEqual(exportingId, layer.ConnectedTo(importingId, importDefinition));
             }
-
-            var connector = new Mock<IConnectGroups>();
-            {
-                connector.Setup(
-                    c => c.GenerateConnectionFor(
-                        It.IsAny<GroupDefinition>(),
-                        It.IsAny<GroupImportDefinition>(),
-                        It.IsAny<GroupDefinition>()))
-                    .Callback<GroupDefinition, GroupImportDefinition, GroupDefinition>(
-                        (importingGroup, importDef, exportingGroup) => { })
-                    .Returns(Enumerable.Empty<PartImportToPartExportMap>());
-            }
-
-            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            var layer = new ProxyCompositionLayer(commands.Object, connector.Object, systemDiagnostics);
-
-            var exportingDefinition = new GroupDefinition("Group1");
-            var addTask = layer.Add(exportingDefinition);
-            var exportingId = addTask.Result;
-
-            var importingDefinition = new GroupDefinition("Group2");
-            addTask = layer.Add(importingDefinition);
-            var importingId = addTask.Result;
-
-            var importDefinition = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-            var connectTask = layer.Connect(importingId, importDefinition, exportingId);
-            connectTask.Wait();
-
-            Assert.IsTrue(layer.IsConnected(importingId, importDefinition));
-            Assert.IsTrue(layer.IsConnected(importingId, importDefinition, exportingId));
-            Assert.AreEqual(exportingId, layer.ConnectedTo(importingId, importDefinition));
         }
 
         [Test]
         public void DisconnectImportFromExport()
         {
-            var commands = new Mock<ICompositionCommands>();
+            using (var source = new CancellationTokenSource())
             {
-                commands.Setup(c => c.Add(It.IsAny<GroupCompositionId>(), It.IsAny<GroupDefinition>()))
-                    .Returns(
-                        Task.Factory.StartNew(
-                            () => { },
-                            new CancellationTokenSource().Token,
-                            TaskCreationOptions.None,
-                            new CurrentThreadTaskScheduler()));
+                var commands = new Mock<ICompositionCommands>();
+                {
+                    commands.Setup(c => c.Add(It.IsAny<GroupCompositionId>(), It.IsAny<GroupDefinition>()))
+                        .Returns(
+                            Task.Factory.StartNew(
+                                () => { },
+                                source.Token,
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler()));
 
-                commands.Setup(c => c.Connect(It.IsAny<GroupConnection>()))
-                    .Returns(
-                        Task.Factory.StartNew(
-                            () => { },
-                            new CancellationTokenSource().Token,
-                            TaskCreationOptions.None,
-                            new CurrentThreadTaskScheduler()));
+                    commands.Setup(c => c.Connect(It.IsAny<GroupConnection>()))
+                        .Returns(
+                            Task.Factory.StartNew(
+                                () => { },
+                                source.Token,
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler()));
                 
-                commands.Setup(c => c.Disconnect(It.IsAny<GroupCompositionId>(), It.IsAny<GroupCompositionId>()))
-                    .Returns(
-                        Task.Factory.StartNew(
-                            () => { },
-                            new CancellationTokenSource().Token,
-                            TaskCreationOptions.None,
-                            new CurrentThreadTaskScheduler()));
+                    commands.Setup(c => c.Disconnect(It.IsAny<GroupCompositionId>(), It.IsAny<GroupCompositionId>()))
+                        .Returns(
+                            Task.Factory.StartNew(
+                                () => { },
+                                source.Token,
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler()));
+                }
+
+                var connector = new Mock<IConnectGroups>();
+                {
+                    connector.Setup(
+                        c => c.GenerateConnectionFor(
+                            It.IsAny<GroupDefinition>(),
+                            It.IsAny<GroupImportDefinition>(),
+                            It.IsAny<GroupDefinition>()))
+                        .Callback<GroupDefinition, GroupImportDefinition, GroupDefinition>(
+                            (importingGroup, importDef, exportingGroup) => { })
+                        .Returns(Enumerable.Empty<PartImportToPartExportMap>());
+                }
+
+                var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+                var layer = new ProxyCompositionLayer(commands.Object, connector.Object, systemDiagnostics);
+
+                var exportingDefinition = new GroupDefinition("Group1");
+                var addTask = layer.Add(exportingDefinition);
+                var exportingId = addTask.Result;
+
+                var importingDefinition = new GroupDefinition("Group2");
+                addTask = layer.Add(importingDefinition);
+                var importingId = addTask.Result;
+
+                var importDefinition = GroupImportDefinition.CreateDefinition(
+                    "a",
+                    new GroupRegistrationId("b"),
+                    null,
+                    Enumerable.Empty<ImportRegistrationId>());
+                var connectTask = layer.Connect(importingId, importDefinition, exportingId);
+                connectTask.Wait();
+
+                Assert.IsTrue(layer.IsConnected(importingId, importDefinition));
+                Assert.IsTrue(layer.IsConnected(importingId, importDefinition, exportingId));
+                Assert.AreEqual(exportingId, layer.ConnectedTo(importingId, importDefinition));
+
+                var disconnectTask = layer.Disconnect(importingId, exportingId);
+                disconnectTask.Wait();
+
+                Assert.IsTrue(layer.Contains(importingId));
+                Assert.IsTrue(layer.Contains(exportingId));
+                Assert.IsFalse(layer.IsConnected(importingId, importDefinition));
+                Assert.IsFalse(layer.IsConnected(importingId, importDefinition, exportingId));
+                Assert.IsNull(layer.ConnectedTo(importingId, importDefinition));
             }
-
-            var connector = new Mock<IConnectGroups>();
-            {
-                connector.Setup(
-                    c => c.GenerateConnectionFor(
-                        It.IsAny<GroupDefinition>(),
-                        It.IsAny<GroupImportDefinition>(),
-                        It.IsAny<GroupDefinition>()))
-                    .Callback<GroupDefinition, GroupImportDefinition, GroupDefinition>(
-                        (importingGroup, importDef, exportingGroup) => { })
-                    .Returns(Enumerable.Empty<PartImportToPartExportMap>());
-            }
-
-            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            var layer = new ProxyCompositionLayer(commands.Object, connector.Object, systemDiagnostics);
-
-            var exportingDefinition = new GroupDefinition("Group1");
-            var addTask = layer.Add(exportingDefinition);
-            var exportingId = addTask.Result;
-
-            var importingDefinition = new GroupDefinition("Group2");
-            addTask = layer.Add(importingDefinition);
-            var importingId = addTask.Result;
-
-            var importDefinition = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-            var connectTask = layer.Connect(importingId, importDefinition, exportingId);
-            connectTask.Wait();
-
-            Assert.IsTrue(layer.IsConnected(importingId, importDefinition));
-            Assert.IsTrue(layer.IsConnected(importingId, importDefinition, exportingId));
-            Assert.AreEqual(exportingId, layer.ConnectedTo(importingId, importDefinition));
-
-            var disconnectTask = layer.Disconnect(importingId, exportingId);
-            disconnectTask.Wait();
-
-            Assert.IsTrue(layer.Contains(importingId));
-            Assert.IsTrue(layer.Contains(exportingId));
-            Assert.IsFalse(layer.IsConnected(importingId, importDefinition));
-            Assert.IsFalse(layer.IsConnected(importingId, importDefinition, exportingId));
-            Assert.IsNull(layer.ConnectedTo(importingId, importDefinition));
         }
 
         [Test]
         public void DisconnectFromAll()
         {
-            var commands = new Mock<ICompositionCommands>();
+            using (var source = new CancellationTokenSource())
             {
-                commands.Setup(c => c.Add(It.IsAny<GroupCompositionId>(), It.IsAny<GroupDefinition>()))
-                    .Returns(
-                        Task.Factory.StartNew(
-                            () => { },
-                            new CancellationTokenSource().Token,
-                            TaskCreationOptions.None,
-                            new CurrentThreadTaskScheduler()));
+                var commands = new Mock<ICompositionCommands>();
+                {
+                    commands.Setup(c => c.Add(It.IsAny<GroupCompositionId>(), It.IsAny<GroupDefinition>()))
+                        .Returns(
+                            Task.Factory.StartNew(
+                                () => { },
+                                source.Token,
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler()));
 
-                commands.Setup(c => c.Connect(It.IsAny<GroupConnection>()))
-                    .Returns(
-                        Task.Factory.StartNew(
-                            () => { },
-                            new CancellationTokenSource().Token,
-                            TaskCreationOptions.None,
-                            new CurrentThreadTaskScheduler()));
+                    commands.Setup(c => c.Connect(It.IsAny<GroupConnection>()))
+                        .Returns(
+                            Task.Factory.StartNew(
+                                () => { },
+                                source.Token,
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler()));
                 
-                commands.Setup(c => c.Disconnect(It.IsAny<GroupCompositionId>()))
-                    .Returns(
-                        Task.Factory.StartNew(
-                            () => { },
-                            new CancellationTokenSource().Token,
-                            TaskCreationOptions.None,
-                            new CurrentThreadTaskScheduler()));
+                    commands.Setup(c => c.Disconnect(It.IsAny<GroupCompositionId>()))
+                        .Returns(
+                            Task.Factory.StartNew(
+                                () => { },
+                                source.Token,
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler()));
+                }
+
+                var connector = new Mock<IConnectGroups>();
+                {
+                    connector.Setup(
+                        c => c.GenerateConnectionFor(
+                            It.IsAny<GroupDefinition>(),
+                            It.IsAny<GroupImportDefinition>(),
+                            It.IsAny<GroupDefinition>()))
+                        .Callback<GroupDefinition, GroupImportDefinition, GroupDefinition>(
+                            (importingGroup, importDef, exportingGroup) => { })
+                        .Returns(Enumerable.Empty<PartImportToPartExportMap>());
+                }
+
+                var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+                var layer = new ProxyCompositionLayer(commands.Object, connector.Object, systemDiagnostics);
+
+                var exportingDefinition = new GroupDefinition("Group1");
+                var addTask = layer.Add(exportingDefinition);
+                var exportingId = addTask.Result;
+
+                var importingDefinition = new GroupDefinition("Group2");
+                addTask = layer.Add(importingDefinition);
+                var importingId = addTask.Result;
+
+                var importDefinition = GroupImportDefinition.CreateDefinition(
+                    "a",
+                    new GroupRegistrationId("b"),
+                    null,
+                    Enumerable.Empty<ImportRegistrationId>());
+                var connectTask = layer.Connect(importingId, importDefinition, exportingId);
+                connectTask.Wait();
+
+                Assert.IsTrue(layer.IsConnected(importingId, importDefinition));
+                Assert.IsTrue(layer.IsConnected(importingId, importDefinition, exportingId));
+                Assert.AreEqual(exportingId, layer.ConnectedTo(importingId, importDefinition));
+
+                var disconnectTask = layer.Disconnect(importingId);
+                disconnectTask.Wait();
+
+                Assert.IsTrue(layer.Contains(importingId));
+                Assert.IsTrue(layer.Contains(exportingId));
+                Assert.IsFalse(layer.IsConnected(importingId, importDefinition));
+                Assert.IsFalse(layer.IsConnected(importingId, importDefinition, exportingId));
+                Assert.IsNull(layer.ConnectedTo(importingId, importDefinition));
             }
-
-            var connector = new Mock<IConnectGroups>();
-            {
-                connector.Setup(
-                    c => c.GenerateConnectionFor(
-                        It.IsAny<GroupDefinition>(),
-                        It.IsAny<GroupImportDefinition>(),
-                        It.IsAny<GroupDefinition>()))
-                    .Callback<GroupDefinition, GroupImportDefinition, GroupDefinition>(
-                        (importingGroup, importDef, exportingGroup) => { })
-                    .Returns(Enumerable.Empty<PartImportToPartExportMap>());
-            }
-
-            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            var layer = new ProxyCompositionLayer(commands.Object, connector.Object, systemDiagnostics);
-
-            var exportingDefinition = new GroupDefinition("Group1");
-            var addTask = layer.Add(exportingDefinition);
-            var exportingId = addTask.Result;
-
-            var importingDefinition = new GroupDefinition("Group2");
-            addTask = layer.Add(importingDefinition);
-            var importingId = addTask.Result;
-
-            var importDefinition = GroupImportDefinition.CreateDefinition(
-                "a",
-                new GroupRegistrationId("b"),
-                null,
-                Enumerable.Empty<ImportRegistrationId>());
-            var connectTask = layer.Connect(importingId, importDefinition, exportingId);
-            connectTask.Wait();
-
-            Assert.IsTrue(layer.IsConnected(importingId, importDefinition));
-            Assert.IsTrue(layer.IsConnected(importingId, importDefinition, exportingId));
-            Assert.AreEqual(exportingId, layer.ConnectedTo(importingId, importDefinition));
-
-            var disconnectTask = layer.Disconnect(importingId);
-            disconnectTask.Wait();
-
-            Assert.IsTrue(layer.Contains(importingId));
-            Assert.IsTrue(layer.Contains(exportingId));
-            Assert.IsFalse(layer.IsConnected(importingId, importDefinition));
-            Assert.IsFalse(layer.IsConnected(importingId, importDefinition, exportingId));
-            Assert.IsNull(layer.ConnectedTo(importingId, importDefinition));
         }
 
         [Test]
@@ -534,32 +558,35 @@ namespace Apollo.Core.Host.Projects
                         new Tuple<GroupCompositionId, GroupImportDefinition, GroupCompositionId>(importingId, importDefinition, exportingId)
                     });
 
-            var commands = new Mock<ICompositionCommands>();
+            using (var source = new CancellationTokenSource())
             {
-                commands.Setup(c => c.CurrentState())
-                    .Returns(
-                        Task<GroupCompositionState>.Factory.StartNew(
-                            () => state,
-                            new CancellationTokenSource().Token,
-                            TaskCreationOptions.None,
-                            new CurrentThreadTaskScheduler()));
+                var commands = new Mock<ICompositionCommands>();
+                {
+                    commands.Setup(c => c.CurrentState())
+                        .Returns(
+                            Task<GroupCompositionState>.Factory.StartNew(
+                                () => state,
+                                source.Token,
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler()));
+                }
+
+                var connector = new Mock<IConnectGroups>();
+                var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+                var layer = new ProxyCompositionLayer(commands.Object, connector.Object, systemDiagnostics);
+                var task = layer.ReloadFromDataset();
+                task.Wait();
+
+                Assert.IsTrue(layer.Contains(importingId));
+                Assert.AreEqual(importingGroup, layer.Group(importingId));
+
+                Assert.IsTrue(layer.Contains(exportingId));
+                Assert.AreEqual(exportingGroup, layer.Group(exportingId));
+
+                Assert.IsTrue(layer.IsConnected(importingId, importDefinition));
+                Assert.IsTrue(layer.IsConnected(importingId, importDefinition, exportingId));
+                Assert.AreEqual(exportingId, layer.ConnectedTo(importingId, importDefinition));
             }
-
-            var connector = new Mock<IConnectGroups>();
-            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
-            var layer = new ProxyCompositionLayer(commands.Object, connector.Object, systemDiagnostics);
-            var task = layer.ReloadFromDataset();
-            task.Wait();
-
-            Assert.IsTrue(layer.Contains(importingId));
-            Assert.AreEqual(importingGroup, layer.Group(importingId));
-
-            Assert.IsTrue(layer.Contains(exportingId));
-            Assert.AreEqual(exportingGroup, layer.Group(exportingId));
-
-            Assert.IsTrue(layer.IsConnected(importingId, importDefinition));
-            Assert.IsTrue(layer.IsConnected(importingId, importDefinition, exportingId));
-            Assert.AreEqual(exportingId, layer.ConnectedTo(importingId, importDefinition));
         }
     }
 }

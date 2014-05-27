@@ -260,6 +260,8 @@ namespace Apollo.Core.Host.UserInterfaces
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Do not want a failing notification action to crash the application.")]
         private void OnStartupComplete(object sender, ApplicationStartupEventArgs args)
         {
             // @todo: We can store the start-up time here. Effectively we're not started until we get this
@@ -329,6 +331,8 @@ namespace Apollo.Core.Host.UserInterfaces
         /// <summary>
         /// Stops the user interface service.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Do not want a failing notification to take down the entire process.")]
         protected override void StopService()
         {
             if (!m_Notifications.ContainsKey(m_NotificationNames.SystemShuttingDown))

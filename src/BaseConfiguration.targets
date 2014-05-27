@@ -25,10 +25,21 @@
         <Prefer32Bit>false</Prefer32Bit>
 
         <!-- Flags -->
+        <!-- 
+            Note that {3AC096D0-A1C2-E12C-1390-A8335801FDAB} is the project type GUID for test projects in any language 
+            See here: http://www.codeproject.com/Reference/720512/List-of-Visual-Studio-Project-Type-GUIDs
+        -->
+        <IsTest Condition=" '$(IsTest)' == '' ">$(ProjectTypeGuids.Contains('{3AC096D0-A1C2-E12C-1390-A8335801FDAB}'))</IsTest>
+        <ShouldDoCodeAnalysis Condition=" '$(ShouldDoCodeAnalysis)' == '' ">true</ShouldDoCodeAnalysis>
         <ShouldDoDocumentation Condition=" '$(ShouldDoDocumentation)' == '' ">true</ShouldDoDocumentation>
         <ShouldSign Condition=" '$(ShouldSign)' == '' ">true</ShouldSign>
     </PropertyGroup>
-    <PropertyGroup Condition="$(ShouldDoDocumentation)">
+    <PropertyGroup Condition="$(ShouldDoCodeAnalysis)">
+        <CodeAnalysisRuleSet Condition="!$(IsTest)">$(SolutionDir)\codeanalysis.base.ruleset</CodeAnalysisRuleSet>
+        <CodeAnalysisRuleSet Condition="$(IsTest)">$(SolutionDir)\codeanalysis.test.ruleset</CodeAnalysisRuleSet>
+        <CodeAnalysisCulture>en-US</CodeAnalysisCulture>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(ShouldDoDocumentation) AND !$(IsTest)">
         <DocumentationFile>$(OutputPath)\$(AssemblyName).XML</DocumentationFile>
     </PropertyGroup>
     <PropertyGroup Condition="$(ShouldSign)">
@@ -41,16 +52,19 @@
         <DebugType>full</DebugType>
         <Optimize>false</Optimize>
         <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS;IN_VS_SOLUTION</DefineConstants>
+        <RunCodeAnalysis Condition="$(ShouldDoCodeAnalysis)">true</RunCodeAnalysis>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
         <DebugType>pdbonly</DebugType>
         <Optimize>true</Optimize>
         <DefineConstants>TRACE;CODE_ANALYSIS;IN_VS_SOLUTION</DefineConstants>
+        <RunCodeAnalysis Condition="$(ShouldDoCodeAnalysis)">true</RunCodeAnalysis>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Deploy|x64' ">
         <DebugType>pdbonly</DebugType>
         <Optimize>true</Optimize>
         <DefineConstants>TRACE;IN_VS_SOLUTION</DefineConstants>
+        <RunCodeAnalysis>false</RunCodeAnalysis>
     </PropertyGroup>
     <PropertyGroup>
         <DirWorkspace>$(SolutionDir)\..</DirWorkspace>

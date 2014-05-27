@@ -6,6 +6,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -61,6 +62,9 @@ namespace Apollo.UI.Wpf
         /// Notifies listeners about a change.
         /// </summary>
         /// <param name="property">The property that changed.</param>
+        /// <exception cref="InvalidExpressionException">
+        ///     Thrown when <paramref name="property"/> is not a valid property get lambda expression.
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "The generic expression makes it possible to get the property name which we need to raise the PropertyChanged event.")]
         protected void Notify(Expression<Func<object>> property)
@@ -71,10 +75,20 @@ namespace Apollo.UI.Wpf
             }
 
             var lambda = property as LambdaExpression;
+            if (lambda == null)
+            {
+                throw new InvalidExpressionException();
+            }
+
             MemberExpression memberExpression;
             if (lambda.Body is UnaryExpression)
             {
                 var unaryExpression = lambda.Body as UnaryExpression;
+                if (unaryExpression == null)
+                {
+                    throw new InvalidExpressionException();
+                }
+
                 memberExpression = unaryExpression.Operand as MemberExpression;
             }
             else
@@ -82,7 +96,17 @@ namespace Apollo.UI.Wpf
                 memberExpression = lambda.Body as MemberExpression;
             }
 
+            if (memberExpression == null)
+            {
+                throw new InvalidExpressionException();
+            }
+
             var propertyInfo = memberExpression.Member as PropertyInfo;
+            if (propertyInfo == null)
+            {
+                throw new InvalidExpressionException();
+            }
+
             RaisePropertyChanged(propertyInfo.Name);
         }
 

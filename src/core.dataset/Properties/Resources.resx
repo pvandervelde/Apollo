@@ -171,4 +171,7 @@
   <data name="Progress_ExecutingSchedule" xml:space="preserve">
     <value>Executing schedule ...</value>
   </data>
+  <data name="Exceptions_Messages_PartInstanceIdCannotBeTheInvalidId" xml:space="preserve">
+    <value>The GUID for a part instance ID cannot be equal to the invalid GUID.</value>
+  </data>
 </root>

@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 using Apollo.Internals;
@@ -22,6 +23,114 @@ namespace Test.Regression.Explorer.UseCases
     /// </summary>
     internal sealed class VerifyViews : IUserInterfaceVerifier
     {
+        /// <summary>
+        /// Verifies that the about dialog works as expected.
+        /// </summary>
+        /// <param name="application">The application.</param>
+        /// <param name="log">The log object.</param>
+        /// <param name="result">The test result for the current test.</param>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "This is a regression test which should always finish normally.")]
+        private static void VerifyAboutDialog(Application application, Log log, TestResult result)
+        {
+            const string prefix = "About dialog";
+            var assert = new Assert(result, log);
+            log.Info(prefix, "Verifying content ...");
+
+            MenuProxies.OpenAboutDialogViaHelpAboutMenuItem(application, log);
+            var dialog = DialogProxies.AboutWindow(application, log);
+            if (dialog == null)
+            {
+                var message = "Failed to get dialog.";
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
+                return;
+            }
+
+            // Check application name
+            var applicationNameSearchCiteria = SearchCriteria
+                .ByAutomationId(AboutAutomationIds.ProductName);
+            var nameLabel = Retry.Times(() => (Label)dialog.Get(applicationNameSearchCiteria));
+            if (nameLabel == null)
+            {
+                var message = "Failed to get name label.";
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
+                return;
+            }
+
+            var nameText = nameLabel.Text;
+            assert.AreEqual(ProductInformation.ProductName, nameText, prefix + " - Product name");
+
+            // Check application version
+            var applicationVersionSearchCriteria = SearchCriteria
+                .ByAutomationId(AboutAutomationIds.ProductVersion);
+            var versionLabel = Retry.Times(() => (Label)dialog.Get(applicationVersionSearchCriteria));
+            if (versionLabel == null)
+            {
+                var message = "Failed to get version label.";
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
+                return;
+            }
+
+            var versionText = versionLabel.Text;
+            var versionAttribute = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false);
+            var version = (versionAttribute[0] as AssemblyInformationalVersionAttribute).InformationalVersion;
+            assert.AreEqual(version, versionText, prefix + " - Product version");
+
+            // Check company name
+            var companyNameSearchCriteria = SearchCriteria
+                .ByAutomationId(AboutAutomationIds.CompanyName);
+            var companyLabel = Retry.Times(() => (Label)dialog.Get(companyNameSearchCriteria));
+            if (companyLabel == null)
+            {
+                var message = "Failed to get company label.";
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
+                return;
+            }
+
+            var companyText = companyLabel.Text;
+            assert.AreEqual(CompanyInformation.CompanyName, companyText, prefix + " - Company name");
+
+            // Check copyright
+            var copyrightSearchCriteria = SearchCriteria
+                .ByAutomationId(AboutAutomationIds.Copyright);
+            var copyrightLabel = Retry.Times(() => (Label)dialog.Get(copyrightSearchCriteria));
+            if (copyrightLabel == null)
+            {
+                var message = "Failed to get copyright label.";
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
+                return;
+            }
+
+            var copyrightText = copyrightLabel.Text;
+            assert.AreEqual(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Copyright {0} 2009 - {1}",
+                    CompanyInformation.CompanyName,
+                    DateTimeOffset.Now.Year),
+                copyrightText,
+                prefix + " - Copyright");
+
+            try
+            {
+                dialog.Close();
+            }
+            catch (Exception e)
+            {
+                var message = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Failed to close the dialog. Error was: {0}",
+                    e);
+                log.Error(prefix, message);
+                result.AddError(prefix + " - " + message);
+            }
+        }
+
         /// <summary>
         /// Returns a collection of tests that should be executed.
         /// </summary>
@@ -47,6 +156,8 @@ namespace Test.Regression.Explorer.UseCases
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
         /// <returns>The test result for the current test case.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "This is a regression test which should always finish normally.")]
         private TestResult VerifyTabBehaviour(Application application, Log log)
         {
             const string prefix = "Tabs";
@@ -141,6 +252,8 @@ namespace Test.Regression.Explorer.UseCases
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
         /// <returns>The test result for the current test case.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "This is a regression test which should always finish normally.")]
         public TestResult VerifyWelcomeTab(Application application, Log log)
         {
             const string prefix = "Welcome tab";
@@ -228,6 +341,8 @@ namespace Test.Regression.Explorer.UseCases
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
         /// <returns>The test result for the current test case.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "This is a regression test which should always finish normally.")]
         public TestResult VerifyCloseOnProjectOpenCheckbox(Application application, Log log)
         {
             const string prefix = "Close welcome tab on project open";
@@ -490,19 +605,6 @@ namespace Test.Regression.Explorer.UseCases
         }
 
         /// <summary>
-        /// Verifies that the 'Run' menu works as expected.
-        /// </summary>
-        /// <param name="application">The application.</param>
-        /// <param name="log">The log object.</param>
-        /// <param name="assert">The object used to verify the test conditions.</param>
-        /// <returns>The test result for the current test case.</returns>
-        public TestResult VerifyRunMenu(Application application, Log log, Assert assert)
-        {
-            // Do nothing for now
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Verifies that the 'Help' menu works as expected.
         /// </summary>
         /// <param name="application">The application.</param>
@@ -528,112 +630,6 @@ namespace Test.Regression.Explorer.UseCases
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Verifies that the about dialog works as expected.
-        /// </summary>
-        /// <param name="application">The application.</param>
-        /// <param name="log">The log object.</param>
-        /// <param name="result">The test result for the current test.</param>
-        private void VerifyAboutDialog(Application application, Log log, TestResult result)
-        {
-            const string prefix = "About dialog";
-            var assert = new Assert(result, log);
-            log.Info(prefix, "Verifying content ...");
-
-            MenuProxies.OpenAboutDialogViaHelpAboutMenuItem(application, log);
-            var dialog = DialogProxies.AboutWindow(application, log);
-            if (dialog == null)
-            {
-                var message = "Failed to get dialog.";
-                log.Error(prefix, message);
-                result.AddError(prefix + " - " + message);
-                return;
-            }
-
-            // Check application name
-            var applicationNameSearchCiteria = SearchCriteria
-                .ByAutomationId(AboutAutomationIds.ProductName);
-            var nameLabel = Retry.Times(() => (Label)dialog.Get(applicationNameSearchCiteria));
-            if (nameLabel == null)
-            {
-                var message = "Failed to get name label.";
-                log.Error(prefix, message);
-                result.AddError(prefix + " - " + message);
-                return;
-            }
-
-            var nameText = nameLabel.Text;
-            assert.AreEqual(ProductInformation.ProductName, nameText, prefix + " - Product name");
-
-            // Check application version
-            var applicationVersionSearchCriteria = SearchCriteria
-                .ByAutomationId(AboutAutomationIds.ProductVersion);
-            var versionLabel = Retry.Times(() => (Label)dialog.Get(applicationVersionSearchCriteria));
-            if (versionLabel == null)
-            {
-                var message = "Failed to get version label.";
-                log.Error(prefix, message);
-                result.AddError(prefix + " - " + message);
-                return;
-            }
-
-            var versionText = versionLabel.Text;
-            var versionAttribute = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false);
-            var version = (versionAttribute[0] as AssemblyInformationalVersionAttribute).InformationalVersion;
-            assert.AreEqual(version, versionText, prefix + " - Product version");
-
-            // Check company name
-            var companyNameSearchCriteria = SearchCriteria
-                .ByAutomationId(AboutAutomationIds.CompanyName);
-            var companyLabel = Retry.Times(() => (Label)dialog.Get(companyNameSearchCriteria));
-            if (companyLabel == null)
-            {
-                var message = "Failed to get company label.";
-                log.Error(prefix, message);
-                result.AddError(prefix + " - " + message);
-                return;
-            }
-
-            var companyText = companyLabel.Text;
-            assert.AreEqual(CompanyInformation.CompanyName, companyText, prefix + " - Company name");
-
-            // Check copyright
-            var copyrightSearchCriteria = SearchCriteria
-                .ByAutomationId(AboutAutomationIds.Copyright);
-            var copyrightLabel = Retry.Times(() => (Label)dialog.Get(copyrightSearchCriteria));
-            if (copyrightLabel == null)
-            {
-                var message = "Failed to get copyright label.";
-                log.Error(prefix, message);
-                result.AddError(prefix + " - " + message);
-                return;
-            }
-
-            var copyrightText = copyrightLabel.Text;
-            assert.AreEqual(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    "Copyright {0} 2009 - {1}",
-                    CompanyInformation.CompanyName,
-                    DateTimeOffset.Now.Year),
-                copyrightText,
-                prefix + " - Copyright");
-
-            try
-            {
-                dialog.Close();
-            }
-            catch (Exception e)
-            {
-                var message = string.Format(
-                    CultureInfo.InvariantCulture,
-                    "Failed to close the dialog. Error was: {0}",
-                    e);
-                log.Error(prefix, message);
-                result.AddError(prefix + " - " + message);
-            }
         }
     }
 }

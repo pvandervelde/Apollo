@@ -13,11 +13,14 @@
 // </auto-generated>
 //-----------------------------------------------------------------------
 
+using System.CodeDom.Compiler;
+
 namespace Apollo.Internals
 {
     /// <summary>
     /// Stores marketing information about the company.
     /// </summary>
+    [GeneratedCode("MsBuild.TemplateFile", "1.0")]
     internal static class CompanyInformation
     {
         /// <summary>

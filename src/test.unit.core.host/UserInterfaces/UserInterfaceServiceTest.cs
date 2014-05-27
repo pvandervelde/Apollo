@@ -120,6 +120,7 @@ namespace Apollo.Core.Host.UserInterfaces
                         UnloadProjectCommand.CommandId,
                     };
                 Assert.That(commandCollection, Is.EquivalentTo(original));
+                Assert.IsNotNull(service);
             }
         }
 
@@ -514,7 +515,7 @@ namespace Apollo.Core.Host.UserInterfaces
                 onStartService,
                 systemDiagnostics);
 
-            service.RegisterNotification(notificationNames.SystemShuttingDown, obj => { throw new Exception(); });
+            service.RegisterNotification(notificationNames.SystemShuttingDown, obj => { throw new NotImplementedException(); });
 
             var proxy = new CoreProxy(new Mock<IKernel>().Object, systemDiagnostics);
             service.ConnectTo(proxy);

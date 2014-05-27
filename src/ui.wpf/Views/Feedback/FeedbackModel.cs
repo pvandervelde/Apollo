@@ -41,23 +41,23 @@ namespace Apollo.UI.Wpf.Views.Feedback
         {
             try
             {
-                var searcher = new ManagementObjectSearcher(
-                    "root\\CIMV2",
-                    "SELECT * FROM Win32_Processor");
-
-                var builder = new StringBuilder();
-                builder.Append("Processors:");
-                foreach (ManagementObject queryObj in searcher.Get())
+                StringBuilder builder;
+                using (var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_Processor"))
                 {
-                    var description = queryObj["Description"];
-                    var name = queryObj["Name"];
+                    builder = new StringBuilder();
+                    builder.Append("Processors:");
+                    foreach (ManagementObject queryObj in searcher.Get())
+                    {
+                        var description = queryObj["Description"];
+                        var name = queryObj["Name"];
 
-                    builder.Append(
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            " - {0} ({1})",
-                            name,
-                            description));
+                        builder.Append(
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                " - {0} ({1})",
+                                name,
+                                description));
+                    }
                 }
 
                 return builder.ToString();
@@ -72,14 +72,13 @@ namespace Apollo.UI.Wpf.Views.Feedback
         {
             try
             {
-                var searcher = new ManagementObjectSearcher(
-                    "root\\CIMV2",
-                    "SELECT * FROM CIM_OperatingSystem");
-
                 ulong totalPhysical = 0;
-                foreach (ManagementObject queryObj in searcher.Get())
+                using (var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM CIM_OperatingSystem"))
                 {
-                    totalPhysical += (ulong)queryObj["TotalVisibleMemorySize"];
+                    foreach (ManagementObject queryObj in searcher.Get())
+                    {
+                        totalPhysical += (ulong)queryObj["TotalVisibleMemorySize"];
+                    }
                 }
 
                 return totalPhysical;

@@ -46,29 +46,31 @@ namespace Apollo.UI.Explorer
         public static int Main()
         {
             int functionReturnResult = -1;
-            Action applicationAction = 
-                () => 
+            using (var app = new App())
+            {
+                Action applicationAction =
+                () =>
                 {
-                    var app = new App();
                     app.InitializeComponent();
                     app.Run();
 
                     functionReturnResult = NormalApplicationExitCode;
                 };
 
-            using (var processor = new LogBasedExceptionProcessor(
-                LoggerBuilder.ForFile(
-                    Path.Combine(new FileConstants(new ApplicationConstants()).LogPath(), DefaultErrorFileName),
-                    new DebugLogTemplate(new NullConfiguration(), () => DateTimeOffset.Now))))
-            {
-                var result = TopLevelExceptionGuard.RunGuarded(
-                    applicationAction,
-                    new ExceptionProcessor[]
+                using (var processor = new LogBasedExceptionProcessor(
+                    LoggerBuilder.ForFile(
+                        Path.Combine(FileConstants.LogPath(), DefaultErrorFileName),
+                        new DebugLogTemplate(new NullConfiguration(), () => DateTimeOffset.Now))))
+                {
+                    var result = TopLevelExceptionGuard.RunGuarded(
+                        applicationAction,
+                        new ExceptionProcessor[]
                         {
                             processor.Process,
                         });
 
-                return (result == GuardResult.Failure) ? UnhandledExceptionApplicationExitCode : functionReturnResult;
+                    return (result == GuardResult.Failure) ? UnhandledExceptionApplicationExitCode : functionReturnResult;
+                }
             }
         }
 

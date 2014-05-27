@@ -20,8 +20,15 @@ namespace Apollo.Utilities.History
         /// </summary>
         /// <param name="storage">The storage object that holds the value of <typeparamref name="T"/>.</param>
         /// <returns>The value of <typeparamref name="T"/> stored by the <paramref name="storage"/> object.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="storage"/> is <see langword="null" />.
+        /// </exception>
         public static implicit operator T(ValueHistory<T> storage)
         {
+            {
+                Lokad.Enforce.Argument(() => storage);
+            }
+
             return storage.Current;
         }
 
@@ -30,10 +37,15 @@ namespace Apollo.Utilities.History
         /// </summary>
         /// <param name="storage">The storage object that holds the value of <typeparamref name="T"/>.</param>
         /// <returns>The value of <typeparamref name="T"/> stored by the <paramref name="storage"/> object.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes",
-            Justification = "FxCop wants it otherwise we get CA2225 but then it doesn't want static and generic.")]
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="storage"/> is <see langword="null" />.
+        /// </exception>
         public static T FromStorage(ValueHistory<T> storage)
         {
+            {
+                Lokad.Enforce.Argument(() => storage);
+            }
+
             return storage.Current;
         }
 

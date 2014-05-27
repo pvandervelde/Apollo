@@ -200,7 +200,7 @@ namespace Apollo.Utilities.History
             }
 
             // Dunno what that is ...
-            throw new ArgumentException();
+            throw new ArgumentException("Unknown storage type.", "storageType");
         }
 
         private static MockHistoryObject BuildObject(

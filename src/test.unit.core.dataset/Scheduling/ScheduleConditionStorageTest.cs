@@ -59,7 +59,7 @@ namespace Apollo.Core.Dataset.Scheduling
             var collection = ScheduleConditionStorage.CreateInstanceWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
 
-            var info = collection.Add(condition.Object, "a", "b");
+            collection.Add(condition.Object, "a", "b");
             var otherCondition = new Mock<IScheduleCondition>();
             Assert.Throws<ArgumentNullException>(() => collection.Update(null, otherCondition.Object));
         }
@@ -70,7 +70,7 @@ namespace Apollo.Core.Dataset.Scheduling
             var collection = ScheduleConditionStorage.CreateInstanceWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
 
-            var info = collection.Add(condition.Object, "a", "b");
+            collection.Add(condition.Object, "a", "b");
             var otherCondition = new Mock<IScheduleCondition>();
             Assert.Throws<UnknownScheduleConditionException>(() => collection.Update(new ScheduleElementId(), otherCondition.Object));
         }

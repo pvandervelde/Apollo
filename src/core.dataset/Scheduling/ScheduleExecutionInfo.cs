@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -44,7 +43,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <summary>
         /// Indicates if the current endpoint has been disposed.
         /// </summary>
-        private volatile bool m_IsDisposed = false;
+        private volatile bool m_IsDisposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScheduleExecutionInfo"/> class.

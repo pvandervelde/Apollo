@@ -50,7 +50,7 @@ namespace Test.Regression.Explorer
             ShowWindow(hWndConsole, MinimizeWindow);
         }
 
-        static int Main(string[] args)
+        static int Main()
         {
             // Minimize directly on start-up so that we can't take focus on our own window
             MinimizeConsoleWindow();
@@ -127,6 +127,8 @@ namespace Test.Regression.Explorer
                 LoggerLevel.Debug);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "This is a regression test which should always finish normally.")]
         private static TestResult ExecuteTestCase(TestStep testCase, Log testLog, string applicationPath)
         {
             const string prefix = "Execute test case";

@@ -42,8 +42,15 @@ namespace Test.Regression.Explorer
         /// </summary>
         /// <param name="type">The type for which the logger is created.</param>
         /// <returns>The newly created logger.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="type"/> is <see langword="null" />.
+        /// </exception>
         public ILogger Create(Type type)
         {
+            {
+                Lokad.Enforce.Argument(() => type);
+            }
+
             return new WhiteLogRedirector(type.FullName, m_DefaultLevel, m_Diagnostics);
         }
 
@@ -52,8 +59,19 @@ namespace Test.Regression.Explorer
         /// </summary>
         /// <param name="name">The name of the logger.</param>
         /// <returns>The newly created logger.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="name"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="name"/> is an empty string.
+        /// </exception>
         public ILogger Create(string name)
         {
+            {
+                Lokad.Enforce.Argument(() => name);
+                Lokad.Enforce.Argument(() => name, Lokad.Rules.StringIs.NotEmpty);
+            }
+
             return new WhiteLogRedirector(name, m_DefaultLevel, m_Diagnostics);
         }
 
@@ -63,8 +81,15 @@ namespace Test.Regression.Explorer
         /// <param name="type">The type for which the logger is created.</param>
         /// <param name="level">The default log level.</param>
         /// <returns>The newly created logger.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="type"/> is <see langword="null" />.
+        /// </exception>
         public ILogger Create(Type type, LoggerLevel level)
         {
+            {
+                Lokad.Enforce.Argument(() => type);
+            }
+
             return new WhiteLogRedirector(type.FullName, level, m_Diagnostics);
         }
 

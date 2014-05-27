@@ -130,7 +130,7 @@ namespace Apollo.Core.Base.Plugins
         }
 
         [Test]
-        public void RoundTripSerialise()
+        public void RoundtripSerialize()
         {
             var original = GroupImportDefinition.CreateDefinition(
                 "a",

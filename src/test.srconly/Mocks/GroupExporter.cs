@@ -82,7 +82,7 @@ namespace Test.Mocks
         {
             builder.Clear();
 
-            var exportOnProperty = builder.RegisterObject(typeof(ExportOnProperty));
+            builder.RegisterObject(typeof(ExportOnProperty));
             var actionOnMethod = builder.RegisterObject(typeof(ActionOnMethod));
             var conditionOnProperty = builder.RegisterObject(typeof(ConditionOnProperty));
 

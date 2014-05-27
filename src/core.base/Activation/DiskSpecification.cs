@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
@@ -85,18 +86,18 @@ namespace Apollo.Core.Base.Activation
             try
             {
                 // @Todo: Need to allow configurations to block out drives that we can't touch
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher(
-                    "root\\CIMV2",
-                    "SELECT * FROM Win32_LogicalDisk");
-
-                // Select all drives that are fixed local disks (drivetype == 3)
-                var drives = from ManagementObject queryObj in searcher.Get()
-                             where ((uint)queryObj["DriveType"] == 3)
-                             select new DiskSpecification(
-                                    queryObj["Caption"] as string,
-                                    queryObj["VolumeSerialNumber"] as string,
-                                    (ulong)queryObj["Size"],
-                                    (ulong)queryObj["FreeSpace"]);
+                IEnumerable<DiskSpecification> drives;
+                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_LogicalDisk"))
+                {
+                    // Select all drives that are fixed local disks (drivetype == 3)
+                    drives = from ManagementObject queryObj in searcher.Get()
+                        where ((uint)queryObj["DriveType"] == 3)
+                        select new DiskSpecification(
+                            queryObj["Caption"] as string,
+                            queryObj["VolumeSerialNumber"] as string,
+                            (ulong)queryObj["Size"],
+                            (ulong)queryObj["FreeSpace"]);
+                }
 
                 return drives.ToArray();
             }

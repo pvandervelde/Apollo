@@ -298,7 +298,6 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         public void AddChild()
         {
             DatasetCreationInformation creationInformation = null;
-            var childId = new DatasetId();
 
             var storage = new Mock<IPersistenceInformation>();
             var child = CreateMockDataset();

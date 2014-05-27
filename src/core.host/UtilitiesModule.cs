@@ -31,12 +31,6 @@ namespace Apollo.Core.Host
 
             // Register the global application objects
             {
-                builder.Register(c => new ApplicationConstants())
-                    .As<ApplicationConstants>();
-
-                builder.Register(c => new FileConstants(c.Resolve<ApplicationConstants>()))
-                    .As<FileConstants>();
-
                 builder.Register(c => new FileSystem())
                     .As<IFileSystem>();
             }

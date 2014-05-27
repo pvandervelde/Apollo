@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Host.Scripting;
 using Moq;
 using NUnit.Framework;
@@ -43,26 +44,36 @@ namespace Apollo.UI.Wpf.Commands
         [Test]
         public void CancelScriptRun()
         {
-            var tuple = new Tuple<Task, CancellationTokenSource>(new Task(() => { }), new CancellationTokenSource());
-            var scriptHost = new Mock<IHostScripts>();
+            using (var source = new CancellationTokenSource())
             {
-                scriptHost.Setup(s => s.Execute(It.IsAny<ScriptLanguage>(), It.IsAny<string>(), It.IsAny<TextWriter>()))
-                    .Returns(tuple);
-            }
-
-            var command = new RunScriptCommand(scriptHost.Object);
-            Assert.IsTrue(command.CanExecute(null));
-
-            var info = new ScriptRunInformation
+                using (var task = Task.Factory.StartNew(
+                    () => { },
+                    source.Token,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()))
                 {
-                    Language = ScriptLanguage.IronPython,
-                    Script = "a",
-                    ScriptOutput = new ScriptOutputPipe(),
-                };
-            command.Execute(info);
+                    var tuple = new Tuple<Task, CancellationTokenSource>(task, source);
+                    var scriptHost = new Mock<IHostScripts>();
+                    {
+                        scriptHost.Setup(s => s.Execute(It.IsAny<ScriptLanguage>(), It.IsAny<string>(), It.IsAny<TextWriter>()))
+                            .Returns(tuple);
+                    }
 
-            Assert.AreSame(tuple.Item1, info.ScriptRunningTask);
-            Assert.AreSame(tuple.Item2, info.CancellationToken);
+                    var command = new RunScriptCommand(scriptHost.Object);
+                    Assert.IsTrue(command.CanExecute(null));
+
+                    var info = new ScriptRunInformation
+                    {
+                        Language = ScriptLanguage.IronPython,
+                        Script = "a",
+                        ScriptOutput = new ScriptOutputPipe(),
+                    };
+                    command.Execute(info);
+
+                    Assert.AreSame(tuple.Item1, info.ScriptRunningTask);
+                    Assert.AreSame(tuple.Item2, info.CancellationToken);
+                }
+            }
         }
     }
 }

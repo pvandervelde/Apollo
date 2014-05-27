@@ -33,7 +33,7 @@ namespace Apollo.UI.Console.Nuclei.AppDomains
             {
                 var domain = AppDomain.CurrentDomain;
                 var handler = new ExceptionHandler(null, null);
-                domain.UnhandledException += (s, e) => handler.OnException(e.ExceptionObject as Exception, e.IsTerminating);
+                domain.UnhandledException += (s, e) => handler.OnException(e.ExceptionObject as Exception);
             }
         }
 

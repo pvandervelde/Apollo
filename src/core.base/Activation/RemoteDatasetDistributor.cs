@@ -333,7 +333,7 @@ namespace Apollo.Core.Base.Activation
                 }
             }
 
-            using (m_Diagnostics.Profiler.Measure(Globals.TimingGroup, "Generating remote proposal"))
+            using (m_Diagnostics.Profiler.Measure(BaseConstants.TimingGroup, "Generating remote proposal"))
             {
                 var proposals = RetrieveProposals(availableEndpoints, m_Configuration, activationRequest, token);
                 return proposals

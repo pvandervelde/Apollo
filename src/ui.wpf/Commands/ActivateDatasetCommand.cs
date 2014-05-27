@@ -71,9 +71,10 @@ namespace Apollo.UI.Wpf.Commands
             {
                 var source = new CancellationTokenSource();
                 dataset.Activate(
-                    DistributionLocations.All,
-                    selector,
-                    source.Token);
+                        DistributionLocations.All,
+                        selector,
+                        source.Token)
+                    .ContinueWith(t => source.Dispose());
                 projectFacade.ActiveProject().History.Mark();
             }
         }

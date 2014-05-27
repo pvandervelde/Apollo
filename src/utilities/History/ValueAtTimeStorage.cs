@@ -69,8 +69,15 @@ namespace Apollo.Utilities.History
         /// The function that is invoked for each stored value. Should return
         /// <see langword="false"/> to stop the iteration; otherwise, <see langword="true" />.
         /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="visitor"/> is <see langword="null" />.
+        /// </exception>
         public void TrackBackwardsInTime(Func<TimeMarker, T, bool> visitor)
         {
+            {
+                Lokad.Enforce.Argument(() => visitor);
+            }
+
             bool shouldContinue = true;
             var node = m_PastValues.Last;
             while ((node != null) && shouldContinue)
@@ -87,8 +94,15 @@ namespace Apollo.Utilities.History
         /// The function that is invoked for each stored value. Should return
         /// <see langword="false"/> to stop the iteration; otherwise, <see langword="true" />.
         /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="visitor"/> is <see langword="null" />.
+        /// </exception>
         public void TrackForwardsInTime(Func<TimeMarker, T, bool> visitor)
         {
+            {
+                Lokad.Enforce.Argument(() => visitor);
+            }
+
             bool shouldContinue = true;
             var node = m_FutureValues.First;
             while ((node != null) && shouldContinue)

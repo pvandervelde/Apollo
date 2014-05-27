@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Utilities.History;
 using QuickGraph;
 
 namespace Apollo.Utilities.History
@@ -213,8 +212,15 @@ namespace Apollo.Utilities.History
         /// </summary>
         /// <param name="edges">The collection of edges.</param>
         /// <returns>The number of edges that were added to the graph.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="edges"/> is <see langword="null" />.
+        /// </exception>
         public int AddEdgeRange(IEnumerable<TEdge> edges)
         {
+            {
+                Lokad.Enforce.Argument(() => edges);
+            }
+
             int count = 0;
             foreach (var edge in edges)
             {
@@ -357,8 +363,15 @@ namespace Apollo.Utilities.History
         /// </summary>
         /// <param name="vertices">The collection of vertices.</param>
         /// <returns>The number of vertices that were added to the graph.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="vertices"/> is <see langword="null" />.
+        /// </exception>
         public int AddVertexRange(IEnumerable<TVertex> vertices)
         {
+            {
+                Lokad.Enforce.Argument(() => vertices);
+            }
+
             int count = 0;
             foreach (var vertex in vertices)
             {
@@ -390,8 +403,15 @@ namespace Apollo.Utilities.History
         /// </summary>
         /// <param name="edges">The collection of edges.</param>
         /// <returns>The number of edges that were added to the graph.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="edges"/> is <see langword="null" />.
+        /// </exception>
         public int AddVerticesAndEdgeRange(IEnumerable<TEdge> edges)
         {
+            {
+                Lokad.Enforce.Argument(() => edges);
+            }
+
             int count = 0;
             foreach (var edge in edges)
             {
@@ -446,8 +466,15 @@ namespace Apollo.Utilities.History
         /// </summary>
         /// <param name="pred">The predicate.</param>
         /// <returns>The number of vertices that were removed.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="pred"/> is <see langword="null" />.
+        /// </exception>
         public int RemoveVertexIf(VertexPredicate<TVertex> pred)
         {
+            {
+                Lokad.Enforce.Argument(() => pred);
+            }
+
             var verticesToRemove = new List<TVertex>();
             foreach (var vertex in Current.Vertices)
             {
@@ -649,8 +676,15 @@ namespace Apollo.Utilities.History
         /// </summary>
         /// <param name="vertex">The vertex.</param>
         /// <param name="edgeFactory">The delegate that is used to create new edges.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="edgeFactory"/> is <see langword="null" />.
+        /// </exception>
         public void MergeVertex(TVertex vertex, EdgeFactory<TVertex, TEdge> edgeFactory)
         {
+            {
+                Lokad.Enforce.Argument(() => edgeFactory);
+            }
+
             var inEdges = Current.InEdges(vertex);
             var outEdges = Current.OutEdges(vertex);
 
@@ -681,8 +715,19 @@ namespace Apollo.Utilities.History
         /// </summary>
         /// <param name="vertexPredicate">The predicate that indicates which vertices need to be removed.</param>
         /// <param name="edgeFactory">The delegate that is used to create new edges.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="vertexPredicate"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="edgeFactory"/> is <see langword="null" />.
+        /// </exception>
         public void MergeVertexIf(VertexPredicate<TVertex> vertexPredicate, EdgeFactory<TVertex, TEdge> edgeFactory)
         {
+            {
+                Lokad.Enforce.Argument(() => vertexPredicate);
+                Lokad.Enforce.Argument(() => edgeFactory);
+            }
+
             var list = new List<TVertex>(VertexCount / 4);
             foreach (var vertex in this.Vertices)
             {

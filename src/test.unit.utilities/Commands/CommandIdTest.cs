@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using Nuclei.Nunit.Extensions;
 using NUnit.Framework;
@@ -62,15 +63,15 @@ namespace Apollo.Utilities.Commands
             private readonly IEnumerable<CommandId> m_DistinctInstances
                 = new List<CommandId> 
                      {
-                        new CommandId(1.ToString()),
-                        new CommandId(2.ToString()),
-                        new CommandId(3.ToString()),
-                        new CommandId(4.ToString()),
-                        new CommandId(5.ToString()),
-                        new CommandId(6.ToString()),
-                        new CommandId(7.ToString()),
-                        new CommandId(8.ToString()),
-                        new CommandId(9.ToString()),
+                        new CommandId(1.ToString(CultureInfo.InvariantCulture)),
+                        new CommandId(2.ToString(CultureInfo.InvariantCulture)),
+                        new CommandId(3.ToString(CultureInfo.InvariantCulture)),
+                        new CommandId(4.ToString(CultureInfo.InvariantCulture)),
+                        new CommandId(5.ToString(CultureInfo.InvariantCulture)),
+                        new CommandId(6.ToString(CultureInfo.InvariantCulture)),
+                        new CommandId(7.ToString(CultureInfo.InvariantCulture)),
+                        new CommandId(8.ToString(CultureInfo.InvariantCulture)),
+                        new CommandId(9.ToString(CultureInfo.InvariantCulture)),
                      };
 
             protected override IEnumerable<int> GetHashcodes()
@@ -249,7 +250,7 @@ namespace Apollo.Utilities.Commands
             IComparable first = new CommandId("a");
             object second = new CommandId("b");
 
-            Assert.IsTrue("a".CompareTo("b") < 0);
+            Assert.IsTrue(string.Compare("a", "b", StringComparison.Ordinal) < 0);
             Assert.IsTrue(first.CompareTo(second) < 0);
         }
 

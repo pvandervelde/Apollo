@@ -32,7 +32,7 @@ namespace Apollo.Core.Base.Activation
 
         /// <summary>
         /// Gets a value indicating whether the selection process
-        /// was canceled at any point.
+        /// was cancelled at any point.
         /// </summary>
         public bool WasSelectionCanceled
         {

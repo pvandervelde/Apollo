@@ -62,8 +62,15 @@ namespace Apollo.UI.Wpf
         /// </summary>
         /// <param name="region">The region.</param>
         /// <param name="view">The view for the region.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="region"/> is <see langword="null" />.
+        /// </exception>
         public static void AddAndActivate(this IRegion region, object view)
         {
+            {
+                Lokad.Enforce.Argument(() => region);
+            }
+
             region.Add(view);
             region.Activate(view);
         }
@@ -74,8 +81,15 @@ namespace Apollo.UI.Wpf
         /// <param name="region">The region.</param>
         /// <param name="view">The view for the region.</param>
         /// <param name="name">The name for the association.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="region"/> is <see langword="null" />.
+        /// </exception>
         public static void AddAndActivate(this IRegion region, object view, string name)
         {
+            {
+                Lokad.Enforce.Argument(() => region);
+            }
+
             region.Add(view, name);
             region.Activate(view);
         }
@@ -86,8 +100,15 @@ namespace Apollo.UI.Wpf
         /// <param name="region">The region.</param>
         /// <param name="view">The view for the region.</param>
         /// <param name="createChildRegion">If set to <see langword="true" /> a child region manager will be created.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="region"/> is <see langword="null" />.
+        /// </exception>
         public static void AddAndActivate(this IRegion region, object view, bool createChildRegion)
         {
+            {
+                Lokad.Enforce.Argument(() => region);
+            }
+
             region.Add(view, Guid.NewGuid().ToString(), createChildRegion);
             region.Activate(view);
         }
@@ -98,8 +119,15 @@ namespace Apollo.UI.Wpf
         /// <param name="region">The region.</param>
         /// <param name="parameter">The parameter.</param>
         /// <returns>The view that is associated with the given parameter.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="region"/> is <see langword="null" />.
+        /// </exception>
         public static object GetViewByParameter(this IRegion region, Parameter parameter)
         {
+            {
+                Lokad.Enforce.Argument(() => region);
+            }
+
             return region.Views.OfType<DependencyObject>().FirstOrDefault(x => parameter.Equals(GetParameter(x)));
         }
 
@@ -108,8 +136,15 @@ namespace Apollo.UI.Wpf
         /// </summary>
         /// <param name="region">The region.</param>
         /// <param name="parameter">The parameter.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="region"/> is <see langword="null" />.
+        /// </exception>
         public static void ActivateByParameter(this IRegion region, Parameter parameter)
         {
+            {
+                Lokad.Enforce.Argument(() => region);
+            }
+
             var view = region.GetViewByParameter(parameter);
             if (view != null)
             {
@@ -125,10 +160,17 @@ namespace Apollo.UI.Wpf
         /// <returns>
         ///     <see langword="true" /> if a view by this parameter already exists in the region; otherwise, <see langword="false" />.
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="region"/> is <see langword="null" />.
+        /// </exception>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
         public static bool HasViewByParameter(this IRegion region, Parameter parameter)
         {
+            {
+                Lokad.Enforce.Argument(() => region);
+            }
+
             return region.GetViewByParameter(parameter) != null;
         }
 
@@ -138,8 +180,15 @@ namespace Apollo.UI.Wpf
         /// <param name="region">The region.</param>
         /// <param name="view">The view for the parameter.</param>
         /// <param name="parameter">The parameter.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="region"/> is <see langword="null" />.
+        /// </exception>
         public static void AddWithParameter(this IRegion region, object view, Parameter parameter)
         {
+            {
+                Lokad.Enforce.Argument(() => region);
+            }
+
             SetParameter(view, parameter);
             region.Add(view);
         }
@@ -150,8 +199,15 @@ namespace Apollo.UI.Wpf
         /// <param name="region">The region.</param>
         /// <param name="view">The view for the parameter.</param>
         /// <param name="parameter">The parameter.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="region"/> is <see langword="null" />.
+        /// </exception>
         public static void AddAndActivateWithParameter(this IRegion region, object view, Parameter parameter)
         {
+            {
+                Lokad.Enforce.Argument(() => region);
+            }
+
             region.AddWithParameter(view, parameter);
             region.Activate(view);
         }

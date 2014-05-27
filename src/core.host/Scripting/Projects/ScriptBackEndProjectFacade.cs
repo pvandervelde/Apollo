@@ -166,15 +166,6 @@ namespace Apollo.Core.Host.Scripting.Projects
         }
 
         /// <summary>
-        /// Saves the current project.
-        /// </summary>
-        /// <param name="filePath">The path to the file where the project should be persisted.</param>
-        public void SaveProject(string filePath)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Returns the root dataset for the current project.
         /// </summary>
         /// <returns>The root dataset.</returns>

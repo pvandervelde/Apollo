@@ -60,7 +60,7 @@ namespace Apollo.Utilities.History
         }
 
         [Test]
-        public void RollBackToToCurrentValue()
+        public void RollBackToCurrentValue()
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc =

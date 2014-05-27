@@ -60,7 +60,7 @@ namespace Apollo.Core.Dataset.Plugins
             /// <returns><see langword="true" /> if the specified objects are equal; otherwise, <see langword="false"/>.</returns>
             public bool Equals(ParameterInfo x, ParameterInfo y)
             {
-                return x != null && x.ParameterType.IsAssignableFrom(y.ParameterType);
+                return x != null && y != null && x.ParameterType.IsAssignableFrom(y.ParameterType);
             }
 
             /// <summary>
@@ -68,8 +68,15 @@ namespace Apollo.Core.Dataset.Plugins
             /// </summary>
             /// <param name="obj">The <see cref="ParameterInfo"/> for which a hash code is to be returned.</param>
             /// <returns>A hash code for the specified object.</returns>
+            /// <exception cref="ArgumentNullException">
+            ///     Thrown if <paramref name="obj"/> is <see langword="null" />.
+            /// </exception>
             public int GetHashCode(ParameterInfo obj)
             {
+                {
+                    Lokad.Enforce.Argument(() => obj);
+                }
+
                 return obj.GetHashCode();
             }
         }

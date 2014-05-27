@@ -143,7 +143,7 @@ namespace Apollo.Core.Host.Plugins
             var knownFiles = m_Repository.KnownPluginFiles();
 
             var changedKnownFiles = knownFiles
-                .Where(p => files.Exists(f => string.Equals(p.Path, f, StringComparison.InvariantCultureIgnoreCase)))
+                .Where(p => files.Exists(f => string.Equals(p.Path, f, StringComparison.OrdinalIgnoreCase)))
                 .Where(p => m_FileSystem.File.GetLastWriteTimeUtc(p.Path) > p.LastWriteTimeUtc)
                 .Select(p => p.Path);
 

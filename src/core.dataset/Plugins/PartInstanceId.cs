@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
+using Apollo.Core.Dataset.Properties;
 using Nuclei;
 
 namespace Apollo.Core.Dataset.Plugins
@@ -49,7 +50,12 @@ namespace Apollo.Core.Dataset.Plugins
         internal PartInstanceId(Guid id)
             : base(id)
         {
-            Debug.Assert(id != s_InvalidId, "The ID number should not be invalid"); 
+            if (id.Equals(s_InvalidId))
+            {
+                throw new ArgumentException(
+                    Resources.Exceptions_Messages_PartInstanceIdCannotBeTheInvalidId,
+                    "id");
+            }
         }
 
         /// <summary>

@@ -27,16 +27,22 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         public void ProcessWithIncorrectVertexType()
         {
             var processor = new EndVertexProcessor();
-            var state = processor.Process(new StartVertex(1), new ScheduleExecutionInfo());
-            Assert.AreEqual(ScheduleExecutionState.IncorrectProcessorForVertex, state);
+            using (var info = new ScheduleExecutionInfo())
+            {
+                var state = processor.Process(new StartVertex(1), info);
+                Assert.AreEqual(ScheduleExecutionState.IncorrectProcessorForVertex, state);
+            }
         }
 
         [Test]
         public void Process()
         {
             var processor = new EndVertexProcessor();
-            var state = processor.Process(new EndVertex(1), new ScheduleExecutionInfo());
-            Assert.AreEqual(ScheduleExecutionState.Completed, state);
+            using (var info = new ScheduleExecutionInfo())
+            {
+                var state = processor.Process(new EndVertex(1), info);
+                Assert.AreEqual(ScheduleExecutionState.Completed, state);
+            }
         }
     }
 }

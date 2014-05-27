@@ -100,7 +100,7 @@ namespace Apollo.Core.Host.Projects
         }
 
         [Test]
-        public void SaveWithullPersistenceInformation()
+        public void SaveWithNullPersistenceInformation()
         {
             ITimeline timeline = null;
             timeline = new Timeline(t => BuildStorage(timeline, t));

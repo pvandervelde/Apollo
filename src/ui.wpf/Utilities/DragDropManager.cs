@@ -101,8 +101,15 @@ namespace Apollo.UI.Wpf.Utilities
         /// </summary>
         /// <param name="obj">The dependency object on which the property should be set.</param>
         /// <param name="isSet">Indicates if the property is set or not set.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="obj"/> is <see langword="null" />.
+        /// </exception>
         public static void SetDragSourceAdvisor(DependencyObject obj, bool isSet)
         {
+            {
+                Lokad.Enforce.Argument(() => obj);
+            }
+
             obj.SetValue(DragSourceAdvisorProperty, isSet);
         }
 
@@ -112,8 +119,15 @@ namespace Apollo.UI.Wpf.Utilities
         /// </summary>
         /// <param name="obj">The dependency object on which the property should be set.</param>
         /// <param name="isSet">Indicates if the property is set or not set.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="obj"/> is <see langword="null" />.
+        /// </exception>
         public static void SetIsDragAllowed(DependencyObject obj, bool isSet)
         {
+            {
+                Lokad.Enforce.Argument(() => obj);
+            }
+
             obj.SetValue(IsDragAllowedProperty, isSet);
         }
 
@@ -123,8 +137,15 @@ namespace Apollo.UI.Wpf.Utilities
         /// </summary>
         /// <param name="obj">The dependency object on which the property should be set.</param>
         /// <param name="isSet">Indicates if the property is set or not set.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="obj"/> is <see langword="null" />.
+        /// </exception>
         public static void SetDragVisualizationTemplate(DependencyObject obj, bool isSet)
         {
+            {
+                Lokad.Enforce.Argument(() => obj);
+            }
+
             obj.SetValue(DragVisualizationTemplateProperty, isSet);
         }
 
@@ -134,8 +155,15 @@ namespace Apollo.UI.Wpf.Utilities
         /// </summary>
         /// <param name="obj">The dependency object on which the property should be set.</param>
         /// <param name="isSet">Indicates if the property is set or not set.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="obj"/> is <see langword="null" />.
+        /// </exception>
         public static void SetDropTargetAdvisor(DependencyObject obj, bool isSet)
         {
+            {
+                Lokad.Enforce.Argument(() => obj);
+            }
+
             obj.SetValue(DropTargetAdvisorProperty, isSet);
         }
 
@@ -145,8 +173,15 @@ namespace Apollo.UI.Wpf.Utilities
         /// </summary>
         /// <param name="obj">The dependency object on which the property should be set.</param>
         /// <param name="isSet">Indicates if the property is set or not set.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="obj"/> is <see langword="null" />.
+        /// </exception>
         public static void SetDropHandler(DependencyObject obj, bool isSet)
         {
+            {
+                Lokad.Enforce.Argument(() => obj);
+            }
+
             obj.SetValue(DropHandlerProperty, isSet);
         }
 

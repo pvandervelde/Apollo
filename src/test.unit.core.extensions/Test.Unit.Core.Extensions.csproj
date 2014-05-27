@@ -6,6 +6,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Apollo.Core.Extensions</RootNamespace>
     <AssemblyName>Test.Unit.Core.Extensions</AssemblyName>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ShouldDoDocumentation>false</ShouldDoDocumentation>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -92,6 +93,7 @@
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -135,6 +137,11 @@
     <Compile Include="Scheduling\ScheduleElementIdTest.cs" />
     <Compile Include="Scheduling\ScheduleIdTest.cs" />
     <Compile Include="Scheduling\UnknownScheduleVertexExceptionTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
+      <Link>CustomDictionary.xml</Link>
+    </CodeAnalysisDictionary>
   </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

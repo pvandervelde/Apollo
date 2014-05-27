@@ -27,21 +27,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Utilities", "test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FA065AF0-8827-4E09-ABAA-812E5E9AA363}"
 	ProjectSection(SolutionItems) = preProject
-		..\templates\app.manifest.in = ..\templates\app.manifest.in
-		..\templates\AssemblyInfo.Base.cs.in = ..\templates\AssemblyInfo.Base.cs.in
-		..\templates\AssemblyInfo.BuildInformation.cs.in = ..\templates\AssemblyInfo.BuildInformation.cs.in
-		..\templates\AssemblyInfo.InternalsVisibleTo.cs.in = ..\templates\AssemblyInfo.InternalsVisibleTo.cs.in
-		..\templates\AssemblyInfo.VersionNumber.cs.in = ..\templates\AssemblyInfo.VersionNumber.cs.in
+		codeanalysis.base.ruleset = codeanalysis.base.ruleset
+		codeanalysis.test.ruleset = codeanalysis.test.ruleset
 		..\company.xml = ..\company.xml
-		..\templates\CompanyIncludes.wxi.in = ..\templates\CompanyIncludes.wxi.in
-		..\templates\CompanyInformation.cs.in = ..\templates\CompanyInformation.cs.in
-		..\templates\Dependencies.wxi.in = ..\templates\Dependencies.wxi.in
+		..\NextVersion.txt = ..\NextVersion.txt
 		..\nuget.config = ..\nuget.config
 		..\packages.config = ..\packages.config
-		..\templates\ProductIncludes.wxi.in = ..\templates\ProductIncludes.wxi.in
-		..\templates\ProductInformation.cs.in = ..\templates\ProductInformation.cs.in
-		..\version.xml = ..\version.xml
-		..\templates\VersionNumber.wxi.in = ..\templates\VersionNumber.wxi.in
+		..\product.xml = ..\product.xml
+		..\README.md = ..\README.md
+		..\Settings.StyleCop = ..\Settings.StyleCop
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Extensions", "core.extensions\Apollo.Core.Extensions.csproj", "{EE14FAFE-8E78-11E1-B5D3-6DF7BBE59B18}"
@@ -65,6 +59,33 @@ EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Wix.Host", "wix.host\Wix.Host.wixproj", "{B8DE1DF9-52C3-4EA2-AF76-F45B35BEFEBC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Regression.Explorer", "test.regression.explorer\Test.Regression.Explorer.csproj", "{96589EDE-BE39-4FEA-8614-188DD936792A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{41EA47AE-001C-46EC-BFD0-299245E534EC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{60C08DFA-E52E-4122-948C-1AFB5F9E59A1}"
+	ProjectSection(SolutionItems) = preProject
+		..\templates\CompanyIncludes.wxi.in = ..\templates\CompanyIncludes.wxi.in
+		..\templates\Dependencies.wxi.in = ..\templates\Dependencies.wxi.in
+		..\templates\ProductIncludes.wxi.in = ..\templates\ProductIncludes.wxi.in
+		..\templates\VersionNumber.wxi.in = ..\templates\VersionNumber.wxi.in
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Product", "Product", "{1A988421-4074-4173-9123-4FF803964905}"
+	ProjectSection(SolutionItems) = preProject
+		..\templates\app.manifest.in = ..\templates\app.manifest.in
+		..\templates\AssemblyInfo.Base.cs.in = ..\templates\AssemblyInfo.Base.cs.in
+		..\templates\AssemblyInfo.BuildInformation.cs.in = ..\templates\AssemblyInfo.BuildInformation.cs.in
+		..\templates\AssemblyInfo.InternalsVisibleTo.cs.in = ..\templates\AssemblyInfo.InternalsVisibleTo.cs.in
+		..\templates\AssemblyInfo.VersionNumber.cs.in = ..\templates\AssemblyInfo.VersionNumber.cs.in
+		..\templates\CompanyInformation.cs.in = ..\templates\CompanyInformation.cs.in
+		..\templates\ProductInformation.cs.in = ..\templates\ProductInformation.cs.in
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{9BA565F7-C4EE-41E6-8E42-CDBB5FFD325E}"
+	ProjectSection(SolutionItems) = preProject
+		BaseConfiguration.targets = BaseConfiguration.targets
+		WixBaseConfiguration.targets = WixBaseConfiguration.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -178,5 +199,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{60C08DFA-E52E-4122-948C-1AFB5F9E59A1} = {41EA47AE-001C-46EC-BFD0-299245E534EC}
+		{1A988421-4074-4173-9123-4FF803964905} = {41EA47AE-001C-46EC-BFD0-299245E534EC}
 	EndGlobalSection
 EndGlobal

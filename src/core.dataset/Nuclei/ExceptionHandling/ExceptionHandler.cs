@@ -36,10 +36,9 @@ namespace Apollo.Core.Dataset.Nuclei.ExceptionHandling
         /// Used when an unhandled exception occurs in an <see cref="AppDomain"/>.
         /// </summary>
         /// <param name="exception">The exception that was thrown.</param>
-        /// <param name="isApplicationTerminating">Indicates if the application is about to shut down or not.</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "We're doing exception handling here, we don't really want anything to escape.")]
-        public void OnException(Exception exception, bool isApplicationTerminating)
+        public void OnException(Exception exception)
         {
             // Something has gone really wrong here. We need to be very careful
             // when we try to deal with this exception because:

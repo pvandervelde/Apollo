@@ -13,7 +13,6 @@ using System.Globalization;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using Apollo.Core.Base;
@@ -94,7 +93,7 @@ namespace Apollo.Core.Dataset
         {
             builder.Register(c => LoggerBuilder.ForFile(
                     Path.Combine(
-                        c.Resolve<FileConstants>().LogPath(),
+                        FileConstants.LogPath(),
                         string.Format(
                             CultureInfo.InvariantCulture,
                             DefaultInfoFileName,
@@ -126,7 +125,7 @@ namespace Apollo.Core.Dataset
                                 // been removed yet.
                                 Func<Stream> factory =
                                     () => new FileStream(
-                                        Path.Combine(new FileConstants(new ApplicationConstants()).LogPath(), DefaultProfilerFileName),
+                                        Path.Combine(FileConstants.LogPath(), DefaultProfilerFileName),
                                         FileMode.OpenOrCreate,
                                         FileAccess.Write,
                                         FileShare.Read);
@@ -337,12 +336,6 @@ namespace Apollo.Core.Dataset
             IContainer result = null;
             var builder = new ContainerBuilder();
             {
-                builder.Register(c => new ApplicationConstants())
-                   .As<ApplicationConstants>();
-
-                builder.Register(c => new FileConstants(c.Resolve<ApplicationConstants>()))
-                    .As<FileConstants>();
-
                 builder.Register(c => new XmlConfiguration(
                         CommunicationConfigurationKeys.ToCollection()
                             .Append(DiagnosticsConfigurationKeys.ToCollection())
@@ -378,6 +371,7 @@ namespace Apollo.Core.Dataset
 
                 builder.Register(c => context)
                     .As<ApplicationContext>()
+                    .As<IDisposable>()
                     .ExternallyOwned();
 
                 RegisterLoggers(builder);

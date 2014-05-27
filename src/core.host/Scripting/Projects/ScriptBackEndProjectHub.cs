@@ -140,15 +140,6 @@ namespace Apollo.Core.Host.Scripting.Projects
         }
 
         /// <summary>
-        /// Loads a new project from the given resource stream.
-        /// </summary>
-        /// <param name="projectFilePath">The path to the file in which the project was persisted.</param>
-        public void LoadProject(string projectFilePath)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Returns a value indicating if the existing project can be unloaded.
         /// </summary>
         /// <returns>

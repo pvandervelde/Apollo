@@ -12,7 +12,7 @@
         <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
     </PropertyGroup>
 
-    <Target Name="Run" DependsOnTargets="_PrepareWorkspace;_GatherReleaseNotes;_CodeAnalysisCcm;_CodeAnalysisSourceMonitor;_BuildBinaries;_ExecuteUnitTests;_CodeAnalysisFxCop;_CodeAnalysisMoma;_BuildApiDocumentation;_PackageNuget;_PackageTests">
+    <Target Name="Run" DependsOnTargets="_PrepareWorkspace;_GatherReleaseNotes;_CodeAnalysisCcm;_CodeAnalysisSourceMonitor;_BuildBinaries;_ExecuteUnitTests;_CodeAnalysisMoma;_BuildApiDocumentation;_PackageNuget;_PackageTests">
         <!-- Do nothing here -->
     </Target>
     
@@ -62,13 +62,6 @@
     </PropertyGroup>
     <Target Name="_ExecuteUnitTests" DependsOnTargets="_BuildBinaries">
         <MSBuild Projects="$(MsBuildExecuteUnitTest)" Properties="Configuration=Release" />
-    </Target>
-
-    <PropertyGroup>
-        <MsBuildAnalyzeFxCop>$(DirWorkspace)\build.analyze.fxcop.msbuild</MsBuildAnalyzeFxCop>
-    </PropertyGroup>
-    <Target Name="_CodeAnalysisFxCop" DependsOnTargets="_BuildBinaries">
-        <MSBuild Projects="$(MsBuildAnalyzeFxCop)" Properties="Configuration=Release" />
     </Target>
 
     <PropertyGroup>

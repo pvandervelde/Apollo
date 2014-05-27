@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Automation;
 using Apollo.UI.Explorer;
@@ -59,6 +60,8 @@ namespace Test.Regression.Explorer.Controls
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
         /// <returns>The start page tab item.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "This is a regression test which should always finish normally.")]
         public static ITabPage GetStartPageTabItem(Application application, Log log)
         {
             const string prefix = "Tabs - Get start page";
@@ -92,6 +95,8 @@ namespace Test.Regression.Explorer.Controls
         /// <param name="application">The application.</param>
         /// <param name="log">The log object.</param>
         /// <returns>The project page tab item.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "This is a regression test which should always finish normally.")]
         public static ITabPage GetProjectPageTabItem(Application application, Log log)
         {
             const string prefix = "Tabs - Get project page";

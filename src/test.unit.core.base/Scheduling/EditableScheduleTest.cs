@@ -228,7 +228,7 @@ namespace Apollo.Core.Base.Scheduling
         }
 
         [Test]
-        public void RoundTripSerialise()
+        public void RoundtripSerialize()
         {
             // Making a schedule that looks like:
             // start -> node1 --> node2 -> end

@@ -63,7 +63,7 @@ namespace Apollo.UI.Wpf.Profiling
             m_Storage = timingStorage;
             m_Collection = collection;
             m_Transformer = reportTransformer;
-            m_Interval = (ITimerInterval)diagnostics.Profiler.Measure(Globals.TimingGroup, description);
+            m_Interval = (ITimerInterval)diagnostics.Profiler.Measure(BaseConstants.TimingGroup, description);
         }
 
         /// <summary>

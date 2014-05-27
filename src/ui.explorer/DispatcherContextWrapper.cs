@@ -7,7 +7,6 @@
 using System;
 using System.Windows.Threading;
 using Apollo.UI.Wpf;
-using Lokad;
 
 namespace Apollo.UI.Explorer
 {
@@ -31,7 +30,7 @@ namespace Apollo.UI.Explorer
         public DispatcherContextWrapper(Dispatcher dispatcher)
         {
             {
-                Enforce.Argument(() => dispatcher);
+                Lokad.Enforce.Argument(() => dispatcher);
             }
 
             m_Dispatcher = dispatcher;
@@ -53,8 +52,15 @@ namespace Apollo.UI.Explorer
         /// Invokes the given action in the correct context.
         /// </summary>
         /// <param name="action">The action to execute.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="action"/> is <see langword="null" />.
+        /// </exception>
         public void Invoke(Action action)
         {
+            {
+                Lokad.Enforce.Argument(() => action);
+            }
+
             if (m_Dispatcher.CheckAccess())
             {
                 action();

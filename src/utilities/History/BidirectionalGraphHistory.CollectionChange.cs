@@ -5,8 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
-using Apollo.Utilities.History;
 using QuickGraph;
 
 namespace Apollo.Utilities.History
@@ -52,9 +50,15 @@ namespace Apollo.Utilities.History
             /// Applies the changes in the current change to the given history object.
             /// </summary>
             /// <param name="historyObject">The object to which the changes should be applied.</param>
+            /// <exception cref="ArgumentNullException">
+            ///     Thrown if <paramref name="historyObject"/> is <see langword="null" />.
+            /// </exception>
             public void ApplyTo(BidirectionalGraph<TVertex, TEdge> historyObject)
             {
-                Debug.Assert(historyObject != null, "This change can only be applied to a BidirectionalGraph.");
+                {
+                    Lokad.Enforce.Argument(() => historyObject);
+                }
+
                 historyObject.EdgeCapacity = m_Capacity;
             }
         }
@@ -95,9 +99,15 @@ namespace Apollo.Utilities.History
             /// Applies the changes in the current change to the given history object.
             /// </summary>
             /// <param name="historyObject">The object to which the changes should be applied.</param>
+            /// <exception cref="ArgumentNullException">
+            ///     Thrown if <paramref name="historyObject"/> is <see langword="null" />.
+            /// </exception>
             public void ApplyTo(BidirectionalGraph<TVertex, TEdge> historyObject)
             {
-                Debug.Assert(historyObject != null, "This change can only be applied to a BidirectionalGraph.");
+                {
+                    Lokad.Enforce.Argument(() => historyObject);
+                }
+
                 historyObject.AddEdge(m_Edge);
             }
         }
@@ -138,9 +148,15 @@ namespace Apollo.Utilities.History
             /// Applies the changes in the current change to the given history object.
             /// </summary>
             /// <param name="historyObject">The object to which the changes should be applied.</param>
+            /// <exception cref="ArgumentNullException">
+            ///     Thrown if <paramref name="historyObject"/> is <see langword="null" />.
+            /// </exception>
             public void ApplyTo(BidirectionalGraph<TVertex, TEdge> historyObject)
             {
-                Debug.Assert(historyObject != null, "This change can only be applied to a BidirectionalGraph.");
+                {
+                    Lokad.Enforce.Argument(() => historyObject);
+                }
+
                 historyObject.RemoveEdge(m_Edge);
             }
         }
@@ -181,9 +197,15 @@ namespace Apollo.Utilities.History
             /// Applies the changes in the current change to the given history object.
             /// </summary>
             /// <param name="historyObject">The object to which the changes should be applied.</param>
+            /// <exception cref="ArgumentNullException">
+            ///     Thrown if <paramref name="historyObject"/> is <see langword="null" />.
+            /// </exception>
             public void ApplyTo(BidirectionalGraph<TVertex, TEdge> historyObject)
             {
-                Debug.Assert(historyObject != null, "This change can only be applied to a BidirectionalGraph.");
+                {
+                    Lokad.Enforce.Argument(() => historyObject);
+                }
+
                 historyObject.AddVertex(m_Vertex);
             }
         }
@@ -224,9 +246,15 @@ namespace Apollo.Utilities.History
             /// Applies the changes in the current change to the given history object.
             /// </summary>
             /// <param name="historyObject">The object to which the changes should be applied.</param>
+            /// <exception cref="ArgumentNullException">
+            ///     Thrown if <paramref name="historyObject"/> is <see langword="null" />.
+            /// </exception>
             public void ApplyTo(BidirectionalGraph<TVertex, TEdge> historyObject)
             {
-                Debug.Assert(historyObject != null, "This change can only be applied to a BidirectionalGraph.");
+                {
+                    Lokad.Enforce.Argument(() => historyObject);
+                }
+
                 historyObject.RemoveVertex(m_Vertex);
             }
         }
@@ -253,9 +281,15 @@ namespace Apollo.Utilities.History
             /// Applies the changes in the current change to the given history object.
             /// </summary>
             /// <param name="historyObject">The object to which the changes should be applied.</param>
+            /// <exception cref="ArgumentNullException">
+            ///     Thrown if <paramref name="historyObject"/> is <see langword="null" />.
+            /// </exception>
             public void ApplyTo(BidirectionalGraph<TVertex, TEdge> historyObject)
             {
-                Debug.Assert(historyObject != null, "This change can only be applied to a BidirectionalGraph.");
+                {
+                    Lokad.Enforce.Argument(() => historyObject);
+                }
+                
                 historyObject.Clear();
             }
         }

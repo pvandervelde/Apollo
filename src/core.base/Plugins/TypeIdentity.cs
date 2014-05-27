@@ -438,6 +438,8 @@ namespace Apollo.Core.Base.Plugins
         ///     <see langword="true"/> if the specified <see cref="Type"/> is equal to this instance;
         ///     otherwise, <see langword="false"/>.
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0",
+            Justification = "There is no need to validate the parameter because it is implicitly verified.")]
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
         public bool Equals(Type other)

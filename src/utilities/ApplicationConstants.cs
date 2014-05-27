@@ -14,8 +14,7 @@ namespace Apollo.Utilities
     /// <summary>
     /// Holds a set of constants that apply to the application.
     /// </summary>
-    [Serializable]
-    public sealed class ApplicationConstants
+    public static class ApplicationConstants
     {
         /// <summary>
         /// Gets the assembly that called into this assembly.
@@ -37,28 +36,10 @@ namespace Apollo.Utilities
         }
 
         /// <summary>
-        /// Gets the attribute from the calling assembly.
-        /// </summary>
-        /// <typeparam name="T">The type of attribute that should be gotten from the assembly.</typeparam>
-        /// <returns>
-        /// The requested attribute.
-        /// </returns>
-        private static T GetAttributeFromAssembly<T>() where T : Attribute
-        {
-            var attributes = GetAssembly().GetCustomAttributes(typeof(T), false);
-            Debug.Assert(attributes.Length == 1, "There should only be one attribute.");
-
-            var requestedAttribute = attributes[0] as T;
-            Debug.Assert(requestedAttribute != null, "Found an incorrect attribute type.");
-
-            return requestedAttribute;
-        }
-
-        /// <summary>
         /// Gets the name of the company.
         /// </summary>
         /// <value>The name of the company.</value>
-        public string CompanyName
+        public static string CompanyName
         {
             get
             {
@@ -70,7 +51,7 @@ namespace Apollo.Utilities
         /// Gets the name of the application.
         /// </summary>
         /// <value>The name of the application.</value>
-        public string ApplicationName
+        public static string ApplicationName
         {
             get
             {
@@ -82,7 +63,7 @@ namespace Apollo.Utilities
         /// Gets the application version.
         /// </summary>
         /// <value>The application version.</value>
-        public Version ApplicationVersion
+        public static Version ApplicationVersion
         {
             get
             {
@@ -99,7 +80,7 @@ namespace Apollo.Utilities
         /// A compatible application version indicates that the current version reads the
         /// configuration files of the compatible application.
         /// </remarks>
-        public Version ApplicationCompatibilityVersion
+        public static Version ApplicationCompatibilityVersion
         {
             get
             {

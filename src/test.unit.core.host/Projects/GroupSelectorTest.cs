@@ -89,7 +89,7 @@ namespace Apollo.Core.Host.Projects
 
         [Test]
         [Ignore]
-        public void CanConnectToWithNonMatchingGroups()
+        public void CanConnectToWithNonmatchingGroups()
         {
             var groups = new List<GroupDefinition>
                 {

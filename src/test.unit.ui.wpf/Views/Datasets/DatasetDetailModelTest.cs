@@ -290,6 +290,9 @@ namespace Apollo.UI.Wpf.Views.Datasets
 
             var dataset = new DatasetFacade(proxy.Object);
             var model = new DatasetDetailModel(context.Object, progressTracker.Object, projectLink.Object, dataset);
+            
+            // Verify here to indicate that we do really need this instance.
+            Assert.IsNotNull(model);
 
             proxy.Raise(p => p.OnProgressOfCurrentAction += null, new ProgressEventArgs(0, "a", true));
             progressTracker.Verify(p => p.StartTracking(), Times.Once());

@@ -84,15 +84,15 @@ namespace Apollo.Core.Dataset.Plugins
         private static GroupPartDefinition CreateMultiParameterMethodExportingDefinition()
         {
             return new GroupPartDefinition(
-                TypeIdentity.CreateDefinition(typeof(ExportOnMultiParameterMethod)),
+                TypeIdentity.CreateDefinition(typeof(ExportOnMethodWithMultipleParameters)),
                 3,
                 new Dictionary<ExportRegistrationId, SerializableExportDefinition> 
                     { 
                         {
-                            new ExportRegistrationId(typeof(ExportOnMultiParameterMethod), 3, "PartContract4"),
+                            new ExportRegistrationId(typeof(ExportOnMethodWithMultipleParameters), 3, "PartContract4"),
                             MethodBasedExportDefinition.CreateDefinition(
                                 "PartContract4",
-                                typeof(ExportOnMultiParameterMethod).GetMethod("ExportingMethod"))
+                                typeof(ExportOnMethodWithMultipleParameters).GetMethod("ExportingMethod"))
                         }
                     },
                 new Dictionary<ImportRegistrationId, SerializableImportDefinition>(),
@@ -200,20 +200,20 @@ namespace Apollo.Core.Dataset.Plugins
         private static GroupPartDefinition CreateMultiParameterFuncPropertyImportDefinition()
         {
             return new GroupPartDefinition(
-                TypeIdentity.CreateDefinition(typeof(ImportOnPropertyWithMultiParameterFunc)),
+                TypeIdentity.CreateDefinition(typeof(ImportOnPropertyWithFuncWithMultipleParameters)),
                 5,
                 new Dictionary<ExportRegistrationId, SerializableExportDefinition>(),
                 new Dictionary<ImportRegistrationId, SerializableImportDefinition>
                     {
                         { 
-                            new ImportRegistrationId(typeof(ImportOnPropertyWithMultiParameterFunc), 5, "PartContract5"),
+                            new ImportRegistrationId(typeof(ImportOnPropertyWithFuncWithMultipleParameters), 5, "PartContract5"),
                             PropertyBasedImportDefinition.CreateDefinition(
                                 "PartContract5", 
                                 TypeIdentity.CreateDefinition(typeof(IExportingInterface)),
                                 ImportCardinality.ExactlyOne,
                                 false,
                                 CreationPolicy.Any,
-                                typeof(ImportOnPropertyWithMultiParameterFunc).GetProperty("ImportingProperty"))
+                                typeof(ImportOnPropertyWithFuncWithMultipleParameters).GetProperty("ImportingProperty"))
                         }
                     },
                 new Dictionary<ScheduleActionRegistrationId, ScheduleActionDefinition>(),
@@ -332,19 +332,19 @@ namespace Apollo.Core.Dataset.Plugins
         private static GroupPartDefinition CreateMultiParameterFuncConstructorImportDefinition()
         {
             return new GroupPartDefinition(
-                TypeIdentity.CreateDefinition(typeof(ImportOnConstructorWithMultiParameterFunc)),
+                TypeIdentity.CreateDefinition(typeof(ImportOnConstructorWithFuncWithMultipleParameters)),
                 10,
                 new Dictionary<ExportRegistrationId, SerializableExportDefinition>(),
                 new Dictionary<ImportRegistrationId, SerializableImportDefinition>
                     {
                         { 
-                            new ImportRegistrationId(typeof(ImportOnConstructorWithMultiParameterFunc), 10, "PartContract10"),
+                            new ImportRegistrationId(typeof(ImportOnConstructorWithFuncWithMultipleParameters), 10, "PartContract10"),
                             ConstructorBasedImportDefinition.CreateDefinition(
                                 "PartContract10", 
                                 TypeIdentity.CreateDefinition(typeof(IExportingInterface)),
                                 ImportCardinality.ExactlyOne,
                                 CreationPolicy.Any,
-                                typeof(ImportOnConstructorWithMultiParameterFunc).GetConstructor(
+                                typeof(ImportOnConstructorWithFuncWithMultipleParameters).GetConstructor(
                                     new[] 
                                     { 
                                         typeof(Func<IExportingInterface, bool, bool>) 
@@ -1049,7 +1049,7 @@ namespace Apollo.Core.Dataset.Plugins
         }
 
         [Test]
-        public void ConstructWithConstructorWithParameterlessFunctionImportAndMultiParameterMethodExport()
+        public void ConstructWithConstructorWithParameterlessFunctionImportAndMultipleParameterMethodExport()
         {
             var layer = InstanceLayer.CreateInstanceWithoutTimeline();
             var exportingDefinition = CreateMultiParameterMethodExportingDefinition();
@@ -1073,7 +1073,7 @@ namespace Apollo.Core.Dataset.Plugins
         }
 
         [Test]
-        public void ConstructWithPropertyWithParameterlessFunctionImportAndMultiParameterMethodExport()
+        public void ConstructWithPropertyWithParameterlessFunctionImportAndMultipleParameterMethodExport()
         {
             var layer = InstanceLayer.CreateInstanceWithoutTimeline();
             var exportingDefinition = CreateMultiParameterMethodExportingDefinition();
@@ -1097,7 +1097,7 @@ namespace Apollo.Core.Dataset.Plugins
         }
 
         [Test]
-        public void ConstructWithConstructorWithParameterlessFunctionImportAndNonMatchingMethodExport()
+        public void ConstructWithConstructorWithParameterlessFunctionImportAndNonmatchingMethodExport()
         {
             var layer = InstanceLayer.CreateInstanceWithoutTimeline();
             var exportingDefinition = CreateMultiParameterMethodExportingDefinition();
@@ -1122,7 +1122,7 @@ namespace Apollo.Core.Dataset.Plugins
         }
 
         [Test]
-        public void ConstructWithPropertyWithParameterlessFunctionImportAndNonMatchingMethodExport()
+        public void ConstructWithPropertyWithParameterlessFunctionImportAndNonmatchingMethodExport()
         {
             var layer = InstanceLayer.CreateInstanceWithoutTimeline();
             var exportingDefinition = CreateMultiParameterMethodExportingDefinition();

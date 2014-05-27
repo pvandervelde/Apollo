@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Test.Regression.Explorer.Controls;
 using TestStack.White;
@@ -74,6 +75,8 @@ namespace Test.Regression.Explorer
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "This is a regression test which should always finish normally.")]
         public void Dispose()
         {
             const string prefix = "TestContext - Dispose";

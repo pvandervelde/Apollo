@@ -52,19 +52,17 @@ namespace Apollo.Core.Extensions.Plugins
         /// <param name="objectIndex">The index of the object in the group.</param>
         /// <param name="contractName">The contract name for the import.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="owner"/> is <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="contractName"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentException">
         /// Thrown if <paramref name="contractName"/> is an empty string.
         /// </exception>
+        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods",
+            Justification = "There is no way to validate these values before using them. We'll rely on the CLR here.")]
         public ImportRegistrationId(Type owner, int objectIndex, string contractName)
             : base(string.Format(CultureInfo.InvariantCulture, "[{0}]-[{1}]-[{2}]", owner.AssemblyQualifiedName, objectIndex, contractName))
         {
             {
-                Lokad.Enforce.Argument(() => owner);
                 Lokad.Enforce.Argument(() => contractName);
                 Lokad.Enforce.Argument(() => contractName, Lokad.Rules.StringIs.NotEmpty);
             }
@@ -78,20 +76,11 @@ namespace Apollo.Core.Extensions.Plugins
         /// <param name="owner">The type that owns the import.</param>
         /// <param name="objectIndex">The index of the object in the group.</param>
         /// <param name="contractType">The contract type for the import.</param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="owner"/> is <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="contractType"/> is <see langword="null"/>.
-        /// </exception>
+        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods",
+            Justification = "There is no way to validate these values before using them. We'll rely on the CLR here.")]
         public ImportRegistrationId(Type owner, int objectIndex, Type contractType)
             : this(owner, objectIndex, contractType.FullName)
         {
-            {
-                Lokad.Enforce.Argument(() => owner);
-                Lokad.Enforce.Argument(() => contractType);
-            }
-
             m_ContractName = contractType.FullName;
         }
 

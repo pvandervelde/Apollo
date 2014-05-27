@@ -21,11 +21,17 @@ namespace Apollo.Core.Host.Plugins
                 Justification = "Unit tests do not need documentation.")]
     public sealed class PartImportEngineTest
     {
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "input",
+            Justification = "This parameter is used by reflection")]
         public static void MockInput(string input)
         {
             // Do nothing
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "first",
+            Justification = "This parameter is used by reflection")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "second",
+            Justification = "This parameter is used by reflection")]
         public static void MockInput(string first, string second)
         {
             // Do nothing
@@ -75,7 +81,6 @@ namespace Apollo.Core.Host.Plugins
 
         private static bool IsSubTypeOf(List<TypeDefinition> types, TypeIdentity parent, TypeIdentity child)
         {
-            var parentDef = types.Find(t => t.Identity.Equals(parent));
             var childDef = types.Find(t => t.Identity.Equals(child));
 
             var directParent = childDef.BaseType;
@@ -102,7 +107,7 @@ namespace Apollo.Core.Host.Plugins
         }
 
         [Test]
-        public void AcceptsWithNonMatchingContractName()
+        public void AcceptsWithNonmatchingContractName()
         {
             var types = new List<TypeDefinition>();
             var createTypeIdentity = IdentityFactory(types, new Dictionary<Type, TypeIdentity>());
@@ -407,7 +412,7 @@ namespace Apollo.Core.Host.Plugins
         }
 
         [Test]
-        public void AcceptsWithNonMatchingImportAndExport()
+        public void AcceptsWithNonmatchingImportAndExport()
         {
             var types = new List<TypeDefinition>();
             var createTypeIdentity = IdentityFactory(types, new Dictionary<Type, TypeIdentity>());

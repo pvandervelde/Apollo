@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
@@ -37,10 +38,17 @@ namespace Apollo.UI.Wpf.Utilities
         /// <see langword="true"/> if the data object is valid for a drag operation that ends on the related UI element;
         /// otherwise, <see langword="false" />.
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="obj"/> is <see langword="null" />.
+        /// </exception>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
         public bool IsValidDataObject(IDataObject obj)
         {
+            {
+                Lokad.Enforce.Argument(() => obj);
+            }
+
             var storedObject = obj.GetData(s_SupportedFormat.Name);
             return DragDropManager.IsDragAllowed(TargetUI, storedObject);
         }
@@ -50,8 +58,15 @@ namespace Apollo.UI.Wpf.Utilities
         /// </summary>
         /// <param name="obj">The data object that describes the data that was dropped.</param>
         /// <param name="dropPoint">The location on the control where the data was dropped.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="obj"/> is <see langword="null" />.
+        /// </exception>
         public void OnDropCompleted(IDataObject obj, Point dropPoint)
         {
+            {
+                Lokad.Enforce.Argument(() => obj);
+            }
+
             var storedObject = obj.GetData(s_SupportedFormat.Name);
             DragDropManager.ProcessDroppedObject(TargetUI, storedObject);
         }
@@ -61,8 +76,15 @@ namespace Apollo.UI.Wpf.Utilities
         /// </summary>
         /// <param name="obj">The data object that describes the data that is being dragged.</param>
         /// <returns>An UI element that is used as the drag object.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="obj"/> is <see langword="null" />.
+        /// </exception>
         public UIElement GetVisualFeedback(IDataObject obj)
         {
+            {
+                Lokad.Enforce.Argument(() => obj);
+            }
+
             var storedObject = obj.GetData(s_SupportedFormat.Name);
             return DragDropManager.GetDragVisualizationFor(TargetUI, storedObject);
         }
@@ -72,9 +94,16 @@ namespace Apollo.UI.Wpf.Utilities
         /// </summary>
         /// <param name="obj">The data object that describes the data that is being dragged.</param>
         /// <returns>The point indicating the offset.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="obj"/> is <see langword="null" />.
+        /// </exception>
         public Point GetOffsetPoint(IDataObject obj)
         {
-            Point p = (Point)obj.GetData(DragDropHelpers.OffsetPointDataFormatName);
+            {
+                Lokad.Enforce.Argument(() => obj);
+            }
+
+            var p = (Point)obj.GetData(DragDropHelpers.OffsetPointDataFormatName);
             return p;
         }
     }

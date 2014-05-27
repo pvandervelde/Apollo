@@ -5,7 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Security;
 using System.Windows;
 using System.Windows.Data;
@@ -25,6 +27,7 @@ namespace Apollo.UI.Wpf.Converters
         private sealed class SafeBitmapHandle : SafeHandleZeroOrMinusOneIsInvalid
         {
             [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+            [return: MarshalAs(UnmanagedType.Bool)]
             private static extern bool DeleteObject(IntPtr hObject);
 
             [SecurityCritical]
@@ -48,6 +51,9 @@ namespace Apollo.UI.Wpf.Converters
         /// <param name="parameter">The converter parameter to use.</param>
         /// <param name="culture">The culture to use in the converter.</param>
         /// <returns>A converted value. If the method returns null, the valid null value is used.</returns>
+        [SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", 
+            MessageId = "System.Runtime.InteropServices.SafeHandle.DangerousGetHandle",
+            Justification = "We need an IntPtr for this method call to work so ...")]
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var isActivated = (bool)value;

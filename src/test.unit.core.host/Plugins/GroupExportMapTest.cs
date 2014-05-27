@@ -94,7 +94,7 @@ namespace Apollo.Core.Host.Plugins
         }
 
         [Test]
-        public void RoundTripSerialise()
+        public void RoundtripSerialize()
         {
             var original = new GroupExportMap("a");
             var copy = AssertExtensions.RoundTripSerialize(original);

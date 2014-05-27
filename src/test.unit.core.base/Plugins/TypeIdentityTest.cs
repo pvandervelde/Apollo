@@ -102,12 +102,14 @@ namespace Apollo.Core.Base.Plugins
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible",
+            Justification = "Type has to be public for it to be used for reflection.")]
         public sealed class Nested<TKey, TValue>
         {
         }
 
         [Test]
-        public void RoundTripSerialise()
+        public void RoundtripSerialize()
         {
             var original = TypeIdentity.CreateDefinition(typeof(string));
             var copy = AssertExtensions.RoundTripSerialize(original);
