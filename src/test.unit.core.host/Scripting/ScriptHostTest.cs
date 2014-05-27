@@ -22,7 +22,13 @@ namespace Apollo.Core.Host.Scripting
         public void Execute()
         {
             var projects = new Mock<ILinkToProjects>();
-            Func<string, AppDomainPaths, AppDomain> builder = (s, p) => AppDomain.CurrentDomain;
+            Func<string, AppDomainPaths, AppDomain> builder = 
+                (s, p) =>
+                {
+                    // have to have a separate AppDomain because it is unloaded when the
+                    // host is disposed
+                    return AppDomain.CreateDomain("ScriptHostTest.Execute");
+                };
 
             using (var host = new ScriptHost(projects.Object, builder))
             {
