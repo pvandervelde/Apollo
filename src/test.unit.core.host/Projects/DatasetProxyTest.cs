@@ -664,7 +664,8 @@ namespace Apollo.Core.Host.Projects
 
             bool wasUnloaded = false;
             dataset.OnDeactivated += (s, e) => wasUnloaded = true;
-            dataset.Deactivate();
+            var task = dataset.Deactivate();
+            task.Wait();
 
             Assert.IsFalse(dataset.IsActivated);
             Assert.IsTrue(wasUnloaded);

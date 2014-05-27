@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Base.Activation;
 using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces.Projects;
@@ -117,9 +119,17 @@ namespace Apollo.UI.Wpf.Commands
                     .Returns(true);
                 proxy.Setup(
                     p => p.Activate(
-                        It.IsAny<DistributionLocations>(), 
+                        It.IsAny<DistributionLocations>(),
                         It.IsAny<Func<IEnumerable<DistributionSuggestion>, SelectedProposal>>(),
                         It.IsAny<CancellationToken>()))
+                    .Returns<DistributionLocations, Func<IEnumerable<DistributionSuggestion>, SelectedProposal>, CancellationToken>(
+                        (d, f, c) => Task.Factory.StartNew(
+                            () =>
+                            {
+                            },
+                            c,
+                            TaskCreationOptions.None,
+                            new CurrentThreadTaskScheduler()))
                     .Verifiable();
             }
 

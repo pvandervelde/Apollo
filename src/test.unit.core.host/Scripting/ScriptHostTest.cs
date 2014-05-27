@@ -5,10 +5,15 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Reflection;
 using Apollo.Core.Host.UserInterfaces.Projects;
+using Apollo.UI.Explorer.Nuclei.AppDomains;
 using Apollo.Utilities;
 using Moq;
+using Nuclei;
 using NUnit.Framework;
 
 namespace Apollo.Core.Host.Scripting
@@ -21,15 +26,19 @@ namespace Apollo.Core.Host.Scripting
         [Test]
         public void Execute()
         {
-            var projects = new Mock<ILinkToProjects>();
-            Func<string, AppDomainPaths, AppDomain> builder = 
-                (s, p) =>
+            var filePaths = new List<string>();
+            var directoryPaths = new List<string>
                 {
-                    // have to have a separate AppDomain because it is unloaded when the
-                    // host is disposed
-                    return AppDomain.CreateDomain("ScriptHostTest.Execute");
+                    Assembly.GetExecutingAssembly().LocalDirectoryPath()
                 };
 
+            var resolutionPaths = AppDomainResolutionPaths.WithFilesAndDirectories(
+                Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath),
+                filePaths,
+                directoryPaths);
+            Func<string, AppDomainPaths, AppDomain> builder = (name, paths) => AppDomainBuilder.Assemble(name, resolutionPaths);
+
+            var projects = new Mock<ILinkToProjects>();
             using (var host = new ScriptHost(projects.Object, builder))
             {
                 var output = string.Empty;

@@ -6,6 +6,9 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Utilities.History;
@@ -82,23 +85,33 @@ namespace Apollo.UI.Wpf.Commands
                     .Returns(projectFacade);
             }
 
-            var proxy = new Mock<IProxyDataset>();
+            using (var source = new CancellationTokenSource())
             {
-                proxy.Setup(p => p.IsActivated)
-                    .Returns(true);
-                proxy.Setup(p => p.Deactivate())
-                    .Verifiable();
+                var proxy = new Mock<IProxyDataset>();
+                {
+                    proxy.Setup(p => p.IsActivated)
+                        .Returns(true);
+                    proxy.Setup(p => p.Deactivate())
+                        .Returns(() => Task.Factory.StartNew(
+                            () =>
+                            {
+                            },
+                            source.Token,
+                            TaskCreationOptions.None,
+                            new CurrentThreadTaskScheduler()))
+                        .Verifiable();
+                }
+
+                var dataset = new DatasetFacade(proxy.Object);
+
+                Func<string, IDisposable> timerFunc = s => new MockDisposable();
+
+                var command = new DeactivateDatasetCommand(projectLink.Object, dataset, timerFunc);
+                command.Execute(null);
+
+                proxy.Verify(p => p.Deactivate(), Times.Once());
+                history.Verify(h => h.Mark(), Times.Once());
             }
-
-            var dataset = new DatasetFacade(proxy.Object);
-
-            Func<string, IDisposable> timerFunc = s => new MockDisposable();
-
-            var command = new DeactivateDatasetCommand(projectLink.Object, dataset, timerFunc);
-            command.Execute(null);
-
-            proxy.Verify(p => p.Deactivate(), Times.Once());
-            history.Verify(h => h.Mark(), Times.Once());
         }
     }
 }

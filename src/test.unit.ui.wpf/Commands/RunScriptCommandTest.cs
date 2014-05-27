@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Host.Scripting;
 using Moq;
 using NUnit.Framework;
@@ -43,9 +44,13 @@ namespace Apollo.UI.Wpf.Commands
         [Test]
         public void CancelScriptRun()
         {
-            using (var task = new Task(() => { }))
+            using (var source = new CancellationTokenSource())
             {
-                using (var source = new CancellationTokenSource())
+                using (var task = Task.Factory.StartNew(
+                    () => { },
+                    source.Token,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()))
                 {
                     var tuple = new Tuple<Task, CancellationTokenSource>(task, source);
                     var scriptHost = new Mock<IHostScripts>();
