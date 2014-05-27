@@ -37,6 +37,7 @@
     <PropertyGroup Condition="$(ShouldDoCodeAnalysis)">
         <CodeAnalysisRuleSet Condition="!$(IsTest)">$(SolutionDir)\codeanalysis.base.ruleset</CodeAnalysisRuleSet>
         <CodeAnalysisRuleSet Condition="$(IsTest)">$(SolutionDir)\codeanalysis.test.ruleset</CodeAnalysisRuleSet>
+        <CodeAnalysisCulture>en-US</CodeAnalysisCulture>
     </PropertyGroup>
     <PropertyGroup Condition="$(ShouldDoDocumentation) AND !$(IsTest)">
         <DocumentationFile>$(OutputPath)\$(AssemblyName).XML</DocumentationFile>
