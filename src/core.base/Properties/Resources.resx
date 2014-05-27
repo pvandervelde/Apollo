@@ -210,6 +210,9 @@
   <data name="Exceptions_Messages_FileRegistrationNotFound_WithToken" xml:space="preserve">
     <value>No file registration was found for the token: {0}</value>
   </data>
+  <data name="Exceptions_Messages_GroupCompositionIdCannotBeTheInvalidId" xml:space="preserve">
+    <value>The GUID for a group composition ID cannot be the invalid GUID.</value>
+  </data>
   <data name="Exceptions_Messages_IncorrectStreamTransferInformationObjectFound_WithTypes" xml:space="preserve">
     <value>Transferring the information from the stream requires a different set of information than provided. The method required {0} but was provided with {1}.</value>
   </data>
