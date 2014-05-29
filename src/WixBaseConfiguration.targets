@@ -18,9 +18,8 @@
       <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
       
       <!-- Project directories -->
-      <OutputPath>$(SolutionDir)\..\build\deploy\$(Platform)\</OutputPath>
-      <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
-      <IntermediateOutputPath>$(SolutionDir)\..\build\temp\msi\obj\$(AssemblyName)\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+      <OutputPath>$([System.IO.Path]::GetFullPath('$(SolutionDir)\..\build\deploy\$(Platform)\'))</OutputPath>
+      <IntermediateOutputPath>$([System.IO.Path]::GetFullPath('$(SolutionDir)\..\build\temp\msi\obj\$(AssemblyName)\$(Platform)\$(Configuration)\'))</IntermediateOutputPath>
       
       <!-- Build configuration -->
       <SuppressAllWarnings>False</SuppressAllWarnings>
