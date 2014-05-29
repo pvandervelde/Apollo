@@ -92,5 +92,8 @@
                          
         <ReportGeneratorOutputToCsv InputFile="$(ReportGeneratorXmlSummaryFile)"
                                     OutputFile="$(CoverageCsvFile)" />
+                                    
+        <!-- Notify teamcity that there is a new coverage report -->
+        <Message Text="##teamcity[importData type='dotNetCoverage' tool='partcover' path='$(FileOpenCoverReport)']" />
     </Target>
  </Project>
