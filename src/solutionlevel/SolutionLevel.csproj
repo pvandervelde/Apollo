@@ -6,7 +6,6 @@
     <OutputType>library</OutputType>
     <RootNamespace>SolutionLevel</RootNamespace>
     <AssemblyName>SolutionLevel</AssemblyName>
-    <RestorePackages>true</RestorePackages>
     <ShouldDoCodeAnalysis>false</ShouldDoCodeAnalysis>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
@@ -374,5 +373,4 @@
     </ItemGroup>
     <Exec Command="&quot;$(PathNTrevaExe)&quot; -p &quot;$(DirPackages)&quot; -o &quot;$(FileGeneratedLicenses)&quot; @(SolutionPackages-> '-c &quot;%(RootDir)%(Directory)\&quot;', ' ')" />
   </Target>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>
