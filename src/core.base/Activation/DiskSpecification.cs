@@ -85,7 +85,6 @@ namespace Apollo.Core.Base.Activation
         {
             try
             {
-                // @Todo: Need to allow configurations to block out drives that we can't touch
                 IEnumerable<DiskSpecification> drives;
                 using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_LogicalDisk"))
                 {

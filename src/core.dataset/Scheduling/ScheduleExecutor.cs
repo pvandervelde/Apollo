@@ -198,7 +198,6 @@ namespace Apollo.Core.Dataset.Scheduling
                     // What are we going to do with the parameters?
                     m_Parameters = scheduleParameters;
 
-                    // @Todo: Lock the dataset against changes from the outside
                     var token = m_ExecutionInfo.Cancellation;
                     m_ExecutionTask = Task.Factory.StartNew(
                         ExecuteSchedule, 
