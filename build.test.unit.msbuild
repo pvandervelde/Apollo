@@ -48,6 +48,7 @@
         <FileReportGeneratorExe>ReportGenerator.exe</FileReportGeneratorExe>
         <ReportGeneratorOutputDir>$(DirBuildLogs)\coverage</ReportGeneratorOutputDir>
         <ReportGeneratorXmlSummaryFile>$(ReportGeneratorOutputDir)\Summary.xml</ReportGeneratorXmlSummaryFile>
+        <CoverageTeamCityFile>$(ReportGeneratorOutputDir)\OpenCover_TeamCity.html</CoverageTeamCityFile>
         <CoverageCsvFile>$(DirBuildLogs)\coverage.csv</CoverageCsvFile>
     </PropertyGroup>
     <Target Name="_ExecuteUnitTestsWithCoverage" Condition="'$(Configuration)' != 'Deploy'" DependsOnTargets="_DisplayInfo">
@@ -94,6 +95,7 @@
                                     OutputFile="$(CoverageCsvFile)" />
                                     
         <!-- Notify teamcity that there is a new coverage report -->
+        <Message Text="##teamcity[dotNetCoverage partcover_report_xslts='$(PathOpenCoverDir)=>$(CoverageTeamCityFile)']" />
         <Message Text="##teamcity[importData type='dotNetCoverage' tool='partcover' path='$(FileOpenCoverReport)']" />
     </Target>
  </Project>
