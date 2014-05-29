@@ -27,7 +27,7 @@
     <Import Project="$(MsBuildExtensionsPath)\GitHasMasterBranch.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\GitHasMasterBranch.msbuild')"/>    
             
-    <Target Name="Run" DependsOnTargets="_DisplayInfo;_FetchOriginMasterIfNotExists;_Clean;_RestorePackages">
+    <Target Name="Run" DependsOnTargets="_DisplayInfo;_Clean;_RestorePackages">
         <!-- Do nothing here -->
     </Target>
     
@@ -36,23 +36,8 @@
         <Message Text="Preparing workspace ..." />
     </Target>
     
-    <PropertyGroup>
-        <ExeGit>$(DirGit)\git.exe</ExeGit>
-    </PropertyGroup>
-    <Target Name="_FetchOriginMasterIfNotExists" DependsOnTargets="_DisplayInfo">
-        <GitHasMasterBranch LocalPath="$(DirWorkspace)">
-            <Output TaskParameter="HasMaster" PropertyName="HasMaster" />
-        </GitHasMasterBranch>
-    
-        <Message Text="Not fetching master branch because it already exists" Condition="($(HasMaster))" />
-        <Message Text="Fetching master branch because it does not exist" Condition="(!$(HasMaster))" />
-        <Exec Command="&quot;$(ExeGit)&quot; fetch origin origin/master"
-              WorkingDirectory="$(DirWorkspace)"
-              Condition="(!$(HasMaster))"/>
-    </Target>
-    
     <!-- Clean -->
-    <Target Name="_Clean" DependsOnTargets="_DisplayInfo;_FetchOriginMasterIfNotExists" Condition="$(ShouldClean)">
+    <Target Name="_Clean" DependsOnTargets="_DisplayInfo" Condition="$(ShouldClean)">
         <!-- 
             Don't try to delete the directory because that fails randomly because
             some file is being locked. This then leads to a failing task, but ..
@@ -70,7 +55,7 @@
     
     <!-- Run Nuget for the global build -->
     <PropertyGroup>
-        <FileNuGetExe>$(DirSrc)\.nuget\NuGet.exe</FileNuGetExe>
+        <FileNuGetExe>NuGet.exe</FileNuGetExe>
         <PackagesConfig>$([System.IO.Path]::Combine($(DirWorkspace), "packages.config"))</PackagesConfig>
     </PropertyGroup>
     <Target Name="_RestorePackages" DependsOnTargets="_DisplayInfo;_Clean">

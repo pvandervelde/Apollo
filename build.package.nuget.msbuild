@@ -65,7 +65,7 @@
     </Target>
     
     <PropertyGroup>
-        <FileNuGetExe>$(DirSrc)\.nuget\NuGet.exe</FileNuGetExe>
+        <FileNuGetExe>NuGet.exe</FileNuGetExe>
     </PropertyGroup>
     <PropertyGroup>
         <FileTemplateNuSpec>$(DirTemplates)\nuget.nuspec.in</FileTemplateNuSpec>

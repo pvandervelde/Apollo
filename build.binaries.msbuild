@@ -13,10 +13,18 @@
         <DirBuild>$(DirWorkspace)\build</DirBuild>
         <DirBuildBin>$(DirBuild)\bin\$(PlatformTranslated)\$(Configuration)</DirBuildBin>
         <DirBuildLogs>$(DirBuild)\logs</DirBuildLogs>
+        <DirPackages>$(DirWorkspace)\packages</DirPackages>
         <DirSrc>$(DirWorkspace)\src</DirSrc>
+        <DirTools>$(DirWorkspace)\tools</DirTools>
+        
+        <!-- Tools -->
+        <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
     </PropertyGroup>
     
-    <Target Name="Run" DependsOnTargets="_DisplayInfo;_Build;_CopyLogs">
+    <Import Project="$(MsBuildExtensionsPath)\NugetRestore.msbuild"
+            Condition="Exists('$(MsBuildExtensionsPath)\NugetRestore.msbuild')"/>
+    
+    <Target Name="Run" DependsOnTargets="_DisplayInfo;_RestorePackages;_Build;_CopyLogs">
     </Target>
    
     <!-- Display info -->
@@ -24,11 +32,17 @@
         <Message Text="Building Binaries with: Configuration = $(Configuration) and Platform = $(Platform) ..." />
     </Target>
     
-    <!-- Build binaries -->
+    <!-- Run Nuget for the build -->
     <PropertyGroup>
+        <FileNuGetExe>NuGet.exe</FileNuGetExe>
         <FileSln>$(DirSrc)\apollo.sln</FileSln>
     </PropertyGroup>
-    <Target Name="_Build" DependsOnTargets="_DisplayInfo">
+    <Target Name="_RestorePackages" DependsOnTargets="_DisplayInfo">
+        <NugetRestore NugetPath="$(FileNuGetExe)" PackageFile="$(FileSln)" PackageDirectory="$(DirPackages)" />
+    </Target>
+    
+    <!-- Build binaries -->
+    <Target Name="_Build" DependsOnTargets="_DisplayInfo;_RestorePackages">
         <MSBuild Projects="$(FileSln)" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
     </Target>
     

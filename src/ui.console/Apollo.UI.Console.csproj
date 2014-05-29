@@ -6,7 +6,6 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Apollo.UI.Console</RootNamespace>
     <AssemblyName>Apollo.UI.Console</AssemblyName>
-    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup>
     <DirWorkspace>$(SolutionDir)\..</DirWorkspace>
@@ -290,7 +289,6 @@
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
   </ItemGroup>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Import Project="$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild')" />
   <Import Project="$(MsBuildExtensionsPath)\TemplateFile.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\TemplateFile.msbuild')" />
   <!-- Clean up all the files we generate ourselves -->

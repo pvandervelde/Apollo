@@ -6,7 +6,6 @@
     <OutputType>library</OutputType>
     <RootNamespace>Apollo.UI.Wpf</RootNamespace>
     <AssemblyName>Apollo.UI.Wpf</AssemblyName>
-    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
@@ -1012,7 +1011,6 @@
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
   </ItemGroup>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
