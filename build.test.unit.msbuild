@@ -95,7 +95,7 @@
                                     OutputFile="$(CoverageCsvFile)" />
                                     
         <!-- Notify teamcity that there is a new coverage report -->
-        <Message Text="##teamcity[dotNetCoverage partcover_report_xslts='$(PathOpenCoverDir)=>$(CoverageTeamCityFile)']" />
+        <Message Text="##teamcity[dotNetCoverage partcover_report_xslts='$(PathOpenCoverDir)\transform\simple_report.xslt=>$(CoverageTeamCityFile)']" />
         <Message Text="##teamcity[importData type='dotNetCoverage' tool='partcover' path='$(FileOpenCoverReport)']" />
     </Target>
  </Project>
