@@ -264,8 +264,6 @@ namespace Apollo.Core.Host.UserInterfaces
             Justification = "Do not want a failing notification action to crash the application.")]
         private void OnStartupComplete(object sender, ApplicationStartupEventArgs args)
         {
-            // @todo: We can store the start-up time here. Effectively we're not started until we get this
-            //        message anyway so storing it in the UI service sounds reasonable
             Debug.Assert(
                 IsFullyFunctional,
                 string.Format(

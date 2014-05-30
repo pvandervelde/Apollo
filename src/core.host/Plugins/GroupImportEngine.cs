@@ -90,7 +90,6 @@ namespace Apollo.Core.Host.Plugins
                     var foundMatch = false;
                     foreach (var export in exports)
                     {
-                        // @todo: how do we deal with IEnumerable<T> etc.? Some imports allow multiple exports etc.
                         if (m_PartImportEngine.Accepts(import, export))
                         {
                             foundMatch = true;

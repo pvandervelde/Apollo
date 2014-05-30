@@ -125,8 +125,6 @@ namespace Apollo.UI.Wpf.Views.Datasets
 
         private void IterateOverGraph(Action<DatasetViewGraph, DatasetFacade, DatasetFacade> action)
         {
-            // @Todo: We should really just be able to iterate over the original graph
-            // that would be much cleaner ....
             var root = m_Project.Root();
             action(m_Graph, null, root);
 

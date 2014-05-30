@@ -66,8 +66,6 @@ namespace Apollo.Core.Host.UserInterfaces.Application
             m_Service.RegisterNotification(notificationNames.SystemShuttingDown, HandleApplicationShutdown);
 
             // Initialize the system information object.
-            // @todo: Setup a proper way to get the system information. At the moment the
-            //        startup time is incorrect.
             m_SystemInformation = new SystemInformation(
                 () => DateTimeOffset.Now,
                 () => new SystemInformationStorage() { StartupTime = DateTimeOffset.Now });

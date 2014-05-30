@@ -527,10 +527,8 @@ namespace Apollo.Core.Host.Projects
             // in parallel to this one will be notified.
             m_IsClosed = true;
 
-            // @todo: We should only close if we're not saving data. 
-            //        If we are saving data then wait till we're done, then close.
-            // @todo: We should only close if we're not loading
-            //        Technically we should abort the load
+            // If we are saving data then wait till we're done, then close.
+            // Technically we should abort the load
             lock (m_Lock)
             {
                 // Terminate all dataset applications
