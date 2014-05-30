@@ -93,8 +93,7 @@ namespace Apollo.Core.Base.Activation
             {
                 if (token.IsCancellationRequested)
                 {
-                    // @todo: How do we deal with the tasks that are running?
-                    //        do we just abadon them or ...???
+                    // Just abandon any tasks that were running but not finished
                     token.ThrowIfCancellationRequested();
                 }
 

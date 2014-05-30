@@ -56,7 +56,6 @@ namespace Apollo.UI.Console
                 directoryPaths.Add(Assembly.GetExecutingAssembly().LocalDirectoryPath());
             }
 
-            // @Todo: Note that the Apollo.Core.Host.Plugins.PluginService needs these paths ...
             if ((paths & AppDomainPaths.Plugins) == AppDomainPaths.Plugins)
             {
                 // Plugins can be found in:

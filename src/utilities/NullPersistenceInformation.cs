@@ -39,7 +39,6 @@ namespace Apollo.Utilities
         /// </returns>
         public long StoredSizeInBytes()
         {
-            // @todo: put the proper size in here. Can only do that after we have a default setup though.
             return 100;
         }
 

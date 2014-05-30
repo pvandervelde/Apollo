@@ -748,7 +748,6 @@ namespace Apollo.Utilities.History
         /// </summary>
         public void TrimEdgeExcess()
         {
-            // @todo: Do we need to store the fact that we did a TrimEdgeExcess?
             Current.TrimEdgeExcess();
         }
 

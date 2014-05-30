@@ -215,7 +215,6 @@ namespace Apollo.Core.Dataset.Plugins
             Justification = "Code is called by reflection.")]
         private static Func<T> ToFunc<T>(object owner)
         {
-            // @todo: ToFunc(object): There should really be an easier way for handling this
             Func<T> func = () => (T)owner;
 
             return func;
@@ -233,7 +232,6 @@ namespace Apollo.Core.Dataset.Plugins
             Justification = "Code is called by reflection.")]
         private static Func<T> ToFunc<T>(object owner, PropertyInfo property)
         {
-            // @todo: ToFunc(object, PropertyInfo): There should really be an easier way for handling this
             Func<T> func =
                 () =>
                 {
