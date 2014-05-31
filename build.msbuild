@@ -11,6 +11,10 @@
         <!-- Directories -->
         <DirWorkspace>$(MSBuildProjectDirectory)</DirWorkspace>
     </PropertyGroup>
+    
+    <Target Name="BuildServer" DependsOnTargets="_PrepareWorkspace;_GatherReleaseNotes;_BuildBinaries;_PackageNuget;_PackageTests">
+        <!-- Do nothing here -->
+    </Target>
 
     <Target Name="Run" DependsOnTargets="_PrepareWorkspace;_GatherReleaseNotes;_CodeAnalysisCcm;_CodeAnalysisSourceMonitor;_BuildBinaries;_ExecuteUnitTests;_CodeAnalysisMoma;_BuildApiDocumentation;_PackageNuget;_PackageTests">
         <!-- Do nothing here -->
