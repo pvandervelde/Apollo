@@ -1,4 +1,0 @@
-- Greek (sub-)god names / Greek mythology
-  - Major releases will have god names
-  - Minor releases will have demi-god / hero names
-  - Release releases will have location names
