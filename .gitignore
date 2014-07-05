@@ -162,3 +162,11 @@ $RECYCLE.BIN/
 
 # Mac crap
 .DS_Store
+AssemblyInfo.Company.cs
+CompanyInformation.cs
+CompanyInformation.wxi
+ProductInformation.cs
+ProductInformation.wxi
+*.manifest
+.sln.ide
+src/Apollo.sln.ide/graph/Apollo.sln.ide
