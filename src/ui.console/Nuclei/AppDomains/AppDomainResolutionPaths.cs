@@ -16,24 +16,6 @@ namespace Apollo.UI.Console.Nuclei.AppDomains
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AppDomainResolutionPaths"/> class based on the
-        /// specified set of files.
-        /// </summary>
-        /// <param name="basePath">The base path for the <c>AppDomain</c> path resolution.</param>
-        /// <param name="files">The files that can be resolved.</param>
-        /// <returns>A new instance of the <see cref="AppDomainResolutionPaths"/> class.</returns>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="basePath"/> is <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if <paramref name="basePath"/> is an empty string.
-        /// </exception>
-        public static AppDomainResolutionPaths WithFiles(string basePath, IEnumerable<string> files)
-        {
-            return WithFilesAndDirectories(basePath, files, new List<string>());
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AppDomainResolutionPaths"/> class based on the
         /// specified set of files and directories.
         /// </summary>
         /// <param name="basePath">The base path for the <c>AppDomain</c> path resolution.</param>

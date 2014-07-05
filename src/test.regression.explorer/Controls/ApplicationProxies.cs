@@ -75,8 +75,8 @@ namespace Test.Regression.Explorer.Controls
             var keyPath = string.Format(
                 CultureInfo.InvariantCulture,
                 @"software\{0}\{1}\{2}",
-                CompanyInformation.CompanyPathName,
-                ProductInformation.ProductPathName,
+                CompanyInformation.CompanyNameInFilePath,
+                ProductInformation.ProductNameInFilePath,
                 VersionNumberPath());
             var key = Registry.LocalMachine.OpenSubKey(keyPath);
             if (key == null)
@@ -99,8 +99,8 @@ namespace Test.Regression.Explorer.Controls
             var expectedX64Path = string.Format(
                 CultureInfo.InvariantCulture,
                 @"c:\program files\{0}\{1}\{2}",
-                CompanyInformation.CompanyPathName,
-                ProductInformation.ProductPathName,
+                CompanyInformation.CompanyNameInFilePath,
+                ProductInformation.ProductNameInFilePath,
                 VersionNumberPath());
             if (Directory.Exists(expectedX64Path))
             {
@@ -117,8 +117,8 @@ namespace Test.Regression.Explorer.Controls
             var expectedX86Path = string.Format(
                 CultureInfo.InvariantCulture,
                 @"c:\Program Files (x86)\{0}\{1}\{2}",
-                CompanyInformation.CompanyPathName,
-                ProductInformation.ProductPathName,
+                CompanyInformation.CompanyNameInFilePath,
+                ProductInformation.ProductNameInFilePath,
                 VersionNumberPath());
             if (Directory.Exists(expectedX86Path))
             {

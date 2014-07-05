@@ -288,33 +288,34 @@ namespace Apollo.UI.Console
 
         private static string GetLibraryLicenses()
         {
-            var licenseXml = EmbeddedResourceExtracter.LoadEmbeddedTextFile(
-                Assembly.GetExecutingAssembly(),
-                @"Apollo.UI.Console.Properties.licenses.xml");
-            var doc = XDocument.Parse(licenseXml);
-            var licenses = from element in doc.Descendants("package")
-                           select new
-                           {
-                               Id = element.Element("id").Value,
-                               Version = element.Element("version").Value,
-                               Source = element.Element("url").Value,
-                               License = element.Element("licenseurl").Value,
-                           };
-
-            var builder = new StringBuilder();
-            builder.AppendLine(Resources.Header_OtherPackages_Intro);
-            foreach (var license in licenses)
-            {
-                builder.AppendLine(
-                    string.Format(
-                        CultureInfo.CurrentCulture,
-                        Resources.Header_OtherPackages_IdAndLicense,
-                        license.Id,
-                        license.Version,
-                        license.Source));
-            }
-
-            return builder.ToString();
+            // var licenseXml = EmbeddedResourceExtracter.LoadEmbeddedTextFile(
+            //     Assembly.GetExecutingAssembly(),
+            //     @"Apollo.UI.Console.Properties.licenses.xml");
+            // var doc = XDocument.Parse(licenseXml);
+            // var licenses = from element in doc.Descendants("package")
+            //                select new
+            //                {
+            //                    Id = element.Element("id").Value,
+            //                    Version = element.Element("version").Value,
+            //                    Source = element.Element("url").Value,
+            //                    License = element.Element("licenseurl").Value,
+            //                };
+            //
+            // var builder = new StringBuilder();
+            // builder.AppendLine(Resources.Header_OtherPackages_Intro);
+            // foreach (var license in licenses)
+            // {
+            //     builder.AppendLine(
+            //         string.Format(
+            //             CultureInfo.CurrentCulture,
+            //             Resources.Header_OtherPackages_IdAndLicense,
+            //             license.Id,
+            //             license.Version,
+            //             license.Source));
+            // }
+            //
+            // return builder.ToString();
+            return string.Empty;
         }
 
         /// <summary>

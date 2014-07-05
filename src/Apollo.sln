@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Host", "core.host\Apollo.Core.Host.csproj", "{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Base", "core.base\Apollo.Core.Base.csproj", "{5125E82C-2E8A-4CE4-8FA8-39AB82C9B856}"
@@ -29,20 +27,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		codeanalysis.base.ruleset = codeanalysis.base.ruleset
 		codeanalysis.test.ruleset = codeanalysis.test.ruleset
-		..\company.xml = ..\company.xml
 		..\NextVersion.txt = ..\NextVersion.txt
 		..\nuget.config = ..\nuget.config
 		..\packages.config = ..\packages.config
-		..\product.xml = ..\product.xml
 		..\README.md = ..\README.md
+		..\settings.props = ..\settings.props
 		..\Settings.StyleCop = ..\Settings.StyleCop
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Extensions", "core.extensions\Apollo.Core.Extensions.csproj", "{EE14FAFE-8E78-11E1-B5D3-6DF7BBE59B18}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Core.Extensions", "test.unit.core.extensions\Test.Unit.Core.Extensions.csproj", "{EE853190-50AB-4BB0-ADE7-EAA6A53BB495}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolutionLevel", "solutionlevel\SolutionLevel.csproj", "{B0B1C32A-53FC-4B7E-BA60-6DAFB8180A42}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.UI.Console", "ui.console\Apollo.UI.Console.csproj", "{BE673894-4B95-4F22-8E9A-9F1D7C20CF84}"
 EndProject
@@ -59,33 +54,6 @@ EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Wix.Host", "wix.host\Wix.Host.wixproj", "{B8DE1DF9-52C3-4EA2-AF76-F45B35BEFEBC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Regression.Explorer", "test.regression.explorer\Test.Regression.Explorer.csproj", "{96589EDE-BE39-4FEA-8614-188DD936792A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{41EA47AE-001C-46EC-BFD0-299245E534EC}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{60C08DFA-E52E-4122-948C-1AFB5F9E59A1}"
-	ProjectSection(SolutionItems) = preProject
-		..\templates\CompanyIncludes.wxi.in = ..\templates\CompanyIncludes.wxi.in
-		..\templates\Dependencies.wxi.in = ..\templates\Dependencies.wxi.in
-		..\templates\ProductIncludes.wxi.in = ..\templates\ProductIncludes.wxi.in
-		..\templates\VersionNumber.wxi.in = ..\templates\VersionNumber.wxi.in
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Product", "Product", "{1A988421-4074-4173-9123-4FF803964905}"
-	ProjectSection(SolutionItems) = preProject
-		..\templates\app.manifest.in = ..\templates\app.manifest.in
-		..\templates\AssemblyInfo.Base.cs.in = ..\templates\AssemblyInfo.Base.cs.in
-		..\templates\AssemblyInfo.BuildInformation.cs.in = ..\templates\AssemblyInfo.BuildInformation.cs.in
-		..\templates\AssemblyInfo.InternalsVisibleTo.cs.in = ..\templates\AssemblyInfo.InternalsVisibleTo.cs.in
-		..\templates\AssemblyInfo.VersionNumber.cs.in = ..\templates\AssemblyInfo.VersionNumber.cs.in
-		..\templates\CompanyInformation.cs.in = ..\templates\CompanyInformation.cs.in
-		..\templates\ProductInformation.cs.in = ..\templates\ProductInformation.cs.in
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{9BA565F7-C4EE-41E6-8E42-CDBB5FFD325E}"
-	ProjectSection(SolutionItems) = preProject
-		BaseConfiguration.targets = BaseConfiguration.targets
-		WixBaseConfiguration.targets = WixBaseConfiguration.targets
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -166,12 +134,6 @@ Global
 		{EE853190-50AB-4BB0-ADE7-EAA6A53BB495}.Deploy|x64.ActiveCfg = Deploy|x64
 		{EE853190-50AB-4BB0-ADE7-EAA6A53BB495}.Release|x64.ActiveCfg = Release|x64
 		{EE853190-50AB-4BB0-ADE7-EAA6A53BB495}.Release|x64.Build.0 = Release|x64
-		{B0B1C32A-53FC-4B7E-BA60-6DAFB8180A42}.Debug|x64.ActiveCfg = Debug|x64
-		{B0B1C32A-53FC-4B7E-BA60-6DAFB8180A42}.Debug|x64.Build.0 = Debug|x64
-		{B0B1C32A-53FC-4B7E-BA60-6DAFB8180A42}.Deploy|x64.ActiveCfg = Deploy|x64
-		{B0B1C32A-53FC-4B7E-BA60-6DAFB8180A42}.Deploy|x64.Build.0 = Deploy|x64
-		{B0B1C32A-53FC-4B7E-BA60-6DAFB8180A42}.Release|x64.ActiveCfg = Release|x64
-		{B0B1C32A-53FC-4B7E-BA60-6DAFB8180A42}.Release|x64.Build.0 = Release|x64
 		{BE673894-4B95-4F22-8E9A-9F1D7C20CF84}.Debug|x64.ActiveCfg = Debug|x64
 		{BE673894-4B95-4F22-8E9A-9F1D7C20CF84}.Debug|x64.Build.0 = Debug|x64
 		{BE673894-4B95-4F22-8E9A-9F1D7C20CF84}.Deploy|x64.ActiveCfg = Deploy|x64
@@ -199,9 +161,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{60C08DFA-E52E-4122-948C-1AFB5F9E59A1} = {41EA47AE-001C-46EC-BFD0-299245E534EC}
-		{1A988421-4074-4173-9123-4FF803964905} = {41EA47AE-001C-46EC-BFD0-299245E534EC}
 	EndGlobalSection
 EndGlobal

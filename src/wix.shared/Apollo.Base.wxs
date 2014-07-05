@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 
-    <?include $(var.CurrentProjectDir)\includes.wxi ?>
     <?include $(var.SolutionDir)..\build\temp\Dependencies.wxi ?>
-    <?include $(var.SolutionDir)..\build\temp\CompanyIncludes.wxi ?>
-    <?include $(var.SolutionDir)..\build\temp\ProductIncludes.wxi ?>
-    <?include $(var.SolutionDir)..\build\temp\VersionNumber.wxi ?>
+    <?include $(var.ProjectDir)\includes.wxi ?>
+    <?include $(var.SolutionDir)\CompanyInformation.wxi ?>
+    <?include $(var.SolutionDir)\ProductInformation.wxi ?>
+    <?include $(var.ProjectDir)\VersionNumber.wxi ?>
 
     <Fragment>
         <!-- 
