@@ -1,47 +1,59 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">$(MSBuildProjectDirectory)\..</SolutionDir>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
     <ProjectGuid>{60F9649B-6C4B-43D4-AE8C-D68F04E2C3DF}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Apollo.UI.Explorer</RootNamespace>
     <AssemblyName>Apollo.UI.Explorer</AssemblyName>
-  </PropertyGroup>
-  <PropertyGroup>
-    <DirWorkspace>$(SolutionDir)\..</DirWorkspace>
-    <DirBuild>$(DirWorkspace)\build</DirBuild>
-    <DirBuildTemp>$(DirBuild)\temp</DirBuildTemp>
-    <DirTemplates>$(DirWorkspace)\templates</DirTemplates>
-    <DirTools>$(DirWorkspace)\tools</DirTools>
-    <DirPackages>$(DirWorkspace)\packages</DirPackages>
-    <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
-    <!-- Version number -->
-    <VersionMajor>0</VersionMajor>
-    <VersionMinor>0</VersionMinor>
-    <VersionBuild>0</VersionBuild>
-    <VersionRevision>0</VersionRevision>
-    <!-- Jenkins, the build system adds the BUILD_NUMBER environment variable so we can get that here -->
-    <BuildNumber>$(BUILD_NUMBER)</BuildNumber>
-    <BuildNumber Condition=" '$(BuildNumber)' == '' ">0</BuildNumber>
-  </PropertyGroup>
-  <PropertyGroup>
-    <FileTemplateApplicationManifest>$(DirTemplates)\app.manifest.in</FileTemplateApplicationManifest>
-    <FileApplicationManifest>$(DirBuildTemp)\$(AssemblyName).exe.manifest</FileApplicationManifest>
-  </PropertyGroup>
-  <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
-  <Import Project="$(DirWorkspace)\version.xml" Condition="Exists('$(DirWorkspace)\version.xml')" />
-  <PropertyGroup>
     <UseVSHostingProcess>false</UseVSHostingProcess>
-  </PropertyGroup>
-  <PropertyGroup>
     <StartupObject>Apollo.UI.Explorer.App</StartupObject>
-  </PropertyGroup>
-  <PropertyGroup>
     <ApplicationIcon>..\..\resource\icons\Apollo.ico</ApplicationIcon>
+    <ApplicationManifest>$(AssemblyName).exe.manifest</ApplicationManifest>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>$(FileApplicationManifest)</ApplicationManifest>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS;IN_VS_SOLUTION</DefineConstants>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
+    <OutputPath>bin\Debug</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE;CODE_ANALYSIS;IN_VS_SOLUTION</DefineConstants>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
+    <OutputPath>bin\Release</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Deploy|x64' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE;IN_VS_SOLUTION</DefineConstants>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
+    <OutputPath>bin\Deploy</OutputPath>
+  </PropertyGroup>
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.Common.0.2.1/build/common.props" />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.Common.Net.0.2.1/build/common.net.props" />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.2.1/build/csharp.props" />
   <ItemGroup>
     <Reference Include="Args">
       <HintPath>..\..\packages\Args.1.0.4\lib\Net40\Args.dll</HintPath>
@@ -209,10 +221,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\build\temp\CompanyInformation.cs">
+    <Compile Include="..\CompanyInformation.cs">
       <Link>CompanyInformation.cs</Link>
     </Compile>
-    <Compile Include="..\..\build\temp\ProductInformation.cs">
+    <Compile Include="..\ProductInformation.cs">
       <Link>ProductInformation.cs</Link>
     </Compile>
     <Compile Include="..\AutomationId.Explorer.cs">
@@ -301,17 +313,17 @@
     <EmbeddedResource Include="$(COMPANY_PUBLIC_KEY_PATH)">
       <Link>Properties\NSarracReportPublicKey.xml</Link>
     </EmbeddedResource>
-    <Compile Include="..\..\build\temp\AssemblyInfo.Base.cs">
-      <Link>Properties\AssemblyInfo.Base.cs</Link>
+    <Compile Include="Properties\AssemblyInfo.Company.cs">
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="..\..\build\temp\AssemblyInfo.BuildInformation.cs">
-      <Link>Properties\AssemblyInfo.BuildInformation.cs</Link>
+    <Compile Include="Properties\AssemblyInfo.BuildInformation.cs">
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="..\..\build\temp\AssemblyInfo.InternalsVisibleTo.cs">
-      <Link>Properties\AssemblyInfo.InternalsVisibleTo.cs</Link>
+    <Compile Include="Properties\AssemblyInfo.VersionNumber.cs">
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="..\..\build\temp\AssemblyInfo.VersionNumber.cs">
-      <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
+    <Compile Include="Properties\AssemblyInfo.InternalsVisibleTo.cs">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -420,10 +432,6 @@
       <Project>{befcb7fa-8cdf-44d5-bc36-b4c6a03d9ddd}</Project>
       <Name>Apollo.Core.Host</Name>
     </ProjectReference>
-    <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
-      <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>
-      <Name>SolutionLevel</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ui.wpf\Apollo.UI.Wpf.csproj">
       <Project>{acd26d23-36ba-4035-84ca-6e462a03b033}</Project>
       <Name>Apollo.UI.Wpf</Name>
@@ -437,6 +445,9 @@
     <None Include="Resources\AboutBanner.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="nbuildkit.common.net.readme.txt" />
+    <Content Include="nbuildkit.common.readme.txt" />
+    <Content Include="nbuildkit.csharp.readme.txt" />
     <Content Include="README.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -445,70 +456,10 @@
     </CodeAnalysisDictionary>
   </ItemGroup>
   <ItemGroup />
-  <Import Project="$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\PublicKeySignatureFromKeyFile.msbuild')" />
-  <Import Project="$(MsBuildExtensionsPath)\TemplateFile.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\TemplateFile.msbuild')" />
-  <!-- Clean up all the files we generate ourselves -->
-  <PropertyGroup>
-    <CleanDependsOn>
-            CleanGeneratedFiles;
-            $(CleanDependsOn);
-        </CleanDependsOn>
-  </PropertyGroup>
-  <Target Name="CleanGeneratedFiles">
-    <ItemGroup>
-      <GeneratedFiles Include="$(FileApplicationManifest)" />
-    </ItemGroup>
-    <Delete Files="@(GeneratedFiles)" />
-  </Target>
-  <!-- Just before we start building we'll generate the AssemblyInfo.XX.cs files-->
-  <PropertyGroup>
-    <BuildDependsOn>
-            GenerateManifest;
-            $(BuildDependsOn);
-        </BuildDependsOn>
-  </PropertyGroup>
-  <Target Name="_GetSnPath">
-    <GetFrameworkSdkPath>
-      <Output TaskParameter="Path" PropertyName="WindowsSdkPath" />
-    </GetFrameworkSdkPath>
-    <PropertyGroup>
-      <FileSNExe>$(WindowsSdkPath)bin\sn.exe</FileSNExe>
-    </PropertyGroup>
-    <!-- For .NET 4.5 there is nothing WindowsSdkPath dir but there is in the deeper folder called 'NETFX 4.0 Tools'. -->
-    <!-- For .NET 4.5.1 there is nothing WindowsSdkPath dir but there is in the deeper folder called 'NETFX 4.5.1 Tools'. -->
-    <PropertyGroup>
-      <FileSNExe Condition="!Exists($(FileSNExe)) AND Exists('$(WindowsSdkPath)bin\NETFX 4.0 Tools\sn.exe')">$(WindowsSdkPath)bin\NETFX 4.0 Tools\sn.exe</FileSNExe>
-      <FileSNExe Condition="!Exists($(FileSNExe)) AND Exists('$(WindowsSdkPath)bin\NETFX 4.5.1 Tools\sn.exe')">$(WindowsSdkPath)bin\NETFX 4.5.1 Tools\sn.exe</FileSNExe>
-    </PropertyGroup>
-    <Message Text="sn.exe at: $(FileSNExe)" />
-  </Target>
-  <Target Name="GenerateManifest" DependsOnTargets="_GetSnPath">
-    <PublicKeySignatureFromKeyFile SnExe="$(FileSNExe)" DirTemp="$(DirBuildTemp)" Input="$(SOFTWARE_SIGNING_KEY_PATH)">
-      <Output TaskParameter="PublicKeyToken" PropertyName="PublicKeyTokenLocal" />
-    </PublicKeySignatureFromKeyFile>
-    <!-- Generate the version number file -->
-    <ItemGroup>
-      <ManifestTokens Include="Major">
-        <ReplacementValue>$(VersionMajor)</ReplacementValue>
-      </ManifestTokens>
-      <ManifestTokens Include="Minor">
-        <ReplacementValue>$(VersionMinor)</ReplacementValue>
-      </ManifestTokens>
-      <ManifestTokens Include="Build">
-        <ReplacementValue>$(VersionBuild)</ReplacementValue>
-      </ManifestTokens>
-      <ManifestTokens Include="Revision">
-        <ReplacementValue>$(VersionRevision)</ReplacementValue>
-      </ManifestTokens>
-      <ManifestTokens Include="ProjectName">
-        <ReplacementValue>$(AssemblyName)</ReplacementValue>
-      </ManifestTokens>
-      <ManifestTokens Include="PublicKeyToken">
-        <ReplacementValue>$(PublicKeyTokenLocal)</ReplacementValue>
-      </ManifestTokens>
-    </ItemGroup>
-    <TemplateFile Template="$(FileTemplateApplicationManifest)" OutputFileName="$(FileApplicationManifest)" Tokens="@(ManifestTokens)" />
-  </Target>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.Common.0.2.1/build/common.targets" />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.Common.Net.0.2.1/build/common.net.targets" />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.2.1/build/csharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
