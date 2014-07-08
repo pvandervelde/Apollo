@@ -2,9 +2,9 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Apollo</id>
-    <version>${Version}</version>
-    <authors>P. van der Velde</authors>
-    <owners>P. van der Velde</owners>
+    <version>${VersionSemantic}</version>
+    <authors>${Company}</authors>
+    <owners>${Company}</owners>
     <licenseUrl>http://localhost</licenseUrl>
     <projectUrl>http://localhost</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

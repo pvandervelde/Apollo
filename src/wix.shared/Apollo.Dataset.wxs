@@ -41,6 +41,7 @@
             </Component>
             
             <!-- apollo.core.dataset.references.xml -->
+            <!--
             <Component Id="C.Apollo.Core.Dataset.References.Xml"
                        Guid="{09F71B3C-B99C-41E1-8EC7-B4961F9CD9F2}">
                 <File Id="File.Apollo.Core.Dataset.References.Xml"
@@ -49,6 +50,7 @@
                       Source="$(var.BinFolder)\apollo.core.dataset.references.xml"
                       KeyPath="yes" />
             </Component>
+            -->
             
         </DirectoryRef>
 
@@ -56,7 +58,9 @@
         <ComponentGroup Id="CGroup.Apollo.Core.Dataset">
             <ComponentRef Id="C.Apollo.Core.Dataset.Exe" />
             <ComponentRef Id="C.Apollo.Core.Dataset.Exe.Config" />
+            <!--
             <ComponentRef Id="C.Apollo.Core.Dataset.References.Xml" />
+            -->
 
             <ComponentGroupRef Id="CGroup.Apollo.Base" />
         </ComponentGroup>
