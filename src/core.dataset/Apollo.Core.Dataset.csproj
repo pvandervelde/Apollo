@@ -49,9 +49,9 @@
     <Prefer32Bit>false</Prefer32Bit>
     <OutputPath>bin\Deploy</OutputPath>
   </PropertyGroup>
-  <Import Project="../../packages/nBuildKit.MsBuild.Projects.Common.0.2.3/build/common.props" />
-  <Import Project="../../packages/nBuildKit.MsBuild.Projects.Common.Net.0.2.3/build/common.net.props" />
-  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.2.3/build/csharp.props" />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.Common.0.2.4/build/common.props" />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.Common.Net.0.2.4/build/common.net.props" />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.2.4/build/csharp.props" />
   <ItemGroup>
     <Reference Include="Autofac, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -320,7 +320,7 @@
     </SearchPackagesDirectoryForToolPath>
     <Exec Command="&quot;$(PathNRefsExe)&quot; -a &quot;$(OutputPath)Apollo.Core.Dataset.exe&quot; -o &quot;$(FileGeneratedReferences)&quot;" />
   </Target>
-  <Import Project="../../packages/nBuildKit.MsBuild.Projects.Common.0.2.3/build/common.targets" />
-  <Import Project="../../packages/nBuildKit.MsBuild.Projects.Common.Net.0.2.3/build/common.net.targets" />
-  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.2.3/build/csharp.targets" />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.Common.0.2.4/build/common.targets" />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.Common.Net.0.2.4/build/common.net.targets" />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.2.4/build/csharp.targets" />
 </Project>
