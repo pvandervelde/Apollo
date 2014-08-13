@@ -300,7 +300,7 @@
             The following properties can be defined on the command line or via the current script:
               GitUserName - The user name of the user who owns the GitHub repository
         -->
-        <GitUserName Condition=" '$(GitUserName)' == '' ">$(GitHubUserName)</GitUserName>
+        <!-- <GitUserName Condition=" '$(GitUserName)' == '' ">$(GitHubUserName)</GitUserName> -->
         
         <!-- 
             The full directory path to the script that handles custom generation of the version numbers. 
