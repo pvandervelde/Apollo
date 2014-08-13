@@ -49,9 +49,9 @@
     <Prefer32Bit>false</Prefer32Bit>
     <OutputPath>bin\Deploy</OutputPath>
   </PropertyGroup>
-  <Import Project="../../packages/nBuildKit.MsBuild.Projects.Common.0.2.4/build/common.props" />
-  <Import Project="../../packages/nBuildKit.MsBuild.Projects.Common.Net.0.2.4/build/common.net.props" />
-  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.2.4/build/csharp.props" />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.3.1/build/common.props" />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.3.1/build/common.net.props" />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.3.1/build/csharp.props" />
   <ItemGroup>
     <Reference Include="Autofac, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -159,6 +159,9 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyInfo.Base.cs">
+      <Link>Properties\AssemblyInfo.Base.cs</Link>
+    </Compile>
     <Compile Include="DatasetApplicationCommands.cs" />
     <Compile Include="DatasetApplicationConstants.cs" />
     <Compile Include="DatasetApplicationNotifications.cs" />
@@ -299,8 +302,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="nbuildkit.common.net.readme.txt" />
-    <Content Include="nbuildkit.common.readme.txt" />
     <Content Include="nbuildkit.csharp.readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -320,7 +321,7 @@
     </SearchPackagesDirectoryForToolPath>
     <Exec Command="&quot;$(PathNRefsExe)&quot; -a &quot;$(OutputPath)Apollo.Core.Dataset.exe&quot; -o &quot;$(FileGeneratedReferences)&quot;" />
   </Target>
-  <Import Project="../../packages/nBuildKit.MsBuild.Projects.Common.0.2.4/build/common.targets" />
-  <Import Project="../../packages/nBuildKit.MsBuild.Projects.Common.Net.0.2.4/build/common.net.targets" />
-  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.2.4/build/csharp.targets" />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.3.1/build/common.targets" />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.3.1/build/common.net.targets" />
+  <Import Project="../../packages/nBuildKit.MsBuild.Projects.CSharp.0.3.1/build/csharp.targets" />
 </Project>

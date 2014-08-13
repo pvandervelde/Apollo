@@ -4,7 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Reflection;
 using System.Resources;
 using System.Windows;
@@ -16,7 +15,6 @@ using System.Windows;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyProduct("Apollo.UI.Explorer")]
 [assembly: AssemblyCulture("")]
-[assembly: CLSCompliant(true)]
 
 // In order to begin building localizable applications, set 
 // <UICulture>CultureYouAreCodingWith</UICulture> in your .csproj file
