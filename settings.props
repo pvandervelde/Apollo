@@ -822,7 +822,7 @@
     <ItemGroup>
         <PushToDirectorySpecs Include="$(ServerDeployPath)\${ProductNameInFilePath}\${VersionSemantic}\${PlatformWithoutSpaces}">
             <IncludedFiles>
-                $(DirBuildDeploy)\x64\*.msi
+                $(DirBuildDeploy)\x64\$(ProductionConfiguration)\*.msi
             </IncludedFiles>
             <ExcludedFiles>
             </ExcludedFiles>
