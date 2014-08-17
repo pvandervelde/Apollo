@@ -4,11 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Resources;
-using System.Security;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -17,9 +14,6 @@ using System.Security;
 [assembly: AssemblyDescription("Holds the utility classes and interface for Apollo")]
 [assembly: AssemblyProduct("Apollo.Utilities")]
 [assembly: AssemblyCulture("")]
-
-// Indicate that the assembly is CLS compliant.
-[assembly: CLSCompliant(true)]
 
 // Resources
 [assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]

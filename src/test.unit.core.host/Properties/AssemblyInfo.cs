@@ -14,6 +14,3 @@ using System.Reflection;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyProduct("Apollo")]
 [assembly: AssemblyCulture("")]
-
-// Indicate that the assembly is CLS compliant.
-[assembly: CLSCompliant(true)]

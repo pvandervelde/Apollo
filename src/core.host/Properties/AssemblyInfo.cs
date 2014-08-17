@@ -4,7 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Reflection;
 using System.Resources;
 
@@ -15,9 +14,6 @@ using System.Resources;
 [assembly: AssemblyDescription("Holds the components for the core part of Apollo")]
 [assembly: AssemblyProduct("Apollo.Core")]
 [assembly: AssemblyCulture("")]
-
-// Indicate that the assembly is CLS compliant.
-[assembly: CLSCompliant(true)]
 
 // Indicate that the neutral language resources are in the assembly.
 [assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]

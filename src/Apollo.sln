@@ -43,17 +43,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.UI.Console", "ui.con
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Scripting", "core.scripting\Apollo.Core.Scripting.csproj", "{626DB086-D3E7-47A6-92B5-2AFC58E8E18E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{583E31A6-EEBE-4266-90C4-EC5D6078BCDA}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-		.nuget\packages.config = .nuget\packages.config
-	EndProjectSection
-EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Wix.Host", "wix.host\Wix.Host.wixproj", "{B8DE1DF9-52C3-4EA2-AF76-F45B35BEFEBC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Regression.Explorer", "test.regression.explorer\Test.Regression.Explorer.csproj", "{96589EDE-BE39-4FEA-8614-188DD936792A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7514C1CA-2D6C-4AF1-B473-4AA0BD72F769}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
