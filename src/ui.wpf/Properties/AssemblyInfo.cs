@@ -4,11 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Resources;
-using System.Security;
 using System.Windows;
 
 // General Information about an assembly is controlled through the following 
@@ -18,7 +16,6 @@ using System.Windows;
 [assembly: AssemblyDescription("Holds the common user interface components for Apollo")]
 [assembly: AssemblyProduct("Apollo.UI.Wpf")]
 [assembly: AssemblyCulture("")]
-[assembly: CLSCompliant(true)]
 
 // In order to begin building localizable applications, set 
 // <UICulture>CultureYouAreCodingWith</UICulture> in your .csproj file
